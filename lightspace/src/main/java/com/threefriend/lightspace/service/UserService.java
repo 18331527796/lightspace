@@ -13,5 +13,5 @@ public interface UserService {
 	
 	public Optional<UserMapper> findOne(Integer id);
 	
-	public List<UserMapper> findByLoginName(String loginname);
+	public Object findByLoginNameAndPassword(String loginname, String password);
 }

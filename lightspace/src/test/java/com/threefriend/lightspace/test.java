@@ -1,33 +1,29 @@
 package com.threefriend.lightspace;
 
-
-
-import java.util.Date;
-import java.util.List;
+import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.threefriend.lightspace.mapper.UserMapper;
-import com.threefriend.lightspace.service.Impl.UserServiceImpl;
+import com.threefriend.lightspace.util.RedisUtils;
+
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class test {
 
-	@Autowired
-	private UserServiceImpl user;
+	@Resource
+	private RedisUtils redisUtils;
+	
 	
 	
 	@Test
 	public void test() {
-		
-		List<UserMapper> findByLoginName = user.findByLoginName("ffffff");
-		System.out.println(findByLoginName.size()+"+++++++++++++++++++");
-		
+		redisUtils.delete("redis_key");
+		String value = redisUtils.get("redis_key");
+		System.out.println(value);
 	}
 }

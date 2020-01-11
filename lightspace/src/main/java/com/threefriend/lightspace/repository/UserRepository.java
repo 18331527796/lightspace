@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface UserRepository extends JpaRepository<UserMapper, Integer>{
 
-	List<UserMapper> findByloginName(String loginname);
+	List<UserMapper> findByloginNameAndPassword(String loginname, String password);
 
 }
