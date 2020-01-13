@@ -20,7 +20,7 @@ public class RoleMapper {
 	//主键
 	private Integer id;
 	//角色名称
-	@Column(name="right_name")
+	@Column(name="role_name")
 	private String roleName;
 	//创建时间
 	@Column(name="gen_time")

@@ -7,11 +7,14 @@ import com.threefriend.lightspace.mapper.UserMapper;
 
 public interface UserService {
 
+	//新增用户
 	public void insertUser(UserMapper user);
-	
+	//用户列表
 	public List<UserMapper> findAll();
+	//用户登录
+	public Object login(String loginname, String password);
+	//用户权限
+	public Object getUserRight(String token);
 	
-	public Optional<UserMapper> findOne(Integer id);
 	
-	public Object findByLoginNameAndPassword(String loginname, String password);
 }

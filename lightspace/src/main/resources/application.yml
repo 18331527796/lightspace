@@ -15,7 +15,9 @@ spring:
         max-wait: 3000
         max-idle: 20
         min-idle: 2
-          
+  jackson:
+    default-property-inclusion: 
+           
   main:
     allow-bean-definition-overriding: true
   

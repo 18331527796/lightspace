@@ -1,6 +1,10 @@
 package com.threefriend.lightspace.util;
 
 
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -8,14 +12,12 @@ import org.springframework.stereotype.Component;
 /**
 * redis操作工具类.</br>
 * (基于RedisTemplate)
-* @author xcbeyond
-* 2018年7月19日下午2:56:24
 */
 @Component
 public class RedisUtils {
 
 	@Autowired
-	private RedisTemplate<String, String> redisTemplate;
+	private  RedisTemplate<String, String> redisTemplate;
 
 	/**
 	 * 读取缓存
@@ -23,14 +25,14 @@ public class RedisUtils {
 	 * @param key
 	 * @return
 	 */
-	public String get(final String key) {
+	public  String get(final String key) {
 		return redisTemplate.opsForValue().get(key);
 	}
 
 	/**
 	 * 写入缓存
 	 */
-	public boolean set(final String key, String value) {
+	public  boolean set(final String key, String value) {
 		boolean result = false;
 		try {
 			redisTemplate.opsForValue().set(key, value);
@@ -44,10 +46,24 @@ public class RedisUtils {
 	/**
 	 * 更新缓存
 	 */
-	public boolean getAndSet(final String key, String value) {
+	public  boolean getAndSet(final String key, String value) {
 		boolean result = false;
 		try {
 			redisTemplate.opsForValue().getAndSet(key, value);
+			result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * 设置时间
+	 */
+	public  boolean setTime(final String key, Integer time) {
+		boolean result = false;
+		try {
+			redisTemplate.expire(key, time, TimeUnit.SECONDS);
 			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,7 +74,7 @@ public class RedisUtils {
 	/**
 	 * 删除缓存
 	 */
-	public boolean delete(final String key) {
+	public  boolean delete(final String key) {
 		boolean result = false;
 		try {
 			redisTemplate.delete(key);

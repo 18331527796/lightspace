@@ -23,9 +23,6 @@ public class RoleRightRelation {
 	//权限
 	@Column(name="right_id")
 	private Integer rightId;
-	//权限类型（0：可访问  1：可授权）
-	@Column(name="right_type")
-	private Integer rightType;
 	public Integer getId() {
 		return id;
 	}
@@ -43,12 +40,6 @@ public class RoleRightRelation {
 	}
 	public void setRightId(Integer rightId) {
 		this.rightId = rightId;
-	}
-	public Integer getRightType() {
-		return rightType;
-	}
-	public void setRightType(Integer rightType) {
-		this.rightType = rightType;
 	}
 	
 

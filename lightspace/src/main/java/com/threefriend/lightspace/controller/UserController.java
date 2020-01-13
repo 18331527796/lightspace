@@ -27,7 +27,16 @@ public class UserController {
 	@PostMapping("/login")
 	@ResponseBody
 	public Object hello(@RequestParam Map<String, String> params) {
-		return user_impl.findByLoginNameAndPassword(params.get("loginname"),params.get("password"));
+		return user_impl.login(params.get("loginname"),params.get("password"));
 	}
+	
+	
+	@PostMapping("/menuList")
+	@ResponseBody
+	public Object menuList(@RequestParam Map<String, String> params) {
+		
+		return user_impl.getUserRight(params.get("token"));
+	}
+	
 
 }
