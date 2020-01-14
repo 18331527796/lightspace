@@ -15,11 +15,8 @@ public enum ResultEnum {
 
     LOGOUT_SUCCESS(10203, "登出成功"),
     
-    TOKEN_ERROR(10204,"TOKEN非法，请重新登录~"),
+    TOKEN_OVERDUE(10204,"TOKEN过期，请重新登录~"),
     
-    TOKEN_OVERDUE(10205,"TOKEN过期，请重新登录~"),
-    
-    TOKEN_FAILURE(10206,"TOKEN失效，请重新登录~"),
     ;
 
     private Integer status;

@@ -12,11 +12,9 @@ spring:
     jedis:
       pool:
         max-active: 50
-        max-wait: 3000
-        max-idle: 20
+        max-wait: -1
+        max-idle: 30
         min-idle: 2
-  jackson:
-    default-property-inclusion: 
            
   main:
     allow-bean-definition-overriding: true

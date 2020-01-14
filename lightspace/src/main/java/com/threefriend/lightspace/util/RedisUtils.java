@@ -58,7 +58,24 @@ public class RedisUtils {
 	}
 	
 	/**
-	 * 设置时间
+	 * 写入缓存并设置时间
+	 */
+	public  boolean setValueTime(final String key,String value, Integer time) {
+		boolean result = false;
+		try {
+			redisTemplate.opsForValue().set(key,value, time, TimeUnit.SECONDS);
+			result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * 设置过期时间
+	 * @param key
+	 * @param time
+	 * @return
 	 */
 	public  boolean setTime(final String key, Integer time) {
 		boolean result = false;

@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.threefriend.lightspace.mapper.SchoolMapper;
@@ -11,4 +13,5 @@ import com.threefriend.lightspace.mapper.SchoolMapper;
  */
 public interface SchoolRepository extends JpaRepository<SchoolMapper, Integer>{
 
+	List<SchoolMapper> findByNameLike(String name);
 }

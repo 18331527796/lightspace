@@ -5,6 +5,11 @@ import java.util.Optional;
 
 import com.threefriend.lightspace.mapper.UserMapper;
 
+/**
+ * 用户业务逻辑
+ * @author Administrator
+ *
+ */
 public interface UserService {
 
 	//新增用户

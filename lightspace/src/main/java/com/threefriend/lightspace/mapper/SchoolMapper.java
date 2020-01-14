@@ -40,12 +40,6 @@ public class SchoolMapper {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
 	public Integer getRegionId() {
 		return regionId;
 	}
@@ -57,6 +51,12 @@ public class SchoolMapper {
 	}
 	public void setRegionName(String regionName) {
 		this.regionName = regionName;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 

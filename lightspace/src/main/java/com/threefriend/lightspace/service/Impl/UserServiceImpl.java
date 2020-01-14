@@ -70,20 +70,18 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public Object login(String loginname, String password) {
-		System.out.println(loginname + "+++++++" + password);
+		System.out.println(loginname + "+++++++" + password+"登录名+密码");
 		// 比如对密码进行 md5 加密
 		String md5 = DigestUtils.md5DigestAsHex(password.getBytes());
 		List<UserMapper> findByLoginName = user_dao.findByloginNameAndPassword(loginname, md5);
 		if(1 !=findByLoginName.size())return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
 		Map<String, String> token = new HashMap<String, String>();
-		System.out.println(findByLoginName.get(0).getId()+"-------------");
 		//正式用的时候放开
 		String tokenstr = TokenUtils.getToken(findByLoginName.get(0).getId());
-		System.out.println(tokenstr+"-----------");
+		System.out.println(tokenstr+"-----------用户控制器 生成token");
 		//这里要用上面的tokenstr传递前端
 		token.put("token", tokenstr);
-		redisUtil.set(tokenstr, findByLoginName.get(0).getId().toString());
-		redisUtil.setTime(tokenstr, 1800);
+		redisUtil.setValueTime(tokenstr, findByLoginName.get(0).getId().toString(),5);//1800
 		return ResultVOUtil.success(token);
 	}
 
