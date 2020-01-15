@@ -36,7 +36,7 @@ public class HttpAspect {
         System.out.println("--------"+token+"--------这是AOP判定");
         String tokenValue = redisUtil.get(token);
         //开启token验证
-        if(StringUtils.isEmpty(tokenValue))throw new LightException(ResultEnum.TOKEN_OVERDUE);
-        redisUtil.setTime(token, 5);//1800
-	}
+        /*if(StringUtils.isEmpty(tokenValue))throw new LightException(ResultEnum.TOKEN_OVERDUE);
+        redisUtil.setTime(token, 1800);//1800
+*/	}
 }

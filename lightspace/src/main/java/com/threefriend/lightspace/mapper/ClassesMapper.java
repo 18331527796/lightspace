@@ -13,6 +13,7 @@ import javax.persistence.Id;
  */
 @Entity
 public class ClassesMapper {
+	
 
 	@Id
 	@GeneratedValue
@@ -24,13 +25,13 @@ public class ClassesMapper {
 	private Integer volume;
 	// 教室长度
 	@Column(name="room_length")
-	private Integer roomLength;
+	private Double roomLength;
 	// 教室宽度
 	@Column(name="room_width")
-	private Integer roomWidth;
+	private Double roomWidth;
 	// 黑板长度
 	@Column(name="bb_length")
-	private Integer bbLength;
+	private Double bbLength;
 	// 是否实验班（0：不是 1：是）
 	private Integer experiment;
 	// 所属学校id
@@ -65,22 +66,22 @@ public class ClassesMapper {
 	public void setVolume(Integer volume) {
 		this.volume = volume;
 	}
-	public Integer getRoomLength() {
+	public Double getRoomLength() {
 		return roomLength;
 	}
-	public void setRoomLength(Integer roomLength) {
+	public void setRoomLength(Double roomLength) {
 		this.roomLength = roomLength;
 	}
-	public Integer getRoomWidth() {
+	public Double getRoomWidth() {
 		return roomWidth;
 	}
-	public void setRoomWidth(Integer roomWidth) {
+	public void setRoomWidth(Double roomWidth) {
 		this.roomWidth = roomWidth;
 	}
-	public Integer getBbLength() {
+	public Double getBbLength() {
 		return bbLength;
 	}
-	public void setBbLength(Integer bbLength) {
+	public void setBbLength(Double bbLength) {
 		this.bbLength = bbLength;
 	}
 	public Integer getExperiment() {

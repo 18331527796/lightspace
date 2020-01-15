@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
 		System.out.println(tokenstr+"-----------用户控制器 生成token");
 		//这里要用上面的tokenstr传递前端
 		token.put("token", tokenstr);
-		redisUtil.setValueTime(tokenstr, findByLoginName.get(0).getId().toString(),5);//1800
+		redisUtil.setValueTime(tokenstr, findByLoginName.get(0).getId().toString(),1800);//1800
 		return ResultVOUtil.success(token);
 	}
 

@@ -3,8 +3,7 @@ package com.threefriend.lightspace.util;
 import com.threefriend.lightspace.vo.ResultVO;
 
 /**
- * Created by 廖师兄
- * 2017-05-15 00:22
+ * 返回工具类
  */
 public class ResultVOUtil {
 
@@ -12,7 +11,7 @@ public class ResultVOUtil {
         ResultVO resultVO = new ResultVO();
         resultVO.setData(object);
         resultVO.setStatus(200);
-        resultVO.setMsg("成功");
+        resultVO.setMsg("操作成功");
         return resultVO;
     }
 
