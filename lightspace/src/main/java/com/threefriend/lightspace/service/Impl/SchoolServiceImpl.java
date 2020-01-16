@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.threefriend.lightspace.mapper.SchoolMapper;
+import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.service.SchoolService;
@@ -24,6 +25,8 @@ public class SchoolServiceImpl implements SchoolService{
 	private SchoolRepository school_dao;
 	@Autowired
 	private RegionRepository region_dao;
+	@Autowired
+	private ClassesRepository class_dao;
 
 	/* 
 	 * 添加学校
@@ -65,6 +68,7 @@ public class SchoolServiceImpl implements SchoolService{
 	 */
 	@Override
 	public void deleteSchool(Integer id) {
+		class_dao.deleteBySchoolId(id);
 		school_dao.deleteById(id);
 	}
 
@@ -73,7 +77,6 @@ public class SchoolServiceImpl implements SchoolService{
 	 */
 	@Override
 	public SchoolMapper findSchoolById(Map<String, String> params) {
-		System.out.println("按照id查找学校的方法中"+params.get("token"));
 		SchoolMapper findById = school_dao.findById(Integer.valueOf(params.get("id"))).get();
 		return findById;
 	}
@@ -83,7 +86,7 @@ public class SchoolServiceImpl implements SchoolService{
 	 */
 	@Override
 	public List<SchoolMapper> findAllSchoolLike(String name) {
-		List<SchoolMapper> findByNameLike = school_dao.findByNameLike(name);
+		List<SchoolMapper> findByNameLike = school_dao.findByNameLike("%"+name+"%");
 		return findByNameLike;
 	}
 

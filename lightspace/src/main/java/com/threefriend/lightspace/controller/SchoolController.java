@@ -92,7 +92,7 @@ public class SchoolController {
 	@PostMapping("/querySchool")
 	@ResponseBody
 	public ResultVO querySchool(@RequestParam Map<String, String> params) {
-		List<SchoolMapper> findAllSchoolLike = school_Impl.findAllSchoolLike("%"+params.get("name")+"%");
+		List<SchoolMapper> findAllSchoolLike = school_Impl.findAllSchoolLike(params.get("name"));
 		return ResultVOUtil.success(findAllSchoolLike);
 	}
 	

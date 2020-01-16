@@ -79,5 +79,41 @@ public class ClassesController {
 	public ResultVO deleteClasses(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.deleteClasses(Integer.valueOf(params.get("id"))));
 	}
+	
+	/**
+	 * 模糊查询
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/queryClasses")
+	@ResponseBody
+	public ResultVO queryClasses(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(classes_impl.findByNameLike(params.get("className")));
+	}
+	
+	/**
+	 * 按照学校找班级
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/queryClassesBySchool")
+	@ResponseBody
+	public ResultVO queryClassesBySchool(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(classes_impl.findBySchoolId(Integer.valueOf(params.get("shcoolId"))));
+	}
+	
+	/**
+	 * 级联
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/cascade")
+	@ResponseBody
+	public ResultVO cascade(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(classes_impl.cascade());
+	}
+	
+	
+	
 
 }

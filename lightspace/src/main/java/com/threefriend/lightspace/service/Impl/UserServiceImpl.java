@@ -111,8 +111,6 @@ public class UserServiceImpl implements UserService {
 				for (RightMapper it : rights) {
 					if (it.getpId() == role1.getId()) {
 						if (menu.getChildren() == null) {
-							menu.setId(role1.getId());
-							menu.setAuthName(role1.getAuthName());
 							menu.setChildren(new ArrayList<RightMapper>());
 						}
 						menu.setId(role1.getId());
