@@ -20,18 +20,19 @@ public class ClassesMapper {
 	// 主键
 	private Integer id;
 	// 班级名称
-	private String name;
+	@Column(name="name")
+	private String className;
 	// 班级人数
 	private Integer volume;
 	// 教室长度
 	@Column(name="room_length")
-	private Double roomLength;
+	private String roomLength;
 	// 教室宽度
 	@Column(name="room_width")
-	private Double roomWidth;
+	private String roomWidth;
 	// 黑板长度
 	@Column(name="bb_length")
-	private Double bbLength;
+	private String bbLength;
 	// 是否实验班（0：不是 1：是）
 	private Integer experiment;
 	// 所属学校id
@@ -54,11 +55,11 @@ public class ClassesMapper {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public String getClassName() {
+		return className;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setClassName(String className) {
+		this.className = className;
 	}
 	public Integer getVolume() {
 		return volume;
@@ -66,22 +67,22 @@ public class ClassesMapper {
 	public void setVolume(Integer volume) {
 		this.volume = volume;
 	}
-	public Double getRoomLength() {
+	public String getRoomLength() {
 		return roomLength;
 	}
-	public void setRoomLength(Double roomLength) {
+	public void setRoomLength(String roomLength) {
 		this.roomLength = roomLength;
 	}
-	public Double getRoomWidth() {
+	public String getRoomWidth() {
 		return roomWidth;
 	}
-	public void setRoomWidth(Double roomWidth) {
+	public void setRoomWidth(String roomWidth) {
 		this.roomWidth = roomWidth;
 	}
-	public Double getBbLength() {
+	public String getBbLength() {
 		return bbLength;
 	}
-	public void setBbLength(Double bbLength) {
+	public void setBbLength(String bbLength) {
 		this.bbLength = bbLength;
 	}
 	public Integer getExperiment() {

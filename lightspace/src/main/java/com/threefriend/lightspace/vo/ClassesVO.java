@@ -1,10 +1,20 @@
 package com.threefriend.lightspace.vo;
 
-public class ClassesVO {
+import java.io.Serializable;
+import java.util.List;
+
+public class ClassesVO implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private Integer id;
 	
 	private String name;
+	
+	private List<StudentVO> children;
 
 	public Integer getId() {
 		return id;
@@ -20,6 +30,14 @@ public class ClassesVO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<StudentVO> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<StudentVO> children) {
+		this.children = children;
 	}
 
 

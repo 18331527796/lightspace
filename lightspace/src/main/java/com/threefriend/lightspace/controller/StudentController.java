@@ -79,7 +79,7 @@ public class StudentController {
 	 * @param params
 	 * @return
 	 */
-	@PostMapping("/queryStudentsBySidCid")
+	@PostMapping("/queryStudentBySidCid")
 	@ResponseBody
 	public ResultVO queryStudentsBySidCid(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(student_Impl.queryBySidCid(Integer.valueOf(params.get("schoolId")), Integer.valueOf(params.get("classId"))));
@@ -90,7 +90,7 @@ public class StudentController {
 	 * @param params
 	 * @return
 	 */
-	@PostMapping("/queryStudents")
+	@PostMapping("/queryStudent")
 	@ResponseBody
 	public ResultVO queryStudents(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(student_Impl.findByNameLike(params.get("name")));

@@ -48,21 +48,22 @@ public class StudentServiceImpl implements StudentService{
 	public List<StudentMapper> addStudent(Map<String, String> params) {
 		StudentMapper student = new StudentMapper();
 		student.setAge(Integer.valueOf(params.get("age")));
-		student.setChairHeight(Double.valueOf(params.get("chairHeight")));
+		student.setChairHeight(params.get("chairHeight"));
 		student.setClassesId(Integer.valueOf(params.get("classId")));
-		student.setClassesName(classes_dao.findById(Integer.valueOf(params.get("classId"))).get().getName());
+		student.setClassesName(classes_dao.findById(Integer.valueOf(params.get("classId"))).get().getClassName());
 		student.setCorrect(Integer.valueOf(params.get("correct")));
 		student.setGender(Integer.valueOf(params.get("gender")));
-		student.setHeight(Double.valueOf(params.get("height")));
+		student.setHeight(params.get("height"));
 		student.setName(params.get("name"));
 		student.setNature(params.get("nature"));
 		student.setRegionId(1);
 		student.setRegionName("唐山");
 		student.setSchoolId(Integer.valueOf(params.get("schoolId")));
 		student.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
-		student.setSittingHeight(Double.valueOf(params.get("sittingHeight")));
-		student.setWeight(Double.valueOf(params.get("weight")));
+		student.setSittingHeight(params.get("sittingHeight"));
+		student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
+		System.out.println(params.get("chairHeight")+"--"+params.get("height")+"--"+params.get("sittingHeight"));
 		student_dao.save(student);
 		return student_dao.findAll();
 	}
@@ -83,14 +84,14 @@ public class StudentServiceImpl implements StudentService{
 	public List<StudentMapper> saveStudent(Map<String, String> params) {
 		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if(!StringUtils.isEmpty(params.get("age")))student.setAge(Integer.valueOf(params.get("age")));
-		if(!StringUtils.isEmpty(params.get("chairHeight")))student.setChairHeight(Double.valueOf(params.get("chairHeight")));
+		if(!StringUtils.isEmpty(params.get("chairHeight")))student.setChairHeight(params.get("chairHeight"));
 		if(!StringUtils.isEmpty(params.get("correct")))student.setCorrect(Integer.valueOf(params.get("correct")));
 		if(!StringUtils.isEmpty(params.get("gender")))student.setGender(Integer.valueOf(params.get("gender")));
-		if(!StringUtils.isEmpty(params.get("height")))student.setHeight(Double.valueOf(params.get("height")));
+		if(!StringUtils.isEmpty(params.get("height")))student.setHeight(params.get("height"));
 		if(!StringUtils.isEmpty(params.get("name")))student.setName(params.get("name"));
 		if(!StringUtils.isEmpty(params.get("nature")))student.setNature(params.get("nature"));
-		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(Double.valueOf(params.get("sittingHeight")));
-		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(Double.valueOf(params.get("weight")));
+		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
+		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		if(!StringUtils.isEmpty(params.get("schoolId"))) {
 			student.setSchoolId(Integer.valueOf(params.get("schoolId")));
@@ -98,8 +99,9 @@ public class StudentServiceImpl implements StudentService{
 		}
 		if(!StringUtils.isEmpty(params.get("classId"))) {
 			student.setClassesId(Integer.valueOf(params.get("classId")));
-			student.setClassesName(classes_dao.findById(Integer.valueOf(params.get("classId"))).get().getName());
+			student.setClassesName(classes_dao.findById(Integer.valueOf(params.get("classId"))).get().getClassName());
 		}
+		System.out.println(params.get("chairHeight")+"--"+params.get("height")+"--"+params.get("sittingHeight"));
 		student_dao.save(student);
 		return student_dao.findAll();
 	}

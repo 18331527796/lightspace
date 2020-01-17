@@ -15,7 +15,7 @@ public interface ClassesRepository extends JpaRepository<ClassesMapper, Integer>
 
 	List<ClassesMapper> findBySchoolId(Integer sId);
 	
-	List<ClassesMapper> findByNameLike(String name);
+	List<ClassesMapper> findByClassNameLike(String name);
 	
 	void deleteBySchoolId(Integer schoolId);
 	

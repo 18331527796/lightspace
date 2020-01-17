@@ -43,15 +43,15 @@ public class StudentMapper {
 	// 年龄
 	private Integer age;
 	// 身高
-	private Double height;
+	private String height;
 	// 坐姿身高
 	@Column(name = "sitting_height")
-	private Double sittingHeight;
+	private String sittingHeight;
 	// 坐姿用椅高度
 	@Column(name = "chair_height")
-	private Double chairHeight;
+	private String chairHeight;
 	// 体重
-	private Double weight;
+	private String weight;
 	// 性格
 	private String nature;
 	// 是否矫正 (0:未校正 1:未校正)
@@ -118,28 +118,28 @@ public class StudentMapper {
 	public void setAge(Integer age) {
 		this.age = age;
 	}
-	public Double getHeight() {
+	public String getHeight() {
 		return height;
 	}
-	public void setHeight(Double height) {
+	public void setHeight(String height) {
 		this.height = height;
 	}
-	public Double getSittingHeight() {
+	public String getSittingHeight() {
 		return sittingHeight;
 	}
-	public void setSittingHeight(Double sittingHeight) {
+	public void setSittingHeight(String sittingHeight) {
 		this.sittingHeight = sittingHeight;
 	}
-	public Double getChairHeight() {
+	public String getChairHeight() {
 		return chairHeight;
 	}
-	public void setChairHeight(Double chairHeight) {
+	public void setChairHeight(String chairHeight) {
 		this.chairHeight = chairHeight;
 	}
-	public Double getWeight() {
+	public String getWeight() {
 		return weight;
 	}
-	public void setWeight(Double weight) {
+	public void setWeight(String weight) {
 		this.weight = weight;
 	}
 	public String getNature() {

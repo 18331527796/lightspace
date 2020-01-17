@@ -4,17 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
+import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
+import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.ClassesService;
+import com.threefriend.lightspace.util.RedisUtils;
+import com.threefriend.lightspace.util.SerializeUtil;
 import com.threefriend.lightspace.vo.ClassesVO;
 import com.threefriend.lightspace.vo.SchoolVO;
+import com.threefriend.lightspace.vo.StudentVO;
 
 /**
  * 班级业务逻辑实现
@@ -25,10 +32,14 @@ import com.threefriend.lightspace.vo.SchoolVO;
 @Service
 public class ClassesServiceImpl implements ClassesService {
 
+	@Resource
+	private RedisUtils redisUtil;
 	@Autowired
 	private ClassesRepository classes_dao;
 	@Autowired
 	private SchoolRepository school_dao;
+	@Autowired
+	private StudentRepository student_dao;
 
 	/*
 	 * 新增班级方法
@@ -36,16 +47,13 @@ public class ClassesServiceImpl implements ClassesService {
 	@Override
 	public List<ClassesMapper> addClasses(Map<String, String> params) {
 		ClassesMapper classes = new ClassesMapper();
-		System.out.println(params.get("bbLength") + "--" + params.get("experiment") + "---" + params.get("className")
-				+ "---" + params.get("roomLength"));
-		classes.setBbLength(Double.valueOf(params.get("bbLength")));
-		System.out.println(params.get("experiment"));
+		classes.setBbLength(params.get("bbLength"));
 		classes.setExperiment(Integer.valueOf(params.get("experiment")));
-		classes.setName(params.get("className"));
+		classes.setClassName(params.get("className"));
 		classes.setRegionId(1);
 		classes.setRegionName("唐山");
-		classes.setRoomLength(Double.valueOf(params.get("roomLength")));
-		classes.setRoomWidth(Double.valueOf(params.get("roomWidth")));
+		classes.setRoomLength(params.get("roomLength"));
+		classes.setRoomWidth(params.get("roomWidth"));
 		classes.setSchoolId(Integer.valueOf(params.get("schoolId")));
 		classes.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
 		classes.setVolume(Integer.valueOf(params.get("volume")));
@@ -70,15 +78,15 @@ public class ClassesServiceImpl implements ClassesService {
 	public List<ClassesMapper> alterClasses(Map<String, String> params) {
 		ClassesMapper classes = classes_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if (!StringUtils.isEmpty(params.get("bbLength")))
-			classes.setBbLength(Double.valueOf(params.get("bbLength")));
+			classes.setBbLength(params.get("bbLength"));
 		if (!StringUtils.isEmpty(params.get("experiment")))
 			classes.setExperiment(Integer.valueOf(params.get("experiment")));
 		if (!StringUtils.isEmpty(params.get("className")))
-			classes.setName(params.get("className"));
+			classes.setClassName(params.get("className"));
 		if (!StringUtils.isEmpty(params.get("roomLength")))
-			classes.setRoomLength(Double.valueOf(params.get("roomLength")));
+			classes.setRoomLength(params.get("roomLength"));
 		if (!StringUtils.isEmpty(params.get("roomWidth")))
-			classes.setRoomWidth(Double.valueOf(params.get("roomWidth")));
+			classes.setRoomWidth(params.get("roomWidth"));
 		if (!StringUtils.isEmpty(params.get("schoolId"))) {
 			classes.setSchoolId(Integer.valueOf(params.get("schoolId")));
 			classes.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
@@ -121,7 +129,7 @@ public class ClassesServiceImpl implements ClassesService {
 	 */
 	@Override
 	public List<ClassesMapper> findByNameLike(String name) {
-		return classes_dao.findByNameLike("%" + name + "%");
+		return classes_dao.findByClassNameLike("%" + name + "%");
 	}
 
 	/*
@@ -129,8 +137,16 @@ public class ClassesServiceImpl implements ClassesService {
 	 */
 	@Override
 	public List<SchoolVO> cascade() {
+		/*String str = redisUtil.get("cascade");
+		System.out.println(str+"这里测试！");
+		if(!StringUtils.isEmpty(str) ){
+			List<?> unserializeList = SerializeUtil.unserializeList(redisUtil.get("cascade").getBytes());
+			return (List<SchoolVO>) unserializeList;
+		}*/
+		
 		List<SchoolMapper> school = school_dao.findAll();
 		List<ClassesMapper> classes = classes_dao.findAll();
+		List<StudentMapper> student = student_dao.findAll();
 		List<SchoolVO> list = new ArrayList<>();
 		for (SchoolMapper school1 : school) {
 			SchoolVO po = new SchoolVO();
@@ -138,17 +154,36 @@ public class ClassesServiceImpl implements ClassesService {
 			po.setName(school1.getName());
 			for (ClassesMapper classes1 : classes) {
 				ClassesVO it = new ClassesVO();
-				it.setId(classes1.getId());
-				it.setName(classes1.getName());
+				for (StudentMapper student1 : student) {
+					StudentVO vo = new StudentVO();
+					if (classes1.getId() == student1.getClassesId()) {
+						if (it.getChildren() == null) {
+							it.setChildren(new ArrayList<StudentVO>());
+							vo.setId(student1.getId());
+							vo.setName(student1.getName());
+						}
+						vo.setId(student1.getId());
+						vo.setName(student1.getName());
+						it.getChildren().add(vo);
+					}
+				}
 				if (school1.getId() == classes1.getSchoolId()) {
 					if (po.getChildren() == null) {
 						po.setChildren(new ArrayList<ClassesVO>());
+						it.setId(classes1.getId());
+						it.setName(classes1.getClassName());
 					}
+					it.setId(classes1.getId());
+					it.setName(classes1.getClassName());
 					po.getChildren().add(it);
 				}
 			}
 			list.add(po);
 		}
+		/*byte[] serialize = SerializeUtil.serializeList(list);
+		System.out.println(serialize+"这里测试");
+		String str1 = new String(SerializeUtil.serializeList(list));
+		System.out.println(str1+"这里测试");*/
 		return list;
 	}
 
