@@ -27,6 +27,25 @@ public class UserMapper {
 	// 创建时间
 	@Column(name="gen_time")
 	private Date genTime;
+	//对应的学校
+	@Column(name="school_id")
+	private Integer schoolId;
+	//对应的班级
+	@Column(name="classes_id")
+	private Integer classesId;
+	
+	public Integer getSchoolId() {
+		return schoolId;
+	}
+	public void setSchoolId(Integer schoolId) {
+		this.schoolId = schoolId;
+	}
+	public Integer getClassesId() {
+		return classesId;
+	}
+	public void setClassesId(Integer classesId) {
+		this.classesId = classesId;
+	}
 	public Integer getId() {
 		return id;
 	}

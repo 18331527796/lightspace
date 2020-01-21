@@ -29,7 +29,10 @@ public class StudentServiceImpl implements StudentService{
 	 * 学生列表
 	 */
 	@Override
-	public List<StudentMapper> studentList() {
+	public List<StudentMapper> studentList(Map<String, String> params) {
+		String[] split = params.get("token").split("-");
+		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("4"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
 		return student_dao.findAll();
 	}
 
@@ -65,6 +68,9 @@ public class StudentServiceImpl implements StudentService{
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		System.out.println(params.get("chairHeight")+"--"+params.get("height")+"--"+params.get("sittingHeight"));
 		student_dao.save(student);
+		String[] split = params.get("token").split("-");
+		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("4"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
 		return student_dao.findAll();
 	}
 
@@ -72,8 +78,11 @@ public class StudentServiceImpl implements StudentService{
 	 * 删除学生
 	 */
 	@Override
-	public List<StudentMapper> deleteStudent(Integer id) {
+	public List<StudentMapper> deleteStudent(Integer id,String token) {
 		student_dao.deleteById(id);
+		String[] split = token.split("-");
+		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("4"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
 		return student_dao.findAll();
 	}
 
@@ -103,6 +112,9 @@ public class StudentServiceImpl implements StudentService{
 		}
 		System.out.println(params.get("chairHeight")+"--"+params.get("height")+"--"+params.get("sittingHeight"));
 		student_dao.save(student);
+		String[] split = params.get("token").split("-");
+		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("4"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
 		return student_dao.findAll();
 	}
 

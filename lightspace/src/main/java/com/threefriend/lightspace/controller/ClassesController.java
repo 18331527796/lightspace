@@ -44,7 +44,7 @@ public class ClassesController {
 	@PostMapping("/classesList")
 	@ResponseBody
 	public ResultVO classesList(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.findAllClasses());
+		return ResultVOUtil.success(classes_impl.findAllClasses(params));
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class ClassesController {
 	@PostMapping("/deleteClasses")
 	@ResponseBody
 	public ResultVO deleteClasses(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.deleteClasses(Integer.valueOf(params.get("id"))));
+		return ResultVOUtil.success(classes_impl.deleteClasses(Integer.valueOf(params.get("id")),params.get("token")));
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class ClassesController {
 	}
 	
 	/**
-	 * 级联
+	 * 级联（学校到学生）
 	 * @param params
 	 * @return
 	 */
@@ -113,7 +113,16 @@ public class ClassesController {
 		return ResultVOUtil.success(classes_impl.cascade());
 	}
 	
-	
+	/**
+	 * 级联 （学校到班级）
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/cascade1")
+	@ResponseBody
+	public ResultVO cascade1(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(classes_impl.cascade1());
+	}
 	
 
 }

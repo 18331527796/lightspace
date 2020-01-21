@@ -1,18 +1,18 @@
 package com.threefriend.lightspace.service.Impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
-import com.threefriend.lightspace.Exception.LightException;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.RightMapper;
 import com.threefriend.lightspace.mapper.RoleRightRelation;
@@ -53,8 +53,23 @@ public class UserServiceImpl implements UserService {
 	 * 新增用户
 	 */
 	@Override
-	public void insertUser(UserMapper user) {
+	public Object insertUser(Map<String, String> params) {
+		List<UserMapper> list = user_dao.findByLoginName(params.get("loginName"));
+		if(list.size()>=1)return ResultVOUtil.error(ResultEnum.LOGINNAME_REPEAT.getStatus(),ResultEnum.LOGINNAME_REPEAT.getMessage());
+		UserMapper user = new UserMapper();
+		user.setGenTime(new Date());
+		user.setName(params.get("name"));
+		user.setLoginName(params.get("loginName"));
+		user.setPassword(DigestUtils.md5DigestAsHex(params.get("password").getBytes()));
+		if(!StringUtils.isEmpty(params.get("wechatName")))user.setWechatName(params.get("wechatName"));
+		if(!StringUtils.isEmpty(params.get("schoolId")))user.setSchoolId(Integer.valueOf(params.get("schoolId")));
+		if(!StringUtils.isEmpty(params.get("classesId")))user.setClassesId(Integer.valueOf(params.get("classesId")));;
 		user_dao.save(user);
+		UserRoleRelation userRole= new UserRoleRelation();
+		userRole.setUserId(user.getId());
+		userRole.setRoleId(Integer.valueOf(params.get("roleId")));
+		user_role_dao.save(userRole);
+		return user_dao.findAll();
 	}
 
 	/*
@@ -73,15 +88,19 @@ public class UserServiceImpl implements UserService {
 		System.out.println(loginname + "+++++++" + password+"登录名+密码");
 		// 比如对密码进行 md5 加密
 		String md5 = DigestUtils.md5DigestAsHex(password.getBytes());
-		List<UserMapper> findByLoginName = user_dao.findByloginNameAndPassword(loginname, md5);
-		if(1 !=findByLoginName.size())return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
+		List<UserMapper> user = user_dao.findByloginNameAndPassword(loginname, md5);
+		if(1 !=user.size())return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
 		Map<String, String> token = new HashMap<String, String>();
 		//正式用的时候放开
-		String tokenstr = TokenUtils.getToken(findByLoginName.get(0).getId());
-		System.out.println(tokenstr+"-----------用户控制器 生成token");
+		String tokenstr = TokenUtils.getToken(user.get(0).getId());
 		//这里要用上面的tokenstr传递前端
+		redisUtil.setValueTime(tokenstr, user.get(0).getId().toString(),1800);//1800
+		Integer roleId = user_role_dao.findByUserId(user.get(0).getId()).get(0).getRoleId();
+		String mark="0";
+		if(roleId==3)mark=user.get(0).getSchoolId().toString();
+		if(roleId==4)mark=user.get(0).getClassesId().toString();
+		tokenstr=tokenstr+"-"+roleId+"-"+mark;
 		token.put("token", tokenstr);
-		redisUtil.setValueTime(tokenstr, findByLoginName.get(0).getId().toString(),1800);//1800
 		return ResultVOUtil.success(token);
 	}
 
@@ -89,13 +108,14 @@ public class UserServiceImpl implements UserService {
 	 * 菜单list
 	 */
 	@Override
-	public Object getUserRight(String token) {
+	public Object getUserRight(String tokenstr) {
+		String[] token = tokenstr.split("-");
 		// 根据token查找用户id
-		Integer userId = /* Integer.valueOf(redisUtils.get(token)) */2;
+		Integer userId =Integer.valueOf(redisUtil.get(token[0]))/* 2*/;
 		// 根据用户id查找对应的角色
 		List<UserRoleRelation> roleId = user_role_dao.findByUserId(userId);
 		// 根据角色查找相应的权限
-		List<RoleRightRelation> findByRoleId = role_right_dao.findByRoleId(roleId.get(0).getId());
+		List<RoleRightRelation> findByRoleId = role_right_dao.findByRoleId(roleId.get(0).getRoleId());
 		List<Integer> ids = new ArrayList<>();
 		for (RoleRightRelation roleRightRelation : findByRoleId) {
 			ids.add(roleRightRelation.getRightId());
@@ -122,6 +142,13 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return ResultVOUtil.success(trees);
+	}
+
+	@Override
+	public List<UserMapper> deleteUser(Integer id) {
+		user_dao.deleteById(id);
+		user_role_dao.deleteByUserId(id);
+		return user_dao.findAll();
 	}
 
 }

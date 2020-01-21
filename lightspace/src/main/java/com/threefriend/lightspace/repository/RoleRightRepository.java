@@ -6,6 +6,8 @@ import com.threefriend.lightspace.mapper.RoleRightRelation;
 import java.lang.Integer;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 /**
  * 角色权限操作层
  * 
@@ -15,4 +17,6 @@ import java.util.List;
 public interface RoleRightRepository extends JpaRepository<RoleRightRelation, Integer>{
 
 	List<RoleRightRelation> findByRoleId(Integer roleid);
+	@Transactional
+	void deleteByRoleId(Integer roleid);
 }

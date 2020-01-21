@@ -17,6 +17,7 @@ public enum ResultEnum {
     
     TOKEN_OVERDUE(10204,"TOKEN过期，请重新登录~"),
     
+    LOGINNAME_REPEAT(10205,"登录名已被占用~"),
     ;
 
     private Integer status;

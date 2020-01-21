@@ -26,8 +26,8 @@ public class StudentController {
 	 */
 	@PostMapping("/studentList")
 	@ResponseBody
-	public ResultVO studentList() {
-		return ResultVOUtil.success(student_Impl.studentList());
+	public ResultVO studentList(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(student_Impl.studentList(params));
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class StudentController {
 	@PostMapping("/deleteStudent")
 	@ResponseBody
 	public ResultVO deleteStudent(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.deleteStudent(Integer.valueOf(params.get("id"))));
+		return ResultVOUtil.success(student_Impl.deleteStudent(Integer.valueOf(params.get("id")),params.get("token")));
 	}
 	
 	/**

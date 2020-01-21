@@ -60,6 +60,8 @@ public class ClassesServiceImpl implements ClassesService {
 		if (!StringUtils.isEmpty(params.get("description")))
 			classes.setDescription(params.get("description"));
 		classes_dao.save(classes);
+		String[] split = params.get("token").split("-");
+		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));
 		return classes_dao.findAll();
 	}
 
@@ -67,7 +69,9 @@ public class ClassesServiceImpl implements ClassesService {
 	 * 班级列表
 	 */
 	@Override
-	public List<ClassesMapper> findAllClasses() {
+	public List<ClassesMapper> findAllClasses(Map<String, String> params) {
+		String[] split = params.get("token").split("-");
+		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));
 		return classes_dao.findAll();
 	}
 
@@ -96,6 +100,8 @@ public class ClassesServiceImpl implements ClassesService {
 		if (!StringUtils.isEmpty(params.get("description")))
 			classes.setDescription(params.get("description"));
 		classes_dao.save(classes);
+		String[] split = params.get("token").split("-");
+		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));
 		return classes_dao.findAll();
 	}
 
@@ -103,8 +109,10 @@ public class ClassesServiceImpl implements ClassesService {
 	 * 班级删除方法
 	 */
 	@Override
-	public List<ClassesMapper> deleteClasses(Integer id) {
+	public List<ClassesMapper> deleteClasses(Integer id,String token) {
 		classes_dao.deleteById(id);
+		String[] split = token.split("-");
+		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));
 		return classes_dao.findAll();
 	}
 
@@ -133,17 +141,11 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 
 	/*
-	 * 级联方法（服务于下拉框）
+	 * 级联方法（服务于下拉框）学校到学生
 	 */
 	@Override
 	public List<SchoolVO> cascade() {
-		/*String str = redisUtil.get("cascade");
-		System.out.println(str+"这里测试！");
-		if(!StringUtils.isEmpty(str) ){
-			List<?> unserializeList = SerializeUtil.unserializeList(redisUtil.get("cascade").getBytes());
-			return (List<SchoolVO>) unserializeList;
-		}*/
-		
+
 		List<SchoolMapper> school = school_dao.findAll();
 		List<ClassesMapper> classes = classes_dao.findAll();
 		List<StudentMapper> student = student_dao.findAll();
@@ -180,11 +182,36 @@ public class ClassesServiceImpl implements ClassesService {
 			}
 			list.add(po);
 		}
-		/*byte[] serialize = SerializeUtil.serializeList(list);
-		System.out.println(serialize+"这里测试");
-		String str1 = new String(SerializeUtil.serializeList(list));
-		System.out.println(str1+"这里测试");*/
 		return list;
 	}
 
+	/*
+	 * 级联方法（服务于下拉框）学校到班级
+	 */
+	@Override
+	public List<SchoolVO> cascade1() {
+		List<SchoolMapper> school = school_dao.findAll();
+		List<ClassesMapper> classes = classes_dao.findAll();
+		List<SchoolVO> list = new ArrayList<>();
+		for (SchoolMapper school1 : school) {
+			SchoolVO po = new SchoolVO();
+			po.setId(school1.getId());
+			po.setName(school1.getName());
+			for (ClassesMapper classes1 : classes) {
+				ClassesVO it = new ClassesVO();
+				if (school1.getId() == classes1.getSchoolId()) {
+					if (po.getChildren() == null) {
+						po.setChildren(new ArrayList<ClassesVO>());
+						it.setId(classes1.getId());
+						it.setName(classes1.getClassName());
+					}
+					it.setId(classes1.getId());
+					it.setName(classes1.getClassName());
+					po.getChildren().add(it);
+				}
+			}
+			list.add(po);
+		}
+		return list;
+	}
 }

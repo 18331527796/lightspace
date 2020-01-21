@@ -1,15 +1,19 @@
 package com.threefriend.lightspace.enums;
 
-public enum CorrectEnums {
+public enum CurrencyEnums {
 	
-	NO(0,"未校验"),
-	YES(1,"一校验");
+	ADMIN(1,"超级管理员"),
+	PROVINCE(2,"省级管理员"),
+	SCHOOL(3,"学校管理员"),
+	CLASS(4,"班级管理员"),
+	ORDINARY(5,"普通账号"),
+	;
 	
 	private Integer code;
 	
 	private String message;
 	
-	CorrectEnums(Integer code,String message){
+	CurrencyEnums(Integer code,String message){
 		this.code = code;
 		this.message = message;
 	}

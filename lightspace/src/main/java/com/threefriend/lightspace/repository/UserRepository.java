@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<UserMapper, Integer>{
 
 	List<UserMapper> findByloginNameAndPassword(String loginname, String password);
 
+	List<UserMapper> findByLoginName(String loginname);
 }

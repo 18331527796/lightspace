@@ -47,5 +47,16 @@ public class UserController {
 		return user_impl.getUserRight(params.get("token"));
 	}
 	
+	/**
+	 * 后台新增方法
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/addUser")
+	@ResponseBody
+	public Object addUser(@RequestParam Map<String, String> params) {
+		return user_impl.insertUser(params);
+	}
+	
 
 }
