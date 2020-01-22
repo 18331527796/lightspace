@@ -37,7 +37,7 @@ public class RoleController {
 	@PostMapping("/editRole")
 	@ResponseBody
 	public ResultVO editRole(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(role_impl.findById(Integer.valueOf(params.get("id"))));
+		return ResultVOUtil.success(role_impl.findById(Integer.valueOf(params.get("roleId"))));
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class RoleController {
 	@PostMapping("/deleteRole")
 	@ResponseBody
 	public ResultVO deleteRole(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(role_impl.deleteRole(Integer.valueOf(params.get("id"))));
+		return ResultVOUtil.success(role_impl.deleteRole(Integer.valueOf(params.get("roleId"))));
 	}
 	
 	/**

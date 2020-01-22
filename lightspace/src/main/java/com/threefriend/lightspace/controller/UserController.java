@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.threefriend.lightspace.service.Impl.UserServiceImpl;
+import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.vo.ResultVO;
 
 
 
@@ -54,8 +56,30 @@ public class UserController {
 	 */
 	@PostMapping("/addUser")
 	@ResponseBody
-	public Object addUser(@RequestParam Map<String, String> params) {
-		return user_impl.insertUser(params);
+	public ResultVO addUser(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(user_impl.insertUser(params));
+	}
+	
+	/**
+	 * 账户列表方法
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/userList")
+	@ResponseBody
+	public ResultVO userList() {
+		return ResultVOUtil.success(user_impl.findAll());
+	}
+	
+	/**
+	 * 账号删除方法
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/deleteUser")
+	@ResponseBody
+	public ResultVO userList(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(user_impl.deleteUser(Integer.valueOf(params.get("id"))));
 	}
 	
 

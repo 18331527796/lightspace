@@ -69,7 +69,7 @@ public class RecordServiceImpl implements RecordService{
 	 */
 	@Override
 	public List<RecordMapper> saveRecord(Map<String, String> params) {
-		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("id"))).get();
+		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("roleId"))).get();
 		if(!StringUtils.isEmpty(params.get("curvatureLeft")))record.setCurvatureLeft(params.get("curvatureLeft"));
 		if(!StringUtils.isEmpty(params.get("curvatureRight")))record.setCurvatureRight(params.get("curvatureRight"));
 		if(!StringUtils.isEmpty(params.get("cvaLeft")))record.setCvaLeft(params.get("cvaLeft"));
