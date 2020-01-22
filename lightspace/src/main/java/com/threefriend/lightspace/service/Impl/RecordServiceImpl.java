@@ -58,6 +58,9 @@ public class RecordServiceImpl implements RecordService{
 		record.setClassesId(Integer.valueOf(params.get("classId")));
 		record.setClassesName(class_dao.findById(Integer.valueOf(params.get("classId"))).get().getClassName());
 		record_dao.save(record);
+		String[] split = params.get("token").split("-");
+		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("4"))return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
 
@@ -78,6 +81,9 @@ public class RecordServiceImpl implements RecordService{
 		if(!StringUtils.isEmpty(params.get("visionLeft")))record.setVisionLeft(params.get("visionLeft"));
 		if(StringUtils.isEmpty(params.get("visionRight")))record.setVisionRight(params.get("visionRight"));
 		record_dao.save(record);
+		String[] split = params.get("token").split("-");
+		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("4"))return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
 
@@ -85,8 +91,11 @@ public class RecordServiceImpl implements RecordService{
 	 * 删除数据
 	 */
 	@Override
-	public List<RecordMapper> deleteRecord(Integer id) {
+	public List<RecordMapper> deleteRecord(Integer id,String token) {
 		record_dao.deleteById(id);
+		String[] split = token.split("-");
+		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("4"))return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
 
@@ -102,7 +111,10 @@ public class RecordServiceImpl implements RecordService{
 	 * 数据列表
 	 */
 	@Override
-	public List<RecordMapper> recordList() {
+	public List<RecordMapper> recordList(String token) {
+		String[] split = token.split("-");
+		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("4"))return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
 

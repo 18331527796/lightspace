@@ -15,4 +15,8 @@ import com.threefriend.lightspace.mapper.RecordMapper;
 public interface RecordRepository extends JpaRepository<RecordMapper, Integer>{
 	
 	List<RecordMapper> findAllByStudentNameLike(String name);
+	
+	List<RecordMapper> findByClassesId(Integer classId);
+	
+	List<RecordMapper> findBySchoolId(Integer schoolId);
 }

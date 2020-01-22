@@ -15,11 +15,11 @@ public interface RecordService {
 	//修改记录
 	public List<RecordMapper> saveRecord(Map<String, String> params);
 	//删除记录
-	public List<RecordMapper> deleteRecord(Integer id);
+	public List<RecordMapper> deleteRecord(Integer id,String token);
 	//按照id查询记录
 	public RecordMapper editRecord(Integer id);
 	//记录列表
-	public List<RecordMapper> recordList();
+	public List<RecordMapper> recordList(String token);
 	//模糊
 	public List<RecordMapper> findByName(String name);
 }

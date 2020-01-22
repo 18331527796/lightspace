@@ -59,7 +59,7 @@ public class RecordController {
 	@PostMapping("/deleteRecord")
 	@ResponseBody
 	public ResultVO deleteRecord(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.deleteRecord(Integer.valueOf(params.get("id"))));
+		return ResultVOUtil.success(record_impl.deleteRecord(Integer.valueOf(params.get("id")),params.get("token")));
 	}
 	
 	/**
@@ -69,8 +69,8 @@ public class RecordController {
 	 */
 	@PostMapping("/recordList")
 	@ResponseBody
-	public ResultVO recordList() {
-		return ResultVOUtil.success(record_impl.recordList());
+	public ResultVO recordList(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(record_impl.recordList(params.get("token")));
 	}
 	
 	/**
