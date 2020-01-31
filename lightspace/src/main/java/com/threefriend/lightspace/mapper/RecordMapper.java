@@ -1,12 +1,14 @@
 package com.threefriend.lightspace.mapper;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * 学生表
+ * 基础数据表
  * 
  * @author Administrator
  *
@@ -44,22 +46,22 @@ public class RecordMapper {
 	private String studentName;
 	// 左眼裸眼视力
 	@Column(name = "vision_left")
-	private String visionLeft;
+	private Double visionLeft;
 	// 右眼裸眼视力
 	@Column(name = "vision_right")
-	private String visionRight;
+	private Double visionRight;
 	// 左眼眼轴长度
 	@Column(name = "eye_axis_length_left")
-	private String eyeAxisLengthLeft;
+	private Double eyeAxisLengthLeft;
 	// 右眼眼轴长度
 	@Column(name = "eye_axis_length_right")
-	private String eyeAxisLengthRight;
+	private Double eyeAxisLengthRight;
 	// 左眼曲率
 	@Column(name = "curvature_left")
-	private String curvatureLeft;
+	private Double curvatureLeft;
 	// 右眼曲率
 	@Column(name = "curvature_right")
-	private String curvatureRight;
+	private Double curvatureRight;
 	// 左眼屈光度
 	@Column(name = "diopter_left")
 	private String diopterLeft;
@@ -68,13 +70,21 @@ public class RecordMapper {
 	private String diopterRight;
 	//右眼矫正视力
 	@Column(name = "cva_right")
-	private String cvaRight;
+	private Double cvaRight;
 	//左眼矫正视力
 	@Column(name = "cva_left")
-	private String cvaLeft;
+	private Double cvaLeft;
+	//创建时间
+	@Column(name = "gen_time")
+	private Date genTime;
 	
 	
-	
+	public Date getGenTime() {
+		return genTime;
+	}
+	public void setGenTime(Date genTime) {
+		this.genTime = genTime;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -86,66 +96,6 @@ public class RecordMapper {
 	}
 	public void setStudentId(Integer studentId) {
 		this.studentId = studentId;
-	}
-	public String getVisionLeft() {
-		return visionLeft;
-	}
-	public void setVisionLeft(String visionLeft) {
-		this.visionLeft = visionLeft;
-	}
-	public String getVisionRight() {
-		return visionRight;
-	}
-	public void setVisionRight(String visionRight) {
-		this.visionRight = visionRight;
-	}
-	public String getEyeAxisLengthLeft() {
-		return eyeAxisLengthLeft;
-	}
-	public void setEyeAxisLengthLeft(String eyeAxisLengthLeft) {
-		this.eyeAxisLengthLeft = eyeAxisLengthLeft;
-	}
-	public String getEyeAxisLengthRight() {
-		return eyeAxisLengthRight;
-	}
-	public void setEyeAxisLengthRight(String eyeAxisLengthRight) {
-		this.eyeAxisLengthRight = eyeAxisLengthRight;
-	}
-	public String getCurvatureLeft() {
-		return curvatureLeft;
-	}
-	public void setCurvatureLeft(String curvatureLeft) {
-		this.curvatureLeft = curvatureLeft;
-	}
-	public String getCurvatureRight() {
-		return curvatureRight;
-	}
-	public void setCurvatureRight(String curvatureRight) {
-		this.curvatureRight = curvatureRight;
-	}
-	public String getDiopterLeft() {
-		return diopterLeft;
-	}
-	public void setDiopterLeft(String diopterLeft) {
-		this.diopterLeft = diopterLeft;
-	}
-	public String getCvaRight() {
-		return cvaRight;
-	}
-	public void setCvaRight(String cvaRight) {
-		this.cvaRight = cvaRight;
-	}
-	public String getCvaLeft() {
-		return cvaLeft;
-	}
-	public void setCvaLeft(String cvaLeft) {
-		this.cvaLeft = cvaLeft;
-	}
-	public String getDiopterRight() {
-		return diopterRight;
-	}
-	public void setDiopterRight(String diopterRight) {
-		this.diopterRight = diopterRight;
 	}
 	public String getRegionName() {
 		return regionName;
@@ -188,6 +138,66 @@ public class RecordMapper {
 	}
 	public void setStudentName(String studentName) {
 		this.studentName = studentName;
+	}
+	public Double getVisionLeft() {
+		return visionLeft;
+	}
+	public void setVisionLeft(Double visionLeft) {
+		this.visionLeft = visionLeft;
+	}
+	public Double getVisionRight() {
+		return visionRight;
+	}
+	public void setVisionRight(Double visionRight) {
+		this.visionRight = visionRight;
+	}
+	public Double getEyeAxisLengthLeft() {
+		return eyeAxisLengthLeft;
+	}
+	public void setEyeAxisLengthLeft(Double eyeAxisLengthLeft) {
+		this.eyeAxisLengthLeft = eyeAxisLengthLeft;
+	}
+	public Double getEyeAxisLengthRight() {
+		return eyeAxisLengthRight;
+	}
+	public void setEyeAxisLengthRight(Double eyeAxisLengthRight) {
+		this.eyeAxisLengthRight = eyeAxisLengthRight;
+	}
+	public Double getCurvatureLeft() {
+		return curvatureLeft;
+	}
+	public void setCurvatureLeft(Double curvatureLeft) {
+		this.curvatureLeft = curvatureLeft;
+	}
+	public Double getCurvatureRight() {
+		return curvatureRight;
+	}
+	public void setCurvatureRight(Double curvatureRight) {
+		this.curvatureRight = curvatureRight;
+	}
+	public String getDiopterLeft() {
+		return diopterLeft;
+	}
+	public void setDiopterLeft(String diopterLeft) {
+		this.diopterLeft = diopterLeft;
+	}
+	public String getDiopterRight() {
+		return diopterRight;
+	}
+	public void setDiopterRight(String diopterRight) {
+		this.diopterRight = diopterRight;
+	}
+	public Double getCvaRight() {
+		return cvaRight;
+	}
+	public void setCvaRight(Double cvaRight) {
+		this.cvaRight = cvaRight;
+	}
+	public Double getCvaLeft() {
+		return cvaLeft;
+	}
+	public void setCvaLeft(Double cvaLeft) {
+		this.cvaLeft = cvaLeft;
 	}
 	
 	

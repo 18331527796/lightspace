@@ -46,7 +46,7 @@ public class StudentMapper {
 	private String height;
 	// 坐姿身高
 	@Column(name = "sitting_height")
-	private String sittingHeight;
+	private Double sittingHeight;
 	// 坐姿用椅高度
 	@Column(name = "chair_height")
 	private String chairHeight;
@@ -124,10 +124,11 @@ public class StudentMapper {
 	public void setHeight(String height) {
 		this.height = height;
 	}
-	public String getSittingHeight() {
+	
+	public Double getSittingHeight() {
 		return sittingHeight;
 	}
-	public void setSittingHeight(String sittingHeight) {
+	public void setSittingHeight(Double sittingHeight) {
 		this.sittingHeight = sittingHeight;
 	}
 	public String getChairHeight() {

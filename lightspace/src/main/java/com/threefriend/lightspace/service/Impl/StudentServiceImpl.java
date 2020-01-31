@@ -63,7 +63,7 @@ public class StudentServiceImpl implements StudentService{
 		student.setRegionName("唐山");
 		student.setSchoolId(Integer.valueOf(params.get("schoolId")));
 		student.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
-		student.setSittingHeight(params.get("sittingHeight"));
+		student.setSittingHeight(Double.valueOf(params.get("sittingHeight")));
 		student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		System.out.println(params.get("chairHeight")+"--"+params.get("height")+"--"+params.get("sittingHeight"));
@@ -99,7 +99,7 @@ public class StudentServiceImpl implements StudentService{
 		if(!StringUtils.isEmpty(params.get("height")))student.setHeight(params.get("height"));
 		if(!StringUtils.isEmpty(params.get("name")))student.setName(params.get("name"));
 		if(!StringUtils.isEmpty(params.get("nature")))student.setNature(params.get("nature"));
-		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
+		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(Double.valueOf(params.get("sittingHeight")));
 		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		if(!StringUtils.isEmpty(params.get("schoolId"))) {

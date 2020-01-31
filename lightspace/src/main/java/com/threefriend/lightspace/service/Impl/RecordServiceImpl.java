@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.service.Impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,16 +40,16 @@ public class RecordServiceImpl implements RecordService{
 	@Override
 	public List<RecordMapper> addRecord(Map<String, String> params) {
 		RecordMapper record = new RecordMapper();
-		if(!StringUtils.isEmpty(params.get("curvatureLeft")))record.setCurvatureLeft(params.get("curvatureLeft"));
-		if(!StringUtils.isEmpty(params.get("curvatureRight")))record.setCurvatureRight(params.get("curvatureRight"));
-		if(!StringUtils.isEmpty(params.get("cvaLeft")))record.setCvaLeft(params.get("cvaLeft"));
-		if(!StringUtils.isEmpty(params.get("cvaRight")))record.setCvaRight(params.get("cvaRight"));
+		if(!StringUtils.isEmpty(params.get("curvatureLeft")))record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
+		if(!StringUtils.isEmpty(params.get("curvatureRight")))record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
+		if(!StringUtils.isEmpty(params.get("cvaLeft")))record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
+		if(!StringUtils.isEmpty(params.get("cvaRight")))record.setCvaRight(Double.valueOf(params.get("cvaRight")));
 		if(!StringUtils.isEmpty(params.get("diopterLeft")))record.setDiopterLeft(params.get("diopterLeft"));
 		if(!StringUtils.isEmpty(params.get("diopterRight")))record.setDiopterRight(params.get("diopterRight"));
-		if(!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))record.setEyeAxisLengthLeft(params.get("eyeAxisLengthLeft"));
-		if(!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))record.setEyeAxisLengthRight(params.get("eyeAxisLengthRight"));
-		if(!StringUtils.isEmpty(params.get("visionLeft")))record.setVisionLeft(params.get("visionLeft"));
-		if(!StringUtils.isEmpty(params.get("visionRight")))record.setVisionRight(params.get("visionRight"));
+		if(!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
+		if(!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
+		if(!StringUtils.isEmpty(params.get("visionLeft")))record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
+		if(!StringUtils.isEmpty(params.get("visionRight")))record.setVisionRight(Double.valueOf(params.get("visionRight")));
 		record.setRegionId(1);
 		record.setRegionName("唐山");
 		record.setStudentId(Integer.valueOf(params.get("studentId")));
@@ -57,6 +58,7 @@ public class RecordServiceImpl implements RecordService{
 		record.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
 		record.setClassesId(Integer.valueOf(params.get("classId")));
 		record.setClassesName(class_dao.findById(Integer.valueOf(params.get("classId"))).get().getClassName());
+		record.setGenTime(new Date());
 		record_dao.save(record);
 		String[] split = params.get("token").split("-");
 		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));
@@ -70,16 +72,16 @@ public class RecordServiceImpl implements RecordService{
 	@Override
 	public List<RecordMapper> saveRecord(Map<String, String> params) {
 		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("roleId"))).get();
-		if(!StringUtils.isEmpty(params.get("curvatureLeft")))record.setCurvatureLeft(params.get("curvatureLeft"));
-		if(!StringUtils.isEmpty(params.get("curvatureRight")))record.setCurvatureRight(params.get("curvatureRight"));
-		if(!StringUtils.isEmpty(params.get("cvaLeft")))record.setCvaLeft(params.get("cvaLeft"));
-		if(!StringUtils.isEmpty(params.get("cvaRight")))record.setCvaRight(params.get("cvaRight"));
+		if(!StringUtils.isEmpty(params.get("curvatureLeft")))record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
+		if(!StringUtils.isEmpty(params.get("curvatureRight")))record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
+		if(!StringUtils.isEmpty(params.get("cvaLeft")))record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
+		if(!StringUtils.isEmpty(params.get("cvaRight")))record.setCvaRight(Double.valueOf(params.get("cvaRight")));
 		if(!StringUtils.isEmpty(params.get("diopterLeft")))record.setDiopterLeft(params.get("diopterLeft"));
 		if(!StringUtils.isEmpty(params.get("diopterRight")))record.setDiopterRight(params.get("diopterRight"));
-		if(!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))record.setEyeAxisLengthLeft(params.get("eyeAxisLengthLeft"));
-		if(!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))record.setEyeAxisLengthRight(params.get("eyeAxisLengthRight"));
-		if(!StringUtils.isEmpty(params.get("visionLeft")))record.setVisionLeft(params.get("visionLeft"));
-		if(StringUtils.isEmpty(params.get("visionRight")))record.setVisionRight(params.get("visionRight"));
+		if(!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
+		if(!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
+		if(!StringUtils.isEmpty(params.get("visionLeft")))record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
+		if(!StringUtils.isEmpty(params.get("visionRight")))record.setVisionRight(Double.valueOf(params.get("visionRight")));
 		record_dao.save(record);
 		String[] split = params.get("token").split("-");
 		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));

@@ -4,6 +4,7 @@ package com.threefriend.lightspace.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.threefriend.lightspace.mapper.RecordMapper;
 
@@ -19,4 +20,6 @@ public interface RecordRepository extends JpaRepository<RecordMapper, Integer>{
 	List<RecordMapper> findByClassesId(Integer classId);
 	
 	List<RecordMapper> findBySchoolId(Integer schoolId);
+	
+	RecordMapper findTopByStudentIdOrderByGenTime(Integer id);
 }
