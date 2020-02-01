@@ -128,4 +128,12 @@ public class RecordServiceImpl implements RecordService{
 		return record_dao.findAllByStudentNameLike("%"+name+"%");
 	}
 
+	/* 
+	 * 按照学生id查询最新的基础数据
+	 */
+	@Override
+	public RecordMapper findByStudentId(Integer id) {
+		return record_dao.findTopByStudentIdOrderByGenTime(id);
+	}
+
 }

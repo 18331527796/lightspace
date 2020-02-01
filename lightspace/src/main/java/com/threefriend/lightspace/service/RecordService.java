@@ -22,4 +22,6 @@ public interface RecordService {
 	public List<RecordMapper> recordList(String token);
 	//模糊
 	public List<RecordMapper> findByName(String name);
+	//按照学生id查询最新的基础数据
+	public RecordMapper findByStudentId(Integer id);
 }

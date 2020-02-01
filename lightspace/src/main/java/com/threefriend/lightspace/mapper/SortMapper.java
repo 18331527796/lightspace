@@ -22,7 +22,10 @@ public class SortMapper {
 	//班级id
 	@Column(name="class_id")
 	private Integer classId;
-	//班级id
+	//type
+	@Column(name="type")
+	private Integer type;
+	//座位表
 	@Column(name="sort")
 	private String sort;
 	//创建时间
@@ -52,6 +55,12 @@ public class SortMapper {
 	}
 	public void setSort(String sort) {
 		this.sort = sort;
+	}
+	public Integer getType() {
+		return type;
+	}
+	public void setType(Integer type) {
+		this.type = type;
 	}
 	
 }

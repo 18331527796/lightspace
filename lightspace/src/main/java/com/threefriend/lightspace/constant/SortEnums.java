@@ -1,5 +1,10 @@
 package com.threefriend.lightspace.constant;
 
+/**
+ * 
+ * 排座的类型
+ *（需要注意 type 为类型code number 为每行的人数）
+ */
 public enum SortEnums {
 	
 	TYPEONE(1,8),

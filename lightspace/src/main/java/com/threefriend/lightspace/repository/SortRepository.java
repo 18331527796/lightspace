@@ -11,4 +11,5 @@ import com.threefriend.lightspace.mapper.SortMapper;
  */
 public interface SortRepository extends JpaRepository<SortMapper, Integer>{
 
+	SortMapper findTopByClassIdAndTypeOrderByGenTime(Integer classid,Integer type);
 }

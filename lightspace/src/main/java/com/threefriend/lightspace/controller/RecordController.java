@@ -84,5 +84,15 @@ public class RecordController {
 		return ResultVOUtil.success(record_impl.findByName(params.get("name")));
 	}
 	
+	/**
+	 * 按照学生id查询最新的基础数据
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/studentRecord")
+	@ResponseBody
+	public ResultVO studentRecord(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(record_impl.findByStudentId(Integer.valueOf(params.get("id"))));
+	}
 	
 }

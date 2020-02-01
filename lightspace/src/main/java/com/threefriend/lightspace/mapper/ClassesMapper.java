@@ -49,6 +49,17 @@ public class ClassesMapper {
 	private Integer regionId;
 	// 备注
 	private String description;
+	// 保存座位时间
+	@Column(name="save_sort_time")
+	private Integer saveSortTime;
+	
+	
+	public Integer getSaveSortTime() {
+		return saveSortTime;
+	}
+	public void setSaveSortTime(Integer saveSortTime) {
+		this.saveSortTime = saveSortTime;
+	}
 	public Integer getId() {
 		return id;
 	}

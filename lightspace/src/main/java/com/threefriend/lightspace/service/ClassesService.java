@@ -26,4 +26,6 @@ public interface ClassesService {
 	public List<SchoolVO> cascade();
 	//方便于下拉框的方法 （学校——>班级）
 	public List<SchoolVO> cascade1();
+	//设置座位保存时间
+	public void setSaveTime(Integer classId,Integer time);
 }

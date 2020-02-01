@@ -11,6 +11,6 @@ import com.threefriend.lightspace.vo.SortVO;
  */
 public interface SortService {
 	
-	public List<SortVO> studentSort(Integer classId,Integer type);
+	public List<List<SortVO>> studentSort(Integer classId,Integer type);
 
 }

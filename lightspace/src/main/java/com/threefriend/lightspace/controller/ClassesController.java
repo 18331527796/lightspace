@@ -124,5 +124,16 @@ public class ClassesController {
 		return ResultVOUtil.success(classes_impl.cascade1());
 	}
 	
+	/**
+	 * 设置座位保存时间
+	 * 
+	 */
+	@PostMapping("/setSaveTime")
+	@ResponseBody
+	public ResultVO setSaveTime(@RequestParam Map<String, String> params) {
+		classes_impl.setSaveTime(Integer.valueOf(params.get("classId")), Integer.valueOf(params.get("time")));
+		return ResultVOUtil.success();
+	}
+	
 
 }

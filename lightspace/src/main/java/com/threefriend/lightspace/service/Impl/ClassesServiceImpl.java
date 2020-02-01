@@ -214,4 +214,14 @@ public class ClassesServiceImpl implements ClassesService {
 		}
 		return list;
 	}
+
+	/* 
+	 * 设置座位保存时间
+	 */
+	@Override
+	public void setSaveTime(Integer classId,Integer time) {
+		ClassesMapper classesMapper = classes_dao.findById(classId).get();
+		classesMapper.setSaveSortTime(time*1000);
+		classes_dao.save(classesMapper);
+	}
 }
