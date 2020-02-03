@@ -95,4 +95,15 @@ public class RecordController {
 		return ResultVOUtil.success(record_impl.findByStudentId(Integer.valueOf(params.get("id"))));
 	}
 	
+	/**
+	 * 按照学生id查询所有的基础数据
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/studentRecords")
+	@ResponseBody
+	public ResultVO studentRecords(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(record_impl.findAllByStudentId(Integer.valueOf(params.get("studentId"))));
+	}
+	
 }

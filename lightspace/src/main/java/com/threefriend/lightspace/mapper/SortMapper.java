@@ -31,6 +31,9 @@ public class SortMapper {
 	//创建时间
 	@Column(name="gen_time")
 	private Date  genTime;
+	//保存时间
+	@Column(name="end_time")
+	private Date  endTime;
 	
 	public Integer getId() {
 		return id;
@@ -61,6 +64,12 @@ public class SortMapper {
 	}
 	public void setType(Integer type) {
 		this.type = type;
+	}
+	public Date getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 	
 }

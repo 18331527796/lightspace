@@ -42,37 +42,14 @@ public class SortServiceImpl implements SortService {
 
 	/*
 	 * 学生排座
+	 * 通过传输的班级id 排座类型 保存时间来返回排座的数据
+	 * 按照身高查询学生的顺序 再按照学生的平均裸眼视力排序 封装数据返回前台
+	 * 时间单位 传输过来单位为（秒）
 	 */
 	@Override
-	public List<List<SortVO>> studentSort(Integer classId, Integer type) {
-		ClassesMapper classesMapper = class_dao.findById(classId).get();
-		Integer time=0;
-		if(classesMapper.getSaveSortTime()!=null&&classesMapper.getSaveSortTime()!=0) {
-			time=classesMapper.getSaveSortTime();
-		}else {
-			time=604800000;
-		}
-		SortMapper sortmapper = sort_dao.findTopByClassIdAndTypeOrderByGenTime(classId, type);
-		if (sortmapper != null && new Date().getTime() - sortmapper.getGenTime().getTime() < time) {
-			// 排座完成后的
-			List<List<SortVO>> end = new ArrayList<>();
-			String[] split = sortmapper.getSort().split("-");
-			for (String string : split) {
-				if(StringUtils.isEmpty(string))continue;
-				List<SortVO> temporary=new ArrayList<>();
-				String[] split2 = string.split(",");
-				for (String string2 : split2) {
-					if(StringUtils.isEmpty(string2))continue;
-					SortVO vo=new SortVO();
-					StudentMapper studentMapper = student_dao.findById(Integer.valueOf(string2)).get();
-					vo.setStudentId(Integer.valueOf(string2));
-					vo.setStudentName(studentMapper.getName());
-					temporary.add(vo);
-				}
-				end.add(temporary);
-			}
-			return end;
-		} else {
+	public List<List<SortVO>> studentSort(Integer classId, Integer type,Integer time) {
+		time=time*1000;
+		Date nowtime=new Date();
 			Integer number = 0;
 			// 根据不同的type来确定一行多少人 在进行下列的数据处理
 			if (type == SortEnums.TYPEONE.getType())
@@ -130,11 +107,38 @@ public class SortServiceImpl implements SortService {
 			 SortMapper po = new SortMapper(); 
 			 po.setClassId(classId); 
 			 po.setType(type);
-			 po.setGenTime(new Date()); 
+			 po.setGenTime(nowtime); 
+			 po.setEndTime(new Date(nowtime.getTime()+time));
 			 po.setSort(sortMark.toString());
 			 sort_dao.save(po);
 			return end;
 		}
+
+	@Override
+	public List<List<SortVO>> sortShow(Integer Id) {
+		SortMapper sortmapper = sort_dao.findById(Id).get();
+		List<List<SortVO>> end = new ArrayList<>();
+			// 排座完成后的
+			String[] split = sortmapper.getSort().split("-");
+			for (String string : split) {
+				if(StringUtils.isEmpty(string))continue;
+				List<SortVO> temporary=new ArrayList<>();
+				String[] split2 = string.split(",");
+				for (String string2 : split2) {
+					if(StringUtils.isEmpty(string2))continue;
+					SortVO vo=new SortVO();
+					StudentMapper studentMapper = student_dao.findById(Integer.valueOf(string2)).get();
+					vo.setStudentId(Integer.valueOf(string2));
+					vo.setStudentName(studentMapper.getName());
+					temporary.add(vo);
+				}
+				end.add(temporary);
+			}
+		return end;
 	}
 
+	@Override
+	public List<SortMapper> byClassId(Integer classId) {
+		return sort_dao.findByClassId(classId);
+	}
 }

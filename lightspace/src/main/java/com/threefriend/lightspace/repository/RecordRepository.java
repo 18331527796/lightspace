@@ -22,4 +22,6 @@ public interface RecordRepository extends JpaRepository<RecordMapper, Integer>{
 	List<RecordMapper> findBySchoolId(Integer schoolId);
 	
 	RecordMapper findTopByStudentIdOrderByGenTime(Integer id);
+	//按照学生id查询所有的数据
+	List<RecordMapper> findAllByStudentId(Integer id);
 }

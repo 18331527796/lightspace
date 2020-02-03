@@ -136,4 +136,13 @@ public class RecordServiceImpl implements RecordService{
 		return record_dao.findTopByStudentIdOrderByGenTime(id);
 	}
 
+	/* 
+	 * 按照学生id查询所有的数据
+	 * 
+	 */
+	@Override
+	public List<RecordMapper> findAllByStudentId(Integer id) {
+		return record_dao.findAllByStudentId(id);
+	}
+
 }
