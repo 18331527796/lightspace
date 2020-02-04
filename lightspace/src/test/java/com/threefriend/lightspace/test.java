@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.threefriend.lightspace.constant.VisionEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.RecordRepository;
@@ -40,18 +41,8 @@ public class test {
 	@Test
 	public void test() {
 		
-		/*List<StudentMapper> findByClassesIdOrderBySittingHeight = student_dao.findByClassesIdOrderBySittingHeightDesc(18);
-		List<Integer> ids = new ArrayList<>();
-		for (StudentMapper studentMapper : findByClassesIdOrderBySittingHeight) {
-			ids.add(studentMapper.getId());
-		}
-		List<RecordMapper> findAllBylastGenTime = record_dao.findAllById(ids);
-		System.out.println(findAllBylastGenTime.size()+"!!!!!!!!!!!!!!");
-		for (RecordMapper recordMapper : findAllBylastGenTime) {
-			System.out.println(recordMapper.getStudentName());
-			System.out.println(recordMapper.getGenTime());
-			
-		}*/
+		int i = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(22,0.8,3.0);
+		System.out.println(i);
 	}
 	
 	/*@Test

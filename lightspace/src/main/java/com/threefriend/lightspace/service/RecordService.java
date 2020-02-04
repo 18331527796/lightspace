@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.threefriend.lightspace.mapper.RecordMapper;
+import com.threefriend.lightspace.vo.StatisticsVO;
 
 /**
  * 基础数据业务逻辑接口
@@ -26,4 +27,8 @@ public interface RecordService {
 	public RecordMapper findByStudentId(Integer id);
 	//按照学生id查询所有的数据
 	public List<RecordMapper> findAllByStudentId(Integer id);
+	//按照学校数据分析
+	public StatisticsVO schoolStatistics(Integer schoolId);
+	//按照班级数据分析
+	public StatisticsVO classStatistics(Integer classId);
 }

@@ -15,5 +15,7 @@ public interface SortRepository extends JpaRepository<SortMapper, Integer>{
 
 	SortMapper findTopByClassIdAndTypeOrderByGenTime(Integer classid,Integer type);
 	
-	List<SortMapper> findByClassId(Integer classId);
+	List<SortMapper> findByClassIdOrderByGenTimeDesc(Integer classId);
+	
+	int countByClassId(Integer classId);
 }

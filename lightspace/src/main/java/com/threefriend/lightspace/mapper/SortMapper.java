@@ -19,6 +19,8 @@ public class SortMapper {
 	@GeneratedValue
 	//主键
 	private Integer id;
+	//名称
+	private String name;
 	//班级id
 	@Column(name="class_id")
 	private Integer classId;
@@ -70,6 +72,12 @@ public class SortMapper {
 	}
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

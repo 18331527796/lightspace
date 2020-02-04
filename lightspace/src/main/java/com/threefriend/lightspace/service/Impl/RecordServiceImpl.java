@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.constant.VisionEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
@@ -15,13 +16,14 @@ import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.RecordService;
+import com.threefriend.lightspace.vo.StatisticsVO;
 
 /**
  * 基础数据业务逻辑实现类
  */
 @Service
-public class RecordServiceImpl implements RecordService{
-	
+public class RecordServiceImpl implements RecordService {
+
 	@Autowired
 	private RecordRepository record_dao;
 	@Autowired
@@ -32,24 +34,33 @@ public class RecordServiceImpl implements RecordService{
 	private StudentRepository student_dao;
 	@Autowired
 	private RegionRepository region_dao;
-	
-	
-	/* 
+
+	/*
 	 * 新增数据
 	 */
 	@Override
 	public List<RecordMapper> addRecord(Map<String, String> params) {
 		RecordMapper record = new RecordMapper();
-		if(!StringUtils.isEmpty(params.get("curvatureLeft")))record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
-		if(!StringUtils.isEmpty(params.get("curvatureRight")))record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
-		if(!StringUtils.isEmpty(params.get("cvaLeft")))record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
-		if(!StringUtils.isEmpty(params.get("cvaRight")))record.setCvaRight(Double.valueOf(params.get("cvaRight")));
-		if(!StringUtils.isEmpty(params.get("diopterLeft")))record.setDiopterLeft(params.get("diopterLeft"));
-		if(!StringUtils.isEmpty(params.get("diopterRight")))record.setDiopterRight(params.get("diopterRight"));
-		if(!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
-		if(!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
-		if(!StringUtils.isEmpty(params.get("visionLeft")))record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
-		if(!StringUtils.isEmpty(params.get("visionRight")))record.setVisionRight(Double.valueOf(params.get("visionRight")));
+		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
+			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
+		if (!StringUtils.isEmpty(params.get("curvatureRight")))
+			record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
+		if (!StringUtils.isEmpty(params.get("cvaLeft")))
+			record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
+		if (!StringUtils.isEmpty(params.get("cvaRight")))
+			record.setCvaRight(Double.valueOf(params.get("cvaRight")));
+		if (!StringUtils.isEmpty(params.get("diopterLeft")))
+			record.setDiopterLeft(params.get("diopterLeft"));
+		if (!StringUtils.isEmpty(params.get("diopterRight")))
+			record.setDiopterRight(params.get("diopterRight"));
+		if (!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))
+			record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
+		if (!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))
+			record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
+		if (!StringUtils.isEmpty(params.get("visionLeft")))
+			record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
+		if (!StringUtils.isEmpty(params.get("visionRight")))
+			record.setVisionRight(Double.valueOf(params.get("visionRight")));
 		record.setRegionId(1);
 		record.setRegionName("唐山");
 		record.setStudentId(Integer.valueOf(params.get("studentId")));
@@ -61,47 +72,63 @@ public class RecordServiceImpl implements RecordService{
 		record.setGenTime(new Date());
 		record_dao.save(record);
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("4"))return record_dao.findByClassesId(Integer.valueOf(split[2]));
+		if (split[1].equals("3"))
+			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if (split[1].equals("4"))
+			return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
 
-	/* 
+	/*
 	 * 修改后保存数据
 	 */
 	@Override
 	public List<RecordMapper> saveRecord(Map<String, String> params) {
 		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("roleId"))).get();
-		if(!StringUtils.isEmpty(params.get("curvatureLeft")))record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
-		if(!StringUtils.isEmpty(params.get("curvatureRight")))record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
-		if(!StringUtils.isEmpty(params.get("cvaLeft")))record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
-		if(!StringUtils.isEmpty(params.get("cvaRight")))record.setCvaRight(Double.valueOf(params.get("cvaRight")));
-		if(!StringUtils.isEmpty(params.get("diopterLeft")))record.setDiopterLeft(params.get("diopterLeft"));
-		if(!StringUtils.isEmpty(params.get("diopterRight")))record.setDiopterRight(params.get("diopterRight"));
-		if(!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
-		if(!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
-		if(!StringUtils.isEmpty(params.get("visionLeft")))record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
-		if(!StringUtils.isEmpty(params.get("visionRight")))record.setVisionRight(Double.valueOf(params.get("visionRight")));
+		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
+			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
+		if (!StringUtils.isEmpty(params.get("curvatureRight")))
+			record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
+		if (!StringUtils.isEmpty(params.get("cvaLeft")))
+			record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
+		if (!StringUtils.isEmpty(params.get("cvaRight")))
+			record.setCvaRight(Double.valueOf(params.get("cvaRight")));
+		if (!StringUtils.isEmpty(params.get("diopterLeft")))
+			record.setDiopterLeft(params.get("diopterLeft"));
+		if (!StringUtils.isEmpty(params.get("diopterRight")))
+			record.setDiopterRight(params.get("diopterRight"));
+		if (!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))
+			record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
+		if (!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))
+			record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
+		if (!StringUtils.isEmpty(params.get("visionLeft")))
+			record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
+		if (!StringUtils.isEmpty(params.get("visionRight")))
+			record.setVisionRight(Double.valueOf(params.get("visionRight")));
 		record_dao.save(record);
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("4"))return record_dao.findByClassesId(Integer.valueOf(split[2]));
+		if (split[1].equals("3"))
+			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if (split[1].equals("4"))
+			return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
 
-	/* 
+	/*
 	 * 删除数据
 	 */
 	@Override
-	public List<RecordMapper> deleteRecord(Integer id,String token) {
+	public List<RecordMapper> deleteRecord(Integer id, String token) {
 		record_dao.deleteById(id);
 		String[] split = token.split("-");
-		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("4"))return record_dao.findByClassesId(Integer.valueOf(split[2]));
+		if (split[1].equals("3"))
+			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if (split[1].equals("4"))
+			return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
 
-	/* 
+	/*
 	 * 修改数据
 	 */
 	@Override
@@ -109,26 +136,28 @@ public class RecordServiceImpl implements RecordService{
 		return record_dao.findById(id).get();
 	}
 
-	/* 
+	/*
 	 * 数据列表
 	 */
 	@Override
 	public List<RecordMapper> recordList(String token) {
 		String[] split = token.split("-");
-		if(split[1].equals("3"))return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("4"))return record_dao.findByClassesId(Integer.valueOf(split[2]));
+		if (split[1].equals("3"))
+			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if (split[1].equals("4"))
+			return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
 
-	/* 
+	/*
 	 * 模糊查询
 	 */
 	@Override
 	public List<RecordMapper> findByName(String name) {
-		return record_dao.findAllByStudentNameLike("%"+name+"%");
+		return record_dao.findAllByStudentNameLike("%" + name + "%");
 	}
 
-	/* 
+	/*
 	 * 按照学生id查询最新的基础数据
 	 */
 	@Override
@@ -136,13 +165,94 @@ public class RecordServiceImpl implements RecordService{
 		return record_dao.findTopByStudentIdOrderByGenTime(id);
 	}
 
-	/* 
+	/*
 	 * 按照学生id查询所有的数据
 	 * 
 	 */
 	@Override
 	public List<RecordMapper> findAllByStudentId(Integer id) {
 		return record_dao.findAllByStudentId(id);
+	}
+
+	@Override
+	public StatisticsVO schoolStatistics(Integer schoolId) {
+		Integer leftGood = record_dao.countBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(schoolId,
+				VisionEnums.NORMAL.getType());
+		Integer leftMild = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
+				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
+		Integer leftModerate = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
+				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
+		Integer leftSerious = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
+				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
+		Integer rightGood = record_dao.countBySchoolIdAndVisionRightGreaterThanOrderByStudentId(schoolId,
+				VisionEnums.NORMAL.getType());
+		Integer rightMild = record_dao.countBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
+				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
+		Integer rightModerate = record_dao.countBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
+				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
+		Integer rightSerious = record_dao.countBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
+				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
+		Integer avgGood = record_dao.schoolAvgVision(schoolId, VisionEnums.NORMAL.getType());
+		Integer avgMild = record_dao.schoolAvgVision(schoolId, VisionEnums.MILD.getType(),
+				VisionEnums.NORMAL.getType());
+		Integer avgModerate = record_dao.schoolAvgVision(schoolId, VisionEnums.MODERATE.getType(),
+				VisionEnums.MILD1.getType());
+		Integer avgSerious = record_dao.schoolAvgVision(schoolId, VisionEnums.SERIOUS1.getType(),
+				VisionEnums.SERIOUS.getType());
+		StatisticsVO vo = new StatisticsVO();
+		vo.setAvgGood(avgGood);
+		vo.setLeftGood(leftGood);
+		vo.setRightGood(rightGood);
+		vo.setAvgMild(avgMild);
+		vo.setAvgModerate(avgModerate);
+		vo.setAvgSerious(avgSerious);
+		vo.setLeftMild(leftMild);
+		vo.setLeftModerate(leftModerate);
+		vo.setLeftSerious(leftSerious);
+		vo.setRightMild(rightMild);
+		vo.setRightModerate(rightModerate);
+		vo.setRightSerious(rightSerious);
+		return vo;
+	}
+
+	@Override
+	public StatisticsVO classStatistics(Integer classId) {
+		Integer leftGood = record_dao.countByClassesIdAndVisionLeftGreaterThanOrderByStudentId(classId,
+				VisionEnums.NORMAL.getType());
+		Integer leftMild = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
+		Integer leftModerate = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
+		Integer leftSerious = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
+		Integer rightGood = record_dao.countByClassesIdAndVisionRightGreaterThanOrderByStudentId(classId,
+				VisionEnums.NORMAL.getType());
+		Integer rightMild = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
+		Integer rightModerate = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
+		Integer rightSerious = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
+		Integer avgGood = record_dao.classAvgVision(classId, VisionEnums.NORMAL.getType());
+		Integer avgMild = record_dao.classAvgVision(classId, VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
+		Integer avgModerate = record_dao.classAvgVision(classId, VisionEnums.MODERATE.getType(),
+				VisionEnums.MILD1.getType());
+		Integer avgSerious = record_dao.classAvgVision(classId, VisionEnums.SERIOUS1.getType(),
+				VisionEnums.SERIOUS.getType());
+		StatisticsVO vo = new StatisticsVO();
+		vo.setAvgGood(avgGood);
+		vo.setLeftGood(leftGood);
+		vo.setRightGood(rightGood);
+		vo.setAvgMild(avgMild);
+		vo.setAvgModerate(avgModerate);
+		vo.setAvgSerious(avgSerious);
+		vo.setLeftMild(leftMild);
+		vo.setLeftModerate(leftModerate);
+		vo.setLeftSerious(leftSerious);
+		vo.setRightMild(rightMild);
+		vo.setRightModerate(rightModerate);
+		vo.setRightSerious(rightSerious);
+		return vo;
 	}
 
 }

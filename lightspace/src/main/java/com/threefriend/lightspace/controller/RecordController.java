@@ -106,4 +106,26 @@ public class RecordController {
 		return ResultVOUtil.success(record_impl.findAllByStudentId(Integer.valueOf(params.get("studentId"))));
 	}
 	
+	/**
+	 * 根据学校 进行数据分析
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/schoolStatistics")
+	@ResponseBody
+	public ResultVO schoolStatistics(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(record_impl.schoolStatistics(Integer.valueOf(params.get("schoolId"))));
+	}
+	
+	/**
+	 * 根据班级  进行数据分析
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/classStatistics")
+	@ResponseBody
+	public ResultVO classStatistics(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(record_impl.schoolStatistics(Integer.valueOf(params.get("classId"))));
+	}
+	
 }

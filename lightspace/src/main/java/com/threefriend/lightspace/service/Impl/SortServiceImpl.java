@@ -104,7 +104,9 @@ public class SortServiceImpl implements SortService {
 					temporary = new ArrayList<>();
 				}
 			}
+			Integer count = sort_dao.countByClassId(classId);
 			 SortMapper po = new SortMapper(); 
+			 po.setName("第"+(count+1)+"次排座");
 			 po.setClassId(classId); 
 			 po.setType(type);
 			 po.setGenTime(nowtime); 
@@ -139,6 +141,6 @@ public class SortServiceImpl implements SortService {
 
 	@Override
 	public List<SortMapper> byClassId(Integer classId) {
-		return sort_dao.findByClassId(classId);
+		return sort_dao.findByClassIdOrderByGenTimeDesc(classId);
 	}
 }
