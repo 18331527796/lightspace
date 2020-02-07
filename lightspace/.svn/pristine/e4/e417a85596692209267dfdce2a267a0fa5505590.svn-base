@@ -1,10 +1,6 @@
 package com.threefriend.lightspace.service.Impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.threefriend.lightspace.constant.RecordEnums;
 import com.threefriend.lightspace.constant.VisionEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
@@ -21,7 +16,6 @@ import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.RecordService;
-import com.threefriend.lightspace.vo.OneStatisticsVO;
 import com.threefriend.lightspace.vo.StatisticsVO;
 
 /**
@@ -48,9 +42,9 @@ public class RecordServiceImpl implements RecordService {
 	public List<RecordMapper> addRecord(Map<String, String> params) {
 		RecordMapper record = new RecordMapper();
 		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
-			record.setCurvatureLeft(Integer.valueOf(params.get("curvatureLeft")));
+			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
 		if (!StringUtils.isEmpty(params.get("curvatureRight")))
-			record.setCurvatureRight(Integer.valueOf(params.get("curvatureRight")));
+			record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
 		if (!StringUtils.isEmpty(params.get("cvaLeft")))
 			record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
 		if (!StringUtils.isEmpty(params.get("cvaRight")))
@@ -60,9 +54,9 @@ public class RecordServiceImpl implements RecordService {
 		if (!StringUtils.isEmpty(params.get("diopterRight")))
 			record.setDiopterRight(params.get("diopterRight"));
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))
-			record.setEyeAxisLengthLeft(Integer.valueOf(params.get("eyeAxisLengthLeft")));
+			record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))
-			record.setEyeAxisLengthRight(Integer.valueOf(params.get("eyeAxisLengthRight")));
+			record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
 		if (!StringUtils.isEmpty(params.get("visionLeft")))
 			record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
 		if (!StringUtils.isEmpty(params.get("visionRight")))
@@ -92,9 +86,9 @@ public class RecordServiceImpl implements RecordService {
 	public List<RecordMapper> saveRecord(Map<String, String> params) {
 		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("roleId"))).get();
 		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
-			record.setCurvatureLeft(Integer.valueOf(params.get("curvatureLeft")));
+			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
 		if (!StringUtils.isEmpty(params.get("curvatureRight")))
-			record.setCurvatureRight(Integer.valueOf(params.get("curvatureRight")));
+			record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
 		if (!StringUtils.isEmpty(params.get("cvaLeft")))
 			record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
 		if (!StringUtils.isEmpty(params.get("cvaRight")))
@@ -104,9 +98,9 @@ public class RecordServiceImpl implements RecordService {
 		if (!StringUtils.isEmpty(params.get("diopterRight")))
 			record.setDiopterRight(params.get("diopterRight"));
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))
-			record.setEyeAxisLengthLeft(Integer.valueOf(params.get("eyeAxisLengthLeft")));
+			record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))
-			record.setEyeAxisLengthRight(Integer.valueOf(params.get("eyeAxisLengthRight")));
+			record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
 		if (!StringUtils.isEmpty(params.get("visionLeft")))
 			record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
 		if (!StringUtils.isEmpty(params.get("visionRight")))
@@ -176,73 +170,12 @@ public class RecordServiceImpl implements RecordService {
 	 * 
 	 */
 	@Override
-	public List<OneStatisticsVO> findAllByStudentId(Integer id,Long timeLong) {
-		Date after= new Date();
-		Date befor= new Date(after.getTime()-(timeLong*1000));
-		DateFormat format =new SimpleDateFormat("yyyy/MM/dd");
-		List<RecordMapper> all = record_dao.findAllByStudentIdAndGenTimeBetween(id,befor,after);
-		List<OneStatisticsVO> end= new ArrayList<>();
-		OneStatisticsVO visionLeft=new OneStatisticsVO();
-		OneStatisticsVO visionRight=new OneStatisticsVO();
-		OneStatisticsVO eyeAxisLengthLeft=new OneStatisticsVO();
-		OneStatisticsVO eyeAxisLengthRight=new OneStatisticsVO();
-		OneStatisticsVO curvatureLeft=new OneStatisticsVO();
-		OneStatisticsVO curvatureRight=new OneStatisticsVO();
-		
-		for (RecordMapper po : all) {
-			String time =format.format(po.getGenTime());
-			if(visionLeft.getName()==null||visionLeft.getName()=="") {
-				visionLeft.setName(RecordEnums.VISIONLEFT.getName());
-			}
-			visionLeft.getyDataList().add(po.getVisionLeft());
-			visionLeft.getxDataList().add(time);
-			
-			if(visionRight.getName()==null||visionRight.getName()=="") {
-				visionRight.setName(RecordEnums.VISIONRIGHT.getName());
-			}
-			visionRight.getyDataList().add(po.getVisionRight());
-			visionRight.getxDataList().add(time);
-			
-			if(eyeAxisLengthLeft.getName()==null||eyeAxisLengthLeft.getName()=="") {
-				eyeAxisLengthLeft.setName(RecordEnums.EYEAXISLENGTHLEFT.getName());
-			}
-			eyeAxisLengthLeft.getyDataList().add(Double.valueOf(po.getEyeAxisLengthLeft()));
-			eyeAxisLengthLeft.getxDataList().add(time);
-			
-			if(eyeAxisLengthRight.getName()==null||eyeAxisLengthRight.getName()=="") {
-				eyeAxisLengthRight.setName(RecordEnums.EYEAXISLENGTHRIGHT.getName());
-			}
-			eyeAxisLengthRight.getyDataList().add(Double.valueOf(po.getEyeAxisLengthRight()));
-			eyeAxisLengthRight.getxDataList().add(time);
-			
-			if(curvatureLeft.getName()==null||curvatureLeft.getName()=="") {
-				curvatureLeft.setName(RecordEnums.CURVATURELEFT.getName());
-			}
-			curvatureLeft.getyDataList().add(Double.valueOf(po.getCurvatureLeft()));
-			curvatureLeft.getxDataList().add(time);
-			
-			if(curvatureRight.getName()==null||curvatureRight.getName()=="") {
-				curvatureRight.setName(RecordEnums.CURVATURERIGHT.getName());
-			}
-			curvatureRight.getyDataList().add(Double.valueOf(po.getCurvatureRight()));
-			curvatureRight.getxDataList().add(time);
-			
-		}
-		end.add(visionLeft);
-		end.add(visionRight);
-		end.add(eyeAxisLengthLeft);
-		end.add(eyeAxisLengthRight);
-		end.add(curvatureLeft);
-		end.add(curvatureRight);
-		return end;
+	public List<RecordMapper> findAllByStudentId(Integer id) {
+		return record_dao.findAllByStudentId(id);
 	}
 
 	@Override
-	public List<List<StatisticsVO>> schoolStatistics(Integer schoolId) {
-		List<StatisticsVO> left = new ArrayList<>();
-		List<StatisticsVO> right = new ArrayList<>();
-		List<StatisticsVO> avg = new ArrayList<>();
-		List<List<StatisticsVO>> end = new ArrayList<>();
+	public StatisticsVO schoolStatistics(Integer schoolId) {
 		Integer leftGood = record_dao.countBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(schoolId,
 				VisionEnums.NORMAL.getType());
 		Integer leftMild = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
@@ -266,30 +199,24 @@ public class RecordServiceImpl implements RecordService {
 				VisionEnums.MILD1.getType());
 		Integer avgSerious = record_dao.schoolAvgVision(schoolId, VisionEnums.SERIOUS1.getType(),
 				VisionEnums.SERIOUS.getType());
-		left.add(new StatisticsVO("左眼良好数量", leftGood));
-		left.add(new StatisticsVO("左眼轻度不良数量", leftMild));
-		left.add(new StatisticsVO("左眼中度不良数量", leftModerate));
-		left.add(new StatisticsVO("左眼重度不良数量", leftSerious));
-		end.add(left);
-		right.add(new StatisticsVO("右眼良好数量", rightGood));
-		right.add(new StatisticsVO("右眼轻度不良数量", rightMild));
-		right.add(new StatisticsVO("右眼中度不良数量", rightModerate));
-		right.add(new StatisticsVO("右眼重度不良数量", rightSerious));
-		end.add(right);
-		avg.add(new StatisticsVO("双眼良好数量", avgGood));
-		avg.add(new StatisticsVO("双眼轻度不良数量", avgMild));
-		avg.add(new StatisticsVO("双眼中度不良数量", avgModerate));
-		avg.add(new StatisticsVO("双眼重度不良数量", avgSerious));
-		end.add(avg);
-		return end;
+		StatisticsVO vo = new StatisticsVO();
+		vo.setAvgGood(avgGood);
+		vo.setLeftGood(leftGood);
+		vo.setRightGood(rightGood);
+		vo.setAvgMild(avgMild);
+		vo.setAvgModerate(avgModerate);
+		vo.setAvgSerious(avgSerious);
+		vo.setLeftMild(leftMild);
+		vo.setLeftModerate(leftModerate);
+		vo.setLeftSerious(leftSerious);
+		vo.setRightMild(rightMild);
+		vo.setRightModerate(rightModerate);
+		vo.setRightSerious(rightSerious);
+		return vo;
 	}
 
 	@Override
-	public List<List<StatisticsVO>> classStatistics(Integer classId) {
-		List<StatisticsVO> left = new ArrayList<>();
-		List<StatisticsVO> right = new ArrayList<>();
-		List<StatisticsVO> avg = new ArrayList<>();
-		List<List<StatisticsVO>> end = new ArrayList<>();
+	public StatisticsVO classStatistics(Integer classId) {
 		Integer leftGood = record_dao.countByClassesIdAndVisionLeftGreaterThanOrderByStudentId(classId,
 				VisionEnums.NORMAL.getType());
 		Integer leftMild = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
@@ -312,22 +239,20 @@ public class RecordServiceImpl implements RecordService {
 				VisionEnums.MILD1.getType());
 		Integer avgSerious = record_dao.classAvgVision(classId, VisionEnums.SERIOUS1.getType(),
 				VisionEnums.SERIOUS.getType());
-		left.add(new StatisticsVO("左眼良好数量", leftGood));
-		left.add(new StatisticsVO("左眼轻度不良数量", leftMild));
-		left.add(new StatisticsVO("左眼中度不良数量", leftModerate));
-		left.add(new StatisticsVO("左眼重度不良数量", leftSerious));
-		end.add(left);
-		right.add(new StatisticsVO("右眼良好数量", rightGood));
-		right.add(new StatisticsVO("右眼轻度不良数量", rightMild));
-		right.add(new StatisticsVO("右眼中度不良数量", rightModerate));
-		right.add(new StatisticsVO("右眼重度不良数量", rightSerious));
-		end.add(right);
-		avg.add(new StatisticsVO("双眼良好数量", avgGood));
-		avg.add(new StatisticsVO("双眼轻度不良数量", avgMild));
-		avg.add(new StatisticsVO("双眼中度不良数量", avgModerate));
-		avg.add(new StatisticsVO("双眼重度不良数量", avgSerious));
-		end.add(avg);
-		return end;
+		StatisticsVO vo = new StatisticsVO();
+		vo.setAvgGood(avgGood);
+		vo.setLeftGood(leftGood);
+		vo.setRightGood(rightGood);
+		vo.setAvgMild(avgMild);
+		vo.setAvgModerate(avgModerate);
+		vo.setAvgSerious(avgSerious);
+		vo.setLeftMild(leftMild);
+		vo.setLeftModerate(leftModerate);
+		vo.setLeftSerious(leftSerious);
+		vo.setRightMild(rightMild);
+		vo.setRightModerate(rightModerate);
+		vo.setRightSerious(rightSerious);
+		return vo;
 	}
 
 }

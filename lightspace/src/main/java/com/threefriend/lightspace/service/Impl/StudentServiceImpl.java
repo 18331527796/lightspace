@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.service.Impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.StudentService;
+import com.threefriend.lightspace.vo.StudentVO;
 
 /**
  *	学生实现类
@@ -132,6 +134,19 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public List<StudentMapper> findByNameLike(String name) {
 		return student_dao.findByNameLike("%"+name+"%");
+	}
+
+	/* 
+	 * 按照学校班级姓名模糊
+	 */
+	@Override
+	public List<StudentVO> findBySchoolIdAndClassesIdAndNameLike(Integer sId, Integer cId, String name) {
+		List<StudentMapper> students = student_dao.findBySchoolIdAndClassesIdAndNameLike(sId, cId, "%"+name+"%");
+		List<StudentVO> vo = new ArrayList<>();
+		for (StudentMapper studentMapper : students) {
+			vo.add(new StudentVO(studentMapper.getId(), studentMapper.getName()));
+		}
+		return vo;
 	}
 
 }

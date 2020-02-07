@@ -52,16 +52,16 @@ public class RecordMapper {
 	private Double visionRight;
 	// 左眼眼轴长度
 	@Column(name = "eye_axis_length_left")
-	private Double eyeAxisLengthLeft;
+	private Integer eyeAxisLengthLeft;
 	// 右眼眼轴长度
 	@Column(name = "eye_axis_length_right")
-	private Double eyeAxisLengthRight;
+	private Integer eyeAxisLengthRight;
 	// 左眼曲率
 	@Column(name = "curvature_left")
-	private Double curvatureLeft;
+	private Integer curvatureLeft;
 	// 右眼曲率
 	@Column(name = "curvature_right")
-	private Double curvatureRight;
+	private Integer curvatureRight;
 	// 左眼屈光度
 	@Column(name = "diopter_left")
 	private String diopterLeft;
@@ -151,30 +151,6 @@ public class RecordMapper {
 	public void setVisionRight(Double visionRight) {
 		this.visionRight = visionRight;
 	}
-	public Double getEyeAxisLengthLeft() {
-		return eyeAxisLengthLeft;
-	}
-	public void setEyeAxisLengthLeft(Double eyeAxisLengthLeft) {
-		this.eyeAxisLengthLeft = eyeAxisLengthLeft;
-	}
-	public Double getEyeAxisLengthRight() {
-		return eyeAxisLengthRight;
-	}
-	public void setEyeAxisLengthRight(Double eyeAxisLengthRight) {
-		this.eyeAxisLengthRight = eyeAxisLengthRight;
-	}
-	public Double getCurvatureLeft() {
-		return curvatureLeft;
-	}
-	public void setCurvatureLeft(Double curvatureLeft) {
-		this.curvatureLeft = curvatureLeft;
-	}
-	public Double getCurvatureRight() {
-		return curvatureRight;
-	}
-	public void setCurvatureRight(Double curvatureRight) {
-		this.curvatureRight = curvatureRight;
-	}
 	public String getDiopterLeft() {
 		return diopterLeft;
 	}
@@ -198,6 +174,30 @@ public class RecordMapper {
 	}
 	public void setCvaLeft(Double cvaLeft) {
 		this.cvaLeft = cvaLeft;
+	}
+	public Integer getEyeAxisLengthLeft() {
+		return eyeAxisLengthLeft;
+	}
+	public void setEyeAxisLengthLeft(Integer eyeAxisLengthLeft) {
+		this.eyeAxisLengthLeft = eyeAxisLengthLeft;
+	}
+	public Integer getEyeAxisLengthRight() {
+		return eyeAxisLengthRight;
+	}
+	public void setEyeAxisLengthRight(Integer eyeAxisLengthRight) {
+		this.eyeAxisLengthRight = eyeAxisLengthRight;
+	}
+	public Integer getCurvatureLeft() {
+		return curvatureLeft;
+	}
+	public void setCurvatureLeft(Integer curvatureLeft) {
+		this.curvatureLeft = curvatureLeft;
+	}
+	public Integer getCurvatureRight() {
+		return curvatureRight;
+	}
+	public void setCurvatureRight(Integer curvatureRight) {
+		this.curvatureRight = curvatureRight;
 	}
 	
 	

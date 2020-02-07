@@ -96,5 +96,16 @@ public class StudentController {
 		return ResultVOUtil.success(student_Impl.findByNameLike(params.get("name")));
 	}
 	
+	/**
+	 * 按照学校班级姓名模糊查询
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/searchStudents")
+	@ResponseBody
+	public ResultVO searchStudents(@RequestParam Map<String, String> params) {
+		return ResultVOUtil.success(student_Impl.findBySchoolIdAndClassesIdAndNameLike(Integer.valueOf(params.get("schoolId")), Integer.valueOf(params.get("classId")), params.get("name")));
+	}
+	
 	
 }

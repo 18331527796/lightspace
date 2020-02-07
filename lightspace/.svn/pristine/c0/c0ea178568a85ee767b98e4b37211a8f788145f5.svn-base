@@ -103,7 +103,7 @@ public class RecordController {
 	@PostMapping("/studentRecords")
 	@ResponseBody
 	public ResultVO studentRecords(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.findAllByStudentId(Integer.valueOf(params.get("studentId")),Long.valueOf(params.get("time"))));
+		return ResultVOUtil.success(record_impl.findAllByStudentId(Integer.valueOf(params.get("studentId"))));
 	}
 	
 	/**

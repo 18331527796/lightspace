@@ -22,4 +22,6 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	List<StudentMapper> findByClassesId(Integer id);
 	
 	List<StudentMapper> findByClassesIdOrderBySittingHeight(Integer classesid);
+	
+	List<StudentMapper> findBySchoolIdAndClassesIdAndNameLike(Integer schoolid,Integer classesid,String name);
 }

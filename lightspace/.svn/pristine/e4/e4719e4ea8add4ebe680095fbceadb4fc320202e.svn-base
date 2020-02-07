@@ -1,7 +1,6 @@
 package com.threefriend.lightspace.repository;
 
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,7 +23,7 @@ public interface RecordRepository extends JpaRepository<RecordMapper, Integer>{
 	
 	RecordMapper findTopByStudentIdOrderByGenTime(Integer id);
 	//按照学生id查询所有的数据
-	List<RecordMapper> findAllByStudentIdAndGenTimeBetween(Integer id,Date befor , Date after);
+	List<RecordMapper> findAllByStudentId(Integer id);
 	//学校 左眼 区间
 	int countBySchoolIdAndVisionLeftBetweenOrderByStudentId(Integer schoolId,Double min,Double max);
 	//学校 左眼 大于

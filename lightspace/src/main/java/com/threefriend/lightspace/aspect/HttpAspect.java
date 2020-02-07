@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.aspect;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,7 +31,7 @@ public class HttpAspect {
 	
 	@Before("verify()")
 	public void doVerify() {
-		System.out.println("验证token时刻！！！");
+		System.out.println("验证token时刻！！！"+new Date());
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         String token = request.getParameter("token");

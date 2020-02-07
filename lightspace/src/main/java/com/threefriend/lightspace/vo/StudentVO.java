@@ -30,7 +30,11 @@ public class StudentVO implements Serializable{
 	}
 
 	
+	public StudentVO (Integer id,String name) {
+		this.Id=id;
+		this.Name=name;
+	}
 	
-	
-	
+	public StudentVO () {
+	}
 }

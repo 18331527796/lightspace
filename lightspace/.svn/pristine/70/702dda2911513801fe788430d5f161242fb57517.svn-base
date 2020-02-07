@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.threefriend.lightspace.mapper.RecordMapper;
-import com.threefriend.lightspace.vo.OneStatisticsVO;
 import com.threefriend.lightspace.vo.StatisticsVO;
 
 /**
@@ -27,9 +26,9 @@ public interface RecordService {
 	//按照学生id查询最新的基础数据
 	public RecordMapper findByStudentId(Integer id);
 	//按照学生id查询所有的数据
-	public List<OneStatisticsVO> findAllByStudentId(Integer id,Long time);
+	public List<RecordMapper> findAllByStudentId(Integer id);
 	//按照学校数据分析
-	public List<List<StatisticsVO>> schoolStatistics(Integer schoolId);
+	public StatisticsVO schoolStatistics(Integer schoolId);
 	//按照班级数据分析
-	public List<List<StatisticsVO>> classStatistics(Integer classId);
+	public StatisticsVO classStatistics(Integer classId);
 }
