@@ -15,11 +15,6 @@ spring:
         max-wait: -1
         max-idle: 30
         min-idle: 2
-  mvc:
-    view:
-      prefix: /
-      suffix: .html   
-           
   main:
     allow-bean-definition-overriding: true
   
@@ -32,8 +27,6 @@ spring:
 server:    
   servlet:
     context-path: /lightspace    
-    
-    
     
     
     
