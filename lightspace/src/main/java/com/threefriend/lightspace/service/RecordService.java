@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.vo.OneStatisticsVO;
+import com.threefriend.lightspace.vo.RecordVO;
 import com.threefriend.lightspace.vo.StatisticsVO;
 
 /**
@@ -19,7 +20,7 @@ public interface RecordService {
 	//删除记录
 	public List<RecordMapper> deleteRecord(Integer id,String token);
 	//按照id查询记录
-	public RecordMapper editRecord(Integer id);
+	public RecordVO editRecord(Integer id);
 	//记录列表
 	public List<RecordMapper> recordList(String token);
 	//模糊

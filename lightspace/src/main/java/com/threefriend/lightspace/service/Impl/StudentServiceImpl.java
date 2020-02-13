@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
+import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.StudentService;
@@ -26,6 +28,8 @@ public class StudentServiceImpl implements StudentService{
 	private SchoolRepository school_dao;
 	@Autowired
 	private ClassesRepository classes_dao;
+	@Autowired
+	private RecordRepository record_dao;
 
 	/* 
 	 * 学生列表
@@ -60,7 +64,7 @@ public class StudentServiceImpl implements StudentService{
 		student.setGender(Integer.valueOf(params.get("gender")));
 		student.setHeight(params.get("height"));
 		student.setName(params.get("name"));
-		student.setNature(params.get("nature"));
+		if(!StringUtils.isEmpty(params.get("nature")))student.setNature(params.get("nature"));
 		student.setRegionId(1);
 		student.setRegionName("唐山");
 		student.setSchoolId(Integer.valueOf(params.get("schoolId")));
@@ -81,6 +85,7 @@ public class StudentServiceImpl implements StudentService{
 	 */
 	@Override
 	public List<StudentMapper> deleteStudent(Integer id,String token) {
+		record_dao.deleteByStudentId(id);
 		student_dao.deleteById(id);
 		String[] split = token.split("-");
 		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
@@ -100,7 +105,11 @@ public class StudentServiceImpl implements StudentService{
 		if(!StringUtils.isEmpty(params.get("gender")))student.setGender(Integer.valueOf(params.get("gender")));
 		if(!StringUtils.isEmpty(params.get("height")))student.setHeight(params.get("height"));
 		if(!StringUtils.isEmpty(params.get("name")))student.setName(params.get("name"));
-		if(!StringUtils.isEmpty(params.get("nature")))student.setNature(params.get("nature"));
+		if(!StringUtils.isEmpty(params.get("nature"))) {
+			student.setNature(params.get("nature"));
+		}else {
+			student.setNature("");
+		}
 		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(Double.valueOf(params.get("sittingHeight")));
 		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
@@ -124,8 +133,13 @@ public class StudentServiceImpl implements StudentService{
 	 * 按照id查学生
 	 */
 	@Override
-	public StudentMapper findById(Integer id) {
-		return student_dao.findById(id).get();
+	public StudentVO findById(Integer id) {
+		StudentMapper studentMapper = student_dao.findById(id).get();
+		StudentVO vo = new StudentVO();
+		BeanUtils.copyProperties(studentMapper, vo);
+		vo.getStu_cat().add(studentMapper.getSchoolId());
+		vo.getStu_cat().add(studentMapper.getClassesId());
+		return vo;
 	}
 
 	/* 

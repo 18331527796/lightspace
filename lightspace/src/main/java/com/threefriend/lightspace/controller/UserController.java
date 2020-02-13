@@ -56,7 +56,7 @@ public class UserController {
 	@PostMapping("/addUser")
 	@ResponseBody
 	public ResultVO addUser(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(user_impl.insertUser(params));
+		return user_impl.insertUser(params);
 	}
 	
 	/**

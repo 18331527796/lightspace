@@ -10,16 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
+import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.ClassesService;
 import com.threefriend.lightspace.util.RedisUtils;
+import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.util.SerializeUtil;
 import com.threefriend.lightspace.vo.ClassesVO;
+import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SchoolVO;
 import com.threefriend.lightspace.vo.StudentVO;
 
@@ -40,12 +44,16 @@ public class ClassesServiceImpl implements ClassesService {
 	private SchoolRepository school_dao;
 	@Autowired
 	private StudentRepository student_dao;
+	@Autowired
+	private RecordRepository record_dao;
 
 	/*
 	 * 新增班级方法
 	 */
 	@Override
-	public List<ClassesMapper> addClasses(Map<String, String> params) {
+	public ResultVO addClasses(Map<String, String> params) {
+		List<ClassesMapper> findBySchoolIdAndClassName = classes_dao.findBySchoolIdAndClassName(Integer.valueOf(params.get("schoolId")), params.get("className"));
+		if(findBySchoolIdAndClassName.size()>=1)return ResultVOUtil.error(ResultEnum.CLASSNAME_REPEAT.getStatus(), ResultEnum.CLASSNAME_REPEAT.getMessage());
 		ClassesMapper classes = new ClassesMapper();
 		classes.setBbLength(params.get("bbLength"));
 		classes.setExperiment(Integer.valueOf(params.get("experiment")));
@@ -61,8 +69,8 @@ public class ClassesServiceImpl implements ClassesService {
 			classes.setDescription(params.get("description"));
 		classes_dao.save(classes);
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));
-		return classes_dao.findAll();
+		if(split[1].equals("3"))return ResultVOUtil.success(classes_dao.findBySchoolId(Integer.valueOf(split[2])));
+		return ResultVOUtil.success(classes_dao.findAll());
 	}
 
 	/*
@@ -110,6 +118,8 @@ public class ClassesServiceImpl implements ClassesService {
 	 */
 	@Override
 	public List<ClassesMapper> deleteClasses(Integer id,String token) {
+		student_dao.deleteByClassesId(id);
+		record_dao.deleteByClassesId(id);
 		classes_dao.deleteById(id);
 		String[] split = token.split("-");
 		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));
@@ -216,12 +226,12 @@ public class ClassesServiceImpl implements ClassesService {
 	}
 
 	/* 
-	 * 设置座位保存时间
-	 */
+	 * 设置座位保存时间（废弃）
+	 
 	@Override
 	public void setSaveTime(Integer classId,Integer time) {
 		ClassesMapper classesMapper = classes_dao.findById(classId).get();
 		classesMapper.setSaveSortTime(time*1000);
 		classes_dao.save(classesMapper);
-	}
+	}*/
 }

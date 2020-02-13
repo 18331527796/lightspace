@@ -19,6 +19,7 @@ import com.threefriend.lightspace.mapper.RoleRightRelation;
 import com.threefriend.lightspace.mapper.UserMapper;
 import com.threefriend.lightspace.mapper.UserRoleRelation;
 import com.threefriend.lightspace.repository.RightRepository;
+import com.threefriend.lightspace.repository.RoleRepository;
 import com.threefriend.lightspace.repository.RoleRightRepository;
 import com.threefriend.lightspace.repository.UserRepository;
 import com.threefriend.lightspace.repository.UserRoleRepository;
@@ -27,6 +28,7 @@ import com.threefriend.lightspace.util.RedisUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.util.TokenUtils;
 import com.threefriend.lightspace.vo.MenuListVo;
+import com.threefriend.lightspace.vo.ResultVO;
 
 /**
  * 用户逻辑实现
@@ -47,19 +49,22 @@ public class UserServiceImpl implements UserService {
 	private RightRepository right_dao;
 	@Resource
 	private RedisUtils redisUtil;
+	@Autowired
+	private RoleRepository role_dao;
 	
 	
 	/*
 	 * 新增用户
 	 */
 	@Override
-	public Object insertUser(Map<String, String> params) {
+	public ResultVO insertUser(Map<String, String> params) {
 		List<UserMapper> list = user_dao.findByLoginName(params.get("loginName"));
 		if(list.size()>=1)return ResultVOUtil.error(ResultEnum.LOGINNAME_REPEAT.getStatus(),ResultEnum.LOGINNAME_REPEAT.getMessage());
 		UserMapper user = new UserMapper();
 		user.setGenTime(new Date());
 		user.setName(params.get("name"));
 		user.setLoginName(params.get("loginName"));
+		user.setRoleName(role_dao.findById(Integer.valueOf(params.get("roleId"))).get().getRoleName());
 		user.setPassword(DigestUtils.md5DigestAsHex(params.get("password").getBytes()));
 		if(!StringUtils.isEmpty(params.get("wechatName")))user.setWechatName(params.get("wechatName"));
 		if(!StringUtils.isEmpty(params.get("schoolId")))user.setSchoolId(Integer.valueOf(params.get("schoolId")));
@@ -69,7 +74,7 @@ public class UserServiceImpl implements UserService {
 		userRole.setUserId(user.getId());
 		userRole.setRoleId(Integer.valueOf(params.get("roleId")));
 		user_role_dao.save(userRole);
-		return user_dao.findAll();
+		return ResultVOUtil.success(user_dao.findAll());
 	}
 
 	/*

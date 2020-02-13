@@ -4,6 +4,8 @@ package com.threefriend.lightspace.repository;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,6 +23,12 @@ public interface RecordRepository extends JpaRepository<RecordMapper, Integer>{
 	List<RecordMapper> findByClassesId(Integer classId);
 	
 	List<RecordMapper> findBySchoolId(Integer schoolId);
+	@Transactional
+	void deleteBySchoolId(Integer sId);
+	@Transactional
+	void deleteByClassesId(Integer cId);
+	@Transactional
+	void deleteByStudentId(Integer Id);
 	
 	RecordMapper findTopByStudentIdOrderByGenTime(Integer id);
 	//按照学生id查询所有的数据

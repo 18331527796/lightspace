@@ -14,4 +14,6 @@ import com.threefriend.lightspace.mapper.SchoolMapper;
 public interface SchoolRepository extends JpaRepository<SchoolMapper, Integer>{
 
 	List<SchoolMapper> findByNameLike(String name);
+	
+	List<SchoolMapper> findByName(String name);
 }

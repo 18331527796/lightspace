@@ -33,8 +33,7 @@ public class SchoolController {
 	@PostMapping("/addSchool")
 	@ResponseBody
 	public ResultVO insertSchool(@RequestParam Map<String, String> params) {
-		school_Impl.addSchool(params);
-		return ResultVOUtil.success();
+		return school_Impl.addSchool(params);
 	}
 	
 	/**
@@ -80,8 +79,7 @@ public class SchoolController {
 	@PostMapping("/deleteSchool")
 	@ResponseBody
 	public ResultVO deleteSchool(@RequestParam Map<String, String> params) {
-		school_Impl.deleteSchool(Integer.valueOf(params.get("id")));
-		return ResultVOUtil.success();
+		return ResultVOUtil.success(school_Impl.deleteSchool(Integer.valueOf(params.get("id"))));
 	}
 	
 	/**

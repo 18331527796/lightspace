@@ -33,7 +33,17 @@ public class UserMapper {
 	//对应的班级
 	@Column(name="classes_id")
 	private Integer classesId;
+	//角色名称
+	@Column(name="role_name")
+	private String roleName;
 	
+	
+	public String getRoleName() {
+		return roleName;
+	}
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
 	public Integer getSchoolId() {
 		return schoolId;
 	}

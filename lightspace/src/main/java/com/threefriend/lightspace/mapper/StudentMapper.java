@@ -53,7 +53,7 @@ public class StudentMapper {
 	// 体重
 	private String weight;
 	// 性格
-	private String nature;
+	private String nature ="";
 	// 是否矫正 (0:未校正 1:未校正)
 	private Integer correct;
 	// 备注

@@ -2,8 +2,7 @@ package com.threefriend.lightspace.enums;
 
 
 /**
- * Created by 廖师兄
- * 2017-06-11 18:56
+ * 
  */
 public enum ResultEnum {
 
@@ -18,6 +17,10 @@ public enum ResultEnum {
     TOKEN_OVERDUE(10204,"TOKEN过期，请重新登录~"),
     
     LOGINNAME_REPEAT(10205,"账号已被占用~"),
+    
+    SCHOOLNAME_REPEAT(10206,"新建学校重复，请核实后添加~"),
+    
+    CLASSNAME_REPEAT(10207,"新建班级重复，请核实后添加~"),
     ;
 
     private Integer status;

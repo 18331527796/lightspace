@@ -2,6 +2,8 @@ package com.threefriend.lightspace.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.threefriend.lightspace.mapper.StudentMapper;
@@ -24,4 +26,8 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	List<StudentMapper> findByClassesIdOrderBySittingHeight(Integer classesid);
 	
 	List<StudentMapper> findBySchoolIdAndClassesIdAndNameLike(Integer schoolid,Integer classesid,String name);
+	@Transactional
+	void deleteByClassesId(List<Integer> ids);
+	@Transactional
+	void deleteByClassesId(Integer id);
 }

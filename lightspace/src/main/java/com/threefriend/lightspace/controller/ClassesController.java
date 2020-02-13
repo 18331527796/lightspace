@@ -33,7 +33,7 @@ public class ClassesController {
 	@PostMapping("/addClasses")
 	@ResponseBody
 	public ResultVO addClasses(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.addClasses(params));
+		return classes_impl.addClasses(params);
 	}
 	
 	/**
@@ -125,15 +125,15 @@ public class ClassesController {
 	}
 	
 	/**
-	 * 设置座位保存时间
+	 * 设置座位保存时间（废弃）
 	 * 
-	 */
+	 *//*
 	@PostMapping("/setSaveTime")
 	@ResponseBody
 	public ResultVO setSaveTime(@RequestParam Map<String, String> params) {
 		classes_impl.setSaveTime(Integer.valueOf(params.get("classId")), Integer.valueOf(params.get("time")));
 		return ResultVOUtil.success();
-	}
+	}*/
 	
 
 }

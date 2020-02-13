@@ -24,9 +24,9 @@ spring:
       use-new-id-generator-mappings: false
     show-sql: true  
     
-server:    
-  servlet:
-    context-path: /lightspace    
+#server:    
+#  servlet:
+#    context-path: /lightspace    
     
     
     

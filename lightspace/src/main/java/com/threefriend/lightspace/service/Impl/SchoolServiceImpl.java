@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.service.Impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -7,11 +8,17 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.threefriend.lightspace.enums.ResultEnum;
+import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
+import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
+import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.SchoolService;
+import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.vo.ResultVO;
 
 /**
  * 学校逻辑实现类
@@ -27,18 +34,25 @@ public class SchoolServiceImpl implements SchoolService{
 	private RegionRepository region_dao;
 	@Autowired
 	private ClassesRepository class_dao;
+	@Autowired
+	private StudentRepository student_dao;
+	@Autowired
+	private RecordRepository record_dao;
 
 	/* 
 	 * 添加学校
 	 */
 	@Override
-	public void addSchool(Map<String, String> params) {
+	public ResultVO addSchool(Map<String, String> params) { 
+		List<SchoolMapper> findByName = school_dao.findByName(params.get("name"));
+		if(findByName.size()>=1) return ResultVOUtil.error(ResultEnum.SCHOOLNAME_REPEAT.getStatus(),ResultEnum.SCHOOLNAME_REPEAT.getMessage());
 		SchoolMapper newSchool = new SchoolMapper();
 		newSchool.setAddress(params.get("address"));
 		newSchool.setName(params.get("name"));
 		newSchool.setRegionId(1);
 		newSchool.setRegionName(region_dao.findById(1).get().getName());
 		school_dao.save(newSchool);
+		return ResultVOUtil.success(school_dao.findAll());
 	}
 
 	/* 
@@ -47,8 +61,7 @@ public class SchoolServiceImpl implements SchoolService{
 	@Override
 	public List<SchoolMapper> findAllSchool(String token) {
 		System.out.println("这里是学校列表方法"+token);
-		List<SchoolMapper> findAll = school_dao.findAll();
-		return findAll;
+		return school_dao.findAll();
 	}
 
 	/*  
@@ -67,9 +80,17 @@ public class SchoolServiceImpl implements SchoolService{
 	 * 删除学校
 	 */
 	@Override
-	public void deleteSchool(Integer id) {
+	public List<SchoolMapper> deleteSchool(Integer id) {
+		List<ClassesMapper> findBySchoolId = class_dao.findBySchoolId(id);
+		List<Integer> classids= new ArrayList<>();
+		for (ClassesMapper po : findBySchoolId) {
+			classids.add(po.getId());
+		}
+		student_dao.deleteByClassesId(classids);
+		record_dao.deleteBySchoolId(id);
 		class_dao.deleteBySchoolId(id);
 		school_dao.deleteById(id);
+		return school_dao.findAll();
 	}
 
 	/* 

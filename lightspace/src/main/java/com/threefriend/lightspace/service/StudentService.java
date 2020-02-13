@@ -23,7 +23,7 @@ public interface StudentService {
 	//修改学生
 	public List<StudentMapper> saveStudent(Map<String, String> params);
 	//按照id查询学生
-	public StudentMapper findById(Integer id);
+	public StudentVO findById(Integer id);
 	//模糊查询
 	public 	List<StudentMapper> findByNameLike(String name);
 	//按照学校班级姓名模糊查询

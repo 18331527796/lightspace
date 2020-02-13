@@ -8,17 +8,16 @@ public class LightException extends RuntimeException{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Integer code;
+	private Integer status;
 
     public LightException(ResultEnum resultEnum) {
         super(resultEnum.getMessage());
-
-        this.code = resultEnum.getStatus();
+        this.status = resultEnum.getStatus();
     }
 
-    public LightException(Integer code, String message) {
+    public LightException(Integer status, String message) {
         super(message);
-        this.code = code;
+        this.status = status;
     }
 
 }

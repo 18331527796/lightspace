@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,6 +23,7 @@ import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.RecordService;
 import com.threefriend.lightspace.vo.OneStatisticsVO;
+import com.threefriend.lightspace.vo.RecordVO;
 import com.threefriend.lightspace.vo.StatisticsVO;
 
 /**
@@ -46,11 +48,12 @@ public class RecordServiceImpl implements RecordService {
 	 */
 	@Override
 	public List<RecordMapper> addRecord(Map<String, String> params) {
+		System.out.println(params.get("cvaLeft")+"---"+params.get("curvatureRight")+"---"+params.get("diopterLeft")+"---"+params.get("diopterRight"));
 		RecordMapper record = new RecordMapper();
 		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
-			record.setCurvatureLeft(Integer.valueOf(params.get("curvatureLeft")));
+			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
 		if (!StringUtils.isEmpty(params.get("curvatureRight")))
-			record.setCurvatureRight(Integer.valueOf(params.get("curvatureRight")));
+			record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
 		if (!StringUtils.isEmpty(params.get("cvaLeft")))
 			record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
 		if (!StringUtils.isEmpty(params.get("cvaRight")))
@@ -60,9 +63,9 @@ public class RecordServiceImpl implements RecordService {
 		if (!StringUtils.isEmpty(params.get("diopterRight")))
 			record.setDiopterRight(params.get("diopterRight"));
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))
-			record.setEyeAxisLengthLeft(Integer.valueOf(params.get("eyeAxisLengthLeft")));
+			record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))
-			record.setEyeAxisLengthRight(Integer.valueOf(params.get("eyeAxisLengthRight")));
+			record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
 		if (!StringUtils.isEmpty(params.get("visionLeft")))
 			record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
 		if (!StringUtils.isEmpty(params.get("visionRight")))
@@ -90,23 +93,36 @@ public class RecordServiceImpl implements RecordService {
 	 */
 	@Override
 	public List<RecordMapper> saveRecord(Map<String, String> params) {
-		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("roleId"))).get();
+		System.out.println(params.get("cvaLeft")+"---"+params.get("curvatureRight")+"---"+params.get("diopterLeft")+"---"+params.get("diopterRight"));
+		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
-			record.setCurvatureLeft(Integer.valueOf(params.get("curvatureLeft")));
+			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
 		if (!StringUtils.isEmpty(params.get("curvatureRight")))
-			record.setCurvatureRight(Integer.valueOf(params.get("curvatureRight")));
-		if (!StringUtils.isEmpty(params.get("cvaLeft")))
+			record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
+		if (!StringUtils.isEmpty(params.get("cvaLeft"))) {
 			record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
-		if (!StringUtils.isEmpty(params.get("cvaRight")))
+		}else{
+			record.setCvaLeft(0.00);
+		}
+		if (!StringUtils.isEmpty(params.get("cvaRight"))) {
 			record.setCvaRight(Double.valueOf(params.get("cvaRight")));
-		if (!StringUtils.isEmpty(params.get("diopterLeft")))
+		}else {
+			record.setCvaRight(0.00);
+		}
+		if (!StringUtils.isEmpty(params.get("diopterLeft"))) {
 			record.setDiopterLeft(params.get("diopterLeft"));
-		if (!StringUtils.isEmpty(params.get("diopterRight")))
+		}else {
+			record.setDiopterLeft("");
+		}
+		if (!StringUtils.isEmpty(params.get("diopterRight"))) {
 			record.setDiopterRight(params.get("diopterRight"));
+		}else {
+			record.setDiopterRight("");
+		}
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthLeft")))
-			record.setEyeAxisLengthLeft(Integer.valueOf(params.get("eyeAxisLengthLeft")));
+			record.setEyeAxisLengthLeft(Double.valueOf(params.get("eyeAxisLengthLeft")));
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))
-			record.setEyeAxisLengthRight(Integer.valueOf(params.get("eyeAxisLengthRight")));
+			record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
 		if (!StringUtils.isEmpty(params.get("visionLeft")))
 			record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
 		if (!StringUtils.isEmpty(params.get("visionRight")))
@@ -138,8 +154,13 @@ public class RecordServiceImpl implements RecordService {
 	 * 修改数据
 	 */
 	@Override
-	public RecordMapper editRecord(Integer id) {
-		return record_dao.findById(id).get();
+	public RecordVO editRecord(Integer id) {
+		RecordMapper po = record_dao.findById(id).get();
+		RecordVO vo= new RecordVO();
+		BeanUtils.copyProperties(po, vo);
+		vo.getRecord_cat().add(po.getSchoolId());
+		vo.getRecord_cat().add(po.getClassesId());
+		return vo;
 	}
 
 	/*
@@ -206,25 +227,25 @@ public class RecordServiceImpl implements RecordService {
 			if(eyeAxisLengthLeft.getName()==null||eyeAxisLengthLeft.getName()=="") {
 				eyeAxisLengthLeft.setName(RecordEnums.EYEAXISLENGTHLEFT.getName());
 			}
-			eyeAxisLengthLeft.getyDataList().add(Double.valueOf(po.getEyeAxisLengthLeft()));
+			eyeAxisLengthLeft.getyDataList().add(po.getEyeAxisLengthLeft());
 			eyeAxisLengthLeft.getxDataList().add(time);
 			
 			if(eyeAxisLengthRight.getName()==null||eyeAxisLengthRight.getName()=="") {
 				eyeAxisLengthRight.setName(RecordEnums.EYEAXISLENGTHRIGHT.getName());
 			}
-			eyeAxisLengthRight.getyDataList().add(Double.valueOf(po.getEyeAxisLengthRight()));
+			eyeAxisLengthRight.getyDataList().add(po.getEyeAxisLengthRight());
 			eyeAxisLengthRight.getxDataList().add(time);
 			
 			if(curvatureLeft.getName()==null||curvatureLeft.getName()=="") {
 				curvatureLeft.setName(RecordEnums.CURVATURELEFT.getName());
 			}
-			curvatureLeft.getyDataList().add(Double.valueOf(po.getCurvatureLeft()));
+			curvatureLeft.getyDataList().add(po.getCurvatureLeft());
 			curvatureLeft.getxDataList().add(time);
 			
 			if(curvatureRight.getName()==null||curvatureRight.getName()=="") {
 				curvatureRight.setName(RecordEnums.CURVATURERIGHT.getName());
 			}
-			curvatureRight.getyDataList().add(Double.valueOf(po.getCurvatureRight()));
+			curvatureRight.getyDataList().add(po.getCurvatureRight());
 			curvatureRight.getxDataList().add(time);
 			
 		}
