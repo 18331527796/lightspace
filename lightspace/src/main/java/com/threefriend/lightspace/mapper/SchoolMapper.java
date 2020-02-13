@@ -28,6 +28,12 @@ public class SchoolMapper {
 	// 所属地区
 	@Column(name="region_name")
 	private String regionName;
+	//前台用
+	private String value;
+	
+	public String getValue() {
+		return value;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -39,6 +45,7 @@ public class SchoolMapper {
 	}
 	public void setName(String name) {
 		this.name = name;
+		this.value = name;
 	}
 	public Integer getRegionId() {
 		return regionId;

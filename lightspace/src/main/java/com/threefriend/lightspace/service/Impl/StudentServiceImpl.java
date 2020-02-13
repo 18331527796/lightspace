@@ -9,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.StudentService;
+import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.StudentVO;
 
 /**
@@ -146,8 +149,10 @@ public class StudentServiceImpl implements StudentService{
 	 * 模糊查询
 	 */
 	@Override
-	public List<StudentMapper> findByNameLike(String name) {
-		return student_dao.findByNameLike("%"+name+"%");
+	public ResultVO findByNameLike(String name) {
+		List<StudentMapper> list = student_dao.findByNameLike("%"+name+"%");
+		if(list==null||list.size()==0)return ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
+		return ResultVOUtil.success(list);
 	}
 
 	/* 

@@ -106,9 +106,10 @@ public class SchoolServiceImpl implements SchoolService{
 	 * 模糊查询
 	 */
 	@Override
-	public List<SchoolMapper> findAllSchoolLike(String name) {
+	public ResultVO findAllSchoolLike(String name) {
 		List<SchoolMapper> findByNameLike = school_dao.findByNameLike("%"+name+"%");
-		return findByNameLike;
+		if(findByNameLike==null||findByNameLike.size()==0) return ResultVOUtil.error(ResultEnum.SCHOOLSIZE_NULL.getStatus(),ResultEnum.SCHOOLSIZE_NULL.getMessage());
+		return ResultVOUtil.success(findByNameLike);
 	}
 
 }

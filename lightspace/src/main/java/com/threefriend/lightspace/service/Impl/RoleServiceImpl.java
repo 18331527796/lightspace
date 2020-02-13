@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.RightMapper;
 import com.threefriend.lightspace.mapper.RoleMapper;
 import com.threefriend.lightspace.mapper.RoleRightRelation;
@@ -16,7 +17,9 @@ import com.threefriend.lightspace.repository.RightRepository;
 import com.threefriend.lightspace.repository.RoleRepository;
 import com.threefriend.lightspace.repository.RoleRightRepository;
 import com.threefriend.lightspace.service.RoleService;
+import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.MenuListVo;
+import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.RoleRightVO;
 
 @Service
@@ -119,6 +122,13 @@ public class RoleServiceImpl implements RoleService {
 			role_right_dao.save(roleRight);
 		}
 		return role_dao.findAll();
+	}
+
+	@Override
+	public ResultVO findByRoleNameLike(String name) {
+		List<RoleMapper> list = role_dao.findByRoleNameLike("%"+name+"%");
+		if(list==null||list.size()==0)return ResultVOUtil.error(ResultEnum.ROLESIZE_NULL.getStatus(), ResultEnum.ROLESIZE_NULL.getMessage());
+		return ResultVOUtil.success(list);
 	}
 
 }

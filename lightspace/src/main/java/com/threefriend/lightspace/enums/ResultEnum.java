@@ -21,6 +21,18 @@ public enum ResultEnum {
     SCHOOLNAME_REPEAT(10206,"新建学校重复，请核实后添加~"),
     
     CLASSNAME_REPEAT(10207,"新建班级重复，请核实后添加~"),
+    
+    SCHOOLSIZE_NULL(10208,"无相关学校信息~"),
+    
+    RECORDSIZE_NULL(10209,"无相关数据信息~"),
+    
+    CLASSSIZE_NULL(10210,"无相关班级信息~"),
+    
+    STUDENTSIZE_NULL(10211,"无相关学生信息~"),
+    
+    ROLESIZE_NULL(10212,"无相关角色信息~"),
+    
+    USERSIZE_NULL(10213,"无相关用户信息~"),
     ;
 
     private Integer status;

@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.threefriend.lightspace.mapper.RoleMapper;
@@ -10,5 +12,7 @@ import com.threefriend.lightspace.mapper.RoleMapper;
  *
  */
 public interface RoleRepository extends JpaRepository<RoleMapper, Integer>{
+	
+	List<RoleMapper> findByRoleNameLike(String name);
 
 }

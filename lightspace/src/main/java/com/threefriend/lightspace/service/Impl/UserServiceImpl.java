@@ -149,11 +149,24 @@ public class UserServiceImpl implements UserService {
 		return ResultVOUtil.success(trees);
 	}
 
+	/* 
+	 * 删除用户
+	 */
 	@Override
 	public List<UserMapper> deleteUser(Integer id) {
 		user_dao.deleteById(id);
 		user_role_dao.deleteByUserId(id);
 		return user_dao.findAll();
+	}
+
+	/* 
+	 * 模糊查询
+	 */
+	@Override
+	public ResultVO findByNameLike(String name) {
+		List<UserMapper> list = user_dao.findByNameLike("%"+name+"%");
+		if(list==null||list.size()==0)return ResultVOUtil.error(ResultEnum.USERSIZE_NULL.getStatus(), ResultEnum.USERSIZE_NULL.getMessage());
+		return ResultVOUtil.success(list); 
 	}
 
 }

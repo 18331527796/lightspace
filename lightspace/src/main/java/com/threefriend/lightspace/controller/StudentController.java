@@ -93,7 +93,7 @@ public class StudentController {
 	@PostMapping("/queryStudent")
 	@ResponseBody
 	public ResultVO queryStudents(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.findByNameLike(params.get("name")));
+		return student_Impl.findByNameLike(params.get("name"));
 	}
 	
 	/**

@@ -146,8 +146,10 @@ public class ClassesServiceImpl implements ClassesService {
 	 * 模糊查询
 	 */
 	@Override
-	public List<ClassesMapper> findByNameLike(String name) {
-		return classes_dao.findByClassNameLike("%" + name + "%");
+	public ResultVO findByNameLike(String name) {
+		List<ClassesMapper> list = classes_dao.findByClassNameLike("%" + name + "%");
+		if(list==null||list.size()==0)return ResultVOUtil.error(ResultEnum.CLASSSIZE_NULL.getStatus(), ResultEnum.CLASSSIZE_NULL.getMessage());
+		return ResultVOUtil.success(list);
 	}
 
 	/*

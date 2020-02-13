@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.StudentVO;
 
 /**
@@ -25,7 +26,7 @@ public interface StudentService {
 	//按照id查询学生
 	public StudentVO findById(Integer id);
 	//模糊查询
-	public 	List<StudentMapper> findByNameLike(String name);
+	public 	ResultVO findByNameLike(String name);
 	//按照学校班级姓名模糊查询
 	public List<StudentVO> findBySchoolIdAndClassesIdAndNameLike(Integer sId,Integer cId,String name);
 }

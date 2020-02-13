@@ -24,6 +24,6 @@ public interface SchoolService {
 	//删除学校
 	public List<SchoolMapper> deleteSchool(Integer id);
 	//模糊查询
-	public List<SchoolMapper> findAllSchoolLike(String name);
+	public ResultVO findAllSchoolLike(String name);
 	
 }

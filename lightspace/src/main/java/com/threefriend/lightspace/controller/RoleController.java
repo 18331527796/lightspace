@@ -84,4 +84,15 @@ public class RoleController {
 	public ResultVO roleRight(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(role_impl.roleRight(params));
 	}
+	
+	/**
+	 * 模糊查询
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/queryRole")
+	@ResponseBody
+	public ResultVO queryRole(@RequestParam Map<String, String> params) {
+		return role_impl.findByRoleNameLike(params.get("name"));
+	}
 }

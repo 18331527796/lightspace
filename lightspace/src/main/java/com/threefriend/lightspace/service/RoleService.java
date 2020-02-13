@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.threefriend.lightspace.mapper.RoleMapper;
+import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.RoleRightVO;
 
 public interface RoleService {
@@ -20,5 +21,7 @@ public interface RoleService {
 	public List<RoleMapper> deleteRole(Integer id);
 	//角色分配权限
 	public List<RoleMapper> roleRight(Map<String, String> params);
+	//模糊查询
+	public ResultVO findByRoleNameLike(String name);
 
 }

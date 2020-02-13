@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.constant.RecordEnums;
 import com.threefriend.lightspace.constant.VisionEnums;
+import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
@@ -22,8 +23,10 @@ import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.RecordService;
+import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.OneStatisticsVO;
 import com.threefriend.lightspace.vo.RecordVO;
+import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.StatisticsVO;
 
 /**
@@ -180,8 +183,10 @@ public class RecordServiceImpl implements RecordService {
 	 * 模糊查询
 	 */
 	@Override
-	public List<RecordMapper> findByName(String name) {
-		return record_dao.findAllByStudentNameLike("%" + name + "%");
+	public ResultVO findByName(String name) {
+		List<RecordMapper> list = record_dao.findAllByStudentNameLike("%" + name + "%");
+		if(list==null||list.size()==0) return ResultVOUtil.error(ResultEnum.RECORDSIZE_NULL.getStatus(), ResultEnum.RECORDSIZE_NULL.getMessage());
+		return ResultVOUtil.success(list);
 	}
 
 	/*

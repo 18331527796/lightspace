@@ -77,9 +77,19 @@ public class UserController {
 	 */
 	@PostMapping("/deleteUser")
 	@ResponseBody
-	public ResultVO userList(@RequestParam Map<String, String> params) {
+	public ResultVO deleteUser(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(user_impl.deleteUser(Integer.valueOf(params.get("id"))));
 	}
 	
+	/**
+	 * 模糊查询
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/queryUser")
+	@ResponseBody
+	public ResultVO queryUser(@RequestParam Map<String, String> params) {
+		return user_impl.findByNameLike(params.get("name"));
+	}
 
 }

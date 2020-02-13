@@ -88,7 +88,7 @@ public class ClassesController {
 	@PostMapping("/queryClasses")
 	@ResponseBody
 	public ResultVO queryClasses(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.findByNameLike(params.get("className")));
+		return classes_impl.findByNameLike(params.get("name"));
 	}
 	
 	/**

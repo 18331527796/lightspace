@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.threefriend.lightspace.mapper.UserMapper;
+import com.threefriend.lightspace.vo.ResultVO;
 
 /**
  * 用户业务逻辑
@@ -23,6 +24,9 @@ public interface UserService {
 	public Object getUserRight(String token);
 	//删除账户
 	public List<UserMapper> deleteUser(Integer id);
+	//所属人模糊查询
+	public ResultVO findByNameLike(String name);
+	
 	
 	
 }

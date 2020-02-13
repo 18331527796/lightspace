@@ -81,7 +81,7 @@ public class RecordController {
 	@PostMapping("/queryRecord")
 	@ResponseBody
 	public ResultVO queryRecord(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.findByName(params.get("name")));
+		return record_impl.findByName(params.get("name"));
 	}
 	
 	/**

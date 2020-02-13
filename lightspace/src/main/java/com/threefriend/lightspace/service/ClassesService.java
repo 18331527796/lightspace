@@ -22,7 +22,7 @@ public interface ClassesService {
 	//按照id查询班级
 	public ClassesMapper findById(Integer id);
 	//模糊查询
-	public List<ClassesMapper> findByNameLike(String name);
+	public ResultVO findByNameLike(String name);
 	//方便于下拉框的方法 （学校——>班级——>学生）
 	public List<SchoolVO> cascade();
 	//方便于下拉框的方法 （学校——>班级）
