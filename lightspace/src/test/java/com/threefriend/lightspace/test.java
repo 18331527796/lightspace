@@ -2,9 +2,8 @@ package com.threefriend.lightspace;
 
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,13 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.threefriend.lightspace.constant.VisionEnums;
-import com.threefriend.lightspace.mapper.RecordMapper;
-import com.threefriend.lightspace.mapper.StudentMapper;
-import com.threefriend.lightspace.repository.RecordRepository;
-import com.threefriend.lightspace.repository.RoleRightRepository;
-import com.threefriend.lightspace.repository.StudentRepository;
-import com.threefriend.lightspace.util.RedisUtils;
+import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.lightspace.xcx.service.Impl.ScreeningServiceImpl;
 
 
 
@@ -26,23 +20,20 @@ import com.threefriend.lightspace.util.RedisUtils;
 @SpringBootTest
 public class test {
 
-	
 	@Autowired
-	private RoleRightRepository role_right_dao;
-	
-	@Autowired
-	private StudentRepository student_dao;
-	@Autowired
-	private RecordRepository record_dao;
+	private ScreeningServiceImpl pp;
 	
 	/*@Resource
 	private RedisUtils redisUtil;*/
 	
 	@Test
 	public void test() {
-		
-		int i = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(22,0.8,3.0);
-		System.out.println(i);
+		Long now= new Date().getTime(); 
+		for (int j = 0; j < 3000; j++) {
+			ResultVO selectStudent = pp.selectStudent();
+			System.out.println(selectStudent+"---"+j);
+		}
+		System.out.println((new Date().getTime()-now)/1000);
 	}
 	
 	/*@Test

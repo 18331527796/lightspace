@@ -292,20 +292,20 @@ public class RecordServiceImpl implements RecordService {
 				VisionEnums.MILD1.getType());
 		Integer avgSerious = record_dao.schoolAvgVision(schoolId, VisionEnums.SERIOUS1.getType(),
 				VisionEnums.SERIOUS.getType());
-		left.add(new StatisticsVO("左眼良好数量", leftGood));
-		left.add(new StatisticsVO("左眼轻度不良数量", leftMild));
-		left.add(new StatisticsVO("左眼中度不良数量", leftModerate));
-		left.add(new StatisticsVO("左眼重度不良数量", leftSerious));
+		left.add(new StatisticsVO("良好", leftGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		left.add(new StatisticsVO("轻度不良", leftMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		left.add(new StatisticsVO("中度不良", leftModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		left.add(new StatisticsVO("重度不良", leftSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(left);
-		right.add(new StatisticsVO("右眼良好数量", rightGood));
-		right.add(new StatisticsVO("右眼轻度不良数量", rightMild));
-		right.add(new StatisticsVO("右眼中度不良数量", rightModerate));
-		right.add(new StatisticsVO("右眼重度不良数量", rightSerious));
+		right.add(new StatisticsVO("良好", rightGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		right.add(new StatisticsVO("轻度不良", rightMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		right.add(new StatisticsVO("中度不良", rightModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		right.add(new StatisticsVO("重度不良", rightSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(right);
-		avg.add(new StatisticsVO("双眼良好数量", avgGood));
-		avg.add(new StatisticsVO("双眼轻度不良数量", avgMild));
-		avg.add(new StatisticsVO("双眼中度不良数量", avgModerate));
-		avg.add(new StatisticsVO("双眼重度不良数量", avgSerious));
+		avg.add(new StatisticsVO("良好", avgGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		avg.add(new StatisticsVO("轻度不良", avgMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		avg.add(new StatisticsVO("中度不良", avgModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		avg.add(new StatisticsVO("重度不良", avgSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(avg);
 		return end;
 	}
@@ -333,25 +333,26 @@ public class RecordServiceImpl implements RecordService {
 		Integer rightSerious = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
 				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
 		Integer avgGood = record_dao.classAvgVision(classId, VisionEnums.NORMAL.getType());
-		Integer avgMild = record_dao.classAvgVision(classId, VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
+		Integer avgMild = record_dao.classAvgVision(classId, VisionEnums.MILD.getType(),
+				VisionEnums.NORMAL.getType());
 		Integer avgModerate = record_dao.classAvgVision(classId, VisionEnums.MODERATE.getType(),
 				VisionEnums.MILD1.getType());
 		Integer avgSerious = record_dao.classAvgVision(classId, VisionEnums.SERIOUS1.getType(),
 				VisionEnums.SERIOUS.getType());
-		left.add(new StatisticsVO("左眼良好数量", leftGood));
-		left.add(new StatisticsVO("左眼轻度不良数量", leftMild));
-		left.add(new StatisticsVO("左眼中度不良数量", leftModerate));
-		left.add(new StatisticsVO("左眼重度不良数量", leftSerious));
+		left.add(new StatisticsVO("良好", leftGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		left.add(new StatisticsVO("轻度不良", leftMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		left.add(new StatisticsVO("中度不良", leftModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		left.add(new StatisticsVO("重度不良", leftSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(left);
-		right.add(new StatisticsVO("右眼良好数量", rightGood));
-		right.add(new StatisticsVO("右眼轻度不良数量", rightMild));
-		right.add(new StatisticsVO("右眼中度不良数量", rightModerate));
-		right.add(new StatisticsVO("右眼重度不良数量", rightSerious));
+		right.add(new StatisticsVO("良好", rightGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		right.add(new StatisticsVO("轻度不良", rightMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		right.add(new StatisticsVO("中度不良", rightModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		right.add(new StatisticsVO("重度不良", rightSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(right);
-		avg.add(new StatisticsVO("双眼良好数量", avgGood));
-		avg.add(new StatisticsVO("双眼轻度不良数量", avgMild));
-		avg.add(new StatisticsVO("双眼中度不良数量", avgModerate));
-		avg.add(new StatisticsVO("双眼重度不良数量", avgSerious));
+		avg.add(new StatisticsVO("良好", avgGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		avg.add(new StatisticsVO("轻度不良", avgMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		avg.add(new StatisticsVO("中度不良", avgModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		avg.add(new StatisticsVO("重度不良", avgSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(avg);
 		return end;
 	}

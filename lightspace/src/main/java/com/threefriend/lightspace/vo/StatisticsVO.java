@@ -1,10 +1,20 @@
 package com.threefriend.lightspace.vo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class StatisticsVO {
 	
 	private String name;
 	
 	private Integer value;
+	
+	private Map<String, String> itemStyle;
+	
+
+	public Map<String, String> getItemStyle() {
+		return itemStyle;
+	}
 
 	public String getName() {
 		return name;
@@ -22,9 +32,10 @@ public class StatisticsVO {
 		this.value = value;
 	}
 	
-	public StatisticsVO (String name,Integer value) {
+	public StatisticsVO (String name,Integer value,Map<String, String> itemStyle) {
         this.name=name;
         this.value=value;
+        this.itemStyle=itemStyle;
 	}
 	
 }

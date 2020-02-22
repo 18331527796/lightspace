@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService {
 		user.setLoginName(params.get("loginName"));
 		user.setRoleName(role_dao.findById(Integer.valueOf(params.get("roleId"))).get().getRoleName());
 		user.setPassword(DigestUtils.md5DigestAsHex(params.get("password").getBytes()));
-		if(!StringUtils.isEmpty(params.get("wechatName")))user.setWechatName(params.get("wechatName"));
 		if(!StringUtils.isEmpty(params.get("schoolId")))user.setSchoolId(Integer.valueOf(params.get("schoolId")));
 		if(!StringUtils.isEmpty(params.get("classesId")))user.setClassesId(Integer.valueOf(params.get("classesId")));;
 		user_dao.save(user);

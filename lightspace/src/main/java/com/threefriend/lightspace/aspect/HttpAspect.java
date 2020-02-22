@@ -25,7 +25,7 @@ public class HttpAspect {
 	private RedisUtils redisUtil;
 
 	@Pointcut("execution(public * com.threefriend.lightspace.controller.*.*(..))" +
-		    "&& !execution(public * com.threefriend.lightspace.controller.UserController.*(..))")
+		    "&& !execution(public * com.threefriend.lightspace.controller.UserController.login(..))")
 		    public void verify() {}
 	
 	

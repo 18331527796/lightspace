@@ -125,7 +125,7 @@ public class RecordController {
 	@PostMapping("/classStatistics")
 	@ResponseBody
 	public ResultVO classStatistics(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.schoolStatistics(Integer.valueOf(params.get("classId"))));
+		return ResultVOUtil.success(record_impl.classStatistics(Integer.valueOf(params.get("classId"))));
 	}
 	
 }

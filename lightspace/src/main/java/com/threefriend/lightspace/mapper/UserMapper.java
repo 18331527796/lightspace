@@ -16,9 +16,6 @@ public class UserMapper {
 	private Integer id;
 	// 用户姓名
 	private String name;
-	// 微信昵称
-	@Column(name="wechat_name")
-	private String wechatName;
 	// 用户账号
 	@Column(name="login_name")
 	private String loginName;
@@ -67,12 +64,6 @@ public class UserMapper {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public String getWechatName() {
-		return wechatName;
-	}
-	public void setWechatName(String wechatName) {
-		this.wechatName = wechatName;
 	}
 	public String getLoginName() {
 		return loginName;

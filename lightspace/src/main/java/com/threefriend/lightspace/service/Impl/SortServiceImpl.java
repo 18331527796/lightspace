@@ -14,10 +14,12 @@ import org.springframework.util.StringUtils;
 import com.threefriend.lightspace.constant.SortEnums;
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.RecordMapper;
+import com.threefriend.lightspace.mapper.ScreeningMapper;
 import com.threefriend.lightspace.mapper.SortMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
+import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.SortRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.SortService;
@@ -39,6 +41,8 @@ public class SortServiceImpl implements SortService {
 	private SortRepository sort_dao;
 	@Autowired
 	private ClassesRepository class_dao;
+	@Autowired
+	private ScreeningRepository screening_dao;
 
 	/*
 	 * 学生排座
@@ -75,10 +79,17 @@ public class SortServiceImpl implements SortService {
 				SortVO vo = new SortVO();
 				// 拿出来每个人的最新数据
 				RecordMapper top = record_dao.findTopByStudentIdOrderByGenTime(id);
+				// 拿出筛查的最新数据
+				ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTime(id);
 				if (top != null) {
 					vo.setStudentId(top.getStudentId());
 					vo.setStudentName(top.getStudentName());
-					vo.setAvgRecord((top.getVisionLeft() + top.getVisionRight()) / 2);
+					// 筛查数据不是空的 并且 比检测数据更新 那就取筛查数据
+					if(screening != null&& screening.getGenTime().getTime()>top.getGenTime().getTime()) {
+						vo.setAvgRecord((screening.getVisionLeft() + screening.getVisionRight()) / 2);
+					}else {
+						vo.setAvgRecord((top.getVisionLeft() + top.getVisionRight()) / 2);
+					}
 					sort.add(vo);
 				}
 			}
