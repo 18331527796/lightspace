@@ -9,5 +9,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter{
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        System.out.println("配置静态访问路径");
     }
 }

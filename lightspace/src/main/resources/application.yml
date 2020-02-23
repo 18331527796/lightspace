@@ -4,6 +4,8 @@ spring:
     url:  jdbc:mysql://localhost:3306/lightspace?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
     username: root
     password: root
+#    password: lightspace
+    
   redis:
     host: 127.0.0.1
     port: 6379

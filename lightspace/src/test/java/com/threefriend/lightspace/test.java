@@ -20,13 +20,13 @@ import com.threefriend.lightspace.xcx.service.Impl.ScreeningServiceImpl;
 @SpringBootTest
 public class test {
 
-	@Autowired
-	private ScreeningServiceImpl pp;
+	/*@Autowired
+	private ScreeningServiceImpl pp;*/
 	
 	/*@Resource
 	private RedisUtils redisUtil;*/
 	
-	@Test
+	/*@Test
 	public void test() {
 		Long now= new Date().getTime(); 
 		for (int j = 0; j < 3000; j++) {
@@ -35,7 +35,7 @@ public class test {
 		}
 		System.out.println((new Date().getTime()-now)/1000);
 	}
-	
+	*/
 	/*@Test
 	public void userRightTest() {
 		user_impl.getUserRight("00");
