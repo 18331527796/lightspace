@@ -11,4 +11,5 @@ import com.threefriend.lightspace.mapper.RegionMapper;
  */
 public interface RegionRepository extends JpaRepository<RegionMapper, Integer>{
 
+	RegionMapper findByName(String name);
 }

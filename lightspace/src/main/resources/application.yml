@@ -31,9 +31,9 @@ spring:
       max-file-size: 30MB
       max-request-size: 30MB
         
-#server:    
-#  servlet:
-#    context-path: /lightspace    
+server:    
+  servlet:
+    context-path: /lightspace    
     
     
     

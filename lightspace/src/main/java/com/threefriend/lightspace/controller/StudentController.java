@@ -3,10 +3,13 @@ package com.threefriend.lightspace.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.service.Impl.StudentServiceImpl;
 import com.threefriend.lightspace.util.ResultVOUtil;
@@ -107,5 +110,15 @@ public class StudentController {
 		return ResultVOUtil.success(student_Impl.findBySchoolIdAndClassesIdAndNameLike(Integer.valueOf(params.get("schoolId")), Integer.valueOf(params.get("classId")), params.get("name")));
 	}
 	
+	@ResponseBody
+	@PostMapping(value="/studentExcel")
+	public ResultVO  upload(@RequestParam(value="file",required = false)MultipartFile file,@RequestParam(value="token")String token){
+		return student_Impl.readStudentExcel(file,token);
+	}
 	
+	@ResponseBody
+	@PostMapping(value="/downloadStudent")
+	public ResponseEntity<InputStreamResource>  downloadStudent(){
+		return student_Impl.download();
+	}
 }

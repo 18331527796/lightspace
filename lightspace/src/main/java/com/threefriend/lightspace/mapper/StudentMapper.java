@@ -46,7 +46,7 @@ public class StudentMapper {
 	private String height;
 	// 坐姿身高
 	@Column(name = "sitting_height")
-	private Double sittingHeight;
+	private String sittingHeight;
 	// 坐姿用椅高度
 	@Column(name = "chair_height")
 	private String chairHeight;
@@ -125,10 +125,10 @@ public class StudentMapper {
 		this.height = height;
 	}
 	
-	public Double getSittingHeight() {
+	public String getSittingHeight() {
 		return sittingHeight;
 	}
-	public void setSittingHeight(Double sittingHeight) {
+	public void setSittingHeight(String sittingHeight) {
 		this.sittingHeight = sittingHeight;
 	}
 	public String getChairHeight() {
@@ -160,6 +160,14 @@ public class StudentMapper {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	@Override
+	public String toString() {
+		return "StudentMapper [id=" + id + ", regionName=" + regionName + ", regionId=" + regionId + ", schoolName="
+				+ schoolName + ", schoolId=" + schoolId + ", classesName=" + classesName + ", classesId=" + classesId
+				+ ", name=" + name + ", gender=" + gender + ", age=" + age + ", height=" + height + ", sittingHeight="
+				+ sittingHeight + ", chairHeight=" + chairHeight + ", weight=" + weight + ", nature=" + nature
+				+ ", correct=" + correct + ", description=" + description + "]";
 	}
 
 

@@ -33,6 +33,8 @@ public enum ResultEnum {
     ROLESIZE_NULL(10212,"无相关角色信息~"),
     
     USERSIZE_NULL(10213,"无相关用户信息~"),
+    
+    DOWNLOAD_ERROR(10214,"下载模板失败"),
     ;
 
     private Integer status;

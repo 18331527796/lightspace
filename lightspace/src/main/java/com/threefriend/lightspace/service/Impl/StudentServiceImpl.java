@@ -6,8 +6,11 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.StudentMapper;
@@ -16,6 +19,7 @@ import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.StudentService;
+import com.threefriend.lightspace.util.DownloadFileUtil;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.StudentVO;
@@ -25,6 +29,11 @@ import com.threefriend.lightspace.vo.StudentVO;
  */
 @Service
 public class StudentServiceImpl implements StudentService{
+	//文件名
+    String FILENAME ="学生导入模板.xlsx";
+    //下载展示的文件名
+    String NEWNAME="学生导入模板";
+    		
 	@Autowired
 	private StudentRepository student_dao;
 	@Autowired
@@ -33,6 +42,8 @@ public class StudentServiceImpl implements StudentService{
 	private ClassesRepository classes_dao;
 	@Autowired
 	private RecordRepository record_dao;
+	@Autowired
+	private ReadStudentExcel readexcel;
 
 	/* 
 	 * 学生列表
@@ -72,7 +83,7 @@ public class StudentServiceImpl implements StudentService{
 		student.setRegionName("唐山");
 		student.setSchoolId(Integer.valueOf(params.get("schoolId")));
 		student.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
-		student.setSittingHeight(Double.valueOf(params.get("sittingHeight")));
+		student.setSittingHeight(params.get("sittingHeight"));
 		student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		System.out.println(params.get("chairHeight")+"--"+params.get("height")+"--"+params.get("sittingHeight"));
@@ -113,7 +124,7 @@ public class StudentServiceImpl implements StudentService{
 		}else {
 			student.setNature("");
 		}
-		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(Double.valueOf(params.get("sittingHeight")));
+		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
 		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		if(!StringUtils.isEmpty(params.get("schoolId"))) {
@@ -166,6 +177,39 @@ public class StudentServiceImpl implements StudentService{
 			vo.add(new StudentVO(studentMapper.getId(), studentMapper.getName()));
 		}
 		return vo;
+	}
+
+	@Override
+	public ResultVO readStudentExcel(MultipartFile file,String token) {
+		List<StudentMapper> studentInfo = readexcel.getStudentInfo(file);
+		if(studentInfo==null) {
+			System.out.println("读取excel数据返回值是空的");
+		}
+		
+		new Thread(){//直接重写run方法   开启新线程 异步处理excel文件
+            @Override 
+            public synchronized void run(){ 
+                for (StudentMapper studentMapper : studentInfo) {
+                	student_dao.save(studentMapper);
+                }
+            } 
+        }.start(); 
+        
+		String[] split = token.split("-");
+		if(split[1].equals("3"))return ResultVOUtil.success(student_dao.findBySchoolId(Integer.valueOf(split[2])));
+		if(split[1].equals("4"))return ResultVOUtil.success(student_dao.findByClassesId(Integer.valueOf(split[2])));
+		return ResultVOUtil.success(student_dao.findAll());
+	}
+
+	@Override
+	public ResponseEntity<InputStreamResource> download() {
+		ResponseEntity<InputStreamResource> response = null;
+        try {
+            response = DownloadFileUtil.download(FILENAME, NEWNAME);
+        } catch (Exception e) {
+            System.out.println("下载模板失败");
+        }
+        return response;
 	}
 
 }

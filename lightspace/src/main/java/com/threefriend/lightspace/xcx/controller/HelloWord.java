@@ -30,6 +30,13 @@ public class HelloWord {
 	}
 	
 	
+	/**
+	 * 图片的上传
+	 * @param file
+	 * @param request
+	 * @param wechatName
+	 * @return
+	 */
 	@ResponseBody
     @RequestMapping("/upload")
     public ResultVO uploadPicture(@RequestParam(value="file",required=false) MultipartFile file, HttpServletRequest request,@RequestParam String wechatName){
