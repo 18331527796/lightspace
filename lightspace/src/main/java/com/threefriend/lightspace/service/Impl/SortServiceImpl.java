@@ -6,13 +6,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.query.criteria.internal.expression.function.AggregationFunction.AVG;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.constant.SortEnums;
-import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.ScreeningMapper;
 import com.threefriend.lightspace.mapper.SortMapper;

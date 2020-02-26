@@ -3,8 +3,6 @@ package com.threefriend.lightspace.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.threefriend.lightspace.mapper.RightMapper;
-
 public class RoleRightVO {
 	
 	private Integer roleId;

@@ -2,10 +2,13 @@ package com.threefriend.lightspace.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -110,15 +113,25 @@ public class StudentController {
 		return ResultVOUtil.success(student_Impl.findBySchoolIdAndClassesIdAndNameLike(Integer.valueOf(params.get("schoolId")), Integer.valueOf(params.get("classId")), params.get("name")));
 	}
 	
+	/**
+	 * 批量导入学生信息
+	 * @param file
+	 * @param token
+	 * @return
+	 */
 	@ResponseBody
 	@PostMapping(value="/studentExcel")
 	public ResultVO  upload(@RequestParam(value="file",required = false)MultipartFile file,@RequestParam(value="token")String token){
 		return student_Impl.readStudentExcel(file,token);
 	}
 	
+	/**
+	 * 下载模板（流方式）（暂停使用）
+	 * @param res
+	 */
 	@ResponseBody
-	@PostMapping(value="/downloadStudent")
-	public ResponseEntity<InputStreamResource>  downloadStudent(){
-		return student_Impl.download();
+	@RequestMapping(value="/downloadStudent")
+	public void  downloadStudent(HttpServletResponse res){
+		student_Impl.download(res);
 	}
 }

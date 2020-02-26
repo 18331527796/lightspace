@@ -18,7 +18,6 @@ import com.threefriend.lightspace.mapper.ParentMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.ScreeningMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
-import com.threefriend.lightspace.mapper.UserMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.OptotypeRepository;
 import com.threefriend.lightspace.repository.ParentRepository;

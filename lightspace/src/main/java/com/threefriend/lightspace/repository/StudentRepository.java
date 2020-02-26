@@ -26,8 +26,18 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	List<StudentMapper> findByClassesIdOrderBySittingHeight(Integer classesid);
 	
 	List<StudentMapper> findBySchoolIdAndClassesIdAndNameLike(Integer schoolid,Integer classesid,String name);
+	
+	StudentMapper findBySchoolIdAndClassesIdAndName(Integer schoolid,Integer classesid,String name);
 	@Transactional
 	void deleteByClassesId(List<Integer> ids);
 	@Transactional
 	void deleteByClassesId(Integer id);
+	
+	StudentMapper findByNameAndParentPhone(String name,String parentPhone);
+	
+	int countByClassesIdAndCorrect(Integer classId,Integer correct);
+	
+	int countByClassesId(Integer classId);
+	
+	int countBySchoolId(Integer school);
 }

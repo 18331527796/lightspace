@@ -116,7 +116,7 @@ public class SerializeUtil {
             bais = new ByteArrayInputStream(bytes);
             ois = new ObjectInputStream(bais);
             while (bais.available() > 0) {
-                Object obj = (Object) ois.readObject();
+                Object obj = ois.readObject();
                 if (obj == null) {
                     break;
                 }

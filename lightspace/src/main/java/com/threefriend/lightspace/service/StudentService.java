@@ -3,6 +3,8 @@ package com.threefriend.lightspace.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +37,6 @@ public interface StudentService {
 	List<StudentVO> findBySchoolIdAndClassesIdAndNameLike(Integer sId,Integer cId,String name);
 	//导入excel
 	ResultVO readStudentExcel(MultipartFile file, String token);
-	//下载学生导入模板
-	ResponseEntity<InputStreamResource> download();
+	//下载学生导入模板（流方式）（暂停使用）
+	void download(HttpServletResponse response);
 }

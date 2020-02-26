@@ -21,7 +21,6 @@ import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.ClassesService;
 import com.threefriend.lightspace.util.RedisUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
-import com.threefriend.lightspace.util.SerializeUtil;
 import com.threefriend.lightspace.vo.ClassesVO;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SchoolVO;

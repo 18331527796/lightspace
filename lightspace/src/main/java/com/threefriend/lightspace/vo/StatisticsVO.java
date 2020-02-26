@@ -1,6 +1,5 @@
 package com.threefriend.lightspace.vo;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class StatisticsVO {

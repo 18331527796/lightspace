@@ -48,7 +48,7 @@ public interface RecordRepository extends JpaRepository<RecordMapper, Integer>{
 	@Query("select count(1) from RecordMapper where schoolId = ?1 and (visionLeft + visionRight)/2 > ?2 ORDER BY studentId")
 	int schoolAvgVision(Integer school,Double min);
 	
-	int countByClassesIdAndVisionLeftBetweenOrderByStudentId(Integer schoolId,Double min,Double max);
+	int countByClassesIdAndVisionLeftBetweenOrderByStudentId(Integer ClassId,Double min,Double max);
 	
 	int countByClassesIdAndVisionLeftGreaterThanOrderByStudentId(Integer ClassId,Double min);
 	

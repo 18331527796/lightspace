@@ -2,11 +2,15 @@ package com.threefriend.lightspace.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.service.Impl.RecordServiceImpl;
 import com.threefriend.lightspace.util.ResultVOUtil;
@@ -128,4 +132,25 @@ public class RecordController {
 		return ResultVOUtil.success(record_impl.classStatistics(Integer.valueOf(params.get("classId"))));
 	}
 	
+	/**
+	 * 批量导入检测数据
+	 * @param file
+	 * @param token
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="/recordExcel")
+	public ResultVO  upload(@RequestParam(value="file",required = false)MultipartFile file,@RequestParam(value="token")String token){
+		return record_impl.readRecordExcel(file,token);
+	}
+	
+	/**
+	 * 下载模板（流方式）（暂停使用）
+	 * @param res
+	 */
+	@ResponseBody
+	@RequestMapping(value="/downloadRecord")
+	public void  downloadStudent(HttpServletResponse res){
+		record_impl.download(res);
+	}
 }

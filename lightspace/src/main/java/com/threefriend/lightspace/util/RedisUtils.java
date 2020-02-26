@@ -3,8 +3,6 @@ package com.threefriend.lightspace.util;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

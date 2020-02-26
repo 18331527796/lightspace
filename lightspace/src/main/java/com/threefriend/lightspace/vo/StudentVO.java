@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-
 public class StudentVO implements Serializable{
 
 	/**
@@ -35,11 +33,13 @@ public class StudentVO implements Serializable{
 	// 身高
 	private String height;
 	// 坐姿身高
-	private Double sittingHeight;
+	private String sittingHeight;
 	// 坐姿用椅高度
 	private String chairHeight;
 	// 体重
 	private String weight;
+	//家长联系方式
+	private String parentPhone;
 	// 性格
 	private String nature ="";
 	// 是否矫正 (0:未校正 1:未校正)
@@ -121,11 +121,11 @@ public class StudentVO implements Serializable{
 		this.height = height;
 	}
 
-	public Double getSittingHeight() {
+	public String getSittingHeight() {
 		return sittingHeight;
 	}
 
-	public void setSittingHeight(Double sittingHeight) {
+	public void setSittingHeight(String sittingHeight) {
 		this.sittingHeight = sittingHeight;
 	}
 
@@ -203,6 +203,14 @@ public class StudentVO implements Serializable{
 		this.Name=name;
 	}
 	
+	public String getParentPhone() {
+		return parentPhone;
+	}
+
+	public void setParentPhone(String parentPhone) {
+		this.parentPhone = parentPhone;
+	}
+
 	public StudentVO () {
 	}
 }

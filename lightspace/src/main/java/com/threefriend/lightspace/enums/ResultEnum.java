@@ -35,6 +35,8 @@ public enum ResultEnum {
     USERSIZE_NULL(10213,"无相关用户信息~"),
     
     DOWNLOAD_ERROR(10214,"下载模板失败"),
+    
+    READEXCEL_ERROR(10215,"读取EXCEL文件失败，请检查文件是否规范"),
     ;
 
     private Integer status;

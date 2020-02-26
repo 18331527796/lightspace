@@ -3,6 +3,7 @@ package com.threefriend.lightspace.service.Impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
+import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.RegionMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
@@ -26,7 +28,7 @@ import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 
 @Service
-public class ReadStudentExcel {
+public class ReadRecordExcel {
 	@Autowired
 	private RegionRepository region_dao;
 	@Autowired
@@ -35,7 +37,6 @@ public class ReadStudentExcel {
 	private ClassesRepository class_dao;
 	@Autowired
 	private StudentRepository student_dao;
-	
 	// 总行数
 	private int totalRows = 0;
 	// 总条数
@@ -44,7 +45,7 @@ public class ReadStudentExcel {
 	private String errorMsg;
 
 	// 构造方法
-	public ReadStudentExcel() {
+	public ReadRecordExcel() {
 	}
 
 	// 获取总行数
@@ -68,10 +69,10 @@ public class ReadStudentExcel {
 	 * @param fielName
 	 * @return
 	 */
-	public List<StudentMapper> getStudentInfo(MultipartFile mFile) {
+	public List<RecordMapper> getRecordInfo(MultipartFile mFile) {
 		long count = region_dao.count();
 		String fileName = mFile.getOriginalFilename();// 获取文件名
-		List<StudentMapper> studentList = null;
+		List<RecordMapper> RecordList = null;
 		try {
 			if (!validateExcel(fileName)) {// 验证文件名是否合格
 				return null;
@@ -80,11 +81,11 @@ public class ReadStudentExcel {
 			if (isExcel2007(fileName)) {
 				isExcel2003 = false;
 			}
-			studentList = createExcel(mFile.getInputStream(), isExcel2003);
+			RecordList = createExcel(mFile.getInputStream(), isExcel2003);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return studentList;
+		return RecordList;
 	}
 
 	/**
@@ -96,8 +97,8 @@ public class ReadStudentExcel {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<StudentMapper> createExcel(InputStream is, boolean isExcel2003) {
-		List<StudentMapper> studentList = null;
+	public List<RecordMapper> createExcel(InputStream is, boolean isExcel2003) {
+		List<RecordMapper> RecordList = null;
 		try {
 			Workbook wb = null;
 			if (isExcel2003) {// 当excel是2003时,创建excel2003
@@ -105,11 +106,11 @@ public class ReadStudentExcel {
 			} else {// 当excel是2007时,创建excel2007
 				wb = new XSSFWorkbook(is);
 			}
-			studentList = readStudentValue(wb);// 读取Excel里面客户的信息
+			RecordList = readRecordValue(wb);// 读取Excel里面客户的信息
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return studentList;
+		return RecordList;
 	}
 
 	/**
@@ -118,7 +119,7 @@ public class ReadStudentExcel {
 	 * @param wb
 	 * @return
 	 */
-	private List<StudentMapper> readStudentValue(Workbook wb) {
+	private List<RecordMapper> readRecordValue(Workbook wb) {
 		// 得到第一个shell
 		Sheet sheet = wb.getSheetAt(0);
 		// 得到Excel的行数
@@ -127,89 +128,84 @@ public class ReadStudentExcel {
 		if (totalRows > 1 && sheet.getRow(0) != null) {
 			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
 		}
-		List<StudentMapper> studentList = new ArrayList<StudentMapper>();
+		List<RecordMapper> RecordList = new ArrayList<RecordMapper>();
 		// 循环Excel行数
-		Integer schoolId;
-		String name = "";
-		boolean flag=true;
+		Integer schoolId=0;
+		Integer classId=0;
 		for (int r = 1; r < totalRows; r++) {
 			Row row = sheet.getRow(r);
 			if (row == null) {
 				continue;
 			}
-			StudentMapper student = new StudentMapper();
 			schoolId=0;
+			classId=0;
+			RecordMapper Record = new RecordMapper();
+			Record.setGenTime(new Date());
 			// 循环Excel的列
 			for (int c = 0; c < this.totalCells; c++) {
 				Cell cell = row.getCell(c);
 				if (null != cell) {
 					cell.setCellType(Cell.CELL_TYPE_STRING);
 					switch (c) {
-					case 0://姓名
-						name=cell.getStringCellValue();
-						student.setName(cell.getStringCellValue());
-						break;
-					case 1://性别 ( 0 : 男 1 ：女)
-						if(cell.getStringCellValue().equals("男")) {
-							student.setGender(0);
-						}else {
-							student.setGender(1);
-						}
-						break;
-					case 2://年齡
-						student.setAge(Integer.valueOf(cell.getStringCellValue()));
-						break;
-					case 3://身高
-						student.setHeight(cell.getStringCellValue());
-						break;
-					case 4://体重
-						student.setWeight(cell.getStringCellValue());
-						break;
-					case 5://性格
-						student.setNature(cell.getStringCellValue());
-						break;
-					case 6://是否矫正（0：否 1：是）
-						if(cell.getStringCellValue().equals("是")) {
-							student.setCorrect(1);
-						}else {
-							student.setCorrect(0);;
-						}
-						break;
-					case 7://坐姿高度
-						student.setSittingHeight(cell.getStringCellValue());
-						break;
-					case 8://椅子高度
-						student.setChairHeight(cell.getStringCellValue());
-						break;
-					case 9://地区名称
+					case 0://地区名称
 						RegionMapper region = region_dao.findByName(cell.getStringCellValue());
 						if(region!=null) {
-						student.setRegionId(region.getId());
-						student.setRegionName(region.getName());
+							Record.setRegionId(region.getId());
+							Record.setRegionName(region.getName());
 						}
 						break;
-					case 10://学校名称
+					case 1://学校名称
 						SchoolMapper school = school_dao.findByName(cell.getStringCellValue()).get(0);
 						if(school!=null) {
-						schoolId=school.getId();
-						student.setSchoolId(schoolId);
-						student.setSchoolName(school.getName());
+							schoolId=school.getId();
+							Record.setSchoolId(schoolId);
+							Record.setSchoolName(school.getName());
 						}
 						break;
-					case 11://班級名称
-						ClassesMapper classes = class_dao.findBySchoolIdAndClassName(schoolId, cell.getStringCellValue()).get(0);
+					case 2://班级名称
+						ClassesMapper classes = class_dao.findBySchoolIdAndClassName(schoolId,cell.getStringCellValue()).get(0);
 						if(classes!=null) {
-						student.setClassesId(classes.getId());
-						student.setClassesName(classes.getClassName());
+							classId=classes.getId();
+							Record.setClassesId(classId);
+							Record.setClassesName(classes.getClassName());
 						}
 						break;
-					case 12:
-						StudentMapper po = student_dao.findByNameAndParentPhone(name ,cell.getStringCellValue());
-						if(po!=null)flag=false;
-						student.setParentPhone(cell.getStringCellValue());
+					case 3://学生姓名
+						StudentMapper student = student_dao.findBySchoolIdAndClassesIdAndName(schoolId, classId,cell.getStringCellValue() );
+						if(student!=null) {
+						Record.setStudentId(student.getId());
+						Record.setStudentName(student.getName());
+						}
 						break;
-					case 13://备注
-						student.setDescription(cell.getStringCellValue());
+					case 4://右眼曲率
+						Record.setCurvatureRight(Double.valueOf(cell.getStringCellValue()));
+						break;
+					case 5://左眼曲率
+						Record.setCurvatureLeft(Double.valueOf(cell.getStringCellValue()));
+						break;
+					case 6://右眼矫正视力
+						Record.setCvaRight(Double.valueOf(cell.getStringCellValue()));
+						break;
+					case 7://左眼矫正视力
+						Record.setCvaLeft(Double.valueOf(cell.getStringCellValue()));
+						break;
+					case 8://右眼屈光度
+						Record.setDiopterRight(cell.getStringCellValue());
+						break;
+					case 9://左眼屈光度
+						Record.setDiopterLeft(cell.getStringCellValue());
+						break;
+					case 10://右眼眼轴长度
+						Record.setEyeAxisLengthRight(Double.valueOf(cell.getStringCellValue()));
+						break;
+					case 11://左眼眼轴长度
+						Record.setEyeAxisLengthLeft(Double.valueOf(cell.getStringCellValue()));
+						break;
+					case 12://右眼裸眼视力
+						Record.setVisionRight(Double.valueOf(cell.getStringCellValue()));
+						break;
+					case 13://左眼裸眼视力
+						Record.setVisionLeft(Double.valueOf(cell.getStringCellValue()));
 						break;
 					default:
 						break;
@@ -219,9 +215,9 @@ public class ReadStudentExcel {
 				}
 				}
 			// 添加到list
-			if(flag)studentList.add(student);
+			RecordList.add(Record);
 			}
-		return studentList;
+		return RecordList;
 		}
 
 

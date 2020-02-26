@@ -52,12 +52,23 @@ public class StudentMapper {
 	private String chairHeight;
 	// 体重
 	private String weight;
+	// 家长联系方式
+	@Column(name = "patent_phone")
+	private String parentPhone;
 	// 性格
 	private String nature ="";
 	// 是否矫正 (0:未校正 1:未校正)
 	private Integer correct;
 	// 备注
 	private String description;
+	
+	
+	public String getParentPhone() {
+		return parentPhone;
+	}
+	public void setParentPhone(String parentPhone) {
+		this.parentPhone = parentPhone;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -161,6 +172,7 @@ public class StudentMapper {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
 	@Override
 	public String toString() {
 		return "StudentMapper [id=" + id + ", regionName=" + regionName + ", regionId=" + regionId + ", schoolName="

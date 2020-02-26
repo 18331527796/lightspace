@@ -1,14 +1,23 @@
 package com.threefriend.lightspace.service.Impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +28,7 @@ import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.StudentService;
-import com.threefriend.lightspace.util.DownloadFileUtil;
+import com.threefriend.lightspace.util.DownTemplateUtil;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.StudentVO;
@@ -29,11 +38,9 @@ import com.threefriend.lightspace.vo.StudentVO;
  */
 @Service
 public class StudentServiceImpl implements StudentService{
-	//文件名
-    String FILENAME ="学生导入模板.xlsx";
-    //下载展示的文件名
-    String NEWNAME="学生导入模板";
     		
+	private static final String PATH="E:\\学生导入模板.xlsx"; 
+	private static final String FILENAME="学生导入模板.xlsx"; 
 	@Autowired
 	private StudentRepository student_dao;
 	@Autowired
@@ -85,8 +92,8 @@ public class StudentServiceImpl implements StudentService{
 		student.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
 		student.setSittingHeight(params.get("sittingHeight"));
 		student.setWeight(params.get("weight"));
+		student.setParentPhone(params.get("parentPhone"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
-		System.out.println(params.get("chairHeight")+"--"+params.get("height")+"--"+params.get("sittingHeight"));
 		student_dao.save(student);
 		String[] split = params.get("token").split("-");
 		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
@@ -126,6 +133,7 @@ public class StudentServiceImpl implements StudentService{
 		}
 		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
 		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(params.get("weight"));
+		if(!StringUtils.isEmpty(params.get("parentPhone")))student.setParentPhone(params.get("parentPhone"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		if(!StringUtils.isEmpty(params.get("schoolId"))) {
 			student.setSchoolId(Integer.valueOf(params.get("schoolId")));
@@ -135,7 +143,6 @@ public class StudentServiceImpl implements StudentService{
 			student.setClassesId(Integer.valueOf(params.get("classId")));
 			student.setClassesName(classes_dao.findById(Integer.valueOf(params.get("classId"))).get().getClassName());
 		}
-		System.out.println(params.get("chairHeight")+"--"+params.get("height")+"--"+params.get("sittingHeight"));
 		student_dao.save(student);
 		String[] split = params.get("token").split("-");
 		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
@@ -179,37 +186,31 @@ public class StudentServiceImpl implements StudentService{
 		return vo;
 	}
 
+	/* 
+	 * 批量导入学生数据
+	 */
 	@Override
+	@Transactional
 	public ResultVO readStudentExcel(MultipartFile file,String token) {
 		List<StudentMapper> studentInfo = readexcel.getStudentInfo(file);
 		if(studentInfo==null) {
 			System.out.println("读取excel数据返回值是空的");
+			return ResultVOUtil.error(ResultEnum.READEXCEL_ERROR.getStatus(), ResultEnum.READEXCEL_ERROR.READEXCEL_ERROR.getMessage());
 		}
-		
-		new Thread(){//直接重写run方法   开启新线程 异步处理excel文件
-            @Override 
-            public synchronized void run(){ 
-                for (StudentMapper studentMapper : studentInfo) {
-                	student_dao.save(studentMapper);
-                }
-            } 
-        }.start(); 
-        
+        for (StudentMapper studentMapper : studentInfo) {
+        	student_dao.save(studentMapper);
+        }
 		String[] split = token.split("-");
 		if(split[1].equals("3"))return ResultVOUtil.success(student_dao.findBySchoolId(Integer.valueOf(split[2])));
 		if(split[1].equals("4"))return ResultVOUtil.success(student_dao.findByClassesId(Integer.valueOf(split[2])));
 		return ResultVOUtil.success(student_dao.findAll());
 	}
 
+	/* 
+	 * 文件下载（流方式）（暂停使用）
+	 */
 	@Override
-	public ResponseEntity<InputStreamResource> download() {
-		ResponseEntity<InputStreamResource> response = null;
-        try {
-            response = DownloadFileUtil.download(FILENAME, NEWNAME);
-        } catch (Exception e) {
-            System.out.println("下载模板失败");
-        }
-        return response;
+	public void download(HttpServletResponse response) {
+		DownTemplateUtil.downTemplate(response, PATH, FILENAME);
 	}
-
 }
