@@ -48,7 +48,7 @@ public class ClassesMapper {
 	@Column(name="region_id")
 	private Integer regionId;
 	// 备注			
-	private String description;
+	private String description = "";
 	
 	
 	public Integer getId() {

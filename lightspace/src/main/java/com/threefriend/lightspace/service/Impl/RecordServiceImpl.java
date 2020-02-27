@@ -285,9 +285,7 @@ public class RecordServiceImpl implements RecordService {
 		//实验班人数
 		int schoolTest = 0;
 		List<Integer> allclass = class_dao.AllclassIdBySchoolIdAndExperiment(schoolId, 1);
-		for (Integer classId : allclass) {
-			schoolTest += student_dao.countByClassesId(classId);
-		}
+			schoolTest += student_dao.countByClassesIdIn(allclass);
 		
 		//传数据
 		statistics.setSchoolTotal(schoolTotal);
@@ -299,21 +297,21 @@ public class RecordServiceImpl implements RecordService {
 		List<StatisticsVO> right = new ArrayList<>();
 		List<StatisticsVO> avg = new ArrayList<>();
 		List<List<StatisticsVO>> end = new ArrayList<>();
-		Integer leftGood = record_dao.countBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(schoolId,
+		Integer leftGood = record_dao.countTopBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(schoolId,
 				VisionEnums.NORMAL.getType());
-		Integer leftMild = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
+		Integer leftMild = record_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
 				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer leftModerate = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
+		Integer leftModerate = record_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
 				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer leftSerious = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
+		Integer leftSerious = record_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
 				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer rightGood = record_dao.countBySchoolIdAndVisionRightGreaterThanOrderByStudentId(schoolId,
+		Integer rightGood = record_dao.countTopBySchoolIdAndVisionRightGreaterThanOrderByStudentId(schoolId,
 				VisionEnums.NORMAL.getType());
-		Integer rightMild = record_dao.countBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
+		Integer rightMild = record_dao.countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
 				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer rightModerate = record_dao.countBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
+		Integer rightModerate = record_dao.countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
 				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer rightSerious = record_dao.countBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
+		Integer rightSerious = record_dao.countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
 				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
 		Integer avgGood = record_dao.schoolAvgVision(schoolId, VisionEnums.NORMAL.getType());
 		Integer avgMild = record_dao.schoolAvgVision(schoolId, VisionEnums.MILD.getType(),
@@ -339,7 +337,7 @@ public class RecordServiceImpl implements RecordService {
 		end.add(avg);
 		statistics.setTotalData(end);
 		//
-		List<Integer> testIds = class_dao.AllclassIdBySchoolIdAndExperiment(schoolId, 1);
+		List<Integer> classId = class_dao.AllclassIdBySchoolIdAndExperiment(schoolId, 1);
 		List<StatisticsVO> left1 = new ArrayList<>();
 		List<StatisticsVO> right1 = new ArrayList<>();
 		List<StatisticsVO> avg1 = new ArrayList<>();
@@ -347,31 +345,29 @@ public class RecordServiceImpl implements RecordService {
 		Integer leftGood1 = 0,leftMild1 = 0,leftModerate1 = 0,leftSerious1 = 0,
 				rightGood1= 0,rightMild1= 0,rightModerate1= 0,rightSerious1= 0,
 				avgGood1= 0,avgMild1= 0,avgModerate1= 0,avgSerious1= 0;
-		for (Integer classId : testIds) {
-			 leftGood1 += record_dao.countByClassesIdAndVisionLeftGreaterThanOrderByStudentId(classId,
+			 leftGood1 += record_dao.countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(classId,
 					VisionEnums.NORMAL.getType());
-			 leftMild1 += record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+			 leftMild1 += record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 					VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-			 leftModerate1 += record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+			 leftModerate1 += record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 					VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-			 leftSerious1 += record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+			 leftSerious1 += record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 					VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-			 rightGood1 += record_dao.countByClassesIdAndVisionRightGreaterThanOrderByStudentId(classId,
+			 rightGood1 += record_dao.countTopByClassesIdInAndVisionRightGreaterThanOrderByStudentId(classId,
 					VisionEnums.NORMAL.getType());
-			 rightMild1 += record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+			 rightMild1 += record_dao.countTopByClassesIdInAndVisionRightBetweenOrderByStudentId(classId,
 					VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-			 rightModerate1 += record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+			 rightModerate1 += record_dao.countTopByClassesIdInAndVisionRightBetweenOrderByStudentId(classId,
 					VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-			 rightSerious1 += record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+			 rightSerious1 += record_dao.countTopByClassesIdInAndVisionRightBetweenOrderByStudentId(classId,
 					VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-			 avgGood1 += record_dao.classAvgVision(classId, VisionEnums.NORMAL.getType());
-			 avgMild1 += record_dao.classAvgVision(classId, VisionEnums.MILD.getType(),
+			 avgGood1 += record_dao.classInAvgVision(classId, VisionEnums.NORMAL.getType());
+			 avgMild1 += record_dao.classInAvgVision(classId, VisionEnums.MILD.getType(),
 					VisionEnums.NORMAL.getType());
-			 avgModerate1 += record_dao.classAvgVision(classId, VisionEnums.MODERATE.getType(),
+			 avgModerate1 += record_dao.classInAvgVision(classId, VisionEnums.MODERATE.getType(),
 					VisionEnums.MILD1.getType());
-			 avgSerious1 += record_dao.classAvgVision(classId, VisionEnums.SERIOUS1.getType(),
+			 avgSerious1 += record_dao.classInAvgVision(classId, VisionEnums.SERIOUS1.getType(),
 					VisionEnums.SERIOUS.getType());
-		}
 		left1.add(new StatisticsVO("良好", leftGood1,new HashMap<String,String>() {{put("color", "#0793FF");}}));
 		left1.add(new StatisticsVO("轻度不良", leftMild1,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
 		left1.add(new StatisticsVO("中度不良", leftModerate1,new HashMap<String,String>() {{put("color", "#FF0724");}}));
@@ -397,31 +393,29 @@ public class RecordServiceImpl implements RecordService {
 		Integer leftGood2 = 0,leftMild2 = 0,leftModerate2 = 0,leftSerious2 = 0,
 				rightGood2= 0,rightMild2= 0,rightModerate2= 0,rightSerious2= 0,
 				avgGood2= 0,avgMild2= 0,avgModerate2= 0,avgSerious2= 0;
-		for (Integer classId : normalIds) {
-			leftGood2 += record_dao.countByClassesIdAndVisionLeftGreaterThanOrderByStudentId(classId,
+			leftGood2 += record_dao.countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(normalIds,
 					VisionEnums.NORMAL.getType());
-			 leftMild2 += record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+			 leftMild2 += record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(normalIds,
 					VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-			 leftModerate2 += record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+			 leftModerate2 += record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(normalIds,
 					VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-			 leftSerious2 += record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+			 leftSerious2 += record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(normalIds,
 					VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-			 rightGood2 += record_dao.countByClassesIdAndVisionRightGreaterThanOrderByStudentId(classId,
+			 rightGood2 += record_dao.countTopByClassesIdInAndVisionRightGreaterThanOrderByStudentId(normalIds,
 					VisionEnums.NORMAL.getType());
-			 rightMild2 += record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+			 rightMild2 += record_dao.countTopByClassesIdInAndVisionRightBetweenOrderByStudentId(normalIds,
 					VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-			 rightModerate2 += record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+			 rightModerate2 += record_dao.countTopByClassesIdInAndVisionRightBetweenOrderByStudentId(normalIds,
 					VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-			 rightSerious2 += record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+			 rightSerious2 += record_dao.countTopByClassesIdInAndVisionRightBetweenOrderByStudentId(normalIds,
 					VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-			 avgGood2 += record_dao.classAvgVision(classId, VisionEnums.NORMAL.getType());
-			 avgMild2 += record_dao.classAvgVision(classId, VisionEnums.MILD.getType(),
+			 avgGood2 += record_dao.classInAvgVision(normalIds, VisionEnums.NORMAL.getType());
+			 avgMild2 += record_dao.classInAvgVision(normalIds, VisionEnums.MILD.getType(),
 					VisionEnums.NORMAL.getType());
-			 avgModerate2 += record_dao.classAvgVision(classId, VisionEnums.MODERATE.getType(),
+			 avgModerate2 += record_dao.classInAvgVision(normalIds, VisionEnums.MODERATE.getType(),
 					VisionEnums.MILD1.getType());
-			 avgSerious2 += record_dao.classAvgVision(classId, VisionEnums.SERIOUS1.getType(),
+			 avgSerious2 += record_dao.classInAvgVision(normalIds, VisionEnums.SERIOUS1.getType(),
 					VisionEnums.SERIOUS.getType());
-		}
 		left2.add(new StatisticsVO("良好", leftGood2,new HashMap<String,String>() {{put("color", "#0793FF");}}));
 		left2.add(new StatisticsVO("轻度不良", leftMild2,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
 		left2.add(new StatisticsVO("中度不良", leftModerate2,new HashMap<String,String>() {{put("color", "#FF0724");}}));
@@ -449,21 +443,21 @@ public class RecordServiceImpl implements RecordService {
 		List<StatisticsVO> right = new ArrayList<>();
 		List<StatisticsVO> avg = new ArrayList<>();
 		List<List<StatisticsVO>> end = new ArrayList<>();
-		Integer leftGood = record_dao.countBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(schoolId,
+		Integer leftGood = record_dao.countTopBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(schoolId,
 				VisionEnums.NORMAL.getType());
-		Integer leftMild = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
+		Integer leftMild = record_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
 				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer leftModerate = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
+		Integer leftModerate = record_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
 				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer leftSerious = record_dao.countBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
+		Integer leftSerious = record_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
 				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer rightGood = record_dao.countBySchoolIdAndVisionRightGreaterThanOrderByStudentId(schoolId,
+		Integer rightGood = record_dao.countTopBySchoolIdAndVisionRightGreaterThanOrderByStudentId(schoolId,
 				VisionEnums.NORMAL.getType());
-		Integer rightMild = record_dao.countBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
+		Integer rightMild = record_dao.countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
 				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer rightModerate = record_dao.countBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
+		Integer rightModerate = record_dao.countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
 				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer rightSerious = record_dao.countBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
+		Integer rightSerious = record_dao.countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
 				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
 		Integer avgGood = record_dao.schoolAvgVision(schoolId, VisionEnums.NORMAL.getType());
 		Integer avgMild = record_dao.schoolAvgVision(schoolId, VisionEnums.MILD.getType(),
@@ -491,33 +485,35 @@ public class RecordServiceImpl implements RecordService {
 	}
 
 	@Override
-	public List<List<StatisticsVO>> classStatisticsOld(Integer classId) {
+	public List<List<StatisticsVO>> classStatisticsOld(Integer id) {
+		List<Integer> classId = new ArrayList<>();
+		classId.add(id);
 		List<StatisticsVO> left = new ArrayList<>();
 		List<StatisticsVO> right = new ArrayList<>();
 		List<StatisticsVO> avg = new ArrayList<>();
 		List<List<StatisticsVO>> end = new ArrayList<>();
-		Integer leftGood = record_dao.countByClassesIdAndVisionLeftGreaterThanOrderByStudentId(classId,
+		Integer leftGood = record_dao.countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(classId,
 				VisionEnums.NORMAL.getType());
-		Integer leftMild = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+		Integer leftMild = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer leftModerate = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+		Integer leftModerate = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer leftSerious = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+		Integer leftSerious = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer rightGood = record_dao.countByClassesIdAndVisionRightGreaterThanOrderByStudentId(classId,
+		Integer rightGood = record_dao.countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(classId,
 				VisionEnums.NORMAL.getType());
-		Integer rightMild = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+		Integer rightMild = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer rightModerate = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+		Integer rightModerate = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer rightSerious = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+		Integer rightSerious = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer avgGood = record_dao.classAvgVision(classId, VisionEnums.NORMAL.getType());
-		Integer avgMild = record_dao.classAvgVision(classId, VisionEnums.MILD.getType(),
+		Integer avgGood = record_dao.classInAvgVision(classId, VisionEnums.NORMAL.getType());
+		Integer avgMild = record_dao.classInAvgVision(classId, VisionEnums.MILD.getType(),
 				VisionEnums.NORMAL.getType());
-		Integer avgModerate = record_dao.classAvgVision(classId, VisionEnums.MODERATE.getType(),
+		Integer avgModerate = record_dao.classInAvgVision(classId, VisionEnums.MODERATE.getType(),
 				VisionEnums.MILD1.getType());
-		Integer avgSerious = record_dao.classAvgVision(classId, VisionEnums.SERIOUS1.getType(),
+		Integer avgSerious = record_dao.classInAvgVision(classId, VisionEnums.SERIOUS1.getType(),
 				VisionEnums.SERIOUS.getType());
 		left.add(new StatisticsVO("良好", leftGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
 		left.add(new StatisticsVO("轻度不良", leftMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
@@ -539,13 +535,15 @@ public class RecordServiceImpl implements RecordService {
 	
 	
 	@Override
-	public ClassStatisticsVO classStatistics(Integer classId) {
+	public ClassStatisticsVO classStatistics(Integer id) {
+		List<Integer> classId = new ArrayList<>();
+		classId.add(id);
 		//新建返回对象
 		ClassStatisticsVO  statistics = new ClassStatisticsVO();
 		//查这个班里的总人数
-		int total = student_dao.countByClassesId(classId);
+		int total = student_dao.countByClassesId(id);
 		//这个班里的矫正人数
-		int correct = student_dao.countByClassesIdAndCorrect(classId, 1);
+		int correct = student_dao.countByClassesIdAndCorrect(id, 1);
 		statistics.setTotalStudent(total);
 		statistics.setCorrectedStudent(correct);
 		statistics.setUncorrectStudent(total-correct);
@@ -553,28 +551,28 @@ public class RecordServiceImpl implements RecordService {
 		List<StatisticsVO> right = new ArrayList<>();
 		List<StatisticsVO> avg = new ArrayList<>();
 		List<List<StatisticsVO>> end = new ArrayList<>();
-		Integer leftGood = record_dao.countByClassesIdAndVisionLeftGreaterThanOrderByStudentId(classId,
+		Integer leftGood = record_dao.countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(classId,
 				VisionEnums.NORMAL.getType());
-		Integer leftMild = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+		Integer leftMild = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer leftModerate = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+		Integer leftModerate = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer leftSerious = record_dao.countByClassesIdAndVisionLeftBetweenOrderByStudentId(classId,
+		Integer leftSerious = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer rightGood = record_dao.countByClassesIdAndVisionRightGreaterThanOrderByStudentId(classId,
+		Integer rightGood = record_dao.countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(classId,
 				VisionEnums.NORMAL.getType());
-		Integer rightMild = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+		Integer rightMild = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer rightModerate = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+		Integer rightModerate = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer rightSerious = record_dao.countByClassesIdAndVisionRightBetweenOrderByStudentId(classId,
+		Integer rightSerious = record_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
 				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer avgGood = record_dao.classAvgVision(classId, VisionEnums.NORMAL.getType());
-		Integer avgMild = record_dao.classAvgVision(classId, VisionEnums.MILD.getType(),
+		Integer avgGood = record_dao.classInAvgVision(classId, VisionEnums.NORMAL.getType());
+		Integer avgMild = record_dao.classInAvgVision(classId, VisionEnums.MILD.getType(),
 				VisionEnums.NORMAL.getType());
-		Integer avgModerate = record_dao.classAvgVision(classId, VisionEnums.MODERATE.getType(),
+		Integer avgModerate = record_dao.classInAvgVision(classId, VisionEnums.MODERATE.getType(),
 				VisionEnums.MILD1.getType());
-		Integer avgSerious = record_dao.classAvgVision(classId, VisionEnums.SERIOUS1.getType(),
+		Integer avgSerious = record_dao.classInAvgVision(classId, VisionEnums.SERIOUS1.getType(),
 				VisionEnums.SERIOUS.getType());
 		left.add(new StatisticsVO("良好", leftGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
 		left.add(new StatisticsVO("轻度不良", leftMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));

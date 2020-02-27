@@ -104,8 +104,11 @@ public class ClassesServiceImpl implements ClassesService {
 		}
 		if (!StringUtils.isEmpty(params.get("volume")))
 			classes.setVolume(Integer.valueOf(params.get("volume")));
-		if (!StringUtils.isEmpty(params.get("description")))
+		if (!StringUtils.isEmpty(params.get("description"))) {
 			classes.setDescription(params.get("description"));
+		}else {
+			classes.setDescription("");
+		}
 		classes_dao.save(classes);
 		String[] split = params.get("token").split("-");
 		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));

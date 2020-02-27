@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
@@ -41,6 +42,7 @@ public class SchoolServiceImpl implements SchoolService{
 	 * 添加学校
 	 */
 	@Override
+	@Mylog(value=("添加学校"))
 	public ResultVO addSchool(Map<String, String> params) { 
 		List<SchoolMapper> findByName = school_dao.findByName(params.get("name"));
 		if(findByName.size()>=1) return ResultVOUtil.error(ResultEnum.SCHOOLNAME_REPEAT.getStatus(),ResultEnum.SCHOOLNAME_REPEAT.getMessage());
@@ -78,6 +80,7 @@ public class SchoolServiceImpl implements SchoolService{
 	 * 删除学校
 	 */
 	@Override
+	@Mylog(value=("删除学校"))
 	public List<SchoolMapper> deleteSchool(Integer id) {
 		List<ClassesMapper> findBySchoolId = class_dao.findBySchoolId(id);
 		List<Integer> classids= new ArrayList<>();

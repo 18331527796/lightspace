@@ -2,6 +2,8 @@ package com.threefriend.lightspace.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,8 +34,8 @@ public class UserController {
 	 */
 	@PostMapping("/login")
 	@ResponseBody
-	public Object login(@RequestParam Map<String, String> params) {
-		return user_impl.login(params.get("loginname"),params.get("password"));
+	public Object login(@RequestParam Map<String, String> params,HttpSession session) {
+		return user_impl.login(params.get("loginname"),params.get("password"),session);
 	}
 	
 	

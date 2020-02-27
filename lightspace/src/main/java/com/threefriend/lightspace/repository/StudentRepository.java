@@ -37,6 +37,7 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	
 	int countByClassesIdAndCorrect(Integer classId,Integer correct);
 	
+	int countByClassesIdIn(List<Integer> classId);
 	int countByClassesId(Integer classId);
 	
 	int countBySchoolId(Integer school);

@@ -60,7 +60,7 @@ public class StudentMapper {
 	// 是否矫正 (0:未校正 1:未校正)
 	private Integer correct;
 	// 备注
-	private String description;
+	private String description = "";
 	
 	
 	public String getParentPhone() {

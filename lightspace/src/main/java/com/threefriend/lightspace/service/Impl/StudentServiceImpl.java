@@ -134,7 +134,11 @@ public class StudentServiceImpl implements StudentService{
 		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
 		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("parentPhone")))student.setParentPhone(params.get("parentPhone"));
-		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
+		if(!StringUtils.isEmpty(params.get("description"))) {
+			student.setDescription(params.get("description"));
+		}else {
+			student.setDescription("");
+		}
 		if(!StringUtils.isEmpty(params.get("schoolId"))) {
 			student.setSchoolId(Integer.valueOf(params.get("schoolId")));
 			student.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,7 +91,7 @@ public class UserServiceImpl implements UserService {
 	 * 登录方法
 	 */
 	@Override
-	public Object login(String loginname, String password) {
+	public Object login(String loginname, String password,HttpSession session) {
 		System.out.println(loginname + "+++++++" + password+"登录名+密码");
 		// 比如对密码进行 md5 加密
 		String md5 = DigestUtils.md5DigestAsHex(password.getBytes());
@@ -105,6 +108,8 @@ public class UserServiceImpl implements UserService {
 		if(roleId==4)mark=user.get(0).getClassesId().toString();
 		tokenstr=tokenstr+"-"+roleId+"-"+mark;
 		token.put("token", tokenstr);
+		//用户名放session里面
+		session.setAttribute("userName", user.get(0).getName());
 		return ResultVOUtil.success(token);
 	}
 
