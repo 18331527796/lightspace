@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.Exception.SortException;
+import com.threefriend.lightspace.Exception.TokenException;
 import com.threefriend.lightspace.constant.SortEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.ScreeningMapper;
@@ -73,6 +75,9 @@ public class SortServiceImpl implements SortService {
 			for (StudentMapper studentMapper : allStudent) {
 				ids.add(studentMapper.getId());
 			}
+			//用来存放数据空的学生姓名返回前台 告知老师哪个学生都需要检测
+			List<String> nullStudent= new ArrayList<>();
+			//循环每个学生的数据做封装
 			for (Integer id : ids) {
 				SortVO vo = new SortVO();
 				// 拿出来每个人的最新数据
@@ -89,8 +94,19 @@ public class SortServiceImpl implements SortService {
 						vo.setAvgRecord((top.getVisionLeft() + top.getVisionRight()) / 2);
 					}
 					sort.add(vo);
+				}else {
+					//检测数据是空的 但是 筛查记录不是空的 就用筛查记录
+					if(screening != null) {
+						vo.setStudentId(screening.getStudentId());
+						vo.setStudentName(screening.getStudentName());
+						vo.setAvgRecord((screening.getVisionLeft() + screening.getVisionRight()) / 2);
+					}else {
+						nullStudent.add(student_dao.findById(id).get().getName());
+					}
 				}
 			}
+			//两个数据都是空的 就抛异常
+			if(nullStudent!=null)throw new SortException(nullStudent);
 			int size = sort.size();
 			StringBuilder sortMark = new StringBuilder("");
 			for (int i = 1; i < size + 1; i++) {

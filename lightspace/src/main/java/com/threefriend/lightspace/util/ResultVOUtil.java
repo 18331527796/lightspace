@@ -25,4 +25,13 @@ public class ResultVOUtil {
         resultVO.setMsg(msg);
         return resultVO;
     }
+    
+
+    public static ResultVO error(Integer code, String msg,Object object) {
+        ResultVO resultVO = new ResultVO();
+        resultVO.setStatus(code);
+        resultVO.setMsg(msg);
+        resultVO.setData(object);
+        return resultVO;
+    }
 }

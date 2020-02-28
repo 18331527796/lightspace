@@ -118,7 +118,7 @@ public class RecordController {
 	@PostMapping("/schoolStatistics")
 	@ResponseBody
 	public ResultVO schoolStatistics(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.schoolStatistics(Integer.valueOf(params.get("schoolId"))));
+		return ResultVOUtil.success(record_impl.schoolStatisticsOld(Integer.valueOf(params.get("schoolId"))));
 	}
 	
 	/**
@@ -129,7 +129,7 @@ public class RecordController {
 	@PostMapping("/classStatistics")
 	@ResponseBody
 	public ResultVO classStatistics(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.classStatistics(Integer.valueOf(params.get("classId"))));
+		return ResultVOUtil.success(record_impl.classStatisticsOld(Integer.valueOf(params.get("classId"))));
 	}
 	
 	/**

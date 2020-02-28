@@ -20,7 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.threefriend.lightspace.Exception.LightException;
+import com.threefriend.lightspace.Exception.TokenException;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.SysLogMapper;
 import com.threefriend.lightspace.repository.SysLogRepository;
@@ -50,7 +50,7 @@ public class HttpAspect {
         String[] split = token.split("-");
         String tokenValue = redisUtil.get(split[0]);
         //开启token验证
-        if(StringUtils.isEmpty(tokenValue))throw new LightException(ResultEnum.TOKEN_OVERDUE);
+        if(StringUtils.isEmpty(tokenValue))throw new TokenException(ResultEnum.TOKEN_OVERDUE);
         redisUtil.setTime(split[0], 1800);//1800
 	}
 	

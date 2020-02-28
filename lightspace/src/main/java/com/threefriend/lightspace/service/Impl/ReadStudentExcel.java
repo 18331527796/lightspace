@@ -122,7 +122,7 @@ public class ReadStudentExcel {
 		// 得到第一个shell
 		Sheet sheet = wb.getSheetAt(0);
 		// 得到Excel的行数
-		this.totalRows = sheet.getPhysicalNumberOfRows();
+		this.totalRows = sheet.getPhysicalNumberOfRows(); 
 		// 得到Excel的列数(前提是有行数)
 		if (totalRows > 1 && sheet.getRow(0) != null) {
 			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
@@ -144,6 +144,7 @@ public class ReadStudentExcel {
 				Cell cell = row.getCell(c);
 				if (null != cell) {
 					cell.setCellType(Cell.CELL_TYPE_STRING);
+					System.out.println(cell.getStringCellValue());
 					switch (c) {
 					case 0://姓名
 						name=cell.getStringCellValue();
