@@ -128,10 +128,17 @@ public class ReadStudentExcel {
 			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
 		}
 		List<StudentMapper> studentList = new ArrayList<StudentMapper>();
-		// 循环Excel行数
-		Integer schoolId;
+		//用来优化查询数据库操作
+		Integer regionId = 0;
+		String regionName = "";
+		Integer schoolId = 0;
+		String schoolName = "";
+		Integer classId = 0;
+		String className = "";
 		String name = "";
+		//用来判断重复录入
 		boolean flag=true;
+		// 循环Excel行数
 		for (int r = 1; r < totalRows; r++) {
 			Row row = sheet.getRow(r);
 			if (row == null) {
@@ -183,25 +190,45 @@ public class ReadStudentExcel {
 						student.setChairHeight(cell.getStringCellValue());
 						break;
 					case 9://地区名称
-						RegionMapper region = region_dao.findByName(cell.getStringCellValue());
-						if(region!=null) {
-						student.setRegionId(region.getId());
-						student.setRegionName(region.getName());
+						if(cell.getStringCellValue().equals(regionName)) {
+							student.setRegionId(regionId);
+							student.setRegionName(regionName);
+						}else {
+							RegionMapper region = region_dao.findByName(cell.getStringCellValue());
+							if(region!=null) {
+								regionId=region.getId();
+								regionName=region.getName();
+								student.setRegionId(regionId);
+								student.setRegionName(regionName);
+							}
 						}
 						break;
 					case 10://学校名称
-						SchoolMapper school = school_dao.findByName(cell.getStringCellValue()).get(0);
-						if(school!=null) {
-						schoolId=school.getId();
-						student.setSchoolId(schoolId);
-						student.setSchoolName(school.getName());
+						if(cell.getStringCellValue().equals(schoolName)) {
+							student.setSchoolId(schoolId);
+							student.setSchoolName(schoolName);
+						}else {
+							SchoolMapper school = school_dao.findByName(cell.getStringCellValue()).get(0);
+							if(school!=null) {
+								schoolId=school.getId();
+								schoolName=school.getName();
+								student.setSchoolId(schoolId);
+								student.setSchoolName(schoolName);
+							}
 						}
 						break;
 					case 11://班級名称
-						ClassesMapper classes = class_dao.findBySchoolIdAndClassName(schoolId, cell.getStringCellValue()).get(0);
-						if(classes!=null) {
-						student.setClassesId(classes.getId());
-						student.setClassesName(classes.getClassName());
+						if(cell.getStringCellValue().equals(className)) {
+							student.setClassesId(classId);
+							student.setClassesName(className);
+						}else {
+							ClassesMapper classes = class_dao.findBySchoolIdAndClassName(schoolId, cell.getStringCellValue()).get(0);
+							if(classes!=null) {
+								classId=classes.getId();
+								className=classes.getClassName();
+								student.setClassesId(classId);
+								student.setClassesName(className);
+							}
 						}
 						break;
 					case 12:
