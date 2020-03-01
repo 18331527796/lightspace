@@ -21,6 +21,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.threefriend.lightspace.Exception.ReadWordException;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
@@ -51,6 +52,8 @@ public class StudentServiceImpl implements StudentService{
 	private RecordRepository record_dao;
 	@Autowired
 	private ReadStudentExcel readexcel;
+	@Autowired
+	private ReadStudentWord readword;
 
 	/* 
 	 * 学生列表
@@ -217,4 +220,16 @@ public class StudentServiceImpl implements StudentService{
 	public void download(HttpServletResponse response) {
 		DownTemplateUtil.downTemplate(response, PATH, FILENAME);
 	}
+
+	@Override
+	public ResultVO readStudentWord(MultipartFile file, Integer studentId) {
+		try {
+			readword.readStudentWord(file, studentId);
+		} catch (Exception e) {
+			throw new ReadWordException();
+		}
+		return ResultVOUtil.success();
+	}
+	
+	
 }

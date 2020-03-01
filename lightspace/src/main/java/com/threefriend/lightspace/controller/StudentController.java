@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.controller;
 
+import java.io.File;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -133,5 +134,17 @@ public class StudentController {
 	@RequestMapping(value="/downloadStudent")
 	public void  downloadStudent(HttpServletResponse res){
 		student_Impl.download(res);
+	}
+	
+	/**
+	 * 导入学生检查报告
+	 * @param file
+	 * @param token
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="/studentWord")
+	public ResultVO  studentWord(@RequestParam(value="file",required = false)MultipartFile file,@RequestParam(value="studentId")Integer studentId){
+		return student_Impl.readStudentWord(file,studentId);
 	}
 }

@@ -100,7 +100,7 @@ public class ClassesController {
 	@PostMapping("/queryClassesBySchool")
 	@ResponseBody
 	public ResultVO queryClassesBySchool(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.findBySchoolId(Integer.valueOf(params.get("shcoolId"))));
+		return ResultVOUtil.success(classes_impl.findBySchoolId(Integer.valueOf(params.get("schoolId"))));
 	}
 	
 	/**

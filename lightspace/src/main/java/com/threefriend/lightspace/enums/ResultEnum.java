@@ -39,6 +39,8 @@ public enum ResultEnum {
     READEXCEL_ERROR(10215,"读取EXCEL文件失败，请检查文件是否规范"),
     
     STUDENTRECORD_ERROR(10216,"学生检测数据不完整，请核实"),
+    
+    READWORD_ERROR(10217,"导入格式不正确，请核实"),
     ;
 
     private Integer status;

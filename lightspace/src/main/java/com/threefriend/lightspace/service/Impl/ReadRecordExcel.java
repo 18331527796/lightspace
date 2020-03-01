@@ -70,7 +70,6 @@ public class ReadRecordExcel {
 	 * @return
 	 */
 	public List<RecordMapper> getRecordInfo(MultipartFile mFile) {
-		long count = region_dao.count();
 		String fileName = mFile.getOriginalFilename();// 获取文件名
 		List<RecordMapper> RecordList = null;
 		try {

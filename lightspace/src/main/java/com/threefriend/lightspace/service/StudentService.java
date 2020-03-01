@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -39,4 +40,6 @@ public interface StudentService {
 	ResultVO readStudentExcel(MultipartFile file, String token);
 	//下载学生导入模板（流方式）（暂停使用）
 	void download(HttpServletResponse response);
+	
+	ResultVO readStudentWord(MultipartFile file, Integer studentId);
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.threefriend.lightspace.Exception.TokenException;
 import com.threefriend.lightspace.Exception.SortException;
+import com.threefriend.lightspace.Exception.ReadWordException;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -27,5 +28,13 @@ public class TokenExceptionHeadler {
     public ResultVO SortException(Exception e) {
 		SortException ex = (SortException) e;
         return ResultVOUtil.error(ResultEnum.STUDENTRECORD_ERROR.getStatus(), ResultEnum.STUDENTRECORD_ERROR.getMessage(),ex.getStudentName());
+    }
+	
+	
+	// 拦截登录异常
+	@ExceptionHandler(value = ReadWordException.class)
+	@ResponseBody
+    public ResultVO ReadWordException() {
+        return ResultVOUtil.error(ResultEnum.READWORD_ERROR.getStatus(), ResultEnum.READWORD_ERROR.getMessage());
     }
 }
