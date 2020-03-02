@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.Exception.SortException;
-import com.threefriend.lightspace.Exception.TokenException;
 import com.threefriend.lightspace.constant.SortEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.ScreeningMapper;
@@ -43,7 +42,6 @@ public class SortServiceImpl implements SortService {
 	private ClassesRepository class_dao;
 	@Autowired
 	private ScreeningRepository screening_dao;
-
 	/*
 	 * 学生排座
 	 * 通过传输的班级id 排座类型 保存时间来返回排座的数据

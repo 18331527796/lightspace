@@ -40,6 +40,9 @@ public interface StudentService {
 	ResultVO readStudentExcel(MultipartFile file, String token);
 	//下载学生导入模板（流方式）（暂停使用）
 	void download(HttpServletResponse response);
+	//解析word文件储存
+	ResultVO readStudentWord(MultipartFile[] file);
+	//个人概况
+	ResultVO findWordByStudentId(Integer studentId);
 	
-	ResultVO readStudentWord(MultipartFile file, Integer studentId);
 }

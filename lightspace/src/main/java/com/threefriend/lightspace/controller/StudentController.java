@@ -144,7 +144,16 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@PostMapping(value="/studentWord")
-	public ResultVO  studentWord(@RequestParam(value="file",required = false)MultipartFile file,@RequestParam(value="studentId")Integer studentId){
-		return student_Impl.readStudentWord(file,studentId);
+	public ResultVO  studentWord(@RequestParam(value="file",required = false)MultipartFile[] file){
+		return student_Impl.readStudentWord(file);
+	}
+	
+	/**
+	 * 按照学生id查找检查报告
+	 */
+	@ResponseBody
+	@PostMapping(value="/studentReport")
+	public ResultVO  studentReport(@RequestParam(value="studentId")Integer studentId){
+		return student_Impl.findWordByStudentId(studentId);
 	}
 }

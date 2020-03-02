@@ -28,6 +28,7 @@ import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
+import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.service.StudentService;
 import com.threefriend.lightspace.util.DownTemplateUtil;
 import com.threefriend.lightspace.util.ResultVOUtil;
@@ -54,6 +55,8 @@ public class StudentServiceImpl implements StudentService{
 	private ReadStudentExcel readexcel;
 	@Autowired
 	private ReadStudentWord readword;
+	@Autowired
+	private StudentWordRepository studentword_dao;
 
 	/* 
 	 * 学生列表
@@ -221,14 +224,30 @@ public class StudentServiceImpl implements StudentService{
 		DownTemplateUtil.downTemplate(response, PATH, FILENAME);
 	}
 
+	/* 
+	 * 解析word文件
+	 */
 	@Override
-	public ResultVO readStudentWord(MultipartFile file, Integer studentId) {
+	public ResultVO readStudentWord(MultipartFile[] file) {
 		try {
-			readword.readStudentWord(file, studentId);
+			for (MultipartFile multipartFile : file) {
+				// 获取文件名
+	            String name = multipartFile.getOriginalFilename();
+	            String[] split2 = name.split("\\.")[0].split("\\+");
+	            StudentMapper student = student_dao.findByNameAndParentPhone(split2[1], split2[2]);
+				if(student!=null) {
+					readword.readStudentWord(multipartFile, student.getId());
+				}
+			}
 		} catch (Exception e) {
 			throw new ReadWordException();
 		}
 		return ResultVOUtil.success();
+	}
+
+	@Override
+	public ResultVO findWordByStudentId(Integer studentId) {
+		return ResultVOUtil.success(studentword_dao.findByStudentIdOrderByGenTime(studentId));
 	}
 	
 	
