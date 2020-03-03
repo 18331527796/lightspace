@@ -245,10 +245,6 @@ public class StudentServiceImpl implements StudentService{
 		return ResultVOUtil.success();
 	}
 
-	@Override
-	public ResultVO findWordByStudentId(Integer studentId) {
-		return ResultVOUtil.success(studentword_dao.findByStudentIdOrderByGenTime(studentId));
-	}
 	
 	
 }

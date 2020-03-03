@@ -14,6 +14,7 @@ import com.threefriend.lightspace.vo.RecordVO;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SchoolStatisticsVO;
 import com.threefriend.lightspace.vo.StatisticsVO;
+import com.threefriend.lightspace.vo.StudentStatisticsVO;
 
 /**
  * 基础数据业务逻辑接口
@@ -35,16 +36,16 @@ public interface RecordService {
 	//按照学生id查询最新的基础数据
 	public RecordMapper findByStudentId(Integer id);
 	//按照学生id查询所有的数据
-	public List<OneStatisticsVO> findAllByStudentId(Integer id,Long time);
+	public StudentStatisticsVO findAllByStudentId(Integer id,Long time);
 	//按照学校数据分析
 	public SchoolStatisticsVO schoolStatistics(Integer schoolId);
+	List<List<StatisticsVO>> schoolStatisticsOld(Integer schoolId);
 	//按照班级数据分析
 	public ClassStatisticsVO classStatistics(Integer classId);
+	List<List<StatisticsVO>> classStatisticsOld(Integer classId);
 	//读取导入的excel文件
 	ResultVO readRecordExcel(MultipartFile file, String token);
 	//下载模板（流方式）（暂停使用）
 	void download(HttpServletResponse response);
 	
-	List<List<StatisticsVO>> schoolStatisticsOld(Integer schoolId);
-	List<List<StatisticsVO>> classStatisticsOld(Integer classId);
 }

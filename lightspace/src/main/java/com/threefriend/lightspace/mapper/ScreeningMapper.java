@@ -20,24 +20,6 @@ public class ScreeningMapper {
 	@GeneratedValue
 	//主键
 	private Integer id;
-	// 所属地区
-	@Column(name = "region_name")
-	private String regionName;
-	// 所属地区id
-	@Column(name = "region_id")
-	private Integer regionId;
-	// 所属学校
-	@Column(name = "school_name")
-	private String schoolName;
-	// 所属学校id
-	@Column(name = "school_id")
-	private Integer schoolId;
-	// 所属班级
-	@Column(name = "classes_name")
-	private String classesName;
-	// 所属班级id
-	@Column(name = "classes_id")
-	private Integer classesId;
 	//学生id
 	@Column(name = "student_id")
 	private Integer studentId;
@@ -65,42 +47,6 @@ public class ScreeningMapper {
 	}
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	public String getRegionName() {
-		return regionName;
-	}
-	public void setRegionName(String regionName) {
-		this.regionName = regionName;
-	}
-	public Integer getRegionId() {
-		return regionId;
-	}
-	public void setRegionId(Integer regionId) {
-		this.regionId = regionId;
-	}
-	public String getSchoolName() {
-		return schoolName;
-	}
-	public void setSchoolName(String schoolName) {
-		this.schoolName = schoolName;
-	}
-	public Integer getSchoolId() {
-		return schoolId;
-	}
-	public void setSchoolId(Integer schoolId) {
-		this.schoolId = schoolId;
-	}
-	public String getClassesName() {
-		return classesName;
-	}
-	public void setClassesName(String classesName) {
-		this.classesName = classesName;
-	}
-	public Integer getClassesId() {
-		return classesId;
-	}
-	public void setClassesId(Integer classesId) {
-		this.classesId = classesId;
 	}
 	public Integer getStudentId() {
 		return studentId;

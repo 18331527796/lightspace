@@ -8,13 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
+import com.threefriend.lightspace.mapper.IntegralMapper;
 import com.threefriend.lightspace.mapper.SysLogMapper;
 
 /**
- * 系统日志层
+ * 积分管理层
  * @author Administrator
  *
  */
-public interface SysLogRepository extends JpaRepository<SysLogMapper, Integer>{
+public interface IntegralRepository extends JpaRepository<IntegralMapper, Integer>{
 
+	List<IntegralMapper> findByParentIdOrderByGenTime(Integer parentId);
 }

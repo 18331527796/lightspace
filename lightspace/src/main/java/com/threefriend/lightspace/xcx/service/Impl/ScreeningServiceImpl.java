@@ -15,12 +15,14 @@ import org.springframework.stereotype.Service;
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.OptotypeMapper;
 import com.threefriend.lightspace.mapper.ParentMapper;
+import com.threefriend.lightspace.mapper.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.ScreeningMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.OptotypeRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
+import com.threefriend.lightspace.repository.ParentStudentRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
@@ -46,14 +48,17 @@ public class ScreeningServiceImpl implements ScreeningService{
 	@Autowired
 	private StudentRepository student_dao;
 	@Autowired
-	private UserRepository user_dao;
-	@Autowired
 	private ScreeningRepository screening_dao;
 	@Autowired
 	private OptotypeRepository optotype_dao;
 	@Autowired
 	private ParentRepository parent_dao;
+	@Autowired
+	private ParentStudentRepository p_s_dao;
 
+	/* 
+	 * 三级级联
+	 */
 	@Override
 	public ResultVO selectStudent() {
 		List<SchoolMapper> school = school_dao.findAll();
@@ -95,27 +100,29 @@ public class ScreeningServiceImpl implements ScreeningService{
 		return ResultVOUtil.success(list);
 	}
 
+	/* 
+	 * 绑定孩子
+	 */
 	@Override
 	public ResultVO insertStudent(Map<String, String> params) {
 		Integer studentId=Integer.valueOf(params.get("studentId"));
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
-		parent.setStudentId(studentId);
-		parent_dao.save(parent);
+		ParentStudentRelation po =new ParentStudentRelation();
+		po.setParentId(parent.getId());
+		po.setStudentId(studentId);
+		p_s_dao.save(po);
 		return ResultVOUtil.success(student_dao.findById(studentId).get());
 	}
 
+	/* 
+	 * 新增的筛查记录
+	 */
 	@Override
 	public ResultVO addScreening(Map<String, String> params) {
 		Integer studentId = Integer.valueOf(params.get("studentId"));
 		StudentMapper student = student_dao.findById(studentId).get();
 		ScreeningMapper po = new ScreeningMapper();
-		po.setClassesId(student.getClassesId());
-		po.setClassesName(student.getClassesName());
 		po.setGenTime(new Date());
-		po.setRegionId(student.getRegionId());
-		po.setRegionName(student.getRegionName());
-		po.setSchoolId(student.getSchoolId());
-		po.setSchoolName(student.getSchoolName());
 		po.setStudentId(studentId);
 		po.setStudentName(student.getName());
 		po.setVisionLeft(Double.valueOf(params.get("visionLeft")));
@@ -124,6 +131,9 @@ public class ScreeningServiceImpl implements ScreeningService{
 		return ResultVOUtil.success();
 	}
 
+	/* 
+	 * 所有的视标返回
+	 */
 	@Override
 	public ResultVO selectOptotype() {
 		List<OptotypeMapper> allOptotype = optotype_dao.findAll();
@@ -149,6 +159,14 @@ public class ScreeningServiceImpl implements ScreeningService{
 			voList.add(vo);
 		}
 		return ResultVOUtil.success(voList);
+	}
+
+	/* 
+	 * 按照id查找档案
+	 */
+	@Override
+	public ResultVO findById(Map<String, String> params) {
+		return ResultVOUtil.success(screening_dao.findById(Integer.valueOf(params.get("id"))));
 	}
 
 }

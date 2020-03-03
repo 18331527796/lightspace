@@ -148,12 +148,4 @@ public class StudentController {
 		return student_Impl.readStudentWord(file);
 	}
 	
-	/**
-	 * 按照学生id查找检查报告
-	 */
-	@ResponseBody
-	@PostMapping(value="/studentReport")
-	public ResultVO  studentReport(@RequestParam(value="studentId")Integer studentId){
-		return student_Impl.findWordByStudentId(studentId);
-	}
 }

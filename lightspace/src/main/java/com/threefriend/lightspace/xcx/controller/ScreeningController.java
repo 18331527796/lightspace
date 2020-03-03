@@ -22,27 +22,58 @@ public class ScreeningController {
 	@Autowired
 	private ScreeningService screening_impl;
 	
+	/**
+	 * 三级联动
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("/cascade")
 	public ResultVO selectStudent() {
 		return screening_impl.selectStudent();
 	}
 	
+	/**
+	 * 绑定孩子 
+	 * @param params
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("/binding")
 	public ResultVO insertStudent(@RequestParam Map<String, String> params) {
 		return screening_impl.insertStudent(params);
 	}
 	
+	/**
+	 * 新增筛选记录
+	 * @param params
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("/addScreening")
 	public ResultVO addScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.addScreening(params);
 	}
 	
+	/**
+	 * 所有视标返回数据
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("/optotype")
 	public ResultVO optotype() {
 		return screening_impl.selectOptotype();
 	}
+	
+	/**
+	 * 按照id查找筛选档案
+	 * @param params
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/findScreening")
+	public ResultVO findScreening(@RequestParam Map<String, String> params) {
+		return screening_impl.findById(params);
+	}
+	//↓↓↓↓↓↓↓↓新写的↓↓↓↓↓↓↓↓
+	
 }

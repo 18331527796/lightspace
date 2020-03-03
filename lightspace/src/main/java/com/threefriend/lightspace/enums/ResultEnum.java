@@ -41,6 +41,8 @@ public enum ResultEnum {
     STUDENTRECORD_ERROR(10216,"学生检测数据不完整，请核实"),
     
     READWORD_ERROR(10217,"导入格式不正确，请核实"),
+    
+    CHECK_ERROR(10218,"验证码错误，请重新输入"),
     ;
 
     private Integer status;

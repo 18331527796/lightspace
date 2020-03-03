@@ -10,12 +10,14 @@ import com.threefriend.lightspace.vo.ResultVO;
  */
 public interface ScreeningService {
 	
-	public ResultVO selectStudent();
+	ResultVO selectStudent();
 	
-	public ResultVO insertStudent(Map<String, String> params);
+	ResultVO insertStudent(Map<String, String> params);
 	
-	public ResultVO addScreening(Map<String, String> params);
+	ResultVO addScreening(Map<String, String> params);
 	
-	public ResultVO selectOptotype();
+	ResultVO selectOptotype();
+	
+	ResultVO findById(Map<String, String> params);
 
 }

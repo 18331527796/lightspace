@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * 小程序用户
+ *
+ */
 @Entity
 public class ParentMapper {
 
@@ -12,21 +16,21 @@ public class ParentMapper {
 	@GeneratedValue
 	// 主键
 	private Integer id;
-	// 家长姓名
+	// 家长昵称
 	private String name;
-	// 家长性别
-	private String gender;
 	// 家长手机号
 	private Long phone;
-	// 家长头像
-	private String picture;
 	// 家长openId
-	@Column(name = "open_id")
 	private String openId;
-	// 学生Id
-	@Column(name = "student_id")
-	private Integer studentId;
+	//积分
+	private Long Intrgral;
 	
+	public Long getIntrgral() {
+		return Intrgral;
+	}
+	public void setIntrgral(Long intrgral) {
+		Intrgral = intrgral;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -39,35 +43,17 @@ public class ParentMapper {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getGender() {
-		return gender;
-	}
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
 	public Long getPhone() {
 		return phone;
 	}
 	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
-	public String getPicture() {
-		return picture;
-	}
-	public void setPicture(String picture) {
-		this.picture = picture;
-	}
 	public String getOpenId() {
 		return openId;
 	}
 	public void setOpenId(String openId) {
 		this.openId = openId;
-	}
-	public Integer getStudentId() {
-		return studentId;
-	}
-	public void setStudentId(Integer studentId) {
-		this.studentId = studentId;
 	}
 
 	

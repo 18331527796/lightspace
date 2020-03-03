@@ -42,7 +42,5 @@ public interface StudentService {
 	void download(HttpServletResponse response);
 	//解析word文件储存
 	ResultVO readStudentWord(MultipartFile[] file);
-	//个人概况
-	ResultVO findWordByStudentId(Integer studentId);
 	
 }

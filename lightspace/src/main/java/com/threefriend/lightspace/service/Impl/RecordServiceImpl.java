@@ -27,6 +27,7 @@ import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
+import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.service.RecordService;
 import com.threefriend.lightspace.util.DownTemplateUtil;
 import com.threefriend.lightspace.util.ResultVOUtil;
@@ -36,6 +37,7 @@ import com.threefriend.lightspace.vo.RecordVO;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SchoolStatisticsVO;
 import com.threefriend.lightspace.vo.StatisticsVO;
+import com.threefriend.lightspace.vo.StudentStatisticsVO;
 
 /**
  * 基础数据业务逻辑实现类
@@ -58,6 +60,8 @@ public class RecordServiceImpl implements RecordService {
 	private RegionRepository region_dao;
 	@Autowired
 	private ReadRecordExcel readexcel;
+	@Autowired
+	private StudentWordRepository studentword_dao;
 
 	/*
 	 * 新增数据
@@ -215,12 +219,13 @@ public class RecordServiceImpl implements RecordService {
 	 * 
 	 */
 	@Override
-	public List<OneStatisticsVO> findAllByStudentId(Integer id,Long timeLong) {
+	public StudentStatisticsVO findAllByStudentId(Integer id,Long timeLong) {
 		Date after= new Date();
 		Date befor= new Date(after.getTime()-(timeLong*1000));
 		DateFormat format =new SimpleDateFormat("yyyy/MM/dd");
 		List<RecordMapper> all = record_dao.findAllByStudentIdAndGenTimeBetween(id,befor,after);
-		List<OneStatisticsVO> end= new ArrayList<>();
+		StudentStatisticsVO end = new StudentStatisticsVO();
+		
 		OneStatisticsVO visionLeft=new OneStatisticsVO();
 		OneStatisticsVO visionRight=new OneStatisticsVO();
 		OneStatisticsVO eyeAxisLengthLeft=new OneStatisticsVO();
@@ -267,12 +272,13 @@ public class RecordServiceImpl implements RecordService {
 			curvatureRight.getxDataList().add(time);
 			
 		}
-		end.add(visionLeft);
-		end.add(visionRight);
-		end.add(eyeAxisLengthLeft);
-		end.add(eyeAxisLengthRight);
-		end.add(curvatureLeft);
-		end.add(curvatureRight);
+		end.setVisionLeft(visionLeft);
+		end.setVisionRight(visionRight);
+		end.setCurvatureLeft(curvatureLeft);
+		end.setCurvatureRight(curvatureRight);
+		end.setEyeAxisLengthLeft(eyeAxisLengthLeft);
+		end.setEyeAxisLengthRight(eyeAxisLengthRight);
+		end.setStudnetWord(studentword_dao.findByStudentIdOrderByGenTime(id));
 		return end;
 	}
 
