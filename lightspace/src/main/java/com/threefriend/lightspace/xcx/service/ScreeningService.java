@@ -12,8 +12,6 @@ public interface ScreeningService {
 	
 	ResultVO selectStudent();
 	
-	ResultVO insertStudent(Map<String, String> params);
-	
 	ResultVO addScreening(Map<String, String> params);
 	
 	ResultVO selectOptotype();

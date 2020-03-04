@@ -9,4 +9,6 @@ public interface ParentService {
 	ResultVO loginXcx(Map<String, String> params);
 	
 	ResultVO childrenList(Map<String, String> params);
+
+	ResultVO insertStudent(Map<String, String> params);
 }

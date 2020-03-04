@@ -22,15 +22,7 @@ public class ParentMapper {
 	private Long phone;
 	// 家长openId
 	private String openId;
-	//积分
-	private Long Intrgral;
 	
-	public Long getIntrgral() {
-		return Intrgral;
-	}
-	public void setIntrgral(Long intrgral) {
-		Intrgral = intrgral;
-	}
 	public Integer getId() {
 		return id;
 	}

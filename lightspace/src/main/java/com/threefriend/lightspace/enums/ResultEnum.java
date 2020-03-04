@@ -43,6 +43,8 @@ public enum ResultEnum {
     READWORD_ERROR(10217,"导入格式不正确，请核实"),
     
     CHECK_ERROR(10218,"验证码错误，请重新输入"),
+    
+    PARENTSTUDENT_ERROR(10219,"孩子已经被账号绑定，请核实"),
     ;
 
     private Integer status;

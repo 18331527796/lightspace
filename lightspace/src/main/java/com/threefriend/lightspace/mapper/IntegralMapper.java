@@ -23,10 +23,18 @@ public class IntegralMapper {
 	private Integer state;
 	//本条的积分数
 	private Long integral;
-	//本条的积分数
+	//本条明细
+	private String detailed;
+	//本条的创建时间
 	private Date genTime;
 	
 	
+	public String getDetailed() {
+		return detailed;
+	}
+	public void setDetailed(String detailed) {
+		this.detailed = detailed;
+	}
 	public Date getGenTime() {
 		return genTime;
 	}

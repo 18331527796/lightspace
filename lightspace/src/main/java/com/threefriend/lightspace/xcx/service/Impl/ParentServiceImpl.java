@@ -3,6 +3,7 @@ package com.threefriend.lightspace.xcx.service.Impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,5 +64,30 @@ public class ParentServiceImpl implements ParentService{
 		return ResultVOUtil.success(end);
 	}
 
+	
+	/* 
+	 * 绑定孩子
+	 */
+	@Override
+	public ResultVO insertStudent(Map<String, String> params) {
+		Integer studentId=Integer.valueOf(params.get("studentId"));
+		//查找家长学生表中的信息 看看这个孩子有没有被绑定
+		ParentStudentRelation findByStudentId = p_s_dao.findByStudentId(studentId);
+		//如果非空 就是被绑定了 返回错误提示 孩子被其他账号绑定
+		if(findByStudentId!=null)return ResultVOUtil.error(ResultEnum.PARENTSTUDENT_ERROR.getStatus(),ResultEnum.PARENTSTUDENT_ERROR.getMessage() );
+		Integer parentId = parent_dao.findByOpenId(params.get("openId")).getId();
+		ParentStudentRelation po =new ParentStudentRelation();
+		po.setParentId(parentId);
+		po.setStudentId(studentId);
+		p_s_dao.save(po);
+		
+		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentId(parentId);
+		List<StudentMapper> end = new ArrayList<>();
+		for (ParentStudentRelation parentStudentRelation : findByParentId) {
+			Optional<StudentMapper> findById = student_dao.findById(parentStudentRelation.getStudentId());
+			if(findById!=null&&findById.isPresent())end.add(findById.get());
+		} 
+		return ResultVOUtil.success(end);
+	}
 	
 }

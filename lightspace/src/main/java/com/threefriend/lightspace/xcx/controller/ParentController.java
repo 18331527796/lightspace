@@ -29,4 +29,15 @@ public class ParentController {
 	public ResultVO childrenList(@RequestParam Map<String, String> params) {
 		return parent_impl.childrenList(params);
 	}
+	
+	/**
+	 * 绑定孩子 
+	 * @param params
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/binding")
+	public ResultVO insertStudent(@RequestParam Map<String, String> params) {
+		return parent_impl.insertStudent(params);
+	}
 }

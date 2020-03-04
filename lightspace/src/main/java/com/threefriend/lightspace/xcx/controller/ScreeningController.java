@@ -32,16 +32,6 @@ public class ScreeningController {
 		return screening_impl.selectStudent();
 	}
 	
-	/**
-	 * 绑定孩子 
-	 * @param params
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/binding")
-	public ResultVO insertStudent(@RequestParam Map<String, String> params) {
-		return screening_impl.insertStudent(params);
-	}
 	
 	/**
 	 * 新增筛选记录

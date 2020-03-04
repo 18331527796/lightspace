@@ -100,19 +100,7 @@ public class ScreeningServiceImpl implements ScreeningService{
 		return ResultVOUtil.success(list);
 	}
 
-	/* 
-	 * 绑定孩子
-	 */
-	@Override
-	public ResultVO insertStudent(Map<String, String> params) {
-		Integer studentId=Integer.valueOf(params.get("studentId"));
-		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
-		ParentStudentRelation po =new ParentStudentRelation();
-		po.setParentId(parent.getId());
-		po.setStudentId(studentId);
-		p_s_dao.save(po);
-		return ResultVOUtil.success(student_dao.findById(studentId).get());
-	}
+	
 
 	/* 
 	 * 新增的筛查记录

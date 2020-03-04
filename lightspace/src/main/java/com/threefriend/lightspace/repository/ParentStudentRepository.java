@@ -20,4 +20,8 @@ import com.threefriend.lightspace.mapper.SysLogMapper;
 public interface ParentStudentRepository extends JpaRepository<ParentStudentRelation, Integer>{
 
 	List<ParentStudentRelation> findByParentId(Integer parentId);
+	
+	ParentStudentRelation findByStudentId(Integer studentId);
+	
+	
 }

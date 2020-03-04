@@ -38,6 +38,8 @@ public class StudentMapper {
 	private Integer classesId;
 	// 姓名
 	private String name;
+	//生日
+	private String birthday;
 	// 性别
 	private Integer gender;
 	// 年龄
@@ -63,6 +65,12 @@ public class StudentMapper {
 	private String description = "";
 	
 	
+	public String getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
 	public String getParentPhone() {
 		return parentPhone;
 	}

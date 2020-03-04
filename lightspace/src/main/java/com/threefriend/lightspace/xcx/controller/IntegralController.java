@@ -22,7 +22,7 @@ public class IntegralController {
 	@ResponseBody
 	@RequestMapping("/integralList")
 	public ResultVO integralListByParentId(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(integral_impl.IntegralListByParentId(params));
+		return integral_impl.IntegralListByParentId(params);
 	}
 	
 }

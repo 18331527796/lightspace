@@ -19,4 +19,8 @@ import com.threefriend.lightspace.mapper.SysLogMapper;
 public interface IntegralRepository extends JpaRepository<IntegralMapper, Integer>{
 
 	List<IntegralMapper> findByParentIdOrderByGenTime(Integer parentId);
+	
+	//收支标识(0:支出，1:收入)
+	@Query(value="SELECT MAX(integral) FROM integral_mapper  WHERE state = ?1",nativeQuery = true)
+	Long findIntegtalByState(Integer state);
 }
