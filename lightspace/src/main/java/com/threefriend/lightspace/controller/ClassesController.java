@@ -19,7 +19,6 @@ import com.threefriend.lightspace.vo.ResultVO;
  *
  */
 @RestController
-@RequestMapping()
 public class ClassesController {
 	
 	@Autowired

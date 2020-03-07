@@ -62,18 +62,18 @@ public class TeacherServiceImpl implements TeacherService{
 	@Override
 	public ResultVO alertTeacher(Map<String, String> params) {
 		TeacherMapper teacher = teacher_dao.findById(Integer.valueOf(params.get("id"))).get();
-		if(StringUtils.isEmpty(params.get("schoolId"))) {
+		if(!StringUtils.isEmpty(params.get("schoolId"))) {
 			Integer schoolId = Integer.valueOf(params.get("schoolId"));
 			teacher.setSchoolId(schoolId);
 			teacher.setSchoolName(school_dao.findById(schoolId).get().getName());
 		}
-		if(StringUtils.isEmpty(params.get("classId"))) {
+		if(!StringUtils.isEmpty(params.get("classId"))) {
 			Integer classId = Integer.valueOf(params.get("classId"));
 			teacher.setClassId(classId);
 			teacher.setClassName(class_dao.findById(classId).get().getClassName());
 		}
-		if(StringUtils.isEmpty(params.get("name")))teacher.setName(params.get("name"));
-		if(StringUtils.isEmpty(params.get("phone")))teacher.setPhone(params.get("phone"));
+		if(!StringUtils.isEmpty(params.get("name")))teacher.setName(params.get("name"));
+		if(!StringUtils.isEmpty(params.get("phone")))teacher.setPhone(params.get("phone"));
 		teacher_dao.save(teacher);
 		return ResultVOUtil.success(teacher_dao.findAll());
 	}

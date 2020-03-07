@@ -1,9 +1,14 @@
 package com.threefriend.lightspace;
 
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +32,11 @@ public class test {
 	
 	
 	@Test
-	public void test() {
-		System.out.println(record_dao.countTopBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(22,0.81));
-		System.out.println(record_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(22,0.8,0.81));
-		System.out.println(record_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(22,0.4,0.79));
-		System.out.println(record_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(22,0.1,0.39));
+	public void test() throws ParseException {
+		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date begin = simpleDateFormat.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00"));
+		Date end = simpleDateFormat.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59"));
+		System.err.println(begin+"--"+end);
 	}
 	
 }

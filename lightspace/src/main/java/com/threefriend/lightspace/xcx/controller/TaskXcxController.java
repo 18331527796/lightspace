@@ -9,21 +9,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.service.Impl.IntegralServiceImpl;
+import com.threefriend.lightspace.xcx.service.Impl.TaskXcxServiceImpl;
 
 @RestController
 @RequestMapping("/xcx")
-public class IntegralController {
+public class TaskXcxController {
 
 	@Autowired
-	private IntegralServiceImpl integral_impl;
+	private TaskXcxServiceImpl task_impl;
 	
 	@ResponseBody
-	@PostMapping("/integralList")
-	public ResultVO integralListByParentId(@RequestParam Map<String, String> params) {
-		return integral_impl.IntegralListByParentId(params);
+	@PostMapping("/xcxTaskList")
+	public ResultVO xcxTaskList(@RequestParam Map<String, String> params) throws Exception {
+		return task_impl.xcxTaskList(params);
+	}
+	
+	@ResponseBody
+	@PostMapping("/completeTask")
+	public ResultVO completeTask(@RequestParam Map<String, String> params)  {
+		return task_impl.completeTask(params);
 	}
 	
 }

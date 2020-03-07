@@ -3,6 +3,7 @@ package com.threefriend.lightspace.xcx.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,7 +28,7 @@ public class ScreeningController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/cascade")
+	@PostMapping("/cascade")
 	public ResultVO selectStudent() {
 		return screening_impl.selectStudent();
 	}
@@ -39,7 +40,7 @@ public class ScreeningController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/addScreening")
+	@PostMapping("/addScreening")
 	public ResultVO addScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.addScreening(params);
 	}
@@ -49,7 +50,7 @@ public class ScreeningController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/optotype")
+	@PostMapping("/optotype")
 	public ResultVO optotype() {
 		return screening_impl.selectOptotype();
 	}
@@ -60,7 +61,7 @@ public class ScreeningController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/findScreening")
+	@PostMapping("/findScreening")
 	public ResultVO findScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.findById(params);
 	}
@@ -72,7 +73,7 @@ public class ScreeningController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/screeningList")
+	@PostMapping("/screeningList")
 	public ResultVO allChildrenScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.allChildrenScreening(params);
 	}

@@ -149,7 +149,7 @@ public class RecordController {
 	 * @param res
 	 */
 	@ResponseBody
-	@RequestMapping(value="/downloadRecord")
+	@PostMapping(value="/downloadRecord")
 	public void  downloadStudent(HttpServletResponse res){
 		record_impl.download(res);
 	}

@@ -113,7 +113,6 @@ public class RecordServiceImpl implements RecordService {
 	 */
 	@Override
 	public List<RecordMapper> saveRecord(Map<String, String> params) {
-		System.out.println(params.get("cvaLeft")+"---"+params.get("curvatureRight")+"---"+params.get("diopterLeft")+"---"+params.get("diopterRight"));
 		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
 			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));

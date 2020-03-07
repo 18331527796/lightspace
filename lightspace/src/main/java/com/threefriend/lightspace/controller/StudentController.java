@@ -131,7 +131,7 @@ public class StudentController {
 	 * @param res
 	 */
 	@ResponseBody
-	@RequestMapping(value="/downloadStudent")
+	@PostMapping(value="/downloadStudent")
 	public void  downloadStudent(HttpServletResponse res){
 		student_Impl.download(res);
 	}

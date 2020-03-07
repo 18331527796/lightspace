@@ -3,6 +3,7 @@ package com.threefriend.lightspace.xcx.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,13 +20,13 @@ public class ParentXcxController {
 	private ParentXcxServiceImpl parent_impl;
 	
 	@ResponseBody
-	@RequestMapping("/loginXcx")
+	@PostMapping("/loginXcx")
 	public ResultVO loginXcx(@RequestParam Map<String, String> params) {
 		return parent_impl.loginXcx(params);
 	}
 	
 	@ResponseBody
-	@RequestMapping("/childrenList")
+	@PostMapping("/childrenList")
 	public ResultVO childrenList(@RequestParam Map<String, String> params) {
 		return parent_impl.childrenList(params);
 	}
@@ -36,7 +37,7 @@ public class ParentXcxController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/binding")
+	@PostMapping("/binding")
 	public ResultVO insertStudent(@RequestParam Map<String, String> params) {
 		return parent_impl.insertStudent(params);
 	}
@@ -47,7 +48,7 @@ public class ParentXcxController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/relieve")
+	@PostMapping("/relieve")
 	public ResultVO relieveStudent(@RequestParam Map<String, String> params) {
 		return parent_impl.relieveStudent(params);
 	}
@@ -58,7 +59,7 @@ public class ParentXcxController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/findStudent")
+	@PostMapping("/findStudent")
 	public ResultVO findStudent(@RequestParam Map<String, String> params) {
 		return parent_impl.findStudent(params);
 	}
@@ -69,7 +70,7 @@ public class ParentXcxController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/mine")
+	@PostMapping("/mine")
 	public ResultVO mind(@RequestParam Map<String, String> params) {
 		return parent_impl.mine(params);
 	}
