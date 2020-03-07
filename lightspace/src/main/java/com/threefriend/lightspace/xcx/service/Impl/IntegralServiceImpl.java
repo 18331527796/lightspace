@@ -12,6 +12,11 @@ import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.IntegralService;
 
+/**
+ * 积分实现类
+ * @author Administrator
+ *
+ */
 @Service
 public class IntegralServiceImpl implements IntegralService{
 	@Autowired
@@ -19,6 +24,9 @@ public class IntegralServiceImpl implements IntegralService{
 	@Autowired
 	private IntegralRepository Integral_dao;
 
+	/* 
+	 * 这个账号的 积分列表
+	 */
 	@Override
 	public ResultVO IntegralListByParentId(Map<String, String> params) {
 		Integer parentId=parent_dao.findByOpenId(params.get("openId")).getId();

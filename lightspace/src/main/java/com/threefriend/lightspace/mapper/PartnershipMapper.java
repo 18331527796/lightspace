@@ -20,6 +20,16 @@ public class PartnershipMapper {
 	private String address;
 	//联系电话
 	private String phone;
+	//详情
+	private String details;
+	
+	
+	public String getDetails() {
+		return details;
+	}
+	public void setDetails(String details) {
+		this.details = details;
+	}
 	public Integer getId() {
 		return id;
 	}

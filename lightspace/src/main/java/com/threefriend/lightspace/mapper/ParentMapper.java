@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.mapper;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +24,16 @@ public class ParentMapper {
 	private Long phone;
 	// 家长openId
 	private String openId;
+	// 注册时间
+	private Date genTime;
 	
+	
+	public Date getGenTime() {
+		return genTime;
+	}
+	public void setGenTime(Date genTime) {
+		this.genTime = genTime;
+	}
 	public Integer getId() {
 		return id;
 	}

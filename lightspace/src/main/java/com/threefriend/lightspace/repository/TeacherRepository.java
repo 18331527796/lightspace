@@ -9,19 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.IntegralMapper;
-import com.threefriend.lightspace.mapper.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.SysLogMapper;
+import com.threefriend.lightspace.mapper.TeacherMapper;
 
 /**
- * 家长孩子层
+ * 教师层
  * @author Administrator
  *
  */
-public interface ParentStudentRepository extends JpaRepository<ParentStudentRelation, Integer>{
+public interface TeacherRepository extends JpaRepository<TeacherMapper, Integer>{
 
-	List<ParentStudentRelation> findByParentId(Integer parentId);
-	
-	ParentStudentRelation findByStudentId(Integer studentId);
-	@Transactional
-	void deleteByStudentId(Integer studentId);
 }

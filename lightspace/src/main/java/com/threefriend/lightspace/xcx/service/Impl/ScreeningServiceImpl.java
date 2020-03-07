@@ -2,16 +2,19 @@ package com.threefriend.lightspace.xcx.service.Impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.OptotypeMapper;
 import com.threefriend.lightspace.mapper.ParentMapper;
@@ -103,19 +106,25 @@ public class ScreeningServiceImpl implements ScreeningService{
 	
 
 	/* 
-	 * 新增的筛查记录
+	 * 新增的筛查记录（这个方法待定 可能会修改）
 	 */
 	@Override
 	public ResultVO addScreening(Map<String, String> params) {
 		Integer studentId = Integer.valueOf(params.get("studentId"));
-		StudentMapper student = student_dao.findById(studentId).get();
-		ScreeningMapper po = new ScreeningMapper();
-		po.setGenTime(new Date());
-		po.setStudentId(studentId);
-		po.setStudentName(student.getName());
-		po.setVisionLeft(Double.valueOf(params.get("visionLeft")));
-		po.setVisionRight(Double.valueOf(params.get("visionRight")));
-		screening_dao.save(po);
+		Optional<StudentMapper> findById = student_dao.findById(studentId);
+		if(findById!=null&&findById.isPresent()) {
+			StudentMapper student = findById.get();
+			ScreeningMapper po = new ScreeningMapper();
+			po.setGenTime(new Date());
+			po.setStudentId(studentId);
+			po.setStudentName(student.getName());
+			po.setVisionLeft(Double.valueOf(params.get("visionLeft")));
+			po.setVisionRight(Double.valueOf(params.get("visionRight")));
+			po.setBeginEnd(params.get("beginEnd"));
+			po.setDistance(params.get("distance"));
+			po.setNumber(params.get("number"));
+			screening_dao.save(po);
+		}
 		return ResultVOUtil.success();
 	}
 
@@ -155,6 +164,47 @@ public class ScreeningServiceImpl implements ScreeningService{
 	@Override
 	public ResultVO findById(Map<String, String> params) {
 		return ResultVOUtil.success(screening_dao.findById(Integer.valueOf(params.get("id"))));
+	}
+
+
+
+	/* 
+	 * 这个账号的所有绑定孩子的档案
+	 */
+	@Override
+	public ResultVO allChildrenScreening(Map<String, String> params) {
+		Calendar c = Calendar.getInstance();
+        //过去七天
+        c.setTime(new Date());
+        c.add(Calendar.DATE, - 7);
+        Date beginTime = c.getTime();
+		Date eneTime = new Date();
+		//↑定义时间 用来满足前台要求的图表返回数据
+		List<Map<String, Object>> end = new ArrayList<>();
+		//获取这个账号的唯一标识
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		//找到这个账号绑定的孩子
+		List<ParentStudentRelation> all = p_s_dao.findByParentId(parent.getId());
+		//如果这个账号没有绑定孩子 返回错误提示
+		if(all.size()==0)return ResultVOUtil.error(ResultEnum.BINDINGSTUDENT_ERROR.getStatus(),ResultEnum.BINDINGSTUDENT_ERROR.getMessage());
+		//遍历所有的孩子信息来封装数据
+		for (ParentStudentRelation ids : all) {
+			//找到这个孩子的所有信息
+			StudentMapper student = student_dao.findById(ids.getStudentId()).get();
+			//建立map容器
+			Map<String,Object> map = new HashMap<>();
+			//找到这个孩子所有的档案数据
+			List<ScreeningMapper> dataList = screening_dao.findByStudentIdOrderByGenTime(student.getId());
+			//找到这个孩子七天内的档案数据
+			List<ScreeningMapper> picList = screening_dao.findByStudentIdAndGenTimeBetween(student.getId(), beginTime, eneTime);
+			map.put("id", student.getId());
+			map.put("name", student.getName());
+			map.put("birthday", student.getBirthday());
+			map.put("dataList", dataList);
+			map.put("picList", picList);
+			end.add(map);
+		}
+		return ResultVOUtil.success(end);
 	}
 
 }

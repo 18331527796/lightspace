@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.service.Impl.ParentServiceImpl;
+import com.threefriend.lightspace.xcx.service.Impl.ParentXcxServiceImpl;
 
 @RestController
 @RequestMapping("/xcx")
-public class ParentController {
+public class ParentXcxController {
 
 	@Autowired
-	private ParentServiceImpl parent_impl;
+	private ParentXcxServiceImpl parent_impl;
 	
 	@ResponseBody
-	@RequestMapping("/loginchk")
-	public ResultVO loginchk(@RequestParam Map<String, String> params) {
+	@RequestMapping("/loginXcx")
+	public ResultVO loginXcx(@RequestParam Map<String, String> params) {
 		return parent_impl.loginXcx(params);
 	}
 	
@@ -39,5 +39,38 @@ public class ParentController {
 	@RequestMapping("/binding")
 	public ResultVO insertStudent(@RequestParam Map<String, String> params) {
 		return parent_impl.insertStudent(params);
+	}
+	
+	/**
+	 * 解除绑定孩子 
+	 * @param params
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/relieve")
+	public ResultVO relieveStudent(@RequestParam Map<String, String> params) {
+		return parent_impl.relieveStudent(params);
+	}
+	
+	/**
+	 * 查询孩子详细信息 
+	 * @param params
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/findStudent")
+	public ResultVO findStudent(@RequestParam Map<String, String> params) {
+		return parent_impl.findStudent(params);
+	}
+	
+	/**
+	 * 我的首页
+	 * @param params
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/mine")
+	public ResultVO mind(@RequestParam Map<String, String> params) {
+		return parent_impl.mine(params);
 	}
 }

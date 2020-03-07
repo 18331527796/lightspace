@@ -21,23 +21,18 @@ public class ScreeningMapper {
 	//主键
 	private Integer id;
 	//学生id
-	@Column(name = "student_id")
 	private Integer studentId;
 	// 姓名
-	@Column(name = "student_name")
 	private String studentName;
 	// 左眼裸眼视力
-	@Column(name = "vision_left")
 	private Double visionLeft;
 	// 右眼裸眼视力
-	@Column(name = "vision_right")
 	private Double visionRight;
 	// 检测距离
 	private String distance;
 	// 检测数量
 	private String number;
 	// 起止视标
-	@Column(name = "begin_end")
 	private String beginEnd;
 	//创建时间
 	@Column(name = "gen_time")

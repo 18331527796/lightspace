@@ -9,13 +9,15 @@ import com.threefriend.lightspace.vo.ResultVO;
  *
  */
 public interface ScreeningService {
-	
+	//三级级联
 	ResultVO selectStudent();
-	
+	//新增筛查记录
 	ResultVO addScreening(Map<String, String> params);
-	
+	//查询所有视标 随即返回
 	ResultVO selectOptotype();
-	
+	//按照id查找档案
 	ResultVO findById(Map<String, String> params);
+	//档案首页数据
+	ResultVO allChildrenScreening(Map<String, String> params);
 
 }

@@ -66,4 +66,14 @@ public class ScreeningController {
 	}
 	//↓↓↓↓↓↓↓↓新写的↓↓↓↓↓↓↓↓
 	
+	/**
+	 * 档案首页
+	 * @param params
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/screeningList")
+	public ResultVO allChildrenScreening(@RequestParam Map<String, String> params) {
+		return screening_impl.allChildrenScreening(params);
+	}
 }

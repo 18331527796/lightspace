@@ -19,17 +19,24 @@ public class OptotypeMapper {
 	// 主键
 	private Integer id;
 
-	@Column(name = "level_id")
 	private Integer levelId;
 
-	@Column(name = "level_name")
 	private String levelName;
+	
+	private String levelName5;
 
-	@Column(name = "show_name")
 	private String showName;
 
-	@Column(name = "path_str")
 	private String pathStr;
+
+	
+	public String getLevelName5() {
+		return levelName5;
+	}
+
+	public void setLevelName5(String levelName5) {
+		this.levelName5 = levelName5;
+	}
 
 	public Integer getId() {
 		return id;

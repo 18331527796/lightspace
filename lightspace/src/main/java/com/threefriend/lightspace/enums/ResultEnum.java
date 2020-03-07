@@ -45,6 +45,8 @@ public enum ResultEnum {
     CHECK_ERROR(10218,"验证码错误，请重新输入"),
     
     PARENTSTUDENT_ERROR(10219,"孩子已经被账号绑定，请核实"),
+    
+    BINDINGSTUDENT_ERROR(10220,"您尚未绑定孩子，请先完成绑定操作"),
     ;
 
     private Integer status;
