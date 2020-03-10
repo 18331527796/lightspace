@@ -224,10 +224,10 @@ public class ReadRecordExcel {
 						Record.setEyeAxisLengthLeft(Double.valueOf(cell.getStringCellValue()));
 						break;
 					case 12://右眼裸眼视力
-						Record.setVisionRight(Double.valueOf(cell.getStringCellValue()));
+						Record.setVisionRightStr(Double.valueOf(cell.getStringCellValue()));
 						break;
 					case 13://左眼裸眼视力
-						Record.setVisionLeft(Double.valueOf(cell.getStringCellValue()));
+						Record.setVisionLeftStr(Double.valueOf(cell.getStringCellValue()));
 						break;
 					default:
 						break;

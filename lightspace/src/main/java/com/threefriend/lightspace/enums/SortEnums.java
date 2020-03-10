@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.constant;
+package com.threefriend.lightspace.enums;
 
 /**
  * 

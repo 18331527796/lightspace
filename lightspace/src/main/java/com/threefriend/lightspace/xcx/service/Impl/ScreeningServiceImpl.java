@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.xcx.service.Impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -110,16 +112,19 @@ public class ScreeningServiceImpl implements ScreeningService{
 	 */
 	@Override
 	public ResultVO addScreening(Map<String, String> params) {
+		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Integer studentId = Integer.valueOf(params.get("studentId"));
 		Optional<StudentMapper> findById = student_dao.findById(studentId);
 		if(findById!=null&&findById.isPresent()) {
 			StudentMapper student = findById.get();
 			ScreeningMapper po = new ScreeningMapper();
+			po.setDate(simpleDateFormat.format(new Date()));
 			po.setGenTime(new Date());
 			po.setStudentId(studentId);
 			po.setStudentName(student.getName());
-			po.setVisionLeft(Double.valueOf(params.get("visionLeft")));
-			po.setVisionRight(Double.valueOf(params.get("visionRight")));
+			po.setBirthday(student.getBirthday());
+			po.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
+			po.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 			po.setBeginEnd(params.get("beginEnd"));
 			po.setDistance(params.get("distance"));
 			po.setNumber(params.get("number"));

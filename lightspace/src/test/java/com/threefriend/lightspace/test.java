@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.threefriend.lightspace.constant.VisionEnums;
+import com.threefriend.lightspace.enums.VisionEnums;
 import com.threefriend.lightspace.mapper.RegionMapper;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.RegionRepository;

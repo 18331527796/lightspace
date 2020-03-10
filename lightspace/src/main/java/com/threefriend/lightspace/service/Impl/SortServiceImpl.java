@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.Exception.SortException;
-import com.threefriend.lightspace.constant.SortEnums;
+import com.threefriend.lightspace.enums.SortEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.ScreeningMapper;
 import com.threefriend.lightspace.mapper.SortMapper;
@@ -87,9 +87,9 @@ public class SortServiceImpl implements SortService {
 					vo.setStudentName(top.getStudentName());
 					// 筛查数据不是空的 并且 比检测数据更新 那就取筛查数据
 					if(screening != null&& screening.getGenTime().getTime()>top.getGenTime().getTime()) {
-						vo.setAvgRecord((screening.getVisionLeft() + screening.getVisionRight()) / 2);
+						vo.setAvgRecord((screening.getVisionLeftStr() + screening.getVisionRightStr()) / 2);
 					}else {
-						vo.setAvgRecord((top.getVisionLeft() + top.getVisionRight()) / 2);
+						vo.setAvgRecord((top.getVisionLeftStr() + top.getVisionRightStr()) / 2);
 					}
 					sort.add(vo);
 				}else {
@@ -97,7 +97,7 @@ public class SortServiceImpl implements SortService {
 					if(screening != null) {
 						vo.setStudentId(screening.getStudentId());
 						vo.setStudentName(screening.getStudentName());
-						vo.setAvgRecord((screening.getVisionLeft() + screening.getVisionRight()) / 2);
+						vo.setAvgRecord((screening.getVisionLeftStr() + screening.getVisionRightStr()) / 2);
 					}else {
 						nullStudent.add(student_dao.findById(id).get().getName());
 					}

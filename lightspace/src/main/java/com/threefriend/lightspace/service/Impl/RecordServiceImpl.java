@@ -17,11 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.threefriend.lightspace.constant.RecordEnums;
-import com.threefriend.lightspace.constant.VisionEnums;
+import com.threefriend.lightspace.enums.RecordEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
+import com.threefriend.lightspace.enums.VisionEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
-import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.RegionRepository;
@@ -87,9 +86,9 @@ public class RecordServiceImpl implements RecordService {
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))
 			record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
 		if (!StringUtils.isEmpty(params.get("visionLeft")))
-			record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
+			record.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
 		if (!StringUtils.isEmpty(params.get("visionRight")))
-			record.setVisionRight(Double.valueOf(params.get("visionRight")));
+			record.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 		record.setRegionId(1);
 		record.setRegionName("唐山");
 		record.setStudentId(Integer.valueOf(params.get("studentId")));
@@ -143,9 +142,9 @@ public class RecordServiceImpl implements RecordService {
 		if (!StringUtils.isEmpty(params.get("eyeAxisLengthRight")))
 			record.setEyeAxisLengthRight(Double.valueOf(params.get("eyeAxisLengthRight")));
 		if (!StringUtils.isEmpty(params.get("visionLeft")))
-			record.setVisionLeft(Double.valueOf(params.get("visionLeft")));
+			record.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
 		if (!StringUtils.isEmpty(params.get("visionRight")))
-			record.setVisionRight(Double.valueOf(params.get("visionRight")));
+			record.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 		record_dao.save(record);
 		String[] split = params.get("token").split("-");
 		if (split[1].equals("3"))
@@ -177,6 +176,8 @@ public class RecordServiceImpl implements RecordService {
 		RecordMapper po = record_dao.findById(id).get();
 		RecordVO vo= new RecordVO();
 		BeanUtils.copyProperties(po, vo);
+		vo.setVisionLeft(po.getVisionLeftStr());
+		vo.setVisionRight(po.getVisionRightStr());
 		vo.getRecord_cat().add(po.getSchoolId());
 		vo.getRecord_cat().add(po.getClassesId());
 		return vo;
@@ -237,13 +238,13 @@ public class RecordServiceImpl implements RecordService {
 			if(visionLeft.getName()==null||visionLeft.getName()=="") {
 				visionLeft.setName(RecordEnums.VISIONLEFT.getName());
 			}
-			visionLeft.getyDataList().add(po.getVisionLeft());
+			visionLeft.getyDataList().add(po.getVisionLeftStr());
 			visionLeft.getxDataList().add(time);
 			
 			if(visionRight.getName()==null||visionRight.getName()=="") {
 				visionRight.setName(RecordEnums.VISIONRIGHT.getName());
 			}
-			visionRight.getyDataList().add(po.getVisionRight());
+			visionRight.getyDataList().add(po.getVisionRightStr());
 			visionRight.getxDataList().add(time);
 			
 			if(eyeAxisLengthLeft.getName()==null||eyeAxisLengthLeft.getName()=="") {
