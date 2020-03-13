@@ -7,6 +7,10 @@ package com.threefriend.lightspace.enums;
 public enum ResultEnum {
 
     SUCCESS(200, "操作成功"),
+    
+    MARK_SUCCESS(200, "签到成功"),
+    
+    MARK_ERROR(10200, "今日已签到~"),
 
     PARAM_ERROR(10201, "参数不正确"),
 
