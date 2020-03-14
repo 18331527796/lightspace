@@ -51,6 +51,8 @@ public enum ResultEnum {
     PARENTSTUDENT_ERROR(10219,"孩子已经被账号绑定，请核实"),
     
     BINDINGSTUDENT_ERROR(10220,"您尚未绑定孩子，请先完成绑定操作"),
+    
+    STUDENTPHONE_ERROR(10221,"您的手机号和孩子预留手机号不符，请核实"),
     ;
 
     private Integer status;

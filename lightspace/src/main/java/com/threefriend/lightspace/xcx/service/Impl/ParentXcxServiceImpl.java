@@ -77,25 +77,30 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		Integer studentId=Integer.valueOf(params.get("studentId"));
 		//查找家长学生表中的信息 看看这个孩子有没有被绑定
 		ParentStudentRelation findByStudentId = p_s_dao.findByStudentId(studentId);
-		//如果非空 就是被绑定了 返回错误提示 孩子被其他账号绑定
-		if(findByStudentId!=null)return ResultVOUtil.error(ResultEnum.PARENTSTUDENT_ERROR.getStatus(),ResultEnum.PARENTSTUDENT_ERROR.getMessage() );
-		Integer parentId = parent_dao.findByOpenId(params.get("openId")).getId();
+		//如果非空 就是被绑定了 返回错误提示 孩子被其他账号绑定  （这个情况暂时不适用）
+		//if(findByStudentId!=null)return ResultVOUtil.error(ResultEnum.PARENTSTUDENT_ERROR.getStatus(),ResultEnum.PARENTSTUDENT_ERROR.getMessage() );
+		//家长
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		//学生
+		StudentMapper studentMapper = student_dao.findById(studentId).get();
+		studentMapper.setBirthday(params.get("birthday"));
+		student_dao.save(studentMapper);
+		
+		Integer parentId = parent.getId();
+		String phone = parent.getPhone().toString();
+		String parentPhone = studentMapper.getParentPhone();
+		//如果手机号对不上 返回提示
+		if(!phone.equals(parentPhone))return ResultVOUtil.error(ResultEnum.STUDENTPHONE_ERROR.getStatus(),ResultEnum.STUDENTPHONE_ERROR.getMessage() );
+		//从中间表中查询
+		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentId(parentId);
+		//这个孩子绑定过了 而且是这个家长 就直接返回成功
+		if(findByStudentId!=null&&parentId==findByStudentId.getParentId()) return childrenList(params);
 		//保存信息到中间表中
 		ParentStudentRelation po =new ParentStudentRelation();
 		po.setParentId(parentId);
 		po.setStudentId(studentId);
 		p_s_dao.save(po);
-		StudentMapper studentMapper = student_dao.findById(studentId).get();
-		studentMapper.setBirthday(params.get("birthday"));
-		student_dao.save(studentMapper);
-		//从中间表中查询
-		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentId(parentId);
-		List<StudentMapper> end = new ArrayList<>();
-		for (ParentStudentRelation parentStudentRelation : findByParentId) {
-			Optional<StudentMapper> findById = student_dao.findById(parentStudentRelation.getStudentId());
-			if(findById!=null&&findById.isPresent())end.add(findById.get());
-		} 
-		return ResultVOUtil.success(end);
+		return childrenList(params);
 	}
 
 	/* 

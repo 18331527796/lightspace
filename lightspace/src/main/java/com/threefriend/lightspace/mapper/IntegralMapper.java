@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.mapper;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -27,8 +29,16 @@ public class IntegralMapper {
 	private String detailed;
 	//本条的创建时间
 	private Date genTime;
+	//前台时间
+	private String date;
 	
 	
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
 	public String getDetailed() {
 		return detailed;
 	}
@@ -39,7 +49,9 @@ public class IntegralMapper {
 		return genTime;
 	}
 	public void setGenTime(Date genTime) {
+		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		this.genTime = genTime;
+		this.date = simpleDateFormat.format(genTime);
 	}
 	public Integer getId() {
 		return id;
