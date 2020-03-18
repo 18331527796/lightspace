@@ -223,7 +223,7 @@ public class RecordServiceImpl implements RecordService {
 		Date after= new Date();
 		Date befor= new Date(after.getTime()-(timeLong*1000));
 		DateFormat format =new SimpleDateFormat("yyyy/MM/dd");
-		List<RecordMapper> all = record_dao.findAllByStudentIdAndGenTimeBetween(id,befor,after);
+		List<RecordMapper> all = record_dao.findAllByStudentIdAndGenTimeBetweenOrderByGenTime(id,befor,after);
 		StudentStatisticsVO end = new StudentStatisticsVO();
 		
 		OneStatisticsVO visionLeft=new OneStatisticsVO();

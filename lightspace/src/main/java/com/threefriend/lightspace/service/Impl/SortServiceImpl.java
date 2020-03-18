@@ -98,13 +98,14 @@ public class SortServiceImpl implements SortService {
 						vo.setStudentId(screening.getStudentId());
 						vo.setStudentName(screening.getStudentName());
 						vo.setAvgRecord((screening.getVisionLeftStr() + screening.getVisionRightStr()) / 2);
+						sort.add(vo);
 					}else {
 						nullStudent.add(student_dao.findById(id).get().getName());
 					}
 				}
 			}
 			//两个数据都是空的 就抛异常
-			if(nullStudent!=null)throw new SortException(nullStudent);
+			if(nullStudent!=null&&!nullStudent.isEmpty())throw new SortException(nullStudent);
 			int size = sort.size();
 			StringBuilder sortMark = new StringBuilder("");
 			for (int i = 1; i < size + 1; i++) {
