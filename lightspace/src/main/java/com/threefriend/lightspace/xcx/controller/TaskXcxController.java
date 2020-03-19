@@ -19,13 +19,13 @@ public class TaskXcxController {
 	@Autowired
 	private TaskXcxServiceImpl task_impl;
 	
-	@ResponseBody
+	
 	@PostMapping("/xcxTaskList")
 	public ResultVO xcxTaskList(@RequestParam Map<String, String> params) throws Exception {
 		return task_impl.xcxTaskList(params);
 	}
 	
-	@ResponseBody
+	
 	@PostMapping("/completeTask")
 	public ResultVO completeTask(@RequestParam Map<String, String> params)  {
 		return task_impl.completeTask(params);

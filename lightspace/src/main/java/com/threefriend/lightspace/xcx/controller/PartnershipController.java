@@ -16,7 +16,7 @@ public class PartnershipController {
 	private PartnershipServiceImpl partnership_Impl;
 
 	
-	@ResponseBody
+	
 	@PostMapping("/partnershipList")
 	public ResultVO selectStudent() {
 		return partnership_Impl.partnershipList();

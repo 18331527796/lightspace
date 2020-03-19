@@ -28,7 +28,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/addRecord")
-	@ResponseBody
+	
 	public ResultVO addRecord(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(record_impl.addRecord(params));
 	}
@@ -39,7 +39,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/editRecord")
-	@ResponseBody
+	
 	public ResultVO editRecord(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(record_impl.editRecord(Integer.valueOf(params.get("id"))));
 	}
@@ -50,7 +50,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/saveRecord")
-	@ResponseBody
+	
 	public ResultVO saveRecord(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(record_impl.saveRecord(params));
 	}
@@ -61,7 +61,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/deleteRecord")
-	@ResponseBody
+	
 	public ResultVO deleteRecord(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(record_impl.deleteRecord(Integer.valueOf(params.get("id")),params.get("token")));
 	}
@@ -72,7 +72,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/recordList")
-	@ResponseBody
+	
 	public ResultVO recordList(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(record_impl.recordList(params.get("token")));
 	}
@@ -83,7 +83,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/queryRecord")
-	@ResponseBody
+	
 	public ResultVO queryRecord(@RequestParam Map<String, String> params) {
 		return record_impl.findByName(params.get("name"));
 	}
@@ -94,7 +94,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/studentRecord")
-	@ResponseBody
+	
 	public ResultVO studentRecord(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(record_impl.findByStudentId(Integer.valueOf(params.get("id"))));
 	}
@@ -105,7 +105,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/studentRecords")
-	@ResponseBody
+	
 	public ResultVO studentRecords(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(record_impl.findAllByStudentId(Integer.valueOf(params.get("studentId")),Long.valueOf(params.get("time"))));
 	}
@@ -116,7 +116,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/schoolStatistics")
-	@ResponseBody
+	
 	public ResultVO schoolStatistics(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(record_impl.schoolStatisticsOld(Integer.valueOf(params.get("schoolId"))));
 	}
@@ -127,7 +127,7 @@ public class RecordController {
 	 * @return
 	 */
 	@PostMapping("/classStatistics")
-	@ResponseBody
+	
 	public ResultVO classStatistics(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(record_impl.classStatisticsOld(Integer.valueOf(params.get("classId"))));
 	}
@@ -138,7 +138,7 @@ public class RecordController {
 	 * @param token
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping(value="/recordExcel")
 	public ResultVO  upload(@RequestParam(value="file",required = false)MultipartFile file,@RequestParam(value="token")String token){
 		return record_impl.readRecordExcel(file,token);
@@ -148,7 +148,7 @@ public class RecordController {
 	 * 下载模板（流方式）（暂停使用）
 	 * @param res
 	 */
-	@ResponseBody
+	
 	@PostMapping(value="/downloadRecord")
 	public void  downloadStudent(HttpServletResponse res){
 		record_impl.download(res);

@@ -30,7 +30,7 @@ public class SortController {
 	 * @return
 	 */
 	@PostMapping("/sortList")
-	@ResponseBody
+	
 	public ResultVO sortList(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(sort_impl.studentSort(Integer.valueOf(params.get("classId")),Integer.valueOf(params.get("type")),Integer.valueOf(params.get("time"))));
 	}
@@ -41,7 +41,7 @@ public class SortController {
 	 * @return
 	 */
 	@PostMapping("/classSorts")
-	@ResponseBody
+	
 	public ResultVO classSorts(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(sort_impl.byClassId(Integer.valueOf(params.get("classId"))));
 	}
@@ -52,7 +52,7 @@ public class SortController {
 	 * @return
 	 */
 	@PostMapping("/showSort")
-	@ResponseBody
+	
 	public ResultVO showSort(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(sort_impl.sortShow(Integer.valueOf(params.get("sortId"))));
 	}

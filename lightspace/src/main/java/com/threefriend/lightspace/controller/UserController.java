@@ -33,7 +33,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/login")
-	@ResponseBody
+	
 	public Object login(@RequestParam Map<String, String> params,HttpSession session) {
 		return user_impl.login(params.get("loginname"),params.get("password"),session);
 	}
@@ -45,7 +45,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/menuList")
-	@ResponseBody
+	
 	public Object menuList(@RequestParam Map<String, String> params) {
 		return user_impl.getUserRight(params.get("token"));
 	}
@@ -56,7 +56,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/addUser")
-	@ResponseBody
+	
 	public ResultVO addUser(@RequestParam Map<String, String> params) {
 		return user_impl.insertUser(params);
 	}
@@ -67,7 +67,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/userList")
-	@ResponseBody
+	
 	public ResultVO userList() {
 		return ResultVOUtil.success(user_impl.findAll());
 	}
@@ -78,7 +78,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/deleteUser")
-	@ResponseBody
+	
 	public ResultVO deleteUser(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(user_impl.deleteUser(Integer.valueOf(params.get("id"))));
 	}
@@ -89,7 +89,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/queryUser")
-	@ResponseBody
+	
 	public ResultVO queryUser(@RequestParam Map<String, String> params) {
 		return user_impl.findByNameLike(params.get("name"));
 	}

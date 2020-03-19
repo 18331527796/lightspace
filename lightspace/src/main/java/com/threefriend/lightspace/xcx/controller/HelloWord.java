@@ -22,7 +22,6 @@ import com.threefriend.lightspace.vo.ResultVO;
 @RequestMapping("/xcx")
 public class HelloWord {
 
-	@ResponseBody
 	@RequestMapping("/hello")
 	public String HelloWorld() {
 		System.out.println("成功了");
@@ -37,7 +36,7 @@ public class HelloWord {
 	 * @param wechatName
 	 * @return
 	 */
-	@ResponseBody
+	
     @RequestMapping("/upload")
     public ResultVO uploadPicture(@RequestParam(value="file",required=false) MultipartFile file, HttpServletRequest request,@RequestParam String wechatName){
         Map<String, Object> map = new HashMap<>();

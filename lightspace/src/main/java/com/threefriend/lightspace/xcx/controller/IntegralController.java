@@ -20,7 +20,7 @@ public class IntegralController {
 	@Autowired
 	private IntegralServiceImpl integral_impl;
 	
-	@ResponseBody
+	
 	@PostMapping("/integralList")
 	public ResultVO integralListByParentId(@RequestParam Map<String, String> params) {
 		return integral_impl.IntegralListByParentId(params);

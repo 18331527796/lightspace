@@ -24,7 +24,7 @@ public class RoleController {
 	 * @return
 	 */
 	@PostMapping("/addRole")
-	@ResponseBody
+	
 	public ResultVO addRole(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(role_impl.addRole(params));
 	}
@@ -35,7 +35,7 @@ public class RoleController {
 	 * @return
 	 */
 	@PostMapping("/editRole")
-	@ResponseBody
+	
 	public ResultVO editRole(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(role_impl.findById(Integer.valueOf(params.get("roleId"))));
 	}
@@ -46,7 +46,7 @@ public class RoleController {
 	 * @return
 	 */
 	@PostMapping("/saveRole")
-	@ResponseBody
+	
 	public ResultVO saveRole(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(role_impl.saveRole(params));
 	}
@@ -58,7 +58,7 @@ public class RoleController {
 	 * @return
 	 */
 	@PostMapping("/deleteRole")
-	@ResponseBody
+	
 	public ResultVO deleteRole(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(role_impl.deleteRole(Integer.valueOf(params.get("roleId"))));
 	}
@@ -69,7 +69,7 @@ public class RoleController {
 	 * @return
 	 */
 	@PostMapping("/roleList")
-	@ResponseBody
+	
 	public ResultVO roleList() {
 		return ResultVOUtil.success(role_impl.roleList());
 	}
@@ -80,7 +80,7 @@ public class RoleController {
 	 * @return
 	 */
 	@PostMapping("/roleRight")
-	@ResponseBody
+	
 	public ResultVO roleRight(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(role_impl.roleRight(params));
 	}
@@ -91,7 +91,7 @@ public class RoleController {
 	 * @return
 	 */
 	@PostMapping("/queryRole")
-	@ResponseBody
+	
 	public ResultVO queryRole(@RequestParam Map<String, String> params) {
 		return role_impl.findByRoleNameLike(params.get("name"));
 	}

@@ -23,7 +23,7 @@ public class TeacherController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/teacherList")
 	public ResultVO teacherList() {
 		return teacher_impl.teacherList();
@@ -34,7 +34,7 @@ public class TeacherController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/addTeacher")
 	public ResultVO addTeacher(@RequestParam Map<String, String> params) {
 		return teacher_impl.addTeacher(params);
@@ -45,7 +45,7 @@ public class TeacherController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/editTeacher")
 	public ResultVO editTeacher(@RequestParam Map<String, String> params) {
 		return teacher_impl.findById(params);
@@ -56,7 +56,7 @@ public class TeacherController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/saveTeacher")
 	public ResultVO alertTeacher(@RequestParam Map<String, String> params) {
 		return teacher_impl.alertTeacher(params);
@@ -67,7 +67,7 @@ public class TeacherController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/deleteTeacher")
 	public ResultVO deleteTeacher(@RequestParam Map<String, String> params) {
 		return teacher_impl.deleteTeacher(params);

@@ -27,7 +27,7 @@ public class RightController {
 	 * @return
 	 */
 	@PostMapping("/addRight")
-	@ResponseBody
+	
 	public ResultVO addRight(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(right_impl.addRight(params));
 	}
@@ -38,7 +38,7 @@ public class RightController {
 	 * @return
 	 */
 	@PostMapping("/editRight")
-	@ResponseBody
+	
 	public ResultVO editRight(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(right_impl.findById(Integer.valueOf(params.get("id"))));
 	}
@@ -50,7 +50,7 @@ public class RightController {
 	 * @return
 	 */
 	@PostMapping("/saveRight")
-	@ResponseBody
+	
 	public ResultVO saveRight(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(right_impl.saveRight(params));
 	}
@@ -61,7 +61,7 @@ public class RightController {
 	 * @return
 	 */
 	@PostMapping("/deleteRight")
-	@ResponseBody
+	
 	public ResultVO deleteRight(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(right_impl.deleteRight(Integer.valueOf(params.get("id"))));
 	}
@@ -72,7 +72,7 @@ public class RightController {
 	 * @return
 	 */
 	@PostMapping("/rightList")
-	@ResponseBody
+	
 	public ResultVO rightList(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(right_impl.rightList());
 	}

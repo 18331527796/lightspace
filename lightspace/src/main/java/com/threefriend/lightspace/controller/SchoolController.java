@@ -29,7 +29,7 @@ public class SchoolController {
 	 * @return
 	 */
 	@PostMapping("/addSchool")
-	@ResponseBody
+	
 	public ResultVO insertSchool(@RequestParam Map<String, String> params) {
 		return school_Impl.addSchool(params);
 	}
@@ -39,7 +39,7 @@ public class SchoolController {
 	 * @return
 	 */
 	@PostMapping("/schoolList")
-	@ResponseBody
+	
 	public ResultVO findAllSchool(@RequestParam("token") String token) {
 		return ResultVOUtil.success(school_Impl.findAllSchool(token));
 	}
@@ -50,7 +50,7 @@ public class SchoolController {
 	 * @return
 	 */
 	@PostMapping("/editSchool")
-	@ResponseBody
+	
 	public ResultVO editSchool(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(school_Impl.findSchoolById(params));
 	}
@@ -61,7 +61,7 @@ public class SchoolController {
 	 * @return
 	 */
 	@PostMapping("/saveSchool")
-	@ResponseBody
+	
 	public ResultVO saveSchool(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(school_Impl.alterSchool(params));
 	}
@@ -72,7 +72,7 @@ public class SchoolController {
 	 * @return
 	 */
 	@PostMapping("/deleteSchool")
-	@ResponseBody
+	
 	public ResultVO deleteSchool(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(school_Impl.deleteSchool(Integer.valueOf(params.get("id"))));
 	}
@@ -83,7 +83,7 @@ public class SchoolController {
 	 * @return
 	 */
 	@PostMapping("/querySchool")
-	@ResponseBody
+	
 	public ResultVO querySchool(@RequestParam Map<String, String> params) {
 		return school_Impl.findAllSchoolLike(params.get("name"));
 	}

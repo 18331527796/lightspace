@@ -27,7 +27,7 @@ public class ScreeningController {
 	 * 三级联动
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/cascade")
 	public ResultVO selectStudent() {
 		return screening_impl.selectStudent();
@@ -39,7 +39,7 @@ public class ScreeningController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/addScreening")
 	public ResultVO addScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.addScreening(params);
@@ -49,7 +49,7 @@ public class ScreeningController {
 	 * 所有视标返回数据
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/optotype")
 	public ResultVO optotype() {
 		return screening_impl.selectOptotype();
@@ -60,7 +60,7 @@ public class ScreeningController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/findScreening")
 	public ResultVO findScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.findById(params);
@@ -72,7 +72,7 @@ public class ScreeningController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/screeningList")
 	public ResultVO allChildrenScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.allChildrenScreening(params);

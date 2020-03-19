@@ -56,8 +56,6 @@ public class RecordServiceImpl implements RecordService {
 	@Autowired
 	private StudentRepository student_dao;
 	@Autowired
-	private RegionRepository region_dao;
-	@Autowired
 	private ReadRecordExcel readexcel;
 	@Autowired
 	private StudentWordRepository studentword_dao;

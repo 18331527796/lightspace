@@ -20,7 +20,7 @@ public class MarkController {
 	@Autowired
 	private MarkServiceImpl mark_impl;
 	
-	@ResponseBody
+	
 	@PostMapping("/signin")
 	public ResultVO signin(@RequestParam Map<String, String> params) throws ParseException {
 		return mark_impl.Signin(params);

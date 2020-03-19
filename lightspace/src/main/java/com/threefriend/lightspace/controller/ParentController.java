@@ -21,7 +21,7 @@ public class ParentController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/parentList")
 	public ResultVO parentList() {
 		return parent_Impl.parentList();

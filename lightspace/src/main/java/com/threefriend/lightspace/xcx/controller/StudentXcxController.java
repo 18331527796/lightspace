@@ -19,7 +19,7 @@ public class StudentXcxController {
 	@Autowired
 	private StudentXcxServiceImpl student_impl;
 	
-	@ResponseBody
+	
 	@PostMapping("/queryStudentBySidCid")
 	public ResultVO  queryStudentBySidCid (@RequestParam Map<String, String> params) {
 		return student_impl.queryBySidCid(params);

@@ -19,7 +19,7 @@ public class ClassXcxController {
 	@Autowired
 	private ClassXcxServiceImpl class_impl; 
 	
-	@ResponseBody
+	
 	@PostMapping("/queryClassBySchool")
 	public ResultVO queryClassesBySchool(@RequestParam Map<String, String> params) {
 		return class_impl.findBySchoolId(params);

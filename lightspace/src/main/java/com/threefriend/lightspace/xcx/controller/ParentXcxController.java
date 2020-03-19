@@ -19,13 +19,13 @@ public class ParentXcxController {
 	@Autowired
 	private ParentXcxServiceImpl parent_impl;
 	
-	@ResponseBody
+	
 	@PostMapping("/loginXcx")
 	public ResultVO loginXcx(@RequestParam Map<String, String> params) {
 		return parent_impl.loginXcx(params);
 	}
 	
-	@ResponseBody
+	
 	@PostMapping("/childrenList")
 	public ResultVO childrenList(@RequestParam Map<String, String> params) {
 		return parent_impl.childrenList(params);
@@ -36,7 +36,7 @@ public class ParentXcxController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/binding")
 	public ResultVO insertStudent(@RequestParam Map<String, String> params) {
 		return parent_impl.insertStudent(params);
@@ -47,7 +47,7 @@ public class ParentXcxController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/relieve")
 	public ResultVO relieveStudent(@RequestParam Map<String, String> params) {
 		return parent_impl.relieveStudent(params);
@@ -58,7 +58,7 @@ public class ParentXcxController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/findStudent")
 	public ResultVO findStudent(@RequestParam Map<String, String> params) {
 		return parent_impl.findStudent(params);
@@ -69,7 +69,7 @@ public class ParentXcxController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/mine")
 	public ResultVO mind(@RequestParam Map<String, String> params) {
 		return parent_impl.mine(params);

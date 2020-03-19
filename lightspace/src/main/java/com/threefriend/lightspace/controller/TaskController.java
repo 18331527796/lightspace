@@ -23,7 +23,7 @@ public class TaskController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/taskList")
 	public ResultVO taskList() {
 		return task_impl.taskList();
@@ -34,7 +34,7 @@ public class TaskController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/addTask")
 	public ResultVO addTask(@RequestParam Map<String, String> params) {
 		return task_impl.addTask(params);
@@ -45,7 +45,7 @@ public class TaskController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/editTask")
 	public ResultVO editTask(@RequestParam Map<String, String> params) {
 		return task_impl.findById(params);
@@ -56,7 +56,7 @@ public class TaskController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/saveTask")
 	public ResultVO saveTask(@RequestParam Map<String, String> params) {
 		return task_impl.saveTask(params);
@@ -67,7 +67,7 @@ public class TaskController {
 	 * @param params
 	 * @return
 	 */
-	@ResponseBody
+	
 	@PostMapping("/deleteTask")
 	public ResultVO deleteTask(@RequestParam Map<String, String> params) {
 		return task_impl.deleteTask(params);

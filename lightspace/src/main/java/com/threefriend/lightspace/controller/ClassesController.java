@@ -31,7 +31,7 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/addClasses")
-	@ResponseBody
+	
 	public ResultVO addClasses(@RequestParam Map<String, String> params) {
 		return classes_impl.addClasses(params);
 	}
@@ -42,7 +42,7 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/classesList")
-	@ResponseBody
+	
 	public ResultVO classesList(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.findAllClasses(params));
 	}
@@ -53,7 +53,7 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/editClasses")
-	@ResponseBody
+	
 	public ResultVO editClasses(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.findById(Integer.valueOf(params.get("id"))));
 	}
@@ -64,7 +64,7 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/saveClasses")
-	@ResponseBody
+	
 	public ResultVO saveClasses(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.alterClasses(params));
 	}
@@ -75,7 +75,7 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/deleteClasses")
-	@ResponseBody
+	
 	public ResultVO deleteClasses(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.deleteClasses(Integer.valueOf(params.get("id")),params.get("token")));
 	}
@@ -86,7 +86,7 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/queryClasses")
-	@ResponseBody
+	
 	public ResultVO queryClasses(@RequestParam Map<String, String> params) {
 		return classes_impl.findByNameLike(params.get("name"));
 	}
@@ -97,7 +97,7 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/queryClassesBySchool")
-	@ResponseBody
+	
 	public ResultVO queryClassesBySchool(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.findBySchoolId(Integer.valueOf(params.get("schoolId"))));
 	}
@@ -108,7 +108,7 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/cascade")
-	@ResponseBody
+	
 	public ResultVO cascade(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.cascade());
 	}
@@ -119,7 +119,7 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/cascade1")
-	@ResponseBody
+	
 	public ResultVO cascade1(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.cascade1());
 	}
@@ -129,7 +129,7 @@ public class ClassesController {
 	 * 
 	 *//*
 	@PostMapping("/setSaveTime")
-	@ResponseBody
+	
 	public ResultVO setSaveTime(@RequestParam Map<String, String> params) {
 		classes_impl.setSaveTime(Integer.valueOf(params.get("classId")), Integer.valueOf(params.get("time")));
 		return ResultVOUtil.success();
