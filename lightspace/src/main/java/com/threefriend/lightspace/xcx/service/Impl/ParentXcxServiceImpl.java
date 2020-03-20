@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ParentMapper;
@@ -63,7 +65,11 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		if(findByParentId.size()==0)return ResultVOUtil.error(ResultEnum.BINDINGSTUDENT_ERROR.getStatus(),ResultEnum.BINDINGSTUDENT_ERROR.getMessage());
 		List<StudentMapper> end =new ArrayList<>();
 		for (ParentStudentRelation id : findByParentId) {
-			end.add(student_dao.findById(id.getStudentId()).get());
+			Optional<StudentMapper> findById = student_dao.findById(id.getStudentId());
+			if(findById!=null&&findById.isPresent()) {
+				StudentMapper studentMapper = findById.get();
+				end.add(studentMapper);
+			}
 		}
 		return ResultVOUtil.success(end);
 	}
