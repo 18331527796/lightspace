@@ -46,13 +46,13 @@ public enum ResultEnum {
     
     READWORD_ERROR(10217,"导入格式不正确，请核实"),
     
-    CHECK_ERROR(10218,"验证码错误，请重新输入"),
+    CHECK_ERROR(10218,"验证码错误，请重新输入"), //没有验证码了
     
-    PARENTSTUDENT_ERROR(10219,"孩子已经被账号绑定，请核实"),
+    PARENTSTUDENT_ERROR(10219,"孩子已经被账号绑定，请核实"), //这条废弃
     
     BINDINGSTUDENT_ERROR(10220,"您尚未绑定孩子，请先完成绑定操作"),
     
-    STUDENTPHONE_ERROR(10221,"您的手机号和孩子预留手机号不符，请核实"),
+    STUDENTPHONE_ERROR(10221,"您的手机号和孩子预留手机号不符，请核实"), // 这条废弃
     ;
 
     private Integer status;

@@ -1,6 +1,7 @@
 package com.threefriend.lightspace.xcx.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,15 +9,22 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotBlank;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.lightspace.xcxutil.CreateQrcore;
+import com.threefriend.lightspace.xcxutil.WaterMarkUtils;
+import com.threefriend.lightspace.xcxutil.ZipUtils;
 
 @RestController
 @RequestMapping("/xcx")

@@ -15,10 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.enums.VisionEnums;
 import com.threefriend.lightspace.mapper.RegionMapper;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.RegionRepository;
+import com.threefriend.lightspace.xcxutil.CreateQrcore;
+import com.threefriend.lightspace.xcxutil.WaterMarkUtils;
+import com.threefriend.lightspace.xcxutil.ZipUtils;
 
 
 
@@ -33,10 +37,22 @@ public class test {
 	
 	@Test
 	public void test() throws ParseException {
-		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date begin = simpleDateFormat.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00"));
-		Date end = simpleDateFormat.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59"));
-		System.err.println(begin+"--"+end);
+		try {
+        	//生成token
+            String accessToken = CreateQrcore.getToken();
+            System.out.println("accessToken;" + accessToken);
+            String ids = "437";
+            String path = UrlEnums.CODE_PATH.getUrl();
+            System.err.println(path);
+            //生成二维码
+            CreateQrcore.postMiniqrQr(ids, accessToken, path);
+            //添加图片
+            WaterMarkUtils.graphicsGeneration(ids,"吴禹霏", path);
+            //创建压缩包
+            ZipUtils.fileToZip(path, path, "code");
+        } catch (Exception e) {
+        	System.err.println("二维码生成失败");
+        }
 	}
 	
 }

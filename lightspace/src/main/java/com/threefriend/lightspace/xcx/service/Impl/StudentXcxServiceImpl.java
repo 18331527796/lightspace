@@ -15,12 +15,12 @@ import com.threefriend.lightspace.xcx.service.StudentXcxService;
 public class StudentXcxServiceImpl implements StudentXcxService{
 
 	@Autowired
-	private StudentRepository stuent_dao;
+	private StudentRepository student_dao;
 
 	@Override
 	public ResultVO queryBySidCid(Map<String, String> params) {
 		Integer schoolId = Integer.valueOf(params.get("schoolId"));
 		Integer classId = Integer.valueOf(params.get("classId"));
-		return ResultVOUtil.success(stuent_dao.findBySchoolIdAndClassesId(schoolId, classId));
+		return ResultVOUtil.success(student_dao.findBySchoolIdAndClassesId(schoolId, classId));
 	}
 }
