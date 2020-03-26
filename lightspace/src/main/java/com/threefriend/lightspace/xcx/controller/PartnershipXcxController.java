@@ -1,19 +1,20 @@
 package com.threefriend.lightspace.xcx.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.service.Impl.PartnershipServiceImpl;
+import com.threefriend.lightspace.xcx.service.Impl.PartnershipXcxServiceImpl;
 
 @RestController
 @RequestMapping("/xcx")
-public class PartnershipController {
+public class PartnershipXcxController {
 	@Autowired
-	private PartnershipServiceImpl partnership_Impl;
+	private PartnershipXcxServiceImpl partnership_Impl;
 
 	
 	

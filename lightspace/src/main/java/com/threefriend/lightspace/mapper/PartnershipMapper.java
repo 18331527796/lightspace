@@ -22,8 +22,17 @@ public class PartnershipMapper {
 	private String phone;
 	//详情
 	private String details;
+	//图片
+	private String imgurl;
 	
 	
+	
+	public String getImgurl() {
+		return imgurl;
+	}
+	public void setImgurl(String imgurl) {
+		this.imgurl = imgurl;
+	}
 	public String getDetails() {
 		return details;
 	}

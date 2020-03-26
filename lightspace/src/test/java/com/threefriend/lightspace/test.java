@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.junit.Test;
@@ -37,22 +38,31 @@ public class test {
 	
 	@Test
 	public void test() throws ParseException {
-		try {
-        	//生成token
-            String accessToken = CreateQrcore.getToken();
-            System.out.println("accessToken;" + accessToken);
-            String ids = "437";
-            String path = UrlEnums.CODE_PATH.getUrl();
-            System.err.println(path);
-            //生成二维码
-            CreateQrcore.postMiniqrQr(ids, accessToken, path);
-            //添加图片
-            WaterMarkUtils.graphicsGeneration(ids,"吴禹霏", path);
-            //创建压缩包
-            ZipUtils.fileToZip(path, path, "code");
-        } catch (Exception e) {
-        	System.err.println("二维码生成失败");
-        }
+		System.out.println();
+		/*int []test = {1,2,3,4};
+		int []test1= {6,7,8,9};
+		while(true) {
+			
+			int p =0;
+			for (int i : test) {
+				Scanner input =new Scanner(System.in);
+				if (input.hasNext()) {
+					if(Integer.valueOf(input.next())==i)p+=1;
+					System.err.println(p);
+				}
+			}
+			System.out.println("检查完一轮了");
+			if(p<=1&&test[0]==6) {
+				System.out.println("错了");break;
+			}
+			if(p>=4&&test[0]==6) {
+				System.out.println("就是这样");break;
+			}
+			if(p>=3&&test[0]==1) {
+				System.out.println("换视标中……");
+				test=test1;
+			}
+		}*/
 	}
 	
 }

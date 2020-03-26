@@ -2,6 +2,7 @@ package com.threefriend.lightspace.xcxutil;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.UrlEnums;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +20,7 @@ public class CreateQrcore {
      * 普通的 get 可获 token
      */
     public static String getToken() throws Exception {
-    	String APIKEY = "wx6992c25f5c91f13c";//小程序id
-		String SECRETKEY = "f31ee1679f8d2b452fa961437d996f9e";//小程序密钥
-		String requestUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+APIKEY+"&secret="+SECRETKEY;
+		String requestUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AccountEnums.APIKEY.getUrl()+"&secret="+AccountEnums.SECRETKEY.getUrl();
         URL url = new URL(requestUrl);
         // 打开和URL之间的连接
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

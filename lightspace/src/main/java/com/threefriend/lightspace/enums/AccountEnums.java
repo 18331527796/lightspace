@@ -2,9 +2,8 @@ package com.threefriend.lightspace.enums;
 
 public enum AccountEnums {
 	
-	CODE_PATH("F:\\code\\"),
-	//WECHAT_XCX_CODE_PAHT("https://api.weixin.qq.com/wxa/getwxacode?access_token="),
-	WECHAT_XCX_CODE_PAHT("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="),
+	APIKEY("wx6992c25f5c91f13c"),
+	SECRETKEY("f31ee1679f8d2b452fa961437d996f9e"),
 	;
 	
 	private String url;
