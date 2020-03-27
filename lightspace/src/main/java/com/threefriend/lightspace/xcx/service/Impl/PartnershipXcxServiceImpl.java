@@ -20,6 +20,7 @@ import com.threefriend.lightspace.repository.PartnershipRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.PartnershipXcxService;
+import com.threefriend.lightspace.xcxutil.XcxDecryptUtils;
 
 @Service
 public class PartnershipXcxServiceImpl implements PartnershipXcxService{

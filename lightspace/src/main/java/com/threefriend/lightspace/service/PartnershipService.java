@@ -19,4 +19,5 @@ public interface PartnershipService {
 	ResultVO deletePartnership(Map<String, String> params);
 	//uploadIMG
 	String uploadImg(MultipartFile file);
+	
 }

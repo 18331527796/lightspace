@@ -42,4 +42,11 @@ public interface ParentXcxService {
 	 * @return
 	 */
 	ResultVO mine(Map<String, String> params);
+	
+	/**
+	 * 获取手机号
+	 * @param params
+	 * @return
+	 */
+	String getUserDate(Map<String, String> params);
 }

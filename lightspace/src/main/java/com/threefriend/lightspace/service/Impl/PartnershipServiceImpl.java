@@ -17,6 +17,7 @@ import com.threefriend.lightspace.repository.PartnershipRepository;
 import com.threefriend.lightspace.service.PartnershipService;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.lightspace.xcxutil.XcxDecryptUtils;
 
 @Service
 public class PartnershipServiceImpl implements PartnershipService{
@@ -79,5 +80,7 @@ public class PartnershipServiceImpl implements PartnershipService{
         }
 		return UrlEnums.IMG_URL.getUrl()+fileAdd+"/"+fileName;
 	}
+
+	
 	
 }

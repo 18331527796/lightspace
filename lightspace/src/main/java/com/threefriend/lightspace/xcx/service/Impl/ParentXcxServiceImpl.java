@@ -2,6 +2,7 @@ package com.threefriend.lightspace.xcx.service.Impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.ParentXcxService;
+import com.threefriend.lightspace.xcxutil.XcxDecryptUtils;
 
 @Service
 public class ParentXcxServiceImpl implements ParentXcxService{
@@ -37,19 +39,24 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	 */
 	@Override
 	public ResultVO loginXcx(Map<String, String> params) {
+		Map<String, String> end = new HashMap<>();
 		ParentMapper findByOpenId = parent_dao.findByOpenId(params.get("openId"));
+		String phone = getUserDate(params);
+		String resphone = phone.substring(0, 3)+"****"+ phone.substring(7, 11);
 		String type = "old";
+		end.put("phone", resphone);
 		if(findByOpenId==null) {
 			ParentMapper parent = new ParentMapper();
-			parent.setName(params.get("name"));
 			parent.setOpenId(params.get("openId"));
-			parent.setPhone(Long.valueOf(params.get("phone")));
+			parent.setPhone(Long.valueOf(phone));
 			parent.setGenTime(new Date());
 			parent_dao.save(parent);
 			type = "new";
-			return ResultVOUtil.success(type);
+			end.put("type", type);
+			return ResultVOUtil.success(end);
 		}
-		return ResultVOUtil.success(type);
+		end.put("type", type);
+		return ResultVOUtil.success(end);
 	}
 
 	/* 
@@ -124,6 +131,16 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	@Override
 	public ResultVO mine(Map<String, String> params) {
 		return ResultVOUtil.success(parent_dao.findByOpenId(params.get("openId")));
+	}
+	
+	@Override
+	public String getUserDate(Map<String, String> params) {
+		String encryptedData = params.get("encryptedData");
+		String sessionKey = params.get("sessionKey");
+		String iv = params.get("iv");
+		Map<String, Object> userInfo = XcxDecryptUtils.getUserInfo(encryptedData, sessionKey, iv);
+		String phone = (String) userInfo.get("purePhoneNumber"); //手机号
+		return phone;
 	}
 	
 }

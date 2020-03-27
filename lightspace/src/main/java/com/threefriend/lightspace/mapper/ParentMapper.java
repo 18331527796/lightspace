@@ -18,8 +18,6 @@ public class ParentMapper {
 	@GeneratedValue
 	// 主键
 	private Integer id;
-	// 家长昵称
-	private String name;
 	// 家长手机号
 	private Long phone;
 	// 家长openId
@@ -39,12 +37,6 @@ public class ParentMapper {
 	}
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
 	}
 	public Long getPhone() {
 		return phone;

@@ -13,4 +13,6 @@ public interface PartnershipXcxService {
 
 	//合作机构列表
 	ResultVO partnershipList();
+	
+	
 }

@@ -154,8 +154,22 @@
             <version>5.1.6.RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        
+        
+<!--微信小程序解密encryptedData-->
+        <dependency>
+            <groupId>org.codehaus.xfire</groupId>
+            <artifactId>xfire-core</artifactId>
+            <version>1.2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>1.46</version>
+        </dependency>
+<!--微信小程序解密encryptedData-->
 
-	</dependencies>
+		</dependencies>
 
 	<build>
 		<finalName>lightspace</finalName>
