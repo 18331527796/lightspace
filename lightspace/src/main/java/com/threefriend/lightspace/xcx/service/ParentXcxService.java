@@ -11,7 +11,7 @@ public interface ParentXcxService {
 	 * @param params
 	 * @return
 	 */
-	ResultVO loginXcx(Map<String, String> params);
+	ResultVO loginXcx(Map<String, String> params)throws Exception;
 	/**
 	 * 查询账号所绑定的所有孩子信息
 	 * @param params
@@ -48,5 +48,5 @@ public interface ParentXcxService {
 	 * @param params
 	 * @return
 	 */
-	String getUserDate(Map<String, String> params);
+	String getUserDate(Map<String, String> params)throws Exception;
 }

@@ -31,9 +31,9 @@ public class IntegralServiceImpl implements IntegralService{
 	public ResultVO IntegralListByParentId(Map<String, String> params) {
 		Integer parentId=parent_dao.findByOpenId(params.get("openId")).getId();
 		//收入
-		Long income = Integral_dao.findIntegtalByState(1);
+		Long income = (Integral_dao.findIntegtalByState(1,parentId)==null)?0:Integral_dao.findIntegtalByState(1,parentId);
 		//支出
-		Long expenditure = Integral_dao.findIntegtalByState(0);
+		Long expenditure = (Integral_dao.findIntegtalByState(0,parentId)==null)?0:Integral_dao.findIntegtalByState(1,parentId);
 		//余额
 		Long balance = income - expenditure;
 		Map<String, Object> end = new HashedMap();

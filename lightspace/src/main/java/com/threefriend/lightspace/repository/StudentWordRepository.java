@@ -10,12 +10,14 @@ import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
 
 /**
- * 班级操作层
+ * word操作层
  * @author Administrator
  *
  */
 public interface StudentWordRepository extends JpaRepository<StudentWordMapper, Integer>{
 	
-	StudentWordMapper findByStudentIdOrderByGenTime(Integer studentId);
+	StudentWordMapper findTopByStudentIdOrderByGenTimeDesc(Integer studentId);
+	
+	List<StudentWordMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId);
 
 }

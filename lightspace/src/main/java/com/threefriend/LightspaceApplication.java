@@ -27,5 +27,7 @@ public class LightspaceApplication /*extends SpringBootServletInitializer*/ {
 	public static void main(String[] args) {
 		SpringApplication.run(LightspaceApplication.class, args);
 	}
+	
+	
 
 }

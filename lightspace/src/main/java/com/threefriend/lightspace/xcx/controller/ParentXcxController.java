@@ -21,7 +21,7 @@ public class ParentXcxController {
 	
 	
 	@PostMapping("/loginXcx")
-	public ResultVO loginXcx(@RequestParam Map<String, String> params) {
+	public ResultVO loginXcx(@RequestParam Map<String, String> params) throws Exception {
 		return parent_impl.loginXcx(params);
 	}
 	

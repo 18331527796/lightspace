@@ -276,7 +276,7 @@ public class RecordServiceImpl implements RecordService {
 		end.setCurvatureRight(curvatureRight);
 		end.setEyeAxisLengthLeft(eyeAxisLengthLeft);
 		end.setEyeAxisLengthRight(eyeAxisLengthRight);
-		end.setStudnetWord(studentword_dao.findByStudentIdOrderByGenTime(id));
+		end.setStudnetWord(studentword_dao.findTopByStudentIdOrderByGenTimeDesc(id));
 		return end;
 	}
 

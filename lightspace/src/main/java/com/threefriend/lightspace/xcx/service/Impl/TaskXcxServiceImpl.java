@@ -42,8 +42,7 @@ public class TaskXcxServiceImpl implements TaskXcxService{
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date begin = simpleDateFormat.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00"));
 		Date end = simpleDateFormat.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59"));
-		String openId = params.get("openId");
-		ParentMapper parent = parent_dao.findByOpenId(openId);
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		Integer parentId = parent.getId();
 		List<TaskVO> endList = new ArrayList<>();
 		List<TaskRecordMapper> allRecords = taskrecord_dao.findByParentIdAndGenTimeBetween(parentId, begin, end);

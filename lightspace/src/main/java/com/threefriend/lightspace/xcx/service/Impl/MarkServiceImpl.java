@@ -36,7 +36,7 @@ public class MarkServiceImpl {
 		Date begin = format.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00"));
 		Date end = format.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59"));
 		String openId = params.get("openId");
-		ParentMapper parent = parent_dao.findByOpenId(openId);
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		Integer parentId = parent.getId();
 		List<MarkMapper> marks = mark_dao.findByParentId(parentId);
 		if(marks.size()!=0) {

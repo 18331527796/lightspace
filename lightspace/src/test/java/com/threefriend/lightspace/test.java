@@ -40,9 +40,23 @@ public class test {
 	
 	@Test
 	public void test() throws ParseException {
-		String phone = "13242633555";
-		String resphone = phone.substring(0, 3)+"****"+ phone.substring(7, 11);
-		System.err.println(resphone);
+		while (true) {
+			System.out.println("准备开始计算：");
+			int longs = 0;
+			int weith= 0;
+			int hight= 0;
+			System.out.println("请输入 长-宽-高：");
+			Scanner input= new Scanner(System.in);
+			if(input.hasNext()) {
+				String nextLine = input.next();
+				String[] split = nextLine.split("-");
+				longs=Integer.valueOf(split[0]);
+				weith=Integer.valueOf(split[1]);
+				hight=Integer.valueOf(split[2]);
+			}
+			System.err.println("总面积："+((longs*weith)*2+(longs*hight)*2+(weith*hight)*2));
+			System.err.println("体积为："+longs*weith*hight);
+		}
 	}
 	
 }

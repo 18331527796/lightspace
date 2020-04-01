@@ -24,4 +24,9 @@ public class StudentXcxController {
 	public ResultVO  queryStudentBySidCid (@RequestParam Map<String, String> params) {
 		return student_impl.queryBySidCid(params);
 	}
+	
+	@PostMapping("/queryStudentWord")
+	public ResultVO  queryStudentWord (@RequestParam Map<String, String> params) {
+		return student_impl.queryStudentWord(params);
+	}
 }

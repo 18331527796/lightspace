@@ -20,18 +20,10 @@ public class ParentMapper {
 	private Integer id;
 	// 家长手机号
 	private Long phone;
-	// 家长openId
-	private String openId;
 	// 注册时间
 	private Date genTime;
-	
-	
-	public Date getGenTime() {
-		return genTime;
-	}
-	public void setGenTime(Date genTime) {
-		this.genTime = genTime;
-	}
+	//openid
+	private String openId;
 	public Integer getId() {
 		return id;
 	}
@@ -44,6 +36,12 @@ public class ParentMapper {
 	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
+	public Date getGenTime() {
+		return genTime;
+	}
+	public void setGenTime(Date genTime) {
+		this.genTime = genTime;
+	}
 	public String getOpenId() {
 		return openId;
 	}
@@ -51,5 +49,7 @@ public class ParentMapper {
 		this.openId = openId;
 	}
 
+	
+	
 	
 }
