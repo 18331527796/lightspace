@@ -16,7 +16,7 @@ import com.threefriend.lightspace.util.OptotypeUtils;
  *
  */
 @Entity
-public class ScreeningMapper {
+public class ScreeningWearMapper {
 
 	@Id
 	@GeneratedValue

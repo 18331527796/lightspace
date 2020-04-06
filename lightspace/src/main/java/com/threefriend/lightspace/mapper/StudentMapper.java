@@ -1,5 +1,9 @@
 package com.threefriend.lightspace.mapper;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,22 +23,16 @@ public class StudentMapper {
 	// 主键
 	private Integer id;
 	// 所属地区
-	@Column(name = "region_name")
 	private String regionName;
 	// 所属地区id
-	@Column(name = "region_id")
 	private Integer regionId;
 	// 所属学校
-	@Column(name = "school_name")
 	private String schoolName;
 	// 所属学校id
-	@Column(name = "school_id")
 	private Integer schoolId;
 	// 所属班级
-	@Column(name = "classes_name")
 	private String classesName;
 	// 所属班级id
-	@Column(name = "classes_id")
 	private Integer classesId;
 	// 姓名
 	private String name;
@@ -61,6 +59,8 @@ public class StudentMapper {
 	private String nature ="";
 	// 是否矫正 (0:未校正 1:未校正)
 	private Integer correct;
+	//上次检测时间
+	private String lastTime;
 	// 备注
 	private String description = "";
 	
@@ -181,6 +181,14 @@ public class StudentMapper {
 		this.description = description;
 	}
 	
+	
+	public String getLastTime() {
+		return lastTime;
+	}
+	public void setLastTime(Date date) {
+		DateFormat Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.lastTime = Format.format(date);
+	}
 	@Override
 	public String toString() {
 		return "StudentMapper [id=" + id + ", regionName=" + regionName + ", regionId=" + regionId + ", schoolName="

@@ -48,5 +48,12 @@ public interface ParentXcxService {
 	 * @param params
 	 * @return
 	 */
+	String getPhoneDate(Map<String, String> params)throws Exception;
+	
+	/**
+	 * 获取用户信息
+	 * @param params
+	 * @return
+	 */
 	String getUserDate(Map<String, String> params)throws Exception;
 }

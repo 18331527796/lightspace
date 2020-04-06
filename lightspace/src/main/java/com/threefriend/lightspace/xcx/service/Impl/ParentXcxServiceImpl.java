@@ -40,24 +40,24 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	@Override
 	public ResultVO loginXcx(Map<String, String> params) throws Exception {
 		Map<String, String> end = new HashMap<>();
-		String type="",unionid="";
+		String type="";
 		//从微信的接口获取sessionkey openId
 		Map getsessionKey = WeChatUtils.getsessionKey(AccountEnums.APIKEY.getUrl(), AccountEnums.SECRETKEY.getUrl(), params.get("code"));
 		params.put("sessionKey", getsessionKey.get("sessionkey").toString());
+		System.out.println(params.get("sessionKey"));
 		String openId = getsessionKey.get("openId").toString();
 		//查一下有这个用户吗
 		ParentMapper findByOpenId = parent_dao.findByOpenId(openId);
 		String resphone ="";
 		String phone = "";
 		if(findByOpenId==null) {
-			phone = getUserDate(params);
+			phone = getPhoneDate(params);
 			ParentMapper parent = new ParentMapper();
 			parent.setOpenId(openId);
 			parent.setPhone(Long.valueOf(phone));
 			parent.setGenTime(new Date());
 			parent_dao.save(parent);
 			type = "new";
-			unionid= parent.getOpenId();
 			resphone= phone.substring(0, 3)+"****"+ phone.substring(7, 11);
 			end.put("phone", resphone);
 			end.put("openId", openId);
@@ -150,6 +150,23 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		return ResultVOUtil.success(parent_dao.findByOpenId(params.get("openId")));
 	}
 	
+	/* 
+	 * 获取手机号
+	 */
+	@Override
+	public String getPhoneDate(Map<String, String> params) throws Exception {
+		String sessionKey=params.get("sessionKey");
+		String encryptedData = params.get("encryptedData");
+		String iv = params.get("iv");
+		System.out.println(sessionKey+"+"+encryptedData+"+"+iv);
+		Map<String, Object> userInfo = XcxDecryptUtils.getUserInfo(encryptedData, sessionKey, iv);
+		String phone = (String) userInfo.get("purePhoneNumber"); //手机号
+		return phone;
+	}
+	
+	/* 
+	 * 获取用户信息
+	 */
 	@Override
 	public String getUserDate(Map<String, String> params) throws Exception {
 		String sessionKey=params.get("sessionKey");

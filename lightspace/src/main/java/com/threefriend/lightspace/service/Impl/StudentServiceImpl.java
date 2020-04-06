@@ -167,7 +167,7 @@ public class StudentServiceImpl implements StudentService{
 	public StudentVO findById(Integer id) {
 		StudentMapper studentMapper = student_dao.findById(id).get();
 		StudentVO vo = new StudentVO();
-		BeanUtils.copyProperties(studentMapper, vo);
+		BeanUtils.copyProperties(studentMapper,vo);
 		vo.getStu_cat().add(studentMapper.getSchoolId());
 		vo.getStu_cat().add(studentMapper.getClassesId());
 		return vo;
@@ -235,9 +235,8 @@ public class StudentServiceImpl implements StudentService{
 	            String name = multipartFile.getOriginalFilename();
 	            String[] split2 = name.split("\\.")[0].split("\\+");
 	            StudentMapper student = student_dao.findByNameAndParentPhone(split2[1], split2[2]);
-				if(student!=null) {
-					readword.readStudentWord(multipartFile, student.getId());
-				}
+				if(student==null)throw new ReadWordException();
+				readword.readStudentWord(multipartFile, student.getId());
 			}
 		} catch (Exception e) {
 			throw new ReadWordException();

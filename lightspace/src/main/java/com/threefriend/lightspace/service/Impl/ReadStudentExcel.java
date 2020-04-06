@@ -158,6 +158,7 @@ public class ReadStudentExcel {
 						student.setName(cell.getStringCellValue());
 						break;
 					case 1://性别 ( 0 : 男 1 ：女)
+						System.out.println(cell.getStringCellValue());
 						if(cell.getStringCellValue().equals("男")) {
 							student.setGender(0);
 						}else {

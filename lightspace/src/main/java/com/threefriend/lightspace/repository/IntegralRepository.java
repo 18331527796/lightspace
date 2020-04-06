@@ -21,6 +21,6 @@ public interface IntegralRepository extends JpaRepository<IntegralMapper, Intege
 	List<IntegralMapper> findByParentIdOrderByGenTime(Integer parentId);
 	
 	//收支标识(0:支出，1:收入)
-	@Query(value="SELECT SUM(integral) FROM integral_mapper  WHERE state = ?1 AND parent_id = ?2",nativeQuery = true)
+	@Query(value="SELECT SUM(integral) FROM integral_mapper  WHERE state = ?1 AND parent_id = ?2 ORDER BY gen_time desc",nativeQuery = true)
 	Long findIntegtalByState(Integer state,Integer openId);
 }

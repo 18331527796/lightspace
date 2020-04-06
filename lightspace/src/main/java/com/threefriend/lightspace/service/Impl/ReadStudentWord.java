@@ -24,6 +24,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.mapper.StudentWordMapper;
@@ -101,8 +102,8 @@ public class ReadStudentWord {
 								//姓名
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
-									String[] s = para.text().split("：");  
-									po.setName(s[1].trim());
+									String[] s = para.text().split("："); 
+									if(s.length>1)po.setName(s[1].trim());
 								} //end for   
 							}
 							
@@ -116,7 +117,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");  
-									po.setGender(s[1].trim());
+									if(s.length>1)po.setGender(s[1].trim());
 								} //end for  
 							}
 							
@@ -126,7 +127,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");  
-									po.setMotion(s[1].trim());
+									if(s.length>1)po.setMotion(s[1].trim());
 								} //end for   
 							}
 							
@@ -136,7 +137,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("："); 
-									po.setCover(s[1].trim());
+									if(s.length>1)po.setCover(s[1].trim());
 								} //end for   
 							}
 							
@@ -146,7 +147,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");  
-									po.setAssembly(s[1].trim());
+									if(s.length>1)po.setAssembly(s[1].trim());
 								} //end for   
 							}
 							
@@ -156,7 +157,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");  
-									po.setColourVision(s[1].trim());
+									if(s.length>1)po.setColourVision(s[1].trim());
 								} //end for   
 							}
 							
@@ -166,7 +167,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("："); 
-									po.setSlitLamp(s[1].trim());
+									if(s.length>1)po.setSlitLamp(s[1].trim());
 								} //end for   
 							}
 							
@@ -176,7 +177,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");   
-									po.setRetCam(s[1].trim());
+									if(s.length>1)po.setRetCam(s[1].trim());
 								} //end for   
 							}
 							
@@ -186,7 +187,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");  
-									po.setHeight(s[1].trim());
+									if(s.length>1)po.setHeight(s[1].trim());
 								} //end for   
 							}
 							
@@ -196,7 +197,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");   
-									po.setWeight(s[1].trim());
+									if(s.length>1)po.setWeight(s[1].trim());
 								} //end for   
 							}
 							
@@ -206,7 +207,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setSuggest(s.trim());
+									if(!StringUtils.isEmpty(s))po.setSuggest(s.trim());
 								} //end for   
 							}
 							
@@ -218,7 +219,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("："); 
-									po.setBirthday(s[1].trim());
+									if(s.length>1)po.setBirthday(s[1].trim());
 								} //end for  
 							}
 							
@@ -228,7 +229,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setFarRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setFarRight(s.trim());
 								} //end for   
 							}
 							
@@ -238,7 +239,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setFarLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setFarLeft(s.trim());
 								} //end for   
 							}
 							
@@ -248,7 +249,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");   
-									po.setStereopsis(s[1].trim());
+									if(s.length>1)po.setStereopsis(s[1].trim());
 								} //end for   
 							}
 							
@@ -258,7 +259,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");   
-									po.setWorth(s[1].trim());
+									if(s.length>1)po.setWorth(s[1].trim());
 								} //end for   
 							}
 							
@@ -268,7 +269,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setLevelRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setLevelRight(s.trim());
 								} //end for   
 							}
 							
@@ -278,7 +279,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setLevelLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setLevelLeft(s.trim());
 								} //end for   
 							}
 							
@@ -292,7 +293,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("："); 
-									po.setSchool(s[1].trim());
+									if(s.length>1)po.setSchool(s[1].trim());
 								} //end for  
 							}
 							
@@ -302,7 +303,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setNearRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setNearRight(s.trim());
 								} //end for   
 							}
 							
@@ -312,7 +313,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setNearLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setNearLeft(s.trim());
 								} //end for   
 							}
 							
@@ -323,7 +324,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");  
-									po.setSplRight(s[1].trim());
+									if(s.length>1)po.setSplRight(s[1].trim());
 								} //end for   
 							}
 							
@@ -333,7 +334,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("："); 
-									po.setSplLeft(s[1].trim());
+									if(s.length>1)po.setSplLeft(s[1].trim());
 								} //end for   
 							}
 							
@@ -343,7 +344,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("："); 
-									po.setSplBinoculus(s[1].trim());
+									if(s.length>1)po.setSplBinoculus(s[1].trim());
 								} //end for   
 							}
 							
@@ -353,7 +354,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();   
-									   po.setVerticalRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setVerticalRight(s.trim());
 								} //end for   
 							}
 							
@@ -363,7 +364,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setVerticalLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setVerticalLeft(s.trim());
 								} //end for   
 							}
 							break;
@@ -374,7 +375,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");  
-									po.setPhone(s[1].trim());
+									if(s.length>1)po.setPhone(s[1].trim());
 								} //end for  
 							}
 							
@@ -384,7 +385,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setSphRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setSphRight(s.trim());
 								} //end for   
 							}
 							
@@ -394,7 +395,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setSphLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setSphLeft(s.trim());
 								} //end for   
 							}
 							
@@ -404,7 +405,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setAxialLengthRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setAxialLengthRight(s.trim());
 								} //end for   
 							}
 							
@@ -414,7 +415,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();
-									po.setAxialLengthLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setAxialLengthLeft(s.trim());
 								} //end for   
 							}
 							
@@ -426,7 +427,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setCytRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setCytRight(s.trim());
 								} //end for   
 							}
 							
@@ -436,7 +437,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setCytLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setCytLeft(s.trim());
 								} //end for   
 							}
 							
@@ -446,7 +447,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setAcdRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setAcdRight(s.trim());
 								} //end for   
 							}
 							
@@ -456,7 +457,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setAcdLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setAcdLeft(s.trim());
 								} //end for   
 							}
 							break;
@@ -467,7 +468,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();
-									po.setAxisRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setAxisRight(s.trim());
 								} //end for   
 							}
 							
@@ -477,7 +478,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setAxisLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setAxisLeft(s.trim());
 								} //end for   
 							}
 							
@@ -487,7 +488,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setLtRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setLtRight(s.trim());
 								} //end for   
 							}
 							
@@ -497,7 +498,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setLtLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setLtLeft(s.trim());
 								} //end for   
 							}
 							break;
@@ -508,7 +509,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setCorrectRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setCorrectRight(s.trim());
 								} //end for   
 							}
 							
@@ -518,7 +519,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setCorrectLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setCorrectLeft(s.trim());
 								} //end for   
 							}
 							break;
@@ -529,7 +530,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setIpdRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setIpdRight(s.trim());
 								} //end for   
 							}
 							
@@ -539,7 +540,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setIpdLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setIpdLeft(s.trim());
 								} //end for   
 							}
 							break;
@@ -550,7 +551,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text(); 
-									po.setLeadingRight(s.trim());
+									if(!StringUtils.isEmpty(s))po.setLeadingRight(s.trim());
 								} //end for   
 							}
 							
@@ -560,7 +561,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String s = para.text();  
-									po.setLeadingLeft(s.trim());
+									if(!StringUtils.isEmpty(s))po.setLeadingLeft(s.trim());
 								} //end for   
 							}
 							break;

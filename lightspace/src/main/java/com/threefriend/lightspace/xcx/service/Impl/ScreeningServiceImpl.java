@@ -23,6 +23,7 @@ import com.threefriend.lightspace.mapper.ParentMapper;
 import com.threefriend.lightspace.mapper.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.ScreeningMapper;
+import com.threefriend.lightspace.mapper.ScreeningWearMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.OptotypeRepository;
@@ -30,6 +31,7 @@ import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.ParentStudentRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.ScreeningRepository;
+import com.threefriend.lightspace.repository.ScreeningWearRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.UserRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
@@ -37,8 +39,12 @@ import com.threefriend.lightspace.vo.ClassesVO;
 import com.threefriend.lightspace.vo.OptotypeVO;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SchoolVO;
+import com.threefriend.lightspace.vo.ScreeningVO;
 import com.threefriend.lightspace.vo.StudentVO;
 import com.threefriend.lightspace.xcx.service.ScreeningService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * 筛查业务逻辑实现类
@@ -54,6 +60,8 @@ public class ScreeningServiceImpl implements ScreeningService{
 	private StudentRepository student_dao;
 	@Autowired
 	private ScreeningRepository screening_dao;
+	@Autowired
+	private ScreeningWearRepository screening_wear_dao;
 	@Autowired
 	private OptotypeRepository optotype_dao;
 	@Autowired
@@ -125,10 +133,40 @@ public class ScreeningServiceImpl implements ScreeningService{
 			po.setBirthday(student.getBirthday());
 			po.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
 			po.setVisionRightStr(Double.valueOf(params.get("visionRight")));
-			po.setBeginEnd(params.get("beginEnd"));
-			po.setDistance(params.get("distance"));
-			po.setNumber(params.get("number"));
+			po.setProcessLeft(params.get("processLeft"));
+			po.setProcessRight(params.get("processRight"));
+			po.setGender(student.getGender());
 			screening_dao.save(po);
+			student.setLastTime(new Date());
+			student_dao.save(student);
+		}
+		return ResultVOUtil.success();
+	}
+	
+	/* 
+	 * 新增的筛查记录（这个方法待定 可能会修改）(戴镜)
+	 */
+	@Override
+	public ResultVO addScreeningWear(Map<String, String> params) {
+		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Integer studentId = Integer.valueOf(params.get("studentId"));
+		Optional<StudentMapper> findById = student_dao.findById(studentId);
+		if(findById!=null&&findById.isPresent()) {
+			StudentMapper student = findById.get();
+			ScreeningWearMapper po = new ScreeningWearMapper();
+			po.setDate(simpleDateFormat.format(new Date()));
+			po.setGenTime(new Date());
+			po.setStudentId(studentId);
+			po.setStudentName(student.getName());
+			po.setBirthday(student.getBirthday());
+			po.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
+			po.setVisionRightStr(Double.valueOf(params.get("visionRight")));
+			po.setProcessLeft(params.get("processLeft"));
+			po.setProcessRight(params.get("processRight"));
+			po.setGender(student.getGender());
+			screening_wear_dao.save(po);
+			student.setLastTime(new Date());
+			student_dao.save(student);
 		}
 		return ResultVOUtil.success();
 	}
@@ -144,7 +182,7 @@ public class ScreeningServiceImpl implements ScreeningService{
 		//遍历拷贝
 		for (OptotypeMapper optotypeMapper : allOptotype) {
 			OptotypeVO vo = new OptotypeVO();
-			BeanUtils.copyProperties(optotypeMapper, vo);
+			BeanUtils.copyProperties(optotypeMapper,vo);
 			//拆分字符串
 			String[] split = optotypeMapper.getPathStr().split(",");
 			//new个list 准备实现随机
@@ -168,7 +206,13 @@ public class ScreeningServiceImpl implements ScreeningService{
 	 */
 	@Override
 	public ResultVO findById(Map<String, String> params) {
-		return ResultVOUtil.success(screening_dao.findById(Integer.valueOf(params.get("id"))));
+		ScreeningMapper screeningMapper = screening_dao.findById(Integer.valueOf(params.get("id"))).get();
+		ScreeningVO vo = new ScreeningVO();
+		BeanUtils.copyProperties(screeningMapper, vo);
+		JSONArray leftarray = JSONArray.fromObject(screeningMapper.getProcessLeft()); 
+		vo.setProcessLeftList(pushjosn(screeningMapper.getProcessLeft()));
+		vo.setProcessRightList(pushjosn(screeningMapper.getProcessRight()));
+		return ResultVOUtil.success(vo);
 	}
 
 
@@ -202,14 +246,38 @@ public class ScreeningServiceImpl implements ScreeningService{
 			List<ScreeningMapper> dataList = screening_dao.findByStudentIdOrderByGenTime(student.getId());
 			//找到这个孩子七天内的档案数据
 			List<ScreeningMapper> picList = screening_dao.findByStudentIdAndGenTimeBetween(student.getId(), beginTime, eneTime);
+			//找到这个孩子所有的档案数据（戴镜）
+			List<ScreeningWearMapper> weardataList = screening_wear_dao.findByStudentIdOrderByGenTime(student.getId());
+			//找到这个孩子七天内的档案数据（戴镜）
+			List<ScreeningWearMapper> wearpicList = screening_wear_dao.findByStudentIdAndGenTimeBetween(student.getId(), beginTime, eneTime);
+			
 			map.put("id", student.getId());
 			map.put("name", student.getName());
 			map.put("birthday", student.getBirthday());
 			map.put("dataList", dataList);
 			map.put("picList", picList);
+			map.put("weardataList", weardataList);
+			map.put("wearpicList", wearpicList);
 			end.add(map);
 		}
 		return ResultVOUtil.success(end);
+	}
+
+
+
+	@Override
+	public List<Map<String, String>> pushjosn(String josn) {
+		JSONArray array = JSONArray.fromObject(josn); 
+		List<Map<String, String>> endlist = new ArrayList<>();
+		for (Object object : array) {
+			Map<String, String> end = new HashMap<>();
+			JSONObject  jsonObj  = JSONObject.fromObject(object);
+			end.put("levelPre", jsonObj.get("levelPre").toString());
+			end.put("right", jsonObj.get("right").toString());
+			end.put("wrong", jsonObj.get("wrong").toString());
+			endlist.add(end);
+		}
+		return endlist;
 	}
 
 }

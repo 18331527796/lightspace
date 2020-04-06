@@ -46,6 +46,17 @@ public class ScreeningController {
 	}
 	
 	/**
+	 * 新增筛选记录(戴镜)
+	 * @param params
+	 * @return
+	 */
+	
+	@PostMapping("/addWearScreening")
+	public ResultVO addWearScreening(@RequestParam Map<String, String> params) {
+		return screening_impl.addScreeningWear(params);
+	}
+	
+	/**
 	 * 所有视标返回数据
 	 * @return
 	 */
