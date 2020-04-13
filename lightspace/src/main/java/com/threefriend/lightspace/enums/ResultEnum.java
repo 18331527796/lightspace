@@ -2,7 +2,7 @@ package com.threefriend.lightspace.enums;
 
 
 /**
- * 
+ * 错误参数
  */
 public enum ResultEnum {
 
@@ -53,6 +53,10 @@ public enum ResultEnum {
     BINDINGSTUDENT_ERROR(10220,"您尚未绑定孩子，请先完成绑定操作"),
     
     STUDENTPHONE_ERROR(10221,"您的手机号和孩子预留手机号不符，请核实"), // 这条废弃
+    
+    BINDINGPHONE_ERROR(10222,"手机号绑定失败，请重试"),
+    
+    SENDMESSAGE_ERROR(10223,"读取成功，发送失败！"),
     ;
 
     private Integer status;

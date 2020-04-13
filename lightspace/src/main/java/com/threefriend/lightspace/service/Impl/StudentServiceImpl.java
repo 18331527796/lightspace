@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -22,18 +24,29 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.Exception.ReadWordException;
+import com.threefriend.lightspace.Exception.SendMessageException;
+import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
+import com.threefriend.lightspace.mapper.GzhUserMapper;
+import com.threefriend.lightspace.mapper.ParentMapper;
+import com.threefriend.lightspace.mapper.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
+import com.threefriend.lightspace.repository.GzhUserRepository;
+import com.threefriend.lightspace.repository.ParentRepository;
+import com.threefriend.lightspace.repository.ParentStudentRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.service.StudentService;
 import com.threefriend.lightspace.util.DownTemplateUtil;
+import com.threefriend.lightspace.util.RedisUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.StudentVO;
+import com.threefriend.lightspace.xcxutil.SendMessageUtils;
+import com.threefriend.lightspace.xcxutil.WeChatUtils;
 
 /**
  *	学生实现类
@@ -57,6 +70,14 @@ public class StudentServiceImpl implements StudentService{
 	private ReadStudentWord readword;
 	@Autowired
 	private StudentWordRepository studentword_dao;
+	@Autowired
+	private ParentStudentRepository parent_student_dao;
+	@Autowired
+	private GzhUserRepository gzh_dao;
+	@Autowired
+	private ParentRepository parent_dao;
+	@Resource
+	private RedisUtils redisUtil;
 
 	/* 
 	 * 学生列表
@@ -229,18 +250,45 @@ public class StudentServiceImpl implements StudentService{
 	 */
 	@Override
 	public ResultVO readStudentWord(MultipartFile[] file) {
-		try {
 			for (MultipartFile multipartFile : file) {
 				// 获取文件名
 	            String name = multipartFile.getOriginalFilename();
 	            String[] split2 = name.split("\\.")[0].split("\\+");
-	            StudentMapper student = student_dao.findByNameAndParentPhone(split2[1], split2[2]);
+	            System.out.println(split2[0]+"---"+split2[1]+"---"+split2[2]);
+	            StudentMapper student = student_dao.findBySchoolNameAndClassesNameAndName(split2[0],split2[1], split2[2]);
 				if(student==null)throw new ReadWordException();
-				readword.readStudentWord(multipartFile, student.getId());
+				try {
+					readword.readStudentWord(multipartFile, student.getId());
+				} catch (Exception e1) {
+					System.out.println("读取word出错");
+				}
+				//通过学生id找到所有家长
+				List<ParentStudentRelation> findByStudentId = parent_student_dao.findByStudentId(student.getId());
+				//遍历所有家长 查看unionid 有的话就发送消息
+			try {
+				for (ParentStudentRelation parentStudent : findByStudentId) {
+					//找到这个家长
+					Optional<ParentMapper> findById = parent_dao.findById(parentStudent.getParentId());
+					//如果没有就抛异常
+					if(!findById.isPresent())throw new Exception();
+					ParentMapper parent = findById.get();
+					//家长的unionid不能是空的
+					if(parent.getUnionId()!=null&&!"".equals(parent.getUnionId())) {
+						//通过unionid查找这个家长的公众号openId
+						GzhUserMapper findByUnionid = gzh_dao.findByUnionid(parent.getUnionId());
+						//获取access——token 准备发送消息
+						String ACCESS_TOKEN = redisUtil.get("GZHTOKEN"); 
+						if(ACCESS_TOKEN==null||"".equals(ACCESS_TOKEN)) {
+						    ACCESS_TOKEN = WeChatUtils.findAccessToken(AccountEnums.GZHAPPID.getUrl(), AccountEnums.GZHSECRET.getUrl());
+							redisUtil.setValueTime("GZHTOKEN", ACCESS_TOKEN, 7000);
+						} 
+						SendMessageUtils.wordMessage(findByUnionid.getOpenid(),ACCESS_TOKEN);
+					}
+				}
+			} catch (Exception e) {
+				throw new SendMessageException();
 			}
-		} catch (Exception e) {
-			throw new ReadWordException();
-		}
+			}
 		return ResultVOUtil.success();
 	}
 

@@ -33,6 +33,9 @@ import com.threefriend.lightspace.repository.StudentWordRepository;
 import org.apache.poi.hwpf.usermodel.TableCell;  
 import org.apache.poi.hwpf.usermodel.TableRow;
 
+/**
+ *	读取学生word
+ */
 @Service
 public class ReadStudentWord {
 	

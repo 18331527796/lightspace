@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ *	后台管理用户表
+ */
 @Entity
 public class UserMapper {
 

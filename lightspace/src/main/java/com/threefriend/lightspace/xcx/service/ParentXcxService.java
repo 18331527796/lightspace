@@ -2,6 +2,8 @@ package com.threefriend.lightspace.xcx.service;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.threefriend.lightspace.vo.ResultVO;
 
 public interface ParentXcxService {
@@ -44,6 +46,14 @@ public interface ParentXcxService {
 	ResultVO mine(Map<String, String> params);
 	
 	/**
+	 * 绑定手机号
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	ResultVO bindingPhone(Map<String, String> params)throws Exception;
+	
+	/**
 	 * 获取手机号
 	 * @param params
 	 * @return
@@ -55,5 +65,5 @@ public interface ParentXcxService {
 	 * @param params
 	 * @return
 	 */
-	String getUserDate(Map<String, String> params)throws Exception;
+	Map<String, Object> getUserData(Map<String, String> params)throws Exception;
 }

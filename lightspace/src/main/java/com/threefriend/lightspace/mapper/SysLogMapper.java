@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ *	操作日志表
+ */
 @Entity
 public class SysLogMapper implements Serializable{
 

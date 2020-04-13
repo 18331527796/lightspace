@@ -13,6 +13,9 @@ import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.IntegralServiceImpl;
 
+/**
+ * 积分控制器
+ */
 @RestController
 @RequestMapping("/xcx")
 public class IntegralController {

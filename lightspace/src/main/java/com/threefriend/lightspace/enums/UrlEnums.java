@@ -1,5 +1,8 @@
 package com.threefriend.lightspace.enums;
 
+/**
+ *	路径枚举类
+ */
 public enum UrlEnums {
 	
 	CODE_PATH("F:\\code\\"),

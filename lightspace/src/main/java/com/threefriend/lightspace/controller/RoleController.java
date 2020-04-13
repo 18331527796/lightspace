@@ -12,6 +12,11 @@ import com.threefriend.lightspace.service.Impl.RoleServiceImpl;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 
+/**
+ * 角色控制器
+ * @author Administrator
+ *
+ */
 @RestController
 public class RoleController {
 

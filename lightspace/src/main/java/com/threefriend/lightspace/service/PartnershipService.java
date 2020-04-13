@@ -8,6 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.vo.ResultVO;
 
+/**
+ *	合作商业务逻辑
+ */
 public interface PartnershipService {
 
 	//合作机构列表

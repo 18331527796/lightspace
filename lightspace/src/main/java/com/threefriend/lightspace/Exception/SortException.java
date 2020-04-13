@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.threefriend.lightspace.enums.ResultEnum;
 
+/**
+ *	排座错误类
+ */
 public class SortException extends RuntimeException{
 
 	/**

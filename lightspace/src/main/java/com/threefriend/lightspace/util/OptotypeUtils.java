@@ -1,5 +1,8 @@
 package com.threefriend.lightspace.util;
 
+/**
+ *	视标工具类
+ */
 public class OptotypeUtils {
 
 	public static String vision2vision5(Double vision) {

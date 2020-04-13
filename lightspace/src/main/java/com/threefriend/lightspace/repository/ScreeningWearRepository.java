@@ -11,7 +11,7 @@ import com.threefriend.lightspace.mapper.ScreeningMapper;
 import com.threefriend.lightspace.mapper.ScreeningWearMapper;
 
 /**
- * 筛查操作层
+ * 筛查（戴镜）操作层
  * @author Administrator
  *
  */
@@ -19,7 +19,7 @@ public interface ScreeningWearRepository extends JpaRepository<ScreeningWearMapp
 
 	ScreeningWearMapper findTopByStudentIdOrderByGenTime(Integer studentId);
  	
- 	List<ScreeningWearMapper> findByStudentIdOrderByGenTime(Integer studentId);
+ 	List<ScreeningWearMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId);
  	
  	List<ScreeningWearMapper> findByStudentIdAndGenTimeBetween(Integer studentId,Date begin,Date end);
 }

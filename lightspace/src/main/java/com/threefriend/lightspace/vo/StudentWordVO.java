@@ -6,6 +6,8 @@ public class StudentWordVO {
 	
 	private String name;
 	
+	private Integer gender;
+	
 	private String time;
 
 	public Integer getId() {
@@ -30,6 +32,14 @@ public class StudentWordVO {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public Integer getGender() {
+		return gender;
+	}
+
+	public void setGender(Integer gender) {
+		this.gender = gender;
 	}
 	
 	

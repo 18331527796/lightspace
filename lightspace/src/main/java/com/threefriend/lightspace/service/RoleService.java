@@ -7,6 +7,9 @@ import com.threefriend.lightspace.mapper.RoleMapper;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.RoleRightVO;
 
+/**
+ *	角色业务逻辑
+ */
 public interface RoleService {
 	
 	//新增角色

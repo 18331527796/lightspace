@@ -27,6 +27,9 @@ import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 
+/**
+ *	读取recordexcel
+ */
 @Service
 public class ReadRecordExcel {
 	@Autowired

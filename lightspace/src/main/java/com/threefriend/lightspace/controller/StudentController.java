@@ -19,6 +19,11 @@ import com.threefriend.lightspace.service.Impl.StudentServiceImpl;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 
+/**
+ * 学生控制器
+ * @author Administrator
+ *
+ */
 @RestController
 public class StudentController {
 

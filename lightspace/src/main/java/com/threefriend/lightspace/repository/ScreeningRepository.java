@@ -18,7 +18,7 @@ public interface ScreeningRepository extends JpaRepository<ScreeningMapper, Inte
 
  	ScreeningMapper findTopByStudentIdOrderByGenTime(Integer studentId);
  	
- 	List<ScreeningMapper> findByStudentIdOrderByGenTime(Integer studentId);
+ 	List<ScreeningMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId);
  	
  	List<ScreeningMapper> findByStudentIdAndGenTimeBetween(Integer studentId,Date begin,Date end);
 }

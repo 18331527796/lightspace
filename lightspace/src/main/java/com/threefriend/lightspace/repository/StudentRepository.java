@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.threefriend.lightspace.mapper.StudentMapper;
 
 /**
- * 班级操作层
+ * 学生操作层
  * @author Administrator
  *
  */
@@ -33,7 +33,7 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	@Transactional
 	void deleteByClassesId(Integer id);
 	
-	StudentMapper findByNameAndParentPhone(String name,String parentPhone);
+	StudentMapper findBySchoolNameAndClassesNameAndName(String schoolName,String className,String name);
 	
 	int countByClassesIdAndCorrect(Integer classId,Integer correct);
 	

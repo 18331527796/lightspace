@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.PartnershipXcxServiceImpl;
 
+/**
+ *	合作机构控制器
+ */
 @RestController
 @RequestMapping("/xcx")
 public class PartnershipXcxController {

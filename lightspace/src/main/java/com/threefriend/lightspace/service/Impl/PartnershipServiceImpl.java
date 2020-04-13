@@ -19,6 +19,9 @@ import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcxutil.XcxDecryptUtils;
 
+/**
+ *	合作商业务逻辑实现
+ */
 @Service
 public class PartnershipServiceImpl implements PartnershipService{
 

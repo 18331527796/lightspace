@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import com.threefriend.lightspace.util.OptotypeUtils;
 
 /**
- * 筛查表
+ * 筛查表（戴镜）
  * @author Administrator
  *
  */

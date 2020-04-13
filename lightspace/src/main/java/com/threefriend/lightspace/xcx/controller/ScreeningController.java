@@ -76,6 +76,17 @@ public class ScreeningController {
 	public ResultVO findScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.findById(params);
 	}
+	
+	/**
+	 * 按照id查找筛选档案(戴镜)
+	 * @param params
+	 * @return
+	 */
+	
+	@PostMapping("/findWearScreening")
+	public ResultVO findWearScreening(@RequestParam Map<String, String> params) {
+		return screening_impl.findWearById(params);
+	}
 	//↓↓↓↓↓↓↓↓新写的↓↓↓↓↓↓↓↓
 	
 	/**

@@ -162,14 +162,22 @@
             <artifactId>bcprov-jdk16</artifactId>
             <version>1.46</version>
         </dependency>
-<!--微信小程序解密encryptedData-->
+		<!--微信小程序解密encryptedData-->
 
 		<dependency>
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
         </dependency>
-
+        
+        <!-- https://mvnrepository.com/artifact/xstream/xstream -->
+        <!-- 转换xml的 -->
+		<dependency>
+		    <groupId>xstream</groupId>
+		    <artifactId>xstream</artifactId>
+		    <version>1.2.2</version>
+		</dependency>
+        
 		</dependencies>
 
 	<build>

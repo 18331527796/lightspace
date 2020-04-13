@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.TaskXcxServiceImpl;
 
+/**
+ *	打卡任务控制器
+ */
 @RestController
 @RequestMapping("/xcx")
 public class TaskXcxController {

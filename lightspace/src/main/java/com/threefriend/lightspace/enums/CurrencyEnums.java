@@ -1,5 +1,10 @@
 package com.threefriend.lightspace.enums;
 
+/**
+ * 角色枚举类
+ * @author Administrator
+ *
+ */
 public enum CurrencyEnums {
 	
 	ADMIN(1,"超级管理员"),

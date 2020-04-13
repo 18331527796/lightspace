@@ -14,6 +14,9 @@ import com.threefriend.lightspace.service.TaskService;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 
+/**
+ *	打卡任务业务逻辑实现
+ */
 @Service
 public class TaskServiceImpl implements TaskService{
 

@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
@@ -44,31 +47,26 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		//从微信的接口获取sessionkey openId
 		Map getsessionKey = WeChatUtils.getsessionKey(AccountEnums.APIKEY.getUrl(), AccountEnums.SECRETKEY.getUrl(), params.get("code"));
 		params.put("sessionKey", getsessionKey.get("sessionkey").toString());
-		System.out.println(params.get("sessionKey"));
 		String openId = getsessionKey.get("openId").toString();
 		//查一下有这个用户吗
+		System.err.println(params.get("code"));
+		System.err.println(params.get("encryptedData"));
+		System.err.println(params.get("iv"));
 		ParentMapper findByOpenId = parent_dao.findByOpenId(openId);
-		String resphone ="";
-		String phone = "";
 		if(findByOpenId==null) {
-			phone = getPhoneDate(params);
+			Map<String, Object> userData = getUserData(params);
 			ParentMapper parent = new ParentMapper();
-			parent.setOpenId(openId);
-			parent.setPhone(Long.valueOf(phone));
+			parent.setOpenId(userData.get("openId").toString());
+			parent.setUnionId(userData.get("unionId").toString());
 			parent.setGenTime(new Date());
 			parent_dao.save(parent);
 			type = "new";
-			resphone= phone.substring(0, 3)+"****"+ phone.substring(7, 11);
-			end.put("phone", resphone);
 			end.put("openId", openId);
 			end.put("type", type);
 			return ResultVOUtil.success(end);
 		}
-		phone = findByOpenId.getPhone().toString();
 		type = "old";
 		openId = findByOpenId.getOpenId();
-		resphone= phone.substring(0, 3)+"****"+ phone.substring(7, 11);
-		end.put("phone", resphone);
 		end.put("openId", openId);
 		end.put("type", type);
 		return ResultVOUtil.success(end);
@@ -147,7 +145,16 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	 */
 	@Override
 	public ResultVO mine(Map<String, String> params) {
-		return ResultVOUtil.success(parent_dao.findByOpenId(params.get("openId")));
+		ParentMapper findByOpenId = parent_dao.findByOpenId(params.get("openId"));
+		Map<String , String > end = new HashMap<>();
+		String phone="";
+		if(findByOpenId.getPhone()!=null) {
+			String phoneDate=findByOpenId.getPhone().toString();
+			phone=phoneDate.substring(0, 3)+"****"+phoneDate.substring(7, phoneDate.length());
+		}
+		end.put("id", findByOpenId.getId().toString());
+		end.put("phone", phone);
+		return ResultVOUtil.success(end);
 	}
 	
 	/* 
@@ -168,13 +175,27 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	 * 获取用户信息
 	 */
 	@Override
-	public String getUserDate(Map<String, String> params) throws Exception {
+	public Map<String, Object> getUserData(Map<String, String> params) throws Exception {
 		String sessionKey=params.get("sessionKey");
 		String encryptedData = params.get("encryptedData");
 		String iv = params.get("iv");
 		Map<String, Object> userInfo = XcxDecryptUtils.getUserInfo(encryptedData, sessionKey, iv);
-		String phone = (String) userInfo.get("purePhoneNumber"); //手机号
-		return phone;
+		return userInfo;
+	}
+
+	@Override
+	public ResultVO bindingPhone(Map<String, String> params) throws Exception {
+		//从微信的接口获取sessionkey openId
+		Map getsessionKey = WeChatUtils.getsessionKey(AccountEnums.APIKEY.getUrl(), AccountEnums.SECRETKEY.getUrl(), params.get("code"));
+		params.put("sessionKey", getsessionKey.get("sessionkey").toString());
+		String phoneDate = getPhoneDate(params);
+		if(StringUtils.isEmpty(phoneDate))ResultVOUtil.error(ResultEnum.BINDINGPHONE_ERROR.getStatus(), ResultEnum.BINDINGPHONE_ERROR.getMessage());
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		parent.setPhone(Long.valueOf(phoneDate));
+		parent_dao.save(parent);
+	    String phone="";
+	    phone=phoneDate.substring(0, 3)+"****"+phoneDate.substring(7, phoneDate.length());
+		return ResultVOUtil.success(phone);
 	}
 	
 }

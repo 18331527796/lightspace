@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.threefriend.lightspace.mapper.ParentMapper;
 
 /**
- * 视标操作层
+ * 家长操作层
  * @author Administrator
  *
  */

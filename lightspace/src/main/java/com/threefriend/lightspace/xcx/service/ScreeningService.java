@@ -20,6 +20,8 @@ public interface ScreeningService {
 	ResultVO selectOptotype();
 	//按照id查找档案
 	ResultVO findById(Map<String, String> params);
+	//戴镜按照id查
+	ResultVO findWearById(Map<String, String> params);
 	//档案首页数据
 	ResultVO allChildrenScreening(Map<String, String> params);
 	//解析josn串

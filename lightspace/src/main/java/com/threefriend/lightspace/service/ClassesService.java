@@ -7,6 +7,9 @@ import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SchoolVO;
 
+/**
+ *	班级业务逻辑
+ */
 public interface ClassesService {
 	
 	//新增班级

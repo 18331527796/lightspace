@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ *	家长学生关联表
+ */
 @Entity
 public class ParentStudentRelation {
 

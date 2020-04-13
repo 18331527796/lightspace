@@ -14,6 +14,9 @@ import javax.net.ssl.TrustManager;
 
 import net.sf.json.JSONObject;
 
+/**
+ *	http请求工具类
+ */
 public class CommonUtil {
 	/**
 	 * 发送https请求

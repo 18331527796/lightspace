@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.threefriend.lightspace.xcx.service.Impl.XcxCreateQrcoreServiceImpl;
 
+/**
+ *	生成孩子二维码
+ */
 @RestController
 @RequestMapping("/xcx")
 public class XcxCreateQrcoreController {

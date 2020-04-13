@@ -33,7 +33,6 @@ import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.ScreeningWearRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
-import com.threefriend.lightspace.repository.UserRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ClassesVO;
 import com.threefriend.lightspace.vo.OptotypeVO;
@@ -243,16 +242,17 @@ public class ScreeningServiceImpl implements ScreeningService{
 			//建立map容器
 			Map<String,Object> map = new HashMap<>();
 			//找到这个孩子所有的档案数据
-			List<ScreeningMapper> dataList = screening_dao.findByStudentIdOrderByGenTime(student.getId());
+			List<ScreeningMapper> dataList = screening_dao.findByStudentIdOrderByGenTimeDesc(student.getId());
 			//找到这个孩子七天内的档案数据
 			List<ScreeningMapper> picList = screening_dao.findByStudentIdAndGenTimeBetween(student.getId(), beginTime, eneTime);
 			//找到这个孩子所有的档案数据（戴镜）
-			List<ScreeningWearMapper> weardataList = screening_wear_dao.findByStudentIdOrderByGenTime(student.getId());
+			List<ScreeningWearMapper> weardataList = screening_wear_dao.findByStudentIdOrderByGenTimeDesc(student.getId());
 			//找到这个孩子七天内的档案数据（戴镜）
 			List<ScreeningWearMapper> wearpicList = screening_wear_dao.findByStudentIdAndGenTimeBetween(student.getId(), beginTime, eneTime);
 			
 			map.put("id", student.getId());
 			map.put("name", student.getName());
+			map.put("gender", student.getGender());
 			map.put("birthday", student.getBirthday());
 			map.put("dataList", dataList);
 			map.put("picList", picList);
@@ -272,12 +272,25 @@ public class ScreeningServiceImpl implements ScreeningService{
 		for (Object object : array) {
 			Map<String, String> end = new HashMap<>();
 			JSONObject  jsonObj  = JSONObject.fromObject(object);
-			end.put("levelPre", jsonObj.get("levelPre").toString());
-			end.put("right", jsonObj.get("right").toString());
-			end.put("wrong", jsonObj.get("wrong").toString());
+			end.put("levelPre", jsonObj.get("l").toString());
+			end.put("right", jsonObj.get("r").toString());
+			end.put("wrong", jsonObj.get("w").toString());
 			endlist.add(end);
 		}
 		return endlist;
+	}
+
+
+
+	@Override
+	public ResultVO findWearById(Map<String, String> params) {
+		ScreeningWearMapper screeningMapper = screening_wear_dao.findById(Integer.valueOf(params.get("id"))).get();
+		ScreeningVO vo = new ScreeningVO();
+		BeanUtils.copyProperties(screeningMapper, vo);
+		JSONArray leftarray = JSONArray.fromObject(screeningMapper.getProcessLeft()); 
+		vo.setProcessLeftList(pushjosn(screeningMapper.getProcessLeft()));
+		vo.setProcessRightList(pushjosn(screeningMapper.getProcessRight()));
+		return ResultVOUtil.success(vo);
 	}
 
 }

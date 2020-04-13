@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.threefriend.lightspace.service.Impl.TaskServiceImpl;
 import com.threefriend.lightspace.vo.ResultVO;
 
+/**
+ * 打卡任务控制器
+ * @author Administrator
+ *
+ */
 @RestController
 public class TaskController {
 

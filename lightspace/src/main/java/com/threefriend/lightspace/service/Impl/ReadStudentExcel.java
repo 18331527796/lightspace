@@ -25,6 +25,9 @@ import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 
+/**
+ *	读取学生excel
+ */
 @Service
 public class ReadStudentExcel {
 	@Autowired
@@ -233,7 +236,7 @@ public class ReadStudentExcel {
 						}
 						break;
 					case 12:
-						StudentMapper po = student_dao.findByNameAndParentPhone(name ,cell.getStringCellValue());
+						StudentMapper po = student_dao.findBySchoolNameAndClassesNameAndName(schoolName,className,name);
 						if(po!=null)flag=false;
 						student.setParentPhone(cell.getStringCellValue());
 						break;

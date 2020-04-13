@@ -8,6 +8,9 @@ import java.io.InputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 下载模板工具类
+ */
 public class DownTemplateUtil {
 
 	public static void downTemplate(HttpServletResponse response,String path,String fileName) {

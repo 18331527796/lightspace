@@ -22,6 +22,9 @@ import com.threefriend.lightspace.vo.MenuListVo;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.RoleRightVO;
 
+/**
+ *	角色业务逻辑实现
+ */
 @Service
 public class RoleServiceImpl implements RoleService {
 

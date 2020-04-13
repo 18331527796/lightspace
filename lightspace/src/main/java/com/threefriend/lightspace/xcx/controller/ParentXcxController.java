@@ -2,6 +2,8 @@ package com.threefriend.lightspace.xcx.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.ParentXcxServiceImpl;
 
+/**
+ *	家长控制器
+ */
 @RestController
 @RequestMapping("/xcx")
 public class ParentXcxController {
@@ -73,5 +78,10 @@ public class ParentXcxController {
 	@PostMapping("/mine")
 	public ResultVO mind(@RequestParam Map<String, String> params) {
 		return parent_impl.mine(params);
+	}
+	
+	@PostMapping("/bindingPhone")
+	public ResultVO bindingPhone(@RequestParam Map<String, String> params) throws Exception {
+		return parent_impl.bindingPhone(params);
 	}
 }

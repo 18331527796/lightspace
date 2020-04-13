@@ -14,6 +14,9 @@ import com.threefriend.lightspace.service.TeacherService;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 
+/**
+ *	教师业务逻辑实现
+ */
 @Service
 public class TeacherServiceImpl implements TeacherService{
 	@Autowired

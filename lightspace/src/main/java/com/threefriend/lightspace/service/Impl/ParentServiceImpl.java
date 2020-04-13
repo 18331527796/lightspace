@@ -10,6 +10,9 @@ import com.threefriend.lightspace.service.ParentService;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 
+/**
+ *	家长逻辑实现层
+ */
 @Service
 public class ParentServiceImpl implements ParentService{
 	@Autowired
