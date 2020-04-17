@@ -9,6 +9,10 @@ public class StudentWordVO {
 	private Integer gender;
 	
 	private String time;
+	//学校名称
+	private String schoolName;
+	//班级名称
+	private String className;
 
 	public Integer getId() {
 		return id;
@@ -40,6 +44,30 @@ public class StudentWordVO {
 
 	public void setGender(Integer gender) {
 		this.gender = gender;
+	}
+	
+	public void setGender(String gender) {
+		if("男".equals(gender)) {
+			this.gender = 0;
+		}else {
+			this.gender = 1;
+		}
+	}
+
+	public String getSchoolName() {
+		return schoolName;
+	}
+
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
 	}
 	
 	

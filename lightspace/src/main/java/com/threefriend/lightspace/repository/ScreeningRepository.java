@@ -16,7 +16,7 @@ import com.threefriend.lightspace.mapper.ScreeningMapper;
  */
 public interface ScreeningRepository extends JpaRepository<ScreeningMapper, Integer>{
 
- 	ScreeningMapper findTopByStudentIdOrderByGenTime(Integer studentId);
+ 	ScreeningMapper findTopByStudentIdOrderByGenTimeDesc(Integer studentId);
  	
  	List<ScreeningMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId);
  	

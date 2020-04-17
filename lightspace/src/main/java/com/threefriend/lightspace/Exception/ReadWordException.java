@@ -14,5 +14,16 @@ public class ReadWordException extends RuntimeException{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private String name;
+	
+	public ReadWordException(String name) {
+		this.name=name;
+    }
+	public ReadWordException() {
+    }
+	
+	public String getName() {
+		return name;
+	}
 
 }

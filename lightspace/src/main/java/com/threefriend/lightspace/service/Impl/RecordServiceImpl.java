@@ -209,7 +209,7 @@ public class RecordServiceImpl implements RecordService {
 	 */
 	@Override
 	public RecordMapper findByStudentId(Integer id) {
-		return record_dao.findTopByStudentIdOrderByGenTime(id);
+		return record_dao.findTopByStudentIdOrderByGenTimeDesc(id);
 	}
 
 	/*

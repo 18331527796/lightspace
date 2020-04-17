@@ -63,8 +63,8 @@ public class CreateQrcore {
      * @param scene       要输入的内容
      * @param accessToken token
      */
-    public static void postMiniqrQr(String scene, String accessToken, String path) {
-        try {
+    public static void postMiniqrQr(String scene,String name , String accessToken, String path) {
+    	try {
             URL url = new URL(UrlEnums.WECHAT_XCX_CODE_PAHT.getUrl()+ accessToken);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             // conn.setConnectTimeout(10000);//连接超时 单位毫秒
@@ -86,13 +86,14 @@ public class CreateQrcore {
             printWriter.write(paramJson.toString());
             // flush输出流的缓冲
             printWriter.flush();
+            printWriter.close();
             BufferedInputStream bis = new BufferedInputStream(httpURLConnection.getInputStream());
             File file = new File(path);
             if (!file.exists()) {
                 file.mkdir();
             }
             //创建一个空文件
-            OutputStream os = new FileOutputStream(new File(path + scene + ".jpg"));
+            OutputStream os = new FileOutputStream(new File(path + scene + name + ".jpg"));
             //ByteArrayOutputStream os = new ByteArrayOutputStream();
             int len;
             byte[] arr = new byte[1024];

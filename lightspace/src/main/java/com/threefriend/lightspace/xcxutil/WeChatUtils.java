@@ -101,9 +101,6 @@ public class WeChatUtils {
             if (!jb.isNull("openid") && jb.get("openid") != null) {
                 customer.setOpenid(jb.get("openid").toString());
             }
-            if (!jb.isNull("nickname") && jb.get("nickname") != null) {
-                customer.setNickname(jb.get("nickname").toString());
-            }
             if (!jb.isNull("sex") && jb.get("sex") != null) {
                 customer.setSex(Integer.parseInt(jb.get("sex").toString()));
             }

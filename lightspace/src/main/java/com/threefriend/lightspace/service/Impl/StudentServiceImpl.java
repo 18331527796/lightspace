@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,11 +31,14 @@ import com.threefriend.lightspace.Exception.SendMessageException;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.GzhUserMapper;
+import com.threefriend.lightspace.mapper.MsgTempMapper;
 import com.threefriend.lightspace.mapper.ParentMapper;
 import com.threefriend.lightspace.mapper.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.StudentWordMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.GzhUserRepository;
+import com.threefriend.lightspace.repository.MsgTempRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.ParentStudentRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
@@ -67,17 +73,11 @@ public class StudentServiceImpl implements StudentService{
 	@Autowired
 	private ReadStudentExcel readexcel;
 	@Autowired
-	private ReadStudentWord readword;
-	@Autowired
-	private StudentWordRepository studentword_dao;
-	@Autowired
 	private ParentStudentRepository parent_student_dao;
 	@Autowired
-	private GzhUserRepository gzh_dao;
-	@Autowired
 	private ParentRepository parent_dao;
-	@Resource
-	private RedisUtils redisUtil;
+	
+	
 
 	/* 
 	 * 学生列表
@@ -245,52 +245,7 @@ public class StudentServiceImpl implements StudentService{
 		DownTemplateUtil.downTemplate(response, PATH, FILENAME);
 	}
 
-	/* 
-	 * 解析word文件
-	 */
-	@Override
-	public ResultVO readStudentWord(MultipartFile[] file) {
-			for (MultipartFile multipartFile : file) {
-				// 获取文件名
-	            String name = multipartFile.getOriginalFilename();
-	            String[] split2 = name.split("\\.")[0].split("\\+");
-	            System.out.println(split2[0]+"---"+split2[1]+"---"+split2[2]);
-	            StudentMapper student = student_dao.findBySchoolNameAndClassesNameAndName(split2[0],split2[1], split2[2]);
-				if(student==null)throw new ReadWordException();
-				try {
-					readword.readStudentWord(multipartFile, student.getId());
-				} catch (Exception e1) {
-					System.out.println("读取word出错");
-				}
-				//通过学生id找到所有家长
-				List<ParentStudentRelation> findByStudentId = parent_student_dao.findByStudentId(student.getId());
-				//遍历所有家长 查看unionid 有的话就发送消息
-			try {
-				for (ParentStudentRelation parentStudent : findByStudentId) {
-					//找到这个家长
-					Optional<ParentMapper> findById = parent_dao.findById(parentStudent.getParentId());
-					//如果没有就抛异常
-					if(!findById.isPresent())throw new Exception();
-					ParentMapper parent = findById.get();
-					//家长的unionid不能是空的
-					if(parent.getUnionId()!=null&&!"".equals(parent.getUnionId())) {
-						//通过unionid查找这个家长的公众号openId
-						GzhUserMapper findByUnionid = gzh_dao.findByUnionid(parent.getUnionId());
-						//获取access——token 准备发送消息
-						String ACCESS_TOKEN = redisUtil.get("GZHTOKEN"); 
-						if(ACCESS_TOKEN==null||"".equals(ACCESS_TOKEN)) {
-						    ACCESS_TOKEN = WeChatUtils.findAccessToken(AccountEnums.GZHAPPID.getUrl(), AccountEnums.GZHSECRET.getUrl());
-							redisUtil.setValueTime("GZHTOKEN", ACCESS_TOKEN, 7000);
-						} 
-						SendMessageUtils.wordMessage(findByUnionid.getOpenid(),ACCESS_TOKEN);
-					}
-				}
-			} catch (Exception e) {
-				throw new SendMessageException();
-			}
-			}
-		return ResultVOUtil.success();
-	}
+	
 
 	
 	

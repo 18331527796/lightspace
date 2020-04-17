@@ -62,29 +62,27 @@ public class SortServiceImpl implements SortService {
 				number = SortEnums.TYPETHREE.getNumber();
 			if (type == SortEnums.TYPEFOUR.getType())
 				number = SortEnums.TYPEFOUR.getNumber();
-			// 接收按照身高排序后的
+			// 接收按照坐姿高度排序后的
 			List<SortVO> sort = new ArrayList<>();
 			List<SortVO> temporary = new ArrayList<>();
 			// 排座完成后的
 			List<List<SortVO>> end = new ArrayList<>();
-			// 按照班级查出来的身高表
-			List<Integer> ids = new ArrayList<>();
-			List<StudentMapper> allStudent = student_dao.findByClassesIdOrderBySittingHeight(classId);
-			for (StudentMapper studentMapper : allStudent) {
-				ids.add(studentMapper.getId());
-			}
 			//用来存放数据空的学生姓名返回前台 告知老师哪个学生都需要检测
 			List<String> nullStudent= new ArrayList<>();
+			List<StudentMapper> allStudent = student_dao.findByClassesIdOrderBySittingHeight(classId);
 			//循环每个学生的数据做封装
-			for (Integer id : ids) {
+			for (StudentMapper student : allStudent) {
+				Integer id=student.getId();
 				SortVO vo = new SortVO();
 				// 拿出来每个人的最新数据
-				RecordMapper top = record_dao.findTopByStudentIdOrderByGenTime(id);
+				RecordMapper top = record_dao.findTopByStudentIdOrderByGenTimeDesc(id);
 				// 拿出筛查的最新数据
-				ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTime(id);
+				ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(id);
 				if (top != null) {
-					vo.setStudentId(top.getStudentId());
-					vo.setStudentName(top.getStudentName());
+					vo.setStudentId(student.getId());
+					vo.setStudentName(student.getName());
+					vo.setGender(student.getGender());
+					vo.setCorrect(student.getCorrect());
 					// 筛查数据不是空的 并且 比检测数据更新 那就取筛查数据
 					if(screening != null&& screening.getGenTime().getTime()>top.getGenTime().getTime()) {
 						vo.setAvgRecord((screening.getVisionLeftStr() + screening.getVisionRightStr()) / 2);
@@ -95,8 +93,10 @@ public class SortServiceImpl implements SortService {
 				}else {
 					//检测数据是空的 但是 筛查记录不是空的 就用筛查记录
 					if(screening != null) {
-						vo.setStudentId(screening.getStudentId());
-						vo.setStudentName(screening.getStudentName());
+						vo.setStudentId(student.getId());
+						vo.setStudentName(student.getName());
+						vo.setGender(student.getGender());
+						vo.setCorrect(student.getCorrect());
 						vo.setAvgRecord((screening.getVisionLeftStr() + screening.getVisionRightStr()) / 2);
 						sort.add(vo);
 					}else {
@@ -137,6 +137,7 @@ public class SortServiceImpl implements SortService {
 			 po.setEndTime(new Date(nowtime.getTime()+time));
 			 po.setSort(sortMark.toString());
 			 sort_dao.save(po);
+			 Collections.reverse(end);
 			return end;
 		}
 
@@ -156,10 +157,13 @@ public class SortServiceImpl implements SortService {
 					StudentMapper studentMapper = student_dao.findById(Integer.valueOf(string2)).get();
 					vo.setStudentId(Integer.valueOf(string2));
 					vo.setStudentName(studentMapper.getName());
+					vo.setGender(studentMapper.getGender());
+					vo.setCorrect(studentMapper.getCorrect());
 					temporary.add(vo);
 				}
 				end.add(temporary);
 			}
+			Collections.reverse(end);
 		return end;
 	}
 

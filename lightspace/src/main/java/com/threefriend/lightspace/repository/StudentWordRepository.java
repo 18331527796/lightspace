@@ -16,6 +16,8 @@ import com.threefriend.lightspace.mapper.StudentWordMapper;
  */
 public interface StudentWordRepository extends JpaRepository<StudentWordMapper, Integer>{
 	
+	List<StudentWordMapper> findByOrderByGenTimeDesc();
+	
 	StudentWordMapper findTopByStudentIdOrderByGenTimeDesc(Integer studentId);
 	
 	List<StudentWordMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId);

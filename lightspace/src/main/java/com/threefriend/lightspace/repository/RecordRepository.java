@@ -31,7 +31,7 @@ public interface RecordRepository extends JpaRepository<RecordMapper, Integer>{
 	@Transactional
 	void deleteByStudentId(Integer Id);
 	
-	RecordMapper findTopByStudentIdOrderByGenTime(Integer id);
+	RecordMapper findTopByStudentIdOrderByGenTimeDesc(Integer id);
 	//按照学生id查询所有的数据
 	List<RecordMapper> findAllByStudentIdAndGenTimeBetweenOrderByGenTime(Integer id,Date befor , Date after);
 	//学校 左眼 大于

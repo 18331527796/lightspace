@@ -49,7 +49,7 @@ public class XcxCreateQrcoreServiceImpl implements XcxCreateQrcoreService{
             for (StudentMapper student : ids) {
             	String studentId = student.getId().toString();
             	//生成二维码
-            	CreateQrcore.postMiniqrQr(studentId, accessToken, path);
+            	CreateQrcore.postMiniqrQr(studentId,student.getName(), accessToken, path);
             	//添加图片
             	WaterMarkUtils.graphicsGeneration(studentId,student.getName(), path);
 			}

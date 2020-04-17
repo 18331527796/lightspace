@@ -61,6 +61,8 @@ public class StudentMapper {
 	private Integer correct;
 	//上次检测时间
 	private String lastTime;
+	//上次推送时间
+	private Date sendTime;
 	// 备注
 	private String description = "";
 	
@@ -189,13 +191,11 @@ public class StudentMapper {
 		DateFormat Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		this.lastTime = Format.format(date);
 	}
-	@Override
-	public String toString() {
-		return "StudentMapper [id=" + id + ", regionName=" + regionName + ", regionId=" + regionId + ", schoolName="
-				+ schoolName + ", schoolId=" + schoolId + ", classesName=" + classesName + ", classesId=" + classesId
-				+ ", name=" + name + ", gender=" + gender + ", age=" + age + ", height=" + height + ", sittingHeight="
-				+ sittingHeight + ", chairHeight=" + chairHeight + ", weight=" + weight + ", nature=" + nature
-				+ ", correct=" + correct + ", description=" + description + "]";
+	public Date getSendTime() {
+		return sendTime;
+	}
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
 	}
 
 

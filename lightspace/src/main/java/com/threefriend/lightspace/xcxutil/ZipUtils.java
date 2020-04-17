@@ -227,11 +227,10 @@ public final class ZipUtils {
      * @return
      */
     public static String downLoadZip(String tempPath, HttpServletResponse response) {
-        try {
+        try (OutputStream out = response.getOutputStream()){
             int read = 0;
             byte[] buffer = new byte[1024];
             //创建输出流，下载zip
-            OutputStream out = response.getOutputStream();
             FileInputStream in = new FileInputStream(new File(tempPath + "code.zip"));
             //设置响应头，控制浏览器下载该文件
             response.setHeader("Content-Type", "application/octet-stream");
@@ -249,7 +248,7 @@ public final class ZipUtils {
             File file = new File(tempPath);
             deleteDirectory(file);
         } catch (Exception e) {
-            System.out.println(e);
+        	System.out.println(e);
         }
         return null;
     }

@@ -1,6 +1,8 @@
 package com.threefriend.lightspace.mapper;
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -45,7 +47,7 @@ public class ScreeningWearMapper {
 	//创建时间
 	private Date genTime;
 	private String date;
-	
+	private String time;
 	
 	
 	public String getBirthday() {
@@ -68,9 +70,6 @@ public class ScreeningWearMapper {
 	}
 	public String getDate() {
 		return date;
-	}
-	public void setDate(String date) {
-		this.date = date;
 	}
 	public String getVisionLeft() {
 		return visionLeft;
@@ -122,7 +121,11 @@ public class ScreeningWearMapper {
 		return genTime;
 	}
 	public void setGenTime(Date genTime) {
+		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat Format = new SimpleDateFormat("hh:mm:ss");
 		this.genTime = genTime;
+		this.date = simpleDateFormat.format(genTime);
+		this.time = Format.format(genTime);
 	}
 	public Integer getGender() {
 		return gender;
@@ -141,6 +144,9 @@ public class ScreeningWearMapper {
 	}
 	public void setProcessRight(String processRight) {
 		this.processRight = processRight;
+	}
+	public String getTime() {
+		return time;
 	}
 	
 	

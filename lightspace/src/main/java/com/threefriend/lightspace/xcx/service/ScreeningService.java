@@ -3,6 +3,7 @@ package com.threefriend.lightspace.xcx.service;
 import java.util.List;
 import java.util.Map;
 
+import com.threefriend.lightspace.mapper.MsgTempMapper;
 import com.threefriend.lightspace.vo.ResultVO;
 
 /**
@@ -26,4 +27,8 @@ public interface ScreeningService {
 	ResultVO allChildrenScreening(Map<String, String> params);
 	//解析josn串
 	List<Map<String, String>> pushjosn(String josn);
+	//获取access-token
+	String getAccessToken();
+	//发送通知
+	void screeningMessage(MsgTempMapper msg, Integer studentId, String left, String right, Integer type);
 }

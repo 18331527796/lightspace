@@ -141,16 +141,6 @@ public class StudentController {
 		student_Impl.download(res);
 	}
 	
-	/**
-	 * 导入学生检查报告
-	 * @param file
-	 * @param token
-	 * @return
-	 */
 	
-	@PostMapping(value="/studentWord")
-	public ResultVO  studentWord(@RequestParam(value="file",required = false)MultipartFile[] file){
-		return student_Impl.readStudentWord(file);
-	}
 	
 }

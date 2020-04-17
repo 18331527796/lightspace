@@ -2,6 +2,7 @@ package com.threefriend.lightspace.service.Impl;
 
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -13,6 +14,7 @@ import com.threefriend.lightspace.repository.TeacherRepository;
 import com.threefriend.lightspace.service.TeacherService;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.lightspace.vo.TeacherVO;
 
 /**
  *	教师业务逻辑实现
@@ -57,7 +59,12 @@ public class TeacherServiceImpl implements TeacherService{
 	 */
 	@Override
 	public ResultVO findById(Map<String, String> params) {
-		return ResultVOUtil.success(teacher_dao.findById(Integer.valueOf(params.get("id"))));
+		TeacherMapper teacherMapper = teacher_dao.findById(Integer.valueOf(params.get("id"))).get();
+		TeacherVO vo = new TeacherVO();
+		BeanUtils.copyProperties(teacherMapper, vo);
+		vo.getTea_cat().add(teacherMapper.getSchoolId());
+		vo.getTea_cat().add(teacherMapper.getClassId());
+		return ResultVOUtil.success(vo);
 	}
 	/*  
 	 * 修改后保存

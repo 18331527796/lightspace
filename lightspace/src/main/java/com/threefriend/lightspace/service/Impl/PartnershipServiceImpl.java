@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class PartnershipServiceImpl implements PartnershipService{
 	}
 
 	@Override
-	public ResultVO addPartnership(MultipartFile file,Map<String, String> params) {
+	public ResultVO addPartnership(MultipartFile file,Map<String, String> params,HttpServletRequest request) {
 		String imgurl= uploadImg(file);
 		PartnershipMapper partner = new PartnershipMapper();
 		partner.setAddress(params.get("address"));

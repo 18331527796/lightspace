@@ -22,6 +22,10 @@ public class StudentWordMapper {
 	private Integer id;
 	//学生姓名
 	private String name;
+	//学校名称
+	private String schoolName;
+	//班级名称
+	private String className;
 	//性别
 	private String gender;
 	//学生id
@@ -404,22 +408,17 @@ public class StudentWordMapper {
 	public void setSuggest(String suggest) {
 		this.suggest = suggest;
 	}
-	@Override
-	public String toString() {
-		return "StudentWordMapper [id=" + id + ", name=" + name + ", gender=" + gender + ", studentId=" + studentId
-				+ ", birthday=" + birthday + ", school=" + school + ", phone=" + phone + ", farRight=" + farRight
-				+ ", farLeft=" + farLeft + ", nearRight=" + nearRight + ", nearLeft=" + nearLeft + ", sphRight="
-				+ sphRight + ", sphLeft=" + sphLeft + ", cytRight=" + cytRight + ", cytLeft=" + cytLeft + ", axisRight="
-				+ axisRight + ", axisLeft=" + axisLeft + ", correctRight=" + correctRight + ", correctLeft="
-				+ correctLeft + ", ipdRight=" + ipdRight + ", ipdLeft=" + ipdLeft + ", leadingRight=" + leadingRight
-				+ ", leadingLeft=" + leadingLeft + ", motion=" + motion + ", stereopsis=" + stereopsis + ", cover="
-				+ cover + ", worth=" + worth + ", assembly=" + assembly + ", colourVision=" + colourVision
-				+ ", splRight=" + splRight + ", splLeft=" + splLeft + ", splBinoculus=" + splBinoculus + ", levelRight="
-				+ levelRight + ", levelLeft=" + levelLeft + ", verticalRight=" + verticalRight + ", verticalLeft="
-				+ verticalLeft + ", axialLengthRight=" + axialLengthRight + ", axialLengthLeft=" + axialLengthLeft
-				+ ", acdRight=" + acdRight + ", acdLeft=" + acdLeft + ", ltRight=" + ltRight + ", ltLeft=" + ltLeft
-				+ ", slitLamp=" + slitLamp + ", retCam=" + retCam + ", height=" + height + ", weight=" + weight
-				+ ", suggest=" + suggest + ", genTime=" + genTime + "]";
+	public String getSchoolName() {
+		return schoolName;
+	}
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
 	}
 	
 	

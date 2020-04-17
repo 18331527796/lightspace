@@ -43,7 +43,7 @@ public class ReadStudentWord {
 	private StudentWordRepository studentword_dao;
 	
 	
-	public void readStudentWord(MultipartFile file,Integer studentId) throws Exception {
+	public void readStudentWord(MultipartFile file,Integer studentId,String fliename) throws Exception {
         try{  
         	// 获取文件名
             String fileName = file.getOriginalFilename();
@@ -56,7 +56,7 @@ public class ReadStudentWord {
             //↑↑↑↑↑以上是为了转换格式↑↑↑↑↑
         	FileInputStream in = new FileInputStream(excelFile);//载入文档  
         	//这里是直接读取word文件保存
-        	wordtype(in,studentId);
+        	wordtype(in,studentId,fliename);
            //程序结束时，删除临时文件
            deleteFile(excelFile);
         }catch(Exception e){  
@@ -78,15 +78,18 @@ public class ReadStudentWord {
         }
     }
     
-    private void wordtype(FileInputStream in,Integer studentId) throws IOException {
+    private void wordtype(FileInputStream in,Integer studentId,String fliename) throws IOException {
     	
         POIFSFileSystem pfs = new POIFSFileSystem(in);     
         HWPFDocument hwpf = new HWPFDocument(pfs);     
         Range range = hwpf.getRange();//得到文档的读取范围  
         TableIterator it = new TableIterator(range);  
+        String[] split2 = fliename.split("\\.")[0].split("\\+");
         //新建记录
         StudentWordMapper po = new StudentWordMapper();
         po.setStudentId(studentId);
+        po.setSchoolName(split2[0]);
+        po.setClassName(split2[1]);
         po.setGenTime(new Date());
        //迭代文档中的表格  
         while (it.hasNext()) {     

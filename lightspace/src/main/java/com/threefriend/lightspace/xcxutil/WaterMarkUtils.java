@@ -70,7 +70,7 @@ public class WaterMarkUtils {
         Graphics mainPic = image.getGraphics();
         BufferedImage bimg = null;
         try {
-            bimg = javax.imageio.ImageIO.read(new java.io.File(path + scene + ".jpg"));
+            bimg = javax.imageio.ImageIO.read(new java.io.File(path + scene + name + ".jpg"));
         } catch (Exception ignored) {
         }
 
@@ -78,7 +78,7 @@ public class WaterMarkUtils {
             mainPic.drawImage(bimg, 0, H_title, imageWidth, H_mainPic, null);
             mainPic.dispose();
         }
-        createImage(path + scene + ".jpg");
+        createImage(path + scene + name + ".jpg");
 
     }
 

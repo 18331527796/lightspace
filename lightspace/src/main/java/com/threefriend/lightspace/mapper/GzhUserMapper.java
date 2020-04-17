@@ -13,7 +13,6 @@ public class GzhUserMapper {
 	private Integer id;
 	private String openid;
 	private String unionid;
-	private String nickname;
 	private Integer sex ;
 	private String province;
 	private String city;
@@ -36,12 +35,6 @@ public class GzhUserMapper {
 	}
 	public void setUnionid(String unionid) {
 		this.unionid = unionid;
-	}
-	public String getNickname() {
-		return nickname;
-	}
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
 	}
 	public Integer getSex() {
 		return sex;
