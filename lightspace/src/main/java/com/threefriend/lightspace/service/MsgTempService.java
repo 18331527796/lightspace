@@ -35,5 +35,5 @@ public interface MsgTempService {
 	 * @param params
 	 * @return
 	 */
-	ResultVO selectedTemp(Map<String, String> params);
+	void selectedTemp(String type , Integer id);
 }

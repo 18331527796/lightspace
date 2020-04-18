@@ -36,25 +36,25 @@ public class MsgTempServiceImpl implements MsgTempService{
 		if(findById.isPresent()) {
 			MsgTempMapper msg = findById.get();
 			if(!StringUtils.isEmpty(params.get("name")))msg.setName(params.get("name"));
-			if(!StringUtils.isEmpty(params.get("first")))msg.setName(params.get("first"));
-			if(!StringUtils.isEmpty(params.get("remark")))msg.setName(params.get("remark"));
-			if(!StringUtils.isEmpty(params.get("url")))msg.setName(params.get("url"));
+			if(!StringUtils.isEmpty(params.get("first")))msg.setFirst(params.get("first"));
+			if(!StringUtils.isEmpty(params.get("remark")))msg.setRemark(params.get("remark"));
+			if(!StringUtils.isEmpty(params.get("url")))msg.setUrl(params.get("url"));
+			if(Integer.valueOf(params.get("selected"))==1)selectedTemp(msg.getType(),msg.getId());
 			msg_temp_dao.save(msg);
 		}
 		return tempList(params);
 	}
 
 	@Override
-	public ResultVO selectedTemp(Map<String, String> params) {
-		List<MsgTempMapper> findByType = msg_temp_dao.findByType(params.get("type"));
+	public void selectedTemp(String type , Integer id) {
+		List<MsgTempMapper> findByType = msg_temp_dao.findByType(type);
 		for (MsgTempMapper msgTemp : findByType) {
-			if(msgTemp.getId()==Integer.valueOf(params.get("id"))) {
+			if(msgTemp.getId()==id) {
 				msgTemp.setSelected(1);
 			}else {
 				msgTemp.setSelected(0);
 			}
 			msg_temp_dao.save(msgTemp);
 		}
-		return tempList(params);
 	}
 }

@@ -108,15 +108,18 @@ public class SortServiceImpl implements SortService {
 			if(nullStudent!=null&&!nullStudent.isEmpty())throw new SortException(nullStudent);
 			int size = sort.size();
 			StringBuilder sortMark = new StringBuilder("");
+			//遍历身高的集合 添加进临时行的集合
 			for (int i = 1; i < size + 1; i++) {
 				// 临时行的排序
 				temporary.add(sort.get(i - 1));
+				//判断是不是一行已经完成添加
 				if ((i % number == 0 && i != 0) || (((size - i) < number) && i == (size - 1))) {
 					// lamdba表达式排序 按照裸眼视力的平均值
 					Collections.sort(temporary,
 							Comparator.comparing(SortVO::getAvgRecord).thenComparing(SortVO::getAvgRecord));
 					// 组合最后的list
 					end.add(temporary);
+					//遍历这一行的孩子 append 记录座位顺序
 					for (int j = 0; j < temporary.size(); j++) {
 						if (j == 0) {
 							sortMark.append("-" + temporary.get(j).getStudentId());

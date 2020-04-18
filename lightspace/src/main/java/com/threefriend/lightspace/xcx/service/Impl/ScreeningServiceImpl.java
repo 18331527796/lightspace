@@ -304,13 +304,13 @@ public class ScreeningServiceImpl implements ScreeningService {
 			// 找到这个孩子所有的档案数据
 			List<ScreeningMapper> dataList = screening_dao.findByStudentIdOrderByGenTimeDesc(student.getId());
 			// 找到这个孩子七天内的档案数据
-			List<ScreeningMapper> picList = screening_dao.findByStudentIdAndGenTimeBetween(student.getId(), beginTime,
+			List<ScreeningMapper> picList = screening_dao.findByStudentIdAndGenTimeBetweenOrderById(student.getId(), beginTime,
 					eneTime);
 			// 找到这个孩子所有的档案数据（戴镜）
 			List<ScreeningWearMapper> weardataList = screening_wear_dao
 					.findByStudentIdOrderByGenTimeDesc(student.getId());
 			// 找到这个孩子七天内的档案数据（戴镜）
-			List<ScreeningWearMapper> wearpicList = screening_wear_dao.findByStudentIdAndGenTimeBetween(student.getId(),
+			List<ScreeningWearMapper> wearpicList = screening_wear_dao.findByStudentIdAndGenTimeBetweenOrderById(student.getId(),
 					beginTime, eneTime);
 
 			map.put("id", student.getId());

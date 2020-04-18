@@ -45,15 +45,12 @@ public class StudentMapper {
 	// 身高
 	private String height;
 	// 坐姿身高
-	@Column(name = "sitting_height")
 	private String sittingHeight;
 	// 坐姿用椅高度
-	@Column(name = "chair_height")
 	private String chairHeight;
 	// 体重
 	private String weight;
 	// 家长联系方式
-	@Column(name = "patent_phone")
 	private String parentPhone;
 	// 性格
 	private String nature ="";

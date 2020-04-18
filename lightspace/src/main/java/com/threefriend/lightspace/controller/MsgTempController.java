@@ -31,8 +31,4 @@ public class MsgTempController {
 		return msg_temp_impl.saveTemp(params);
 	}
 	
-	@PostMapping("selectedTemp")
-	public ResultVO selectedTemp(@RequestParam Map<String, String> params) {
-		return msg_temp_impl.selectedTemp(params);
-	}
 }

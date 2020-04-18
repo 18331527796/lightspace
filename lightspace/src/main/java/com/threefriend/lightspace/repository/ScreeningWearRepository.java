@@ -21,5 +21,5 @@ public interface ScreeningWearRepository extends JpaRepository<ScreeningWearMapp
  	
  	List<ScreeningWearMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId);
  	
- 	List<ScreeningWearMapper> findByStudentIdAndGenTimeBetween(Integer studentId,Date begin,Date end);
+ 	List<ScreeningWearMapper> findByStudentIdAndGenTimeBetweenOrderById(Integer studentId,Date begin,Date end);
 }
