@@ -155,6 +155,8 @@ public class ScreeningServiceImpl implements ScreeningService {
 			po.setGender(student.getGender());
 			screening_dao.save(po);
 			student.setLastTime(new Date());
+			student.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
+			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 			student_dao.save(student);
 			//if(student.getSendTime()==null||new Date().getTime()-student.getSendTime().getTime()>=604800) {
 				//查一下当前选中的筛查模板
@@ -189,6 +191,8 @@ public class ScreeningServiceImpl implements ScreeningService {
 			po.setGender(student.getGender());
 			screening_wear_dao.save(po);
 			student.setLastTime(new Date());
+			student.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
+			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 			student_dao.save(student);
 			//if(student.getSendTime()==null||new Date().getTime()-student.getSendTime().getTime()>=604800) {
 				//查一下当前选中的筛查模板

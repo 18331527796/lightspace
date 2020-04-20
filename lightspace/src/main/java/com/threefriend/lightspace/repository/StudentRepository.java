@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.threefriend.lightspace.mapper.StudentMapper;
 
@@ -41,4 +42,62 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	int countByClassesId(Integer classId);
 	
 	int countBySchoolId(Integer school);
+	
+	
+	//学校 左眼 大于
+		@Query(value="SELECT count(1)" + 
+				" FROM student_mapper t1" + 
+				" WHERE school_id = ?1 and vision_left_str > ?2",nativeQuery = true)
+		int countTopBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(Integer schoolId,Double min);
+		//学校 左眼 区间
+		@Query(value="SELECT count(1) FROM student_mapper t1" + 
+				" WHERE school_id = ?1 and vision_left_str BETWEEN ?2 and ?3",nativeQuery = true)
+		int countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(Integer schoolId,Double min,Double max);
+		//学校 右眼 大于
+		@Query(value="SELECT count(1)" + 
+				" FROM student_mapper t1" + 
+				" WHERE school_id = ?1 and vision_right_str > ?2",nativeQuery = true)
+		int countTopBySchoolIdAndVisionRightGreaterThanOrderByStudentId(Integer schoolId,Double min);
+		//学校 右眼区间
+		@Query(value="SELECT count(1) FROM student_mapper t1" + 
+				" WHERE school_id = ?1 and vision_right_str BETWEEN ?2 and ?3",nativeQuery = true)
+		int countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(Integer schoolId,Double min,Double max);
+		//学校 双眼 区间
+		@Query(value="SELECT count(1) FROM student_mapper t1" + 
+				" WHERE school_id = ?1 and (vision_left_str + vision_right_str)/2 BETWEEN ?2 and ?3",nativeQuery = true)
+		int schoolAvgVision(Integer school,Double min,Double max);
+		//学校 双眼 大于
+		@Query(value="SELECT count(1)" + 
+				" FROM student_mapper t1" + 
+				" WHERE school_id = ?1 and (vision_left_str + vision_right_str)/2 > ?2",nativeQuery = true)
+		int schoolAvgVision(Integer school,Double min);
+		
+		@Query(value="SELECT count(1)" + 
+				" FROM student_mapper t1" + 
+				" WHERE classes_id IN ?1 and vision_left_str BETWEEN ?2 and ?3",nativeQuery = true)
+		int countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(List<Integer> ClassId,Double min,Double max);
+		
+		@Query(value="SELECT count(1)" + 
+				" FROM student_mapper t1" + 
+				" WHERE classes_id IN ?1 and vision_left_str > ?2",nativeQuery = true)
+		int countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(List<Integer> ClassId,Double min);
+		
+		@Query(value="SELECT count(1)" + 
+				" FROM student_mapper t1" + 
+				" WHERE classes_id IN ?1 and vision_right_str > ?2",nativeQuery = true)
+		int countTopByClassesIdInAndVisionRightGreaterThanOrderByStudentId(List<Integer> ClassId,Double min);
+		
+		@Query(value="SELECT count(1)" + 
+				" FROM student_mapper " + 
+				" WHERE classes_id IN ?1 and vision_right_str BETWEEN ?2 and ?3",nativeQuery = true)
+		int countTopByClassesIdInAndVisionRightBetweenOrderByStudentId(List<Integer> ClassId,Double min,Double max);
+		@Query(value="SELECT count(1)" + 
+				" FROM student_mapper " + 
+				" WHERE classes_id IN ?1 and (vision_left_str + vision_right_str)/2 BETWEEN ?2 and ?3",nativeQuery = true)
+		int classInAvgVision(List<Integer> ClassId,Double min,Double max);
+		
+		@Query(value="SELECT count(1)" + 
+				" FROM student_mapper " + 
+				" WHERE  classes_id IN ?1 and (vision_left_str + vision_right_str)/2 > ?2",nativeQuery = true)
+		int classInAvgVision(List<Integer> ClassId,Double min);
 }

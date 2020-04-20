@@ -22,6 +22,7 @@ import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.SortRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.SortService;
+import com.threefriend.lightspace.util.ListUtils;
 import com.threefriend.lightspace.vo.SortVO;
 
 /**
@@ -74,15 +75,25 @@ public class SortServiceImpl implements SortService {
 			for (StudentMapper student : allStudent) {
 				Integer id=student.getId();
 				SortVO vo = new SortVO();
-				// 拿出来每个人的最新数据
+				vo.setStudentId(student.getId());
+				vo.setStudentName(student.getName());
+				vo.setGender(student.getGender());
+				vo.setCorrect(student.getCorrect());
+				vo.setSittingHeight(Double.valueOf(student.getSittingHeight())-Double.valueOf(student.getChairHeight()));
+				//通过判断学生是否有最新的视力记录
+				if(student.getVisionLeftStr()!=null&&student.getVisionRightStr()!=null) {
+					vo.setAvgRecord((student.getVisionLeftStr()+student.getVisionRightStr())/2);
+				}else {
+					nullStudent.add(student.getName());
+				}
+				//存放集合
+				sort.add(vo);
+				
+				/*// 拿出来每个人的最新数据
 				RecordMapper top = record_dao.findTopByStudentIdOrderByGenTimeDesc(id);
 				// 拿出筛查的最新数据
 				ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(id);
 				if (top != null) {
-					vo.setStudentId(student.getId());
-					vo.setStudentName(student.getName());
-					vo.setGender(student.getGender());
-					vo.setCorrect(student.getCorrect());
 					// 筛查数据不是空的 并且 比检测数据更新 那就取筛查数据
 					if(screening != null&& screening.getGenTime().getTime()>top.getGenTime().getTime()) {
 						vo.setAvgRecord((screening.getVisionLeftStr() + screening.getVisionRightStr()) / 2);
@@ -93,20 +104,17 @@ public class SortServiceImpl implements SortService {
 				}else {
 					//检测数据是空的 但是 筛查记录不是空的 就用筛查记录
 					if(screening != null) {
-						vo.setStudentId(student.getId());
-						vo.setStudentName(student.getName());
-						vo.setGender(student.getGender());
-						vo.setCorrect(student.getCorrect());
 						vo.setAvgRecord((screening.getVisionLeftStr() + screening.getVisionRightStr()) / 2);
 						sort.add(vo);
 					}else {
-						nullStudent.add(student_dao.findById(id).get().getName());
+						nullStudent.add(student.getName());
 					}
-				}
+				}*/
 			}
 			//两个数据都是空的 就抛异常
 			if(nullStudent!=null&&!nullStudent.isEmpty())throw new SortException(nullStudent);
 			int size = sort.size();
+			ListUtils.sort(sort, true,"sittingHeight", "avgRecord");
 			StringBuilder sortMark = new StringBuilder("");
 			//遍历身高的集合 添加进临时行的集合
 			for (int i = 1; i < size + 1; i++) {
@@ -115,8 +123,8 @@ public class SortServiceImpl implements SortService {
 				//判断是不是一行已经完成添加
 				if ((i % number == 0 && i != 0) || (((size - i) < number) && i == (size - 1))) {
 					// lamdba表达式排序 按照裸眼视力的平均值
-					Collections.sort(temporary,
-							Comparator.comparing(SortVO::getAvgRecord).thenComparing(SortVO::getAvgRecord));
+					//Collections.sort(temporary,
+						//	Comparator.comparing(SortVO::getAvgRecord).thenComparing(SortVO::getAvgRecord));
 					// 组合最后的list
 					end.add(temporary);
 					//遍历这一行的孩子 append 记录座位顺序

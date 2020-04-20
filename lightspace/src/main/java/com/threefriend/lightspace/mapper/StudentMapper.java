@@ -62,8 +62,23 @@ public class StudentMapper {
 	private Date sendTime;
 	// 备注
 	private String description = "";
+	//用来进行分析概况以及排座
+	private Double visionLeftStr;
+	private Double visionRightStr;
 	
 	
+	public Double getVisionLeftStr() {
+		return visionLeftStr;
+	}
+	public void setVisionLeftStr(Double visionLeftStr) {
+		this.visionLeftStr = visionLeftStr;
+	}
+	public Double getVisionRightStr() {
+		return visionRightStr;
+	}
+	public void setVisionRightStr(Double visionRightStr) {
+		this.visionRightStr = visionRightStr;
+	}
 	public String getBirthday() {
 		return birthday;
 	}

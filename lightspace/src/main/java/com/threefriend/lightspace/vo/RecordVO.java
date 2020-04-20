@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Administrator
+ *
+ */
 public class RecordVO {
 	
 	private Integer id;
@@ -45,8 +49,17 @@ public class RecordVO {
 	private Double cvaLeft;
 	//创建时间
 	private Date genTime;
+	//坐高
+	private Double height;
 	//前台需要的参数
 	private List<Integer> record_cat = new ArrayList<>();
+	
+	public Double getHeight() {
+		return height;
+	}
+	public void setHeight(Double height) {
+		this.height = height;
+	}
 	public Integer getId() {
 		return id;
 	}

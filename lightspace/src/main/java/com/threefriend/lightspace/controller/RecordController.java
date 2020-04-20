@@ -96,7 +96,7 @@ public class RecordController {
 	@PostMapping("/studentRecord")
 	
 	public ResultVO studentRecord(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.findByStudentId(Integer.valueOf(params.get("id"))));
+		return record_impl.findByStudentId(Integer.valueOf(params.get("id")));
 	}
 	
 	/**

@@ -11,6 +11,18 @@ public class SortVO{
 	private Integer correct;
 	
 	private Double avgRecord;
+	
+	// 坐姿身高
+	private Double sittingHeight;
+	
+
+	public Double getSittingHeight() {
+		return sittingHeight;
+	}
+
+	public void setSittingHeight(Double sittingHeight) {
+		this.sittingHeight = sittingHeight;
+	}
 
 	public Integer getStudentId() {
 		return studentId;

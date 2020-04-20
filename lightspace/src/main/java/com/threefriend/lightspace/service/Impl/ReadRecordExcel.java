@@ -121,6 +121,10 @@ public class ReadRecordExcel {
 	 * @param wb
 	 * @return
 	 */
+	/**
+	 * @param wb
+	 * @return
+	 */
 	private List<RecordMapper> readRecordValue(Workbook wb) {
 		// 得到第一个shell
 		Sheet sheet = wb.getSheetAt(0);
@@ -145,6 +149,7 @@ public class ReadRecordExcel {
 			}
 			schoolId=0;
 			classId=0;
+			StudentMapper student = null;
 			RecordMapper Record = new RecordMapper();
 			Record.setGenTime(new Date());
 			// 循环Excel的列
@@ -196,7 +201,7 @@ public class ReadRecordExcel {
 						}
 						break;
 					case 3://学生姓名
-						StudentMapper student = student_dao.findBySchoolIdAndClassesIdAndName(schoolId, classId,cell.getStringCellValue() );
+						student = student_dao.findBySchoolIdAndClassesIdAndName(schoolId, classId,cell.getStringCellValue() );
 						if(student!=null) {
 						Record.setStudentId(student.getId());
 						Record.setStudentName(student.getName());
@@ -228,9 +233,14 @@ public class ReadRecordExcel {
 						break;
 					case 12://右眼裸眼视力
 						Record.setVisionRightStr(Double.valueOf(cell.getStringCellValue()));
+						if(student!=null) student.setVisionRightStr(Double.valueOf(cell.getStringCellValue()));
 						break;
 					case 13://左眼裸眼视力
 						Record.setVisionLeftStr(Double.valueOf(cell.getStringCellValue()));
+						if(student!=null) {
+							student.setVisionLeftStr(Double.valueOf(cell.getStringCellValue()));
+							student_dao.save(student);
+						}
 						break;
 					default:
 						break;
