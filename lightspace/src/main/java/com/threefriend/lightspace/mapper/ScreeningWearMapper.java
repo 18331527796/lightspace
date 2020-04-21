@@ -122,7 +122,7 @@ public class ScreeningWearMapper {
 	}
 	public void setGenTime(Date genTime) {
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		DateFormat Format = new SimpleDateFormat("hh:mm:ss");
+		DateFormat Format = new SimpleDateFormat("HH:mm:ss");
 		this.genTime = genTime;
 		this.date = simpleDateFormat.format(genTime);
 		this.time = Format.format(genTime);

@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.UrlEnums;
+import com.threefriend.lightspace.util.CreateQrcore;
 import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.util.WaterMarkUtils;
+import com.threefriend.lightspace.util.ZipUtils;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcxutil.CreateQrcore;
-import com.threefriend.lightspace.xcxutil.WaterMarkUtils;
-import com.threefriend.lightspace.xcxutil.ZipUtils;
 
 @RestController
 @RequestMapping("/xcx")

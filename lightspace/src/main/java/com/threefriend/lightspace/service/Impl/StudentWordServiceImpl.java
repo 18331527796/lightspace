@@ -120,7 +120,7 @@ public class StudentWordServiceImpl implements StudentWordService{
 		for (StudentWordMapper studentWordMapper : findAll) {
 			StudentWordVO vo = new StudentWordVO();
 			BeanUtils.copyProperties(studentWordMapper, vo);
-			vo.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(studentWordMapper.getGenTime()));
+			vo.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(studentWordMapper.getGenTime()));
 			vo.setGender(studentWordMapper.getGender());
 			end.add(vo);
 		}

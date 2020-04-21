@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.xcx.service;
+package com.threefriend.lightspace.service;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Administrator
  *
  */
-public interface XcxCreateQrcoreService {
+public interface CreateQrcoreService {
 
 	void download(HttpServletResponse response,Map<String, String> params);
 }

@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.xcxutil;
+package com.threefriend.lightspace.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -102,6 +102,7 @@ public class CreateQrcore {
                 os.flush();
             }
             os.close();
+            bis.close();
             // 上传云储存
             //InputStream is = new ByteArrayInputStream(os.toByteArray());
             //retMap = UploadUtils.upload(is);

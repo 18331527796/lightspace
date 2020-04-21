@@ -294,6 +294,7 @@ public class RecordServiceImpl implements RecordService {
 
 	
 	
+	@SuppressWarnings("serial")
 	@Override
 	public List<List<StatisticsVO>> schoolStatisticsOld(Integer schoolId) {
 		
@@ -341,7 +342,8 @@ public class RecordServiceImpl implements RecordService {
 		end.add(avg);
 		return end;
 	}
-
+	
+	@SuppressWarnings("serial")
 	@Override
 	public List<List<StatisticsVO>> classStatisticsOld(Integer id) {
 		List<Integer> classId = new ArrayList<>();

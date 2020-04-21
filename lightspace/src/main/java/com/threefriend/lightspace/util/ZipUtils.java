@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.xcxutil;
+package com.threefriend.lightspace.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,16 +42,16 @@ public final class ZipUtils {
      */
     public static boolean fileToZip(String sourceFilePath, String zipFilePath, String fileName) {
         boolean flag = false;
+        File zipFile = new File(zipFilePath + File.separator + fileName + ".zip");
+        
+        if (zipFile.exists()) {
+        	LOG.info("{}目录下存在名字为:{}.zip打包文件", zipFilePath, fileName);
+        	zipFile.delete();
+        }
         File sourceFile = new File(sourceFilePath);
         if (!sourceFile.exists()) {
             LOG.info("待压缩的文件目录：{}不存在.", sourceFilePath);
             sourceFile.mkdir();
-        }
-        File zipFile = new File(zipFilePath + File.separator + fileName + ".zip");
-
-        if (zipFile.exists()) {
-            LOG.info("{}目录下存在名字为:{}.zip打包文件", zipFilePath, fileName);
-            zipFile.delete();
         }
         File[] sourceFiles = sourceFile.listFiles();
         if (null == sourceFiles || sourceFiles.length < 1) {
@@ -77,7 +77,7 @@ public final class ZipUtils {
      * @param file
      */
     public static void deleteDirectory(File file) {
-
+    	System.gc();
         File[] list = file.listFiles();
         int i = 0;
         if (list != null && list.length > 0) {

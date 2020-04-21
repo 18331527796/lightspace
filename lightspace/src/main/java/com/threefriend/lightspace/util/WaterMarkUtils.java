@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.xcxutil;
+package com.threefriend.lightspace.util;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -41,7 +41,7 @@ public class WaterMarkUtils {
         }
     }
 
-    public static void graphicsGeneration(String scene,String name, String path) {
+    public static String graphicsGeneration(String scene,String name, String path) {
         int H_title = 50;     //头部高度
         int H_mainPic = 430;  //轮播广告高度
 
@@ -79,7 +79,7 @@ public class WaterMarkUtils {
             mainPic.dispose();
         }
         createImage(path + scene + name + ".jpg");
-
+        return path + scene + name + ".jpg";
     }
 
 

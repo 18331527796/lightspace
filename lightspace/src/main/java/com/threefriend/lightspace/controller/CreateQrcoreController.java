@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.xcx.controller;
+package com.threefriend.lightspace.controller;
 
 import java.util.Map;
 
@@ -10,17 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.threefriend.lightspace.xcx.service.Impl.XcxCreateQrcoreServiceImpl;
+import com.threefriend.lightspace.service.Impl.CreateQrcoreServiceImpl;
 
 /**
  *	生成孩子二维码
  */
 @RestController
-@RequestMapping("/xcx")
-public class XcxCreateQrcoreController {
+public class CreateQrcoreController {
 
 	@Autowired
-	private XcxCreateQrcoreServiceImpl createQrcore_impl;
+	private CreateQrcoreServiceImpl createQrcore_impl;
 	
 	@PostMapping("/download")
 	public void getCreateQrcore(HttpServletResponse response ,@RequestParam Map<String, String> params) {
