@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.lightspace.service.Impl.xcx.MarkServiceImpl;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.service.Impl.MarkServiceImpl;
 
 /**
  *	每日签到控制器

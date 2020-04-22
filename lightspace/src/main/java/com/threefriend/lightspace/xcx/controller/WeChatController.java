@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.threefriend.lightspace.xcx.service.Impl.WechatServiceImpl;
+import com.threefriend.lightspace.service.Impl.xcx.WechatServiceImpl;
 
 
 /**

@@ -1,0 +1,71 @@
+package com.threefriend.lightspace.mapper.xcx;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+/**
+ *	公众号的用户中间表
+ */
+@Entity
+public class GzhUserMapper {
+	@Id
+	@GeneratedValue
+	private Integer id;
+	private String openid;
+	private String unionid;
+	private Integer sex ;
+	private String province;
+	private String city;
+	private String country;
+	private String headImageUrl;
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getOpenid() {
+		return openid;
+	}
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+	public String getUnionid() {
+		return unionid;
+	}
+	public void setUnionid(String unionid) {
+		this.unionid = unionid;
+	}
+	public Integer getSex() {
+		return sex;
+	}
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
+	public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getHeadImageUrl() {
+		return headImageUrl;
+	}
+	public void setHeadImageUrl(String headImageUrl) {
+		this.headImageUrl = headImageUrl;
+	}
+	
+	
+}

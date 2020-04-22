@@ -6,12 +6,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import javax.imageio.ImageIO;
 
 public class DrowMailUtils {
 
@@ -37,26 +35,14 @@ public class DrowMailUtils {
 	// 生成图片文件
 
 	public static void createImage(String fileLocation) {
-		BufferedOutputStream bos = null;
 		if (image != null) {
-			try {
-				FileOutputStream fos = new FileOutputStream(fileLocation);
-				bos = new BufferedOutputStream(fos);
-
-				JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bos);
-				encoder.encode(image);
-				bos.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (bos != null) {// 关闭输出流
-					try {
-						bos.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
+				String formatName = fileLocation.substring(fileLocation.lastIndexOf(".") + 1);   
+				try {
+					ImageIO.write(image, /*"GIF"*/ formatName /* format desired */ , new File(fileLocation) /* target */ );
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 		}
 	}
 

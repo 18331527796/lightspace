@@ -7,6 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
 
 import com.twilio.Twilio;
+import com.twilio.demo.khfsl.drow;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
@@ -15,24 +16,28 @@ import com.twilio.type.PhoneNumber;
 public class test {
 	
 	
-	private static final String accountSid = "ACdcef71c605933e0cb3910794861d3c34"; // Your Account SID from www.twilio.com/user/account
-    private static final String authToken = "c492db2b8f7647d7fed0d925681101fd"; // Your Auth Token from www.twilio.com/user/account
 
     @Test
     public void contextLoads() throws Exception {
-        Twilio.init(accountSid, authToken);
-        for (int i = 0; i < 3; i++) {
-			
-        	Message message = Message.creator(
-        			new PhoneNumber("8618331527796"),  // To number ,Phone number with area code
-        			new PhoneNumber("12564458924"),  // From number
-        			" 你是真鸡儿烦人！！！"                   // SMS body
-        			).create();
-        	if (! StringUtils.isEmpty(message.getSid())){
-        		System.out.println(message.getSid());
-        	}
-        	Thread.sleep(2000);
-        }
+    	drow cg = new drow();
+		/**
+		 *
+		 * @param imglogo
+		 *            logo图片
+		 * @param imgcode
+		 *            二维码图片
+		 * @param words
+		 *            文字信息
+		 * @param outurl
+		 *            输出的Url路径
+		 */
+		String words = "您好！这里是致家长的一封&信，信件里面写满了对您孩子满满的&爱，请关注您孩子的眼睛发展趋势。";
+		try {
+			cg.graphicsGeneration("E:\\光亮空间logo.png", "E:\\杨博淋.jpg",
+					"D:\\upload\\zxing\\ccc.jpg", words, "E:\\");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 	
 }

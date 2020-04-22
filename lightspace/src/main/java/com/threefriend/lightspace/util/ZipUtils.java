@@ -226,8 +226,10 @@ public final class ZipUtils {
      * @param response
      * @return
      */
-    public static String downLoadZip(String tempPath, HttpServletResponse response) {
-        try (OutputStream out = response.getOutputStream()){
+    public static void downLoadZip(String tempPath, HttpServletResponse response) {
+    	OutputStream out =null;
+        try {
+        	out= response.getOutputStream();
             int read = 0;
             byte[] buffer = new byte[1024];
             //创建输出流，下载zip
@@ -239,17 +241,27 @@ public final class ZipUtils {
             while ((read = in.read(buffer)) != -1) {
                 out.write(buffer, 0, read);
             }
+            System.out.println("之前"+out);
             out.flush();
             out.close();
-            File zipFile = new File(tempPath + "/code.zip");
-            if (zipFile.exists()) {
-                zipFile.delete();
-            }
-            File file = new File(tempPath);
-            deleteDirectory(file);
         } catch (Exception e) {
         	System.out.println(e);
-        }
-        return null;
+        }finally {
+			if(out!=null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+        System.out.println(out!=null);
+//            File zipFile = new File(tempPath + "/code.zip");
+//            if (zipFile.exists()) {
+//                zipFile.delete();
+//            }
+        //File file = new File(tempPath);
+        //deleteDirectory(file);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.threefriend.lightspace.service.Impl.CreateQrcoreServiceImpl;
+import com.threefriend.lightspace.vo.ResultVO;
 
 /**
  *	生成孩子二维码
@@ -22,7 +23,7 @@ public class CreateQrcoreController {
 	private CreateQrcoreServiceImpl createQrcore_impl;
 	
 	@PostMapping("/download")
-	public void getCreateQrcore(HttpServletResponse response ,@RequestParam Map<String, String> params) {
-		createQrcore_impl.download(response, params);
+	public ResultVO getCreateQrcore(HttpServletResponse response ,@RequestParam Map<String, String> params) {
+		return createQrcore_impl.download(response, params);
 	}
 }

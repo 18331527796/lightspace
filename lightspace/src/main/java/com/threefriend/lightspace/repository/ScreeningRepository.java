@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.threefriend.lightspace.mapper.ScreeningMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
 
 /**
  * 筛查操作层

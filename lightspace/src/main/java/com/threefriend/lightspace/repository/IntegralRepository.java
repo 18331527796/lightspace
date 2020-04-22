@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
-import com.threefriend.lightspace.mapper.IntegralMapper;
 import com.threefriend.lightspace.mapper.SysLogMapper;
+import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
 
 /**
  * 积分管理层

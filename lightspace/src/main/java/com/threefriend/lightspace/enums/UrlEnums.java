@@ -5,9 +5,9 @@ package com.threefriend.lightspace.enums;
  */
 public enum UrlEnums {
 	//线下
-	CODE_PATH("F:\\code\\"),
+	//CODE_PATH("F:\\code\\"),
 	//线上
-	//CODE_PATH(System.getProperty("catalina.home")+"\\webapps\\code\\"),
+	CODE_PATH(System.getProperty("catalina.home")+"\\webapps\\code\\"),
 	//接口A
 	//WECHAT_XCX_CODE_PAHT("https://api.weixin.qq.com/wxa/getwxacode?access_token="),
 	//接口B

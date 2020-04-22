@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.threefriend.lightspace.mapper.ScreeningMapper;
-import com.threefriend.lightspace.mapper.ScreeningWearMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 
 /**
  * 筛查（戴镜）操作层

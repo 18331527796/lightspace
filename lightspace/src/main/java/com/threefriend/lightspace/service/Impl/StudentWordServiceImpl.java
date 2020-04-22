@@ -15,12 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.threefriend.lightspace.Exception.ReadWordException;
 import com.threefriend.lightspace.Exception.SendMessageException;
 import com.threefriend.lightspace.enums.AccountEnums;
-import com.threefriend.lightspace.mapper.GzhUserMapper;
 import com.threefriend.lightspace.mapper.MsgTempMapper;
 import com.threefriend.lightspace.mapper.ParentMapper;
-import com.threefriend.lightspace.mapper.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
+import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.repository.GzhUserRepository;
 import com.threefriend.lightspace.repository.MsgTempRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
@@ -30,10 +30,10 @@ import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.service.StudentWordService;
 import com.threefriend.lightspace.util.RedisUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.util.xcx.SendMessageUtils;
+import com.threefriend.lightspace.util.xcx.WeChatUtils;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.StudentWordVO;
-import com.threefriend.lightspace.xcxutil.SendMessageUtils;
-import com.threefriend.lightspace.xcxutil.WeChatUtils;
 
 /**
  * 学生word逻辑实现类

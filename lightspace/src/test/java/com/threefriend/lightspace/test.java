@@ -20,10 +20,10 @@ import com.mashape.unirest.http.Unirest;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.StudentRepository;
-import com.threefriend.lightspace.xcx.service.Impl.ParentXcxServiceImpl;
-import com.threefriend.lightspace.xcxutil.HttpClientUtils;
-import com.threefriend.lightspace.xcxutil.SendMessageUtils;
-import com.threefriend.lightspace.xcxutil.WeChatUtils;
+import com.threefriend.lightspace.service.Impl.xcx.ParentXcxServiceImpl;
+import com.threefriend.lightspace.util.xcx.HttpClientUtils;
+import com.threefriend.lightspace.util.xcx.SendMessageUtils;
+import com.threefriend.lightspace.util.xcx.WeChatUtils;
 
 
 

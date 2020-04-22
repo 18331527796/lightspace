@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.service.Impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,10 @@ import com.threefriend.lightspace.service.CreateQrcoreService;
 import com.threefriend.lightspace.util.CreateQrcore;
 import com.threefriend.lightspace.util.DrowMailUtils;
 import com.threefriend.lightspace.util.RedisUtils;
+import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.util.WaterMarkUtils;
 import com.threefriend.lightspace.util.ZipUtils;
-import com.threefriend.lightspace.xcxutil.WeChatUtils;
+import com.threefriend.lightspace.vo.ResultVO;
 
 
 @Service
@@ -34,8 +36,11 @@ public class CreateQrcoreServiceImpl implements CreateQrcoreService{
 	private RedisUtils redisUtil;
 	
 	@Override
-	public void download(HttpServletResponse response, Map<String, String> params) {
+	public ResultVO download(HttpServletResponse response, Map<String, String> params) {
+		String path = UrlEnums.CODE_PATH.getUrl();
 		try {
+			File file = new File(path);
+			ZipUtils.deleteDirectory(file);
 			String type = params.get("type");
 			Integer id = Integer.valueOf(params.get("id"));
 			List<StudentMapper> ids = new ArrayList<>();
@@ -53,7 +58,6 @@ public class CreateQrcoreServiceImpl implements CreateQrcoreService{
 				accessToken = CreateQrcore.getToken();
 				redisUtil.setValueTime("XCXTOKEN", accessToken, 7000);
 			}
-            String path = UrlEnums.CODE_PATH.getUrl();
             System.out.println(path);
             for (StudentMapper student : ids) {
             	String studentId = student.getId().toString();
@@ -62,16 +66,14 @@ public class CreateQrcoreServiceImpl implements CreateQrcoreService{
             	//添加图片
             	String imgcode = WaterMarkUtils.graphicsGeneration(studentId,student.getName(), path);
             	//生成一封信
-            	DrowMailUtils.graphicsGeneration("E:\\光亮空间logo.png", imgcode, "", imgcode);
+            	DrowMailUtils.graphicsGeneration(UrlEnums.TOMCAT_IMG+"\\光亮空间logo.png", imgcode, "", imgcode);
 			}
             //创建压缩包
             ZipUtils.fileToZip(path, path, "code");
-            //下载压缩包
-            ZipUtils.downLoadZip(path, response);
         } catch (Exception e) {
         	System.err.println("二维码生成失败");
         }
-		
+		return ResultVOUtil.success();
 	}
 
 }

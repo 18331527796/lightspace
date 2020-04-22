@@ -5,7 +5,7 @@ package com.threefriend.lightspace.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.threefriend.lightspace.mapper.GzhUserMapper;
+import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
 
 
 /**

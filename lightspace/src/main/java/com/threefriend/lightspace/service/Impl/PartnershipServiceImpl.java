@@ -18,8 +18,8 @@ import com.threefriend.lightspace.mapper.PartnershipMapper;
 import com.threefriend.lightspace.repository.PartnershipRepository;
 import com.threefriend.lightspace.service.PartnershipService;
 import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.util.xcx.XcxDecryptUtils;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcxutil.XcxDecryptUtils;
 
 /**
  *	合作商业务逻辑实现
