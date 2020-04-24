@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
@@ -24,9 +25,10 @@ import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
+import com.threefriend.lightspace.util.MyBeanUtils;
 
 /**
- *	读取学生excel
+ * 读取学生excel
  */
 @Service
 public class ReadStudentExcel {
@@ -38,7 +40,7 @@ public class ReadStudentExcel {
 	private ClassesRepository class_dao;
 	@Autowired
 	private StudentRepository student_dao;
-	
+
 	// 总行数
 	private int totalRows = 0;
 	// 总条数
@@ -125,13 +127,13 @@ public class ReadStudentExcel {
 		// 得到第一个shell
 		Sheet sheet = wb.getSheetAt(0);
 		// 得到Excel的行数
-		this.totalRows = sheet.getPhysicalNumberOfRows(); 
+		this.totalRows = sheet.getPhysicalNumberOfRows();
 		// 得到Excel的列数(前提是有行数)
 		if (totalRows > 1 && sheet.getRow(0) != null) {
 			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
 		}
 		List<StudentMapper> studentList = new ArrayList<StudentMapper>();
-		//用来优化查询数据库操作
+		// 用来优化查询数据库操作
 		Integer regionId = 0;
 		String regionName = "";
 		Integer schoolId = 0;
@@ -139,8 +141,8 @@ public class ReadStudentExcel {
 		Integer classId = 0;
 		String className = "";
 		String name = "";
-		//用来判断重复录入
-		boolean flag=true;
+		// 用来判断重复录入
+		boolean flag = true;
 		// 循环Excel行数
 		for (int r = 1; r < totalRows; r++) {
 			Row row = sheet.getRow(r);
@@ -148,114 +150,126 @@ public class ReadStudentExcel {
 				continue;
 			}
 			StudentMapper student = new StudentMapper();
-			schoolId=0;
+			schoolId = 0;
 			// 循环Excel的列
 			for (int c = 0; c < this.totalCells; c++) {
 				Cell cell = row.getCell(c);
 				if (null != cell) {
 					cell.setCellType(Cell.CELL_TYPE_STRING);
-					System.out.println(cell.getStringCellValue());
 					switch (c) {
-					case 0://姓名
-						name=cell.getStringCellValue();
+					case 0:// 姓名
+						name = cell.getStringCellValue();
 						student.setName(cell.getStringCellValue());
 						break;
-					case 1://性别 ( 0 : 男 1 ：女)
-						System.out.println(cell.getStringCellValue());
-						if(cell.getStringCellValue().equals("男")) {
+					case 1:// 性别 ( 0 : 男 1 ：女)
+						if (cell.getStringCellValue().equals("男")) {
 							student.setGender(0);
-						}else {
+						} else {
 							student.setGender(1);
 						}
 						break;
-					case 2://年齡
-						student.setAge(Integer.valueOf(cell.getStringCellValue()));
+					case 2:// 年齡
+						if (!StringUtils.isEmpty(cell.getStringCellValue()))
+							student.setAge(Integer.valueOf(cell.getStringCellValue()));
 						break;
-					case 3://身高
-						student.setHeight(cell.getStringCellValue());
+					case 3:// 身高
+						if (!StringUtils.isEmpty(cell.getStringCellValue()))
+							student.setHeight(cell.getStringCellValue());
 						break;
-					case 4://体重
-						student.setWeight(cell.getStringCellValue());
+					case 4:// 体重
+						if (!StringUtils.isEmpty(cell.getStringCellValue()))
+							student.setWeight(cell.getStringCellValue());
 						break;
-					case 5://性格
-						student.setNature(cell.getStringCellValue());
+					case 5:// 性格
+						if (!StringUtils.isEmpty(cell.getStringCellValue()))
+							student.setNature(cell.getStringCellValue());
 						break;
-					case 6://是否矫正（0：否 1：是）
-						if(cell.getStringCellValue().equals("是")) {
-							student.setCorrect(1);
-						}else {
-							student.setCorrect(0);;
+					case 6:// 是否矫正（0：否 1：是）
+						if (!StringUtils.isEmpty(cell.getStringCellValue())) {
+							if (cell.getStringCellValue().equals("是")) {
+								student.setCorrect(1);
+							} else {
+								student.setCorrect(0);
+								;
+							}
 						}
 						break;
-					case 7://坐姿高度
-						student.setSittingHeight(cell.getStringCellValue());
+					case 7:// 坐姿高度
+						if (!StringUtils.isEmpty(cell.getStringCellValue()))
+							student.setSittingHeight(cell.getStringCellValue());
 						break;
-					case 8://椅子高度
-						student.setChairHeight(cell.getStringCellValue());
+					case 8:// 椅子高度
+						if (!StringUtils.isEmpty(cell.getStringCellValue()))
+							student.setChairHeight(cell.getStringCellValue());
 						break;
-					case 9://地区名称
-						if(cell.getStringCellValue().equals(regionName)) {
+					case 9:// 地区名称
+						if (cell.getStringCellValue().equals(regionName)) {
 							student.setRegionId(regionId);
 							student.setRegionName(regionName);
-						}else {
+						} else {
 							RegionMapper region = region_dao.findByName(cell.getStringCellValue());
-							if(region!=null) {
-								regionId=region.getId();
-								regionName=region.getName();
+							if (region != null) {
+								regionId = region.getId();
+								regionName = region.getName();
 								student.setRegionId(regionId);
 								student.setRegionName(regionName);
 							}
 						}
 						break;
-					case 10://学校名称
-						if(cell.getStringCellValue().equals(schoolName)) {
+					case 10:// 学校名称
+						if (cell.getStringCellValue().equals(schoolName)) {
 							student.setSchoolId(schoolId);
 							student.setSchoolName(schoolName);
-						}else {
+						} else {
 							SchoolMapper school = school_dao.findByName(cell.getStringCellValue()).get(0);
-							if(school!=null) {
-								schoolId=school.getId();
-								schoolName=school.getName();
+							if (school != null) {
+								schoolId = school.getId();
+								schoolName = school.getName();
 								student.setSchoolId(schoolId);
 								student.setSchoolName(schoolName);
 							}
 						}
 						break;
-					case 11://班級名称
-						if(cell.getStringCellValue().equals(className)) {
+					case 11:// 班級名称
+						if (cell.getStringCellValue().equals(className)) {
 							student.setClassesId(classId);
 							student.setClassesName(className);
-						}else {
-							ClassesMapper classes = class_dao.findBySchoolIdAndClassName(schoolId, cell.getStringCellValue()).get(0);
-							if(classes!=null) {
-								classId=classes.getId();
-								className=classes.getClassName();
+						} else {
+							ClassesMapper classes = class_dao
+									.findBySchoolIdAndClassName(schoolId, cell.getStringCellValue()).get(0);
+							if (classes != null) {
+								classId = classes.getId();
+								className = classes.getClassName();
 								student.setClassesId(classId);
 								student.setClassesName(className);
 							}
 						}
 						break;
 					case 12:
-						StudentMapper po = student_dao.findBySchoolNameAndClassesNameAndName(schoolName,className,name);
-						if(po!=null)flag=false;
 						student.setParentPhone(cell.getStringCellValue());
 						break;
-					case 13://备注
+					case 13:// 备注
 						student.setDescription(cell.getStringCellValue());
 						break;
 					default:
 						break;
 					}
-				}else {
+				} else {
 					System.out.println("这个列是空的 读取不到");
 				}
-				}
-			// 添加到list
-			if(flag)studentList.add(student);
 			}
-		return studentList;
+			StudentMapper po = student_dao.findBySchoolNameAndClassesNameAndName(schoolName, className, name);
+			if (po != null) {
+				MyBeanUtils.copyProperties(student, po);
+				student_dao.save(po);
+				flag = false;
+			}
+			// 添加到list
+			if (flag)
+				studentList.add(student);
 		}
-
+		return studentList;
+	}
 
 	/**
 	 * 验证EXCEL文件

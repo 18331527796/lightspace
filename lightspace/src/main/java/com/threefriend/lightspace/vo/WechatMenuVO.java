@@ -1,22 +1,13 @@
-package com.threefriend.lightspace.mapper;
+package com.threefriend.lightspace.vo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * 微信的自定义菜单表
- * 
- * @author Administrator
- *
- */
-@Entity
-public class WechatMenuMapper {
+import com.threefriend.lightspace.mapper.WechatMenuMapper;
 
-	@Id
-	@GeneratedValue
-	// 主键
-	private Integer id;
+public class WechatMenuVO {
+
+private Integer id;
 	
 	private Integer pId;
 	
@@ -27,8 +18,14 @@ public class WechatMenuMapper {
 	private String url;
 	
 	private String pagepath;
+	
+	private List<WechatMenuMapper> children = new ArrayList<WechatMenuMapper>();
 
 	
+	public List<WechatMenuMapper> getChildren() {
+		return children;
+	}
+
 	public String getPagepath() {
 		return pagepath;
 	}
@@ -76,6 +73,4 @@ public class WechatMenuMapper {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
-	
 }

@@ -15,8 +15,8 @@ import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
-import com.threefriend.lightspace.mapper.ParentMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.ParentStudentRepository;

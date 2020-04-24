@@ -10,6 +10,8 @@ public enum ResultEnum {
     
     MARK_SUCCESS(200, "签到成功"),
     
+    TASK_SUCCESS(10199, "全部打卡完成~"),
+    
     MARK_ERROR(10200, "今日已签到~"),
 
     PARAM_ERROR(10201, "参数不正确"),
@@ -57,6 +59,8 @@ public enum ResultEnum {
     BINDINGPHONE_ERROR(10222,"手机号绑定失败，请重试"),
     
     SENDMESSAGE_ERROR(10223,"读取成功，发送失败！"),
+    
+    SCREENING_ERROR(10224,"今日筛查奖励已领取~"),
     ;
 
     private Integer status;

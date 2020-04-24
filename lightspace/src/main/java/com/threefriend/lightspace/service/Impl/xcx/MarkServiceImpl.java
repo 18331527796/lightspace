@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.threefriend.lightspace.enums.ResultEnum;
-import com.threefriend.lightspace.mapper.ParentMapper;
 import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
 import com.threefriend.lightspace.mapper.xcx.MarkMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.MarkRepository;
 import com.threefriend.lightspace.repository.ParentRepository;

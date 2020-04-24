@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.mapper;
+package com.threefriend.lightspace.mapper.xcx;
 
 import java.util.Date;
 

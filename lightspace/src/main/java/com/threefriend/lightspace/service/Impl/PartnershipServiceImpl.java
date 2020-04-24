@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.UrlEnums;
-import com.threefriend.lightspace.mapper.PartnershipMapper;
+import com.threefriend.lightspace.mapper.xcx.PartnershipMapper;
 import com.threefriend.lightspace.repository.PartnershipRepository;
 import com.threefriend.lightspace.service.PartnershipService;
 import com.threefriend.lightspace.util.ResultVOUtil;
@@ -63,7 +63,7 @@ public class PartnershipServiceImpl implements PartnershipService{
         String fileAdd = sdf.format(new Date());
         
         if(fileName!=null&&fileName!=""){
-            String path = UrlEnums.TOMCAT_IMG.getUrl(); //文件存储位置  线上
+            String path = UrlEnums.TOMCAT_IMG.getUrl()+"\\partnership"; //文件存储位置  线上
             //String path = UrlEnums.IMG_URL.getUrl(); //文件存储位置  线下
             String fileF = fileName.substring(fileName.lastIndexOf("."), fileName.length());//文件后缀
             fileName=new Date().getTime()+"_"+new Random().nextInt(1000)+fileF;//新的文件名
@@ -83,7 +83,7 @@ public class PartnershipServiceImpl implements PartnershipService{
                 e.printStackTrace();
             }
         }
-		return UrlEnums.IMG_URL.getUrl()+fileAdd+"/"+fileName;
+		return UrlEnums.IMG_URL.getUrl()+"/partnership/"+fileAdd+"/"+fileName;
 	}
 
 	

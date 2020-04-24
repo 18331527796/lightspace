@@ -2,6 +2,7 @@ package com.threefriend.lightspace.service.Impl.xcx;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,26 +16,31 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.Exception.SendMessageException;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.MsgTempMapper;
-import com.threefriend.lightspace.mapper.ParentMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
 import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
+import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
+import com.threefriend.lightspace.mapper.xcx.MarkMapper;
 import com.threefriend.lightspace.mapper.xcx.OptotypeMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
 import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.GzhUserRepository;
+import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.MsgTempRepository;
 import com.threefriend.lightspace.repository.OptotypeRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
@@ -86,8 +92,11 @@ public class ScreeningServiceImpl implements ScreeningService {
 	private GzhUserRepository gzh_dao;
 	@Autowired
 	private MsgTempRepository msg_temp_dao;
+	@Autowired
+	private IntegralRepository integral_dao;
 	@Resource
 	private RedisUtils redisUtil;
+	
 
 	/*
 	 * 三级级联
@@ -137,7 +146,8 @@ public class ScreeningServiceImpl implements ScreeningService {
 	 * 新增的筛查记录（这个方法待定 可能会修改）
 	 */
 	@Override
-	public ResultVO addScreening(Map<String, String> params) {
+	public ResultVO addScreening(Map<String, String> params) throws ParseException {
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Integer studentId = Integer.valueOf(params.get("studentId"));
 		Optional<StudentMapper> findById = student_dao.findById(studentId);
@@ -166,14 +176,15 @@ public class ScreeningServiceImpl implements ScreeningService {
 				student_dao.save(student);
 			//}
 		}
-		return ResultVOUtil.success();
+			return getCoin(parent.getId(),studentId);
 	}
 
 	/*
 	 * 新增的筛查记录（这个方法待定 可能会修改）(戴镜)
 	 */
 	@Override
-	public ResultVO addScreeningWear(Map<String, String> params) {
+	public ResultVO addScreeningWear(Map<String, String> params) throws ParseException {
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Integer studentId = Integer.valueOf(params.get("studentId"));
 		Optional<StudentMapper> findById = student_dao.findById(studentId);
@@ -203,7 +214,7 @@ public class ScreeningServiceImpl implements ScreeningService {
 			//}
 			
 		}
-		return ResultVOUtil.success();
+			return getCoin(parent.getId(),studentId);
 	}
 
 	/*
@@ -330,6 +341,9 @@ public class ScreeningServiceImpl implements ScreeningService {
 		return ResultVOUtil.success(end);
 	}
 
+	/* 
+	 * 自定义的字符串解析方法
+	 */
 	@Override
 	public List<Map<String, String>> pushjosn(String josn) {
 		JSONArray array = JSONArray.fromObject(josn);
@@ -345,6 +359,9 @@ public class ScreeningServiceImpl implements ScreeningService {
 		return endlist;
 	}
 
+	/*  
+	 * 按照id查到档案
+	 */
 	@Override
 	public ResultVO findWearById(Map<String, String> params) {
 		ScreeningWearMapper screeningMapper = screening_wear_dao.findById(Integer.valueOf(params.get("id"))).get();
@@ -356,6 +373,9 @@ public class ScreeningServiceImpl implements ScreeningService {
 		return ResultVOUtil.success(vo);
 	}
 
+	/*  
+	 * 拿到公众号的token
+	 */
 	@Override
 	public String getAccessToken() {
 		String ACCESS_TOKEN = redisUtil.get("GZHTOKEN");
@@ -392,6 +412,33 @@ public class ScreeningServiceImpl implements ScreeningService {
 		} catch (Exception e) {
 			throw new SendMessageException();
 		}
+	}
+	
+	/* 
+	 * 获得金币
+	 */
+	public ResultVO getCoin(Integer parentId , Integer studentId ) throws ParseException {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date begin = format.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00"));
+		Date end = format.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59"));
+		int count = 0 ;
+		List<ScreeningMapper> list = screening_dao.findByStudentIdAndGenTimeBetweenOrderById(studentId,begin,end);
+		count+=list.size();
+		List<ScreeningWearMapper> list1 = screening_wear_dao.findByStudentIdAndGenTimeBetweenOrderById(studentId,begin,end);
+		count+=list1.size();
+		if(count>1&&count!=0) {
+			//这里返回的是 今日已签到 的提示
+			return ResultVOUtil.error(ResultEnum.SCREENING_ERROR.getStatus(),ResultEnum.SCREENING_ERROR.getMessage() );
+		}
+		IntegralMapper integral = new IntegralMapper();
+		integral.setIntegral(3l);
+		integral.setDetailed("筛查奖励");
+		integral.setState(1);
+		integral.setParentId(parentId);
+		integral.setGenTime(new Date());
+		integral_dao.save(integral);
+		//这里返回的其实是成功 就是用的err方法带回去的不一样的提示
+		return ResultVOUtil.success();
 	}
 
 }

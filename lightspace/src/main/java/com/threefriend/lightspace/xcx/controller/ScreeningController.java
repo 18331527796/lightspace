@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.xcx.controller;
 
+import java.text.ParseException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +39,11 @@ public class ScreeningController {
 	 * 新增筛选记录
 	 * @param params
 	 * @return
+	 * @throws ParseException 
 	 */
 	
 	@PostMapping("/addScreening")
-	public ResultVO addScreening(@RequestParam Map<String, String> params) {
+	public ResultVO addScreening(@RequestParam Map<String, String> params) throws ParseException {
 		return screening_impl.addScreening(params);
 	}
 	
@@ -49,10 +51,11 @@ public class ScreeningController {
 	 * 新增筛选记录(戴镜)
 	 * @param params
 	 * @return
+	 * @throws ParseException 
 	 */
 	
 	@PostMapping("/addWearScreening")
-	public ResultVO addWearScreening(@RequestParam Map<String, String> params) {
+	public ResultVO addWearScreening(@RequestParam Map<String, String> params) throws ParseException {
 		return screening_impl.addScreeningWear(params);
 	}
 	
