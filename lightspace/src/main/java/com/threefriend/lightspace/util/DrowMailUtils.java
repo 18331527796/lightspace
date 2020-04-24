@@ -16,22 +16,29 @@ public class DrowMailUtils {
 	private static BufferedImage image;
 	private static int imageWidth = 595; // 图片的宽度
 	private static int imageHeight = 842; // 图片的高度
-	private static final String words = "生活中，若中午吃什么出现了，我们就不得不考虑它出现了的事实。 问题的关键究竟为何？&"
-			+ " 要想清楚，中午吃什么，到底是一种怎么样的存在。 中午吃什么的发生，到&"
-			+ "底需要如何做到，不中午吃什么的发生，又会如何产生。 既然如何， 可是，即&"
-			+ "使是这样，中午吃什么的出现仍然代表了一定的意义。 中午吃什么因何而发生？&"
-			+ " 带着这些问题，我们来审视一下中午吃什么。 这种事实对本人来说意义重大，&"
-			+ "相信对这个世界也是有一定意义的。 冯学峰曾经说过，当一个人用工作去迎接光&"
-			+ "明，光明很快就会来照耀着他。这句话语虽然很短，但令我浮想联翩。 亚伯拉&"
-			+ "罕·林肯曾经提到过，我这个人走得很慢，但是我从不后退。这不禁令我深思。&"
-			+ " 这种事实对本人来说意义重大，相信对这个世界也是有一定意义的。 歌德&"
-			+ "说过一句富有哲理的话，意志坚强的人能把世界放在手中像泥块一样任意揉&"
-			+ "捏。带着这句话，我们还要更加慎重的审视这个问题： 总结的来说， 本人也&"
-			+ "是经过了深思熟虑，在每个日日夜夜思考这个问题。 奥普拉·温弗瑞说过一句&"
-			+ "富有哲理的话，你相信什么，你就成为什么样的人。带着这句话，我们还要更&"
-			+ "加慎重的审视这个问题： 现在，解决中午吃什么的问题，是非常非常重要的。&"
-			+ " 所以， 总结的来说， 对我个人而言，中午吃什么不仅仅是一个重大的事件，&"
-			+ "还可能会改变我的人生。";
+	private static final String words = ""
+			+ "&及时预警，发现孩子视力问题，是近视防控中非常重要的一环， 一个&学"
+			+ "期一次的筛查，并不能及时有效的发现孩子视力问题。特别是疫情防控&期"
+			+ "间，我们不便于组织孩子们集中检测视力，也不能及时了解孩子的视力&发"
+			+ "展动态。针对这种情况，我们特别开发了一套小程序，能够让家长在家&里"
+			+ "面就能及时发现孩子视力问题。&&" + 
+			"以下是小程序使用说明：&&" + 
+			"1. 扫描下方二维码进入小程序&" + 
+			"2. 点击“加号”，按照提示进行登录&" + 
+			"3. 点击“加号”，按照提示扫描下方二维码添加孩子&" + 
+			"4. 首次先进行裸眼检测，后期可根据孩子自身是否佩戴眼镜的情况，点&"+
+			"    击“裸视检测”或“戴镜检测”进行裸视检测或者戴镜检测。&" + 
+			"5. 仔细阅读页面上的操作提示进行屏幕校准，（可用硬币为参照物，将&"+ 
+			"    屏幕中的硬币调到实际大小，如无硬币，也可用刻度尺，将硬币&"+ 
+			"    上方刻度尺调整到真实大小）校准完毕后点击“校准完成”。&" + 
+			"6. 按照轮播图演示的步骤来给孩子进行视力检测。了解检测步骤后，点&"+ 
+			"    击“开始测试”进行右眼视力检测。&" + 
+			"7. 结束右眼视力检测后，按照屏幕上的提示，进行左眼视力检测。&" + 
+			"8. 完成左眼视力检测后，会跳转到检测结果页面。 至此已完成一次“&"+ 
+			"    裸视检测”或者“戴镜检测”。&" + 
+			"9. 用户可根据自己的需求在小程序中查看相关功能。&" + 
+			" &" + 
+			"此二维码可多次使用，绑定多个手机，方便家长测试！(每周至少三次)";
 	// 生成图片文件
 
 	public static void createImage(String fileLocation) {
@@ -57,14 +64,14 @@ public class DrowMailUtils {
 	 * @param outurl
 	 *            输出的Url路径
 	 */
-	public static void graphicsGeneration(String imglogo, String imgcode, String imgsign, String outurl) {
+	public static void graphicsGeneration(String imglogo, String imgcode, String imgsign, String outurl,String studentName) {
 		// 定义长度变量
 		int W_logoPic = 165;
 		int H_logoPic = 50;
 		int W_titleRight = 100;
 		int H_Company = 20;
-		int W_CodeImg = 150;
-		int H_CodeImg = 150;
+		int W_CodeImg = 180;
+		int H_CodeImg = 180;
 		int H_Words = 60;
 
 		// 创建主模板图片
@@ -75,7 +82,7 @@ public class DrowMailUtils {
 		main.fillRect(0, 0, imageWidth, imageHeight);
 
 		// ***********************插入logo****************
-		Graphics mainPic = image.getGraphics();
+		/*Graphics mainPic = image.getGraphics();
 		BufferedImage bimg = null;
 		try {
 			bimg = javax.imageio.ImageIO.read(new java.io.File(imglogo));
@@ -85,7 +92,7 @@ public class DrowMailUtils {
 		if (bimg != null) {
 			mainPic.drawImage(bimg, 10, 0, W_logoPic, H_logoPic, null);
 			mainPic.dispose();
-		}
+		}*/
 
 		// ***********************页面头部 文字****************
 		Graphics titleRight = image.createGraphics();
@@ -100,7 +107,7 @@ public class DrowMailUtils {
 		titleRight.setFont(titleFontReght);
 		((Graphics2D) titleRight).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-		titleRight.drawString("致家长的一封信", W_titleRight / 2 + 140, (H_logoPic) / 2 + 10);
+		titleRight.drawString("致家长的一封信", W_titleRight / 2 + 140, (H_logoPic) / 2 + 30);
 
 		// **********************底部公司名字*********
 		Graphics typeLeft = image.createGraphics();
@@ -111,11 +118,11 @@ public class DrowMailUtils {
 		// 设置字体颜色，先设置颜色，再填充内容
 		typeLeft.setColor(Color.black);
 		// 设置字体
-		Font titleFontleft = new Font("宋体", Font.PLAIN, 10);
+		Font titleFontleft = new Font("宋体", Font.PLAIN, 20);
 		typeLeft.setFont(titleFontleft);
 		((Graphics2D) typeLeft).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-		typeLeft.drawString("光量空间", imageWidth / 2 - 20, imageHeight - 5);
+		typeLeft.drawString(studentName, imageWidth / 2 - 35, imageHeight - 20);
 
 		// ***************插入二维码图片***********************************************
 		Graphics codePic = image.getGraphics();
@@ -126,7 +133,7 @@ public class DrowMailUtils {
 		}
 
 		if (codeimg != null) {
-			codePic.drawImage(codeimg, 430, 680, W_CodeImg, H_CodeImg, null);
+			codePic.drawImage(codeimg, 200, 615, W_CodeImg, H_CodeImg, null);
 			codePic.dispose();
 		}
 
@@ -158,11 +165,11 @@ public class DrowMailUtils {
 		String[] info = words.split("&");
 		for (int i = 0; i < info.length; i++) {
 			if (i == 0) {
-				centerword.drawString("尊敬的家长:", 50, 75);
+				centerword.drawString("尊敬的 "+studentName+" 家长，您好:", 50, 85);
 			} else if(i == 1){
-				centerword.drawString(info[i], 75, 75 + (20 * i));
+				centerword.drawString(info[i], 75, 95 + (20 * i));
 			}else {
-				centerword.drawString(info[i], 50, 75 + (20 * i));
+				centerword.drawString(info[i], 50, 95 + (20 * i));
 			}
 		}
 		// 图片输出存放的位置

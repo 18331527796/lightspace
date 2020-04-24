@@ -30,7 +30,7 @@ public class TaskXcxController {
 	
 	
 	@PostMapping("/completeTask")
-	public ResultVO completeTask(@RequestParam Map<String, String> params)  {
+	public ResultVO completeTask(@RequestParam Map<String, String> params) throws Exception  {
 		return task_impl.completeTask(params);
 	}
 	

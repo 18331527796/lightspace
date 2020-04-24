@@ -10,6 +10,8 @@ public enum ResultEnum {
     
     MARK_SUCCESS(200, "签到成功"),
     
+    TASK_SUCCESS(10199, "全部打卡完成~"),
+    
     MARK_ERROR(10200, "今日已签到~"),
 
     PARAM_ERROR(10201, "参数不正确"),
@@ -46,7 +48,7 @@ public enum ResultEnum {
     
     READWORD_ERROR(10217,"导入格式不正确，请核实"),
     
-    CHECK_ERROR(10218,"验证码错误，请重新输入"), //没有验证码了
+    RIGHT_ERROR(10218,"无权限操作，请确认账号权限"), 
     
     PARENTSTUDENT_ERROR(10219,"孩子已经被账号绑定，请核实"), //这条废弃
     
@@ -57,6 +59,8 @@ public enum ResultEnum {
     BINDINGPHONE_ERROR(10222,"手机号绑定失败，请重试"),
     
     SENDMESSAGE_ERROR(10223,"读取成功，发送失败！"),
+    
+    SCREENING_ERROR(10224,"今日筛查奖励已领取~"),
     ;
 
     private Integer status;

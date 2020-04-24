@@ -77,7 +77,6 @@ public final class ZipUtils {
      * @param file
      */
     public static void deleteDirectory(File file) {
-    	System.gc();
         File[] list = file.listFiles();
         int i = 0;
         if (list != null && list.length > 0) {

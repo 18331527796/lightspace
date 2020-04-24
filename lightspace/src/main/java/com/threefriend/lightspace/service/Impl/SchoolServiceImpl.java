@@ -52,7 +52,7 @@ public class SchoolServiceImpl implements SchoolService{
 		newSchool.setRegionId(1);
 		newSchool.setRegionName(region_dao.findById(1).get().getName());
 		school_dao.save(newSchool);
-		return ResultVOUtil.success(school_dao.findAll());
+		return ResultVOUtil.success(school_dao.findAllByOrderByIdDesc());
 	}
 
 	/* 
@@ -61,7 +61,7 @@ public class SchoolServiceImpl implements SchoolService{
 	@Override
 	public List<SchoolMapper> findAllSchool(String token) {
 		System.out.println("这里是学校列表方法"+token);
-		return school_dao.findAll();
+		return school_dao.findAllByOrderByIdDesc();
 	}
 
 	/*  
@@ -73,7 +73,7 @@ public class SchoolServiceImpl implements SchoolService{
 		if(params.get("address")!=(null) && !params.get("address").equals("")) findById.setAddress(params.get("address"));
 		if(params.get("name")!=(null) && !params.get("name").equals("")) findById.setName(params.get("name"));
 		school_dao.save(findById);
-		return school_dao.findAll();
+		return school_dao.findAllByOrderByIdDesc();
 	}
 
 	/*
@@ -82,7 +82,7 @@ public class SchoolServiceImpl implements SchoolService{
 	@Override
 	@Mylog(value=("删除学校"))
 	public List<SchoolMapper> deleteSchool(Integer id) {
-		List<ClassesMapper> findBySchoolId = class_dao.findBySchoolId(id);
+		List<ClassesMapper> findBySchoolId = class_dao.findBySchoolIdOrderByIdDesc(id);
 		List<Integer> classids= new ArrayList<>();
 		for (ClassesMapper po : findBySchoolId) {
 			classids.add(po.getId());
@@ -91,7 +91,7 @@ public class SchoolServiceImpl implements SchoolService{
 		record_dao.deleteBySchoolId(id);
 		class_dao.deleteBySchoolId(id);
 		school_dao.deleteById(id);
-		return school_dao.findAll();
+		return school_dao.findAllByOrderByIdDesc();
 	}
 
 	/* 

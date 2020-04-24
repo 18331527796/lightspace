@@ -68,8 +68,8 @@ public class ClassesServiceImpl implements ClassesService {
 			classes.setDescription(params.get("description"));
 		classes_dao.save(classes);
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return ResultVOUtil.success(classes_dao.findBySchoolId(Integer.valueOf(split[2])));
-		return ResultVOUtil.success(classes_dao.findAll());
+		if(split[1].equals("3"))return ResultVOUtil.success(classes_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2])));
+		return ResultVOUtil.success(classes_dao.findAllByOrderByIdDesc());
 	}
 
 	/*
@@ -78,8 +78,8 @@ public class ClassesServiceImpl implements ClassesService {
 	@Override
 	public List<ClassesMapper> findAllClasses(Map<String, String> params) {
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));
-		return classes_dao.findAll();
+		if(split[1].equals("3"))return classes_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2]));
+		return classes_dao.findAllByOrderByIdDesc();
 	}
 
 	/*
@@ -111,8 +111,8 @@ public class ClassesServiceImpl implements ClassesService {
 		}
 		classes_dao.save(classes);
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));
-		return classes_dao.findAll();
+		if(split[1].equals("3"))return classes_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2]));
+		return classes_dao.findAllByOrderByIdDesc();
 	}
 
 	/*
@@ -124,8 +124,8 @@ public class ClassesServiceImpl implements ClassesService {
 		record_dao.deleteByClassesId(id);
 		classes_dao.deleteById(id);
 		String[] split = token.split("-");
-		if(split[1].equals("3"))return classes_dao.findBySchoolId(Integer.valueOf(split[2]));
-		return classes_dao.findAll();
+		if(split[1].equals("3"))return classes_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2]));
+		return classes_dao.findAllByOrderByIdDesc();
 	}
 
 	/*
@@ -133,7 +133,7 @@ public class ClassesServiceImpl implements ClassesService {
 	 */
 	@Override
 	public List<ClassesMapper> findBySchoolId(Integer sId) {
-		return classes_dao.findBySchoolId(sId);
+		return classes_dao.findBySchoolIdOrderByIdDesc(sId);
 	}
 
 	/*
@@ -229,13 +229,50 @@ public class ClassesServiceImpl implements ClassesService {
 		return list;
 	}
 
-	/* 
-	 * 设置座位保存时间（废弃）
-	 
+	/*  
+	 * 一键升年级
+	 */
 	@Override
-	public void setSaveTime(Integer classId,Integer time) {
-		ClassesMapper classesMapper = classes_dao.findById(classId).get();
-		classesMapper.setSaveSortTime(time*1000);
-		classes_dao.save(classesMapper);
-	}*/
+	public ResultVO elevateClass(Map<String, String> params) {
+		List<ClassesMapper> findAll = classes_dao.findAll();
+		for (ClassesMapper cpo : findAll) {
+			cpo.setClassName(equalsClass(cpo.getClassName()));
+			List<StudentMapper> student = student_dao.findByClassesId(cpo.getId());
+			for (StudentMapper spo : student) {
+				spo.setClassesName(cpo.getClassName());
+				student_dao.save(spo);
+			}
+			classes_dao.save(cpo);
+		}
+		return ResultVOUtil.success(findAllClasses(params));
+	}
+
+	@Override
+	public String equalsClass(String name) {
+		String str = name.substring(0, 1);
+		String end = name.substring(1);
+		switch (str) {
+		case "一":
+			str="二";
+			break;
+		case "二":
+			str="三";
+			break;
+		case "三":
+			str="四";	
+			break;
+		case "四":
+			str="五";		
+			break;
+		case "五":
+			str="六";			
+			break;
+		default:
+			str="已毕业";
+			break;
+		}
+		if("已毕业".equals(str))return str;
+		return str+end;
+	}
+
 }

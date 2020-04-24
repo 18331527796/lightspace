@@ -43,7 +43,7 @@ public class IntegralServiceImpl implements IntegralService{
 		end.put("income", income);
 		end.put("expenditure", expenditure);
 		end.put("balance", balance);
-		end.put("data", Integral_dao.findByParentIdOrderByGenTime(parentId));
+		end.put("data", Integral_dao.findByParentIdOrderByGenTimeDesc(parentId));
 		return ResultVOUtil.success(end);
 	}
 

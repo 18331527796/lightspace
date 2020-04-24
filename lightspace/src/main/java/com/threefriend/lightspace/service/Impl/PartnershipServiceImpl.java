@@ -14,9 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.UrlEnums;
-import com.threefriend.lightspace.mapper.PartnershipMapper;
+import com.threefriend.lightspace.mapper.xcx.PartnershipMapper;
 import com.threefriend.lightspace.repository.PartnershipRepository;
 import com.threefriend.lightspace.service.PartnershipService;
+import com.threefriend.lightspace.util.ImguploadUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.util.xcx.XcxDecryptUtils;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -37,7 +38,7 @@ public class PartnershipServiceImpl implements PartnershipService{
 
 	@Override
 	public ResultVO addPartnership(MultipartFile file,Map<String, String> params,HttpServletRequest request) {
-		String imgurl= uploadImg(file);
+		String imgurl= UrlEnums.IMG_URL.getUrl()+ImguploadUtils.uploadImg(file,"partnership");
 		PartnershipMapper partner = new PartnershipMapper();
 		partner.setAddress(params.get("address"));
 		partner.setName(params.get("name"));
@@ -54,37 +55,7 @@ public class PartnershipServiceImpl implements PartnershipService{
 		return ResultVOUtil.success(partnership_dao.findAll());
 	}
 
-	@Override
-	public String uploadImg(MultipartFile file) {
-        File targetFile=null; 
-        String fileName=file.getOriginalFilename();//获取文件名加后缀
-        //先判断文件是否存在
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String fileAdd = sdf.format(new Date());
-        
-        if(fileName!=null&&fileName!=""){
-            String path = UrlEnums.TOMCAT_IMG.getUrl(); //文件存储位置  线上
-            //String path = UrlEnums.IMG_URL.getUrl(); //文件存储位置  线下
-            String fileF = fileName.substring(fileName.lastIndexOf("."), fileName.length());//文件后缀
-            fileName=new Date().getTime()+"_"+new Random().nextInt(1000)+fileF;//新的文件名
- 
-            //获取文件夹路径
-            File file1 =new File(path+"/"+fileAdd);
-            //如果文件夹不存在则创建
-            if(!file1 .exists()  && !file1 .isDirectory()){
-                file1 .mkdir();
-            }
-            //将图片存入文件夹
-            targetFile = new File(file1, fileName);
-            try {
-                //将上传的文件写到服务器上指定的文件。
-                file.transferTo(targetFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-		return UrlEnums.IMG_URL.getUrl()+fileAdd+"/"+fileName;
-	}
+	
 
 	
 	

@@ -125,15 +125,16 @@ public class ClassesController {
 	}
 	
 	/**
-	 * 设置座位保存时间（废弃）
-	 * 
-	 *//*
-	@PostMapping("/setSaveTime")
+	 * 一键升年级
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/elevateClass")
 	
-	public ResultVO setSaveTime(@RequestParam Map<String, String> params) {
-		classes_impl.setSaveTime(Integer.valueOf(params.get("classId")), Integer.valueOf(params.get("time")));
-		return ResultVOUtil.success();
-	}*/
+	public ResultVO elevateClass(@RequestParam Map<String, String> params) {
+		return classes_impl.elevateClass(params);
+	}
+	
 	
 
 }

@@ -25,6 +25,17 @@ public class WechatMenuMapper {
 	private String name;
 	
 	private String url;
+	
+	private String pagepath;
+
+	
+	public String getPagepath() {
+		return pagepath;
+	}
+
+	public void setPagepath(String pagepath) {
+		this.pagepath = pagepath;
+	}
 
 	public Integer getId() {
 		return id;

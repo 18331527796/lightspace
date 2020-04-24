@@ -31,10 +31,10 @@ import com.threefriend.lightspace.Exception.SendMessageException;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.MsgTempMapper;
-import com.threefriend.lightspace.mapper.ParentMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
 import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.GzhUserRepository;
@@ -112,7 +112,6 @@ public class StudentServiceImpl implements StudentService{
 		student.setGender(Integer.valueOf(params.get("gender")));
 		student.setHeight(params.get("height"));
 		student.setName(params.get("name"));
-		if(!StringUtils.isEmpty(params.get("nature")))student.setNature(params.get("nature"));
 		student.setRegionId(1);
 		student.setRegionName("唐山");
 		student.setSchoolId(Integer.valueOf(params.get("schoolId")));
@@ -120,6 +119,8 @@ public class StudentServiceImpl implements StudentService{
 		student.setSittingHeight(params.get("sittingHeight"));
 		student.setWeight(params.get("weight"));
 		student.setParentPhone(params.get("parentPhone"));
+		if(!StringUtils.isEmpty(params.get("birthday")))student.setBirthday(params.get("birthday"));
+		if(!StringUtils.isEmpty(params.get("nature")))student.setNature(params.get("nature"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		student_dao.save(student);
 		String[] split = params.get("token").split("-");
@@ -158,6 +159,7 @@ public class StudentServiceImpl implements StudentService{
 		}else {
 			student.setNature("");
 		}
+		if(!StringUtils.isEmpty(params.get("birthday")))student.setBirthday(params.get("birthday"));
 		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
 		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("parentPhone")))student.setParentPhone(params.get("parentPhone"));

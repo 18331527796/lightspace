@@ -16,7 +16,9 @@ import com.threefriend.lightspace.mapper.ClassesMapper;
  */
 public interface ClassesRepository extends JpaRepository<ClassesMapper, Integer>{
 
-	List<ClassesMapper> findBySchoolId(Integer sId);
+	List<ClassesMapper> findAllByOrderByIdDesc();
+	
+	List<ClassesMapper> findBySchoolIdOrderByIdDesc(Integer sId);
 	
 	List<ClassesMapper> findBySchoolIdAndClassName(Integer sId,String name);
 	

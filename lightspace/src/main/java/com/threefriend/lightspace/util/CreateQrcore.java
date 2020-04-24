@@ -63,7 +63,7 @@ public class CreateQrcore {
      * @param scene       要输入的内容
      * @param accessToken token
      */
-    public static void postMiniqrQr(String scene,String name , String accessToken, String path) {
+    public static String postMiniqrQr(String scene,String name , String accessToken, String path) {
     	try {
             URL url = new URL(UrlEnums.WECHAT_XCX_CODE_PAHT.getUrl()+ accessToken);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -108,6 +108,7 @@ public class CreateQrcore {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    	return path + scene + name + ".jpg";
     }
 
    

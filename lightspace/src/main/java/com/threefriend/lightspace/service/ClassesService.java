@@ -26,10 +26,12 @@ public interface ClassesService {
 	public ClassesMapper findById(Integer id);
 	//模糊查询
 	public ResultVO findByNameLike(String name);
+	//升年级
+	public ResultVO elevateClass(Map<String, String> params);
+	//判定年级名称
+	public String equalsClass(String name);
 	//方便于下拉框的方法 （学校——>班级——>学生）
 	public List<SchoolVO> cascade();
 	//方便于下拉框的方法 （学校——>班级）
 	public List<SchoolVO> cascade1();
-	//设置座位保存时间（废弃）
-	//public void setSaveTime(Integer classId,Integer time);
 }

@@ -26,6 +26,8 @@ public class StudentVO implements Serializable{
 	private String classesName;
 	// 所属班级id
 	private Integer classesId;
+	//生日
+	private String birthday;
 	// 性别
 	private Integer gender;
 	// 年龄
@@ -49,6 +51,16 @@ public class StudentVO implements Serializable{
 	// 前台需要
 	private List<Integer> stu_cat = new ArrayList<>();
 	
+	
+	
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+
 	public String getRegionName() {
 		return regionName;
 	}

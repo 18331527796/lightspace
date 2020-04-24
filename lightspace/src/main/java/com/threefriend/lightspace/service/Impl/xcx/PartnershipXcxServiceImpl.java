@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.UrlEnums;
-import com.threefriend.lightspace.mapper.PartnershipMapper;
+import com.threefriend.lightspace.mapper.xcx.PartnershipMapper;
 import com.threefriend.lightspace.repository.PartnershipRepository;
 import com.threefriend.lightspace.service.xcx.PartnershipXcxService;
 import com.threefriend.lightspace.util.ResultVOUtil;

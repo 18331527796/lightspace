@@ -36,7 +36,7 @@
 
 
 		<!--部署成war包时开启↓↓↓↓ -->
-		    <dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
@@ -45,7 +45,7 @@
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 			<scope>provided</scope>
-		</dependency>     
+		</dependency>  -->     
 		<!--部署成war包时开启↑↑↑↑ -->
 
 
@@ -177,7 +177,13 @@
 		    <artifactId>xstream</artifactId>
 		    <version>1.2.2</version>
 		</dependency>
-        
+		<!--图片压缩的包-->
+		<dependency>
+		   <groupId>net.coobird</groupId>
+		   <artifactId>thumbnailator</artifactId>
+		   <version>0.4.8</version>
+		</dependency>
+        <!--图片压缩的包-->
 		</dependencies>
 
 	<build>

@@ -83,7 +83,7 @@ public class StudentMapper {
 		return birthday;
 	}
 	public void setBirthday(String birthday) {
-		this.birthday = birthday;
+		this.birthday =birthday;
 	}
 	public String getParentPhone() {
 		return parentPhone;

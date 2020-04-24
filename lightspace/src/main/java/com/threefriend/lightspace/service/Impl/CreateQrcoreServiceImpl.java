@@ -62,11 +62,11 @@ public class CreateQrcoreServiceImpl implements CreateQrcoreService{
             for (StudentMapper student : ids) {
             	String studentId = student.getId().toString();
             	//生成二维码
-            	CreateQrcore.postMiniqrQr(studentId,student.getName(), accessToken, path);
+            	String imgcode = CreateQrcore.postMiniqrQr(studentId,student.getName(), accessToken, path);
             	//添加图片
-            	String imgcode = WaterMarkUtils.graphicsGeneration(studentId,student.getName(), path);
+            	//String imgcode = WaterMarkUtils.graphicsGeneration(studentId,student.getName(), path);
             	//生成一封信
-            	DrowMailUtils.graphicsGeneration(UrlEnums.TOMCAT_IMG+"\\光亮空间logo.png", imgcode, "", imgcode);
+            	DrowMailUtils.graphicsGeneration(UrlEnums.TOMCAT_IMG+"\\光亮空间logo.png", imgcode, "", imgcode,student.getName());
 			}
             //创建压缩包
             ZipUtils.fileToZip(path, path, "code");

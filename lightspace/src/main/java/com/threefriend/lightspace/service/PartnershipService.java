@@ -21,7 +21,5 @@ public interface PartnershipService {
 	//删除合作机构
 	@Transactional
 	ResultVO deletePartnership(Map<String, String> params);
-	//uploadIMG
-	String uploadImg(MultipartFile file);
 	
 }

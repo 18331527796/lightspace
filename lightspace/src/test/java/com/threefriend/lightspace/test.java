@@ -25,6 +25,8 @@ import com.threefriend.lightspace.util.xcx.HttpClientUtils;
 import com.threefriend.lightspace.util.xcx.SendMessageUtils;
 import com.threefriend.lightspace.util.xcx.WeChatUtils;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 
 
 @RunWith(SpringRunner.class)
@@ -36,10 +38,11 @@ public class test {
 	
 	@Test
 	public void test() throws Exception{
-		String phoneDate = "13242633555";
-		String phone="";
-		phone=phoneDate.substring(0, 3)+"****"+phoneDate.substring(7, phoneDate.length());
-		System.out.println(phone);
+		Thumbnails.of("C:\\Users\\Administrator\\Desktop\\79730190_p0.png") 
+        .scale(1f) 
+        .outputQuality(0.25f) 
+        .toFile("C:\\Users\\Administrator\\Desktop\\p0.jpg");
+		
 	}
 	
 }
