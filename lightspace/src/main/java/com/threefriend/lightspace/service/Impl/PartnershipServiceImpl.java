@@ -55,7 +55,7 @@ public class PartnershipServiceImpl implements PartnershipService{
 		return ResultVOUtil.success(partnership_dao.findAll());
 	}
 
-	
+
 
 	
 	
