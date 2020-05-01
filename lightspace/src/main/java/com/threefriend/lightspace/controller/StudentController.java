@@ -94,7 +94,7 @@ public class StudentController {
 	@PostMapping("/queryStudentBySidCid")
 	
 	public ResultVO queryStudentsBySidCid(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.queryBySidCid(Integer.valueOf(params.get("schoolId")), Integer.valueOf(params.get("classId"))));
+		return ResultVOUtil.success(student_Impl.queryBySidCid( Integer.valueOf(params.get("classId"))));
 	}
 	
 	/**

@@ -105,9 +105,9 @@ public class RecordServiceImpl implements RecordService {
 		record_dao.save(record);
 		student_dao.save(student);
 		String[] split = params.get("token").split("-");
-		if (split[1].equals("3"))
+		if (split[1].equals("2"))
 			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if (split[1].equals("4"))
+		if (split[1].equals("3"))
 			return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
@@ -152,9 +152,9 @@ public class RecordServiceImpl implements RecordService {
 			record.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 		record_dao.save(record);
 		String[] split = params.get("token").split("-");
-		if (split[1].equals("3"))
+		if (split[1].equals("2"))
 			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if (split[1].equals("4"))
+		if (split[1].equals("3"))
 			return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
@@ -166,9 +166,9 @@ public class RecordServiceImpl implements RecordService {
 	public List<RecordMapper> deleteRecord(Integer id, String token) {
 		record_dao.deleteById(id);
 		String[] split = token.split("-");
-		if (split[1].equals("3"))
+		if (split[1].equals("2"))
 			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if (split[1].equals("4"))
+		if (split[1].equals("3"))
 			return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
@@ -194,9 +194,9 @@ public class RecordServiceImpl implements RecordService {
 	@Override
 	public List<RecordMapper> recordList(String token) {
 		String[] split = token.split("-");
-		if (split[1].equals("3"))
+		if (split[1].equals("2"))
 			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if (split[1].equals("4"))
+		if (split[1].equals("3"))
 			return record_dao.findByClassesId(Integer.valueOf(split[2]));
 		return record_dao.findAll();
 	}
@@ -412,9 +412,9 @@ public class RecordServiceImpl implements RecordService {
         }
         
 		String[] split = token.split("-");
-		if (split[1].equals("3"))
+		if (split[1].equals("2"))
 			return ResultVOUtil.success(record_dao.findBySchoolId(Integer.valueOf(split[2])));
-		if (split[1].equals("4"))
+		if (split[1].equals("3"))
 			return ResultVOUtil.success(record_dao.findByClassesId(Integer.valueOf(split[2])));
 		return ResultVOUtil.success(record_dao.findAll());
 	}

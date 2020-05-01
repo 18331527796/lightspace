@@ -92,7 +92,6 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public Object login(String loginname, String password,HttpSession session) {
-		System.out.println(loginname + "+++++++" + password+"登录名+密码");
 		// 比如对密码进行 md5 加密
 		String md5 = DigestUtils.md5DigestAsHex(password.getBytes());
 		List<UserMapper> user = user_dao.findByloginNameAndPassword(loginname, md5);
@@ -104,8 +103,8 @@ public class UserServiceImpl implements UserService {
 		redisUtil.setValueTime(tokenstr, user.get(0).getId().toString(),1800);//1800
 		Integer roleId = user_role_dao.findByUserId(user.get(0).getId()).get(0).getRoleId();
 		String mark="0";
-		if(roleId==3)mark=user.get(0).getSchoolId().toString();
-		if(roleId==4)mark=user.get(0).getClassesId().toString();
+		if(roleId==2)mark=user.get(0).getSchoolId().toString();
+		if(roleId==3)mark=user.get(0).getClassesId().toString();
 		tokenstr=tokenstr+"-"+roleId+"-"+mark;
 		token.put("token", tokenstr);
 		//用户名放session里面

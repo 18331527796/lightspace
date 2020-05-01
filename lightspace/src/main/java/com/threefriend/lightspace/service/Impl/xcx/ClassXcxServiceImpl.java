@@ -20,7 +20,7 @@ public class ClassXcxServiceImpl implements ClassXcxService{
 	@Override
 	public ResultVO findBySchoolId(Map<String, String> params) {
 		Integer schoolId = Integer.valueOf(params.get("id")); 
-		return ResultVOUtil.success(class_dao.findBySchoolIdOrderByIdDesc(schoolId));
+		return ResultVOUtil.success(class_dao.findBySchoolIdOrderByFinish(schoolId));
 	}
 
 }

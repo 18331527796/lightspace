@@ -82,7 +82,7 @@ public class SchoolServiceImpl implements SchoolService{
 	@Override
 	@Mylog(value=("删除学校"))
 	public List<SchoolMapper> deleteSchool(Integer id) {
-		List<ClassesMapper> findBySchoolId = class_dao.findBySchoolIdOrderByIdDesc(id);
+		List<ClassesMapper> findBySchoolId = class_dao.findBySchoolIdOrderByFinish(id);
 		List<Integer> classids= new ArrayList<>();
 		for (ClassesMapper po : findBySchoolId) {
 			classids.add(po.getId());

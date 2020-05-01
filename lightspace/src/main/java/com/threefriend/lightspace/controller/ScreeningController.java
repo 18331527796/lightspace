@@ -35,4 +35,14 @@ public class ScreeningController {
 	public ResultVO deleteScreeningWear(@RequestParam Map<String, String> params) {
 		return screening_impl.deleteScreeningWear(params);
 	}
+	
+	@PostMapping("screeningExcel")
+	public ResultVO screeningExcel(@RequestParam Map<String, String> params) {
+		return screening_impl.screeningExcel(params);
+	}
+	
+	@PostMapping("screeningWearExcel")
+	public ResultVO screeningWearExcel(@RequestParam Map<String, String> params) {
+		return screening_impl.screeningWearExcel(params);
+	}
 }

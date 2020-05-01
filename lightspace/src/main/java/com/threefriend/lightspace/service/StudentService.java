@@ -23,7 +23,7 @@ public interface StudentService {
 	//学生列表
 	List<StudentMapper> studentList(Map<String, String> params);
 	//按照学校班级查询
-	List<StudentMapper> queryBySidCid(Integer sId,Integer cId);
+	List<StudentMapper> queryBySidCid(Integer cId);
 	//新增学生
 	List<StudentMapper> addStudent(Map<String, String> params);
 	//删除学生

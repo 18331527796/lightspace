@@ -16,13 +16,13 @@ import com.threefriend.lightspace.mapper.ClassesMapper;
  */
 public interface ClassesRepository extends JpaRepository<ClassesMapper, Integer>{
 
-	List<ClassesMapper> findAllByOrderByIdDesc();
+	List<ClassesMapper> findAllByOrderByFinish();
 	
-	List<ClassesMapper> findBySchoolIdOrderByIdDesc(Integer sId);
+	List<ClassesMapper> findBySchoolIdOrderByFinish(Integer sId);
 	
 	List<ClassesMapper> findBySchoolIdAndClassName(Integer sId,String name);
 	
-	List<ClassesMapper> findByClassNameLike(String name);
+	List<ClassesMapper> findByClassNameLikeOrderByFinish(String name);
 	
 	@Transactional
 	void deleteBySchoolId(Integer schoolId);

@@ -68,8 +68,8 @@ public class ClassesServiceImpl implements ClassesService {
 			classes.setDescription(params.get("description"));
 		classes_dao.save(classes);
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return ResultVOUtil.success(classes_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2])));
-		return ResultVOUtil.success(classes_dao.findAllByOrderByIdDesc());
+		if(split[1].equals("2"))return ResultVOUtil.success(classes_dao.findBySchoolIdOrderByFinish(Integer.valueOf(split[2])));
+		return ResultVOUtil.success(classes_dao.findAllByOrderByFinish());
 	}
 
 	/*
@@ -78,8 +78,8 @@ public class ClassesServiceImpl implements ClassesService {
 	@Override
 	public List<ClassesMapper> findAllClasses(Map<String, String> params) {
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return classes_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2]));
-		return classes_dao.findAllByOrderByIdDesc();
+		if(split[1].equals("2"))return classes_dao.findBySchoolIdOrderByFinish(Integer.valueOf(split[2]));
+		return classes_dao.findAllByOrderByFinish();
 	}
 
 	/*
@@ -111,8 +111,8 @@ public class ClassesServiceImpl implements ClassesService {
 		}
 		classes_dao.save(classes);
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return classes_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2]));
-		return classes_dao.findAllByOrderByIdDesc();
+		if(split[1].equals("2"))return classes_dao.findBySchoolIdOrderByFinish(Integer.valueOf(split[2]));
+		return classes_dao.findAllByOrderByFinish();
 	}
 
 	/*
@@ -124,8 +124,8 @@ public class ClassesServiceImpl implements ClassesService {
 		record_dao.deleteByClassesId(id);
 		classes_dao.deleteById(id);
 		String[] split = token.split("-");
-		if(split[1].equals("3"))return classes_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2]));
-		return classes_dao.findAllByOrderByIdDesc();
+		if(split[1].equals("2"))return classes_dao.findBySchoolIdOrderByFinish(Integer.valueOf(split[2]));
+		return classes_dao.findAllByOrderByFinish();
 	}
 
 	/*
@@ -133,7 +133,7 @@ public class ClassesServiceImpl implements ClassesService {
 	 */
 	@Override
 	public List<ClassesMapper> findBySchoolId(Integer sId) {
-		return classes_dao.findBySchoolIdOrderByIdDesc(sId);
+		return classes_dao.findBySchoolIdOrderByFinish(sId);
 	}
 
 	/*
@@ -149,7 +149,7 @@ public class ClassesServiceImpl implements ClassesService {
 	 */
 	@Override
 	public ResultVO findByNameLike(String name) {
-		List<ClassesMapper> list = classes_dao.findByClassNameLike("%" + name + "%");
+		List<ClassesMapper> list = classes_dao.findByClassNameLikeOrderByFinish("%" + name + "%");
 		if(list==null||list.size()==0)return ResultVOUtil.error(ResultEnum.CLASSSIZE_NULL.getStatus(), ResultEnum.CLASSSIZE_NULL.getMessage());
 		return ResultVOUtil.success(list);
 	}
@@ -236,7 +236,11 @@ public class ClassesServiceImpl implements ClassesService {
 	public ResultVO elevateClass(Map<String, String> params) {
 		List<ClassesMapper> findAll = classes_dao.findAll();
 		for (ClassesMapper cpo : findAll) {
-			cpo.setClassName(equalsClass(cpo.getClassName()));
+			String name = equalsClass(cpo.getClassName());
+			if(name.contains("(")) {
+				cpo.setFinish(1);
+			}
+			cpo.setClassName(name);
 			List<StudentMapper> student = student_dao.findByClassesId(cpo.getId());
 			for (StudentMapper spo : student) {
 				spo.setClassesName(cpo.getClassName());
@@ -249,6 +253,7 @@ public class ClassesServiceImpl implements ClassesService {
 
 	@Override
 	public String equalsClass(String name) {
+		if(name.contains("(")) return name;
 		String str = name.substring(0, 1);
 		String end = name.substring(1);
 		switch (str) {
@@ -268,10 +273,10 @@ public class ClassesServiceImpl implements ClassesService {
 			str="六";			
 			break;
 		default:
-			str="已毕业";
+			str=name+"(已毕业)";
 			break;
 		}
-		if("已毕业".equals(str))return str;
+		if(str.contains("("))return str;
 		return str+end;
 	}
 

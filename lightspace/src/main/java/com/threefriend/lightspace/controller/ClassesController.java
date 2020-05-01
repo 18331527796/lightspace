@@ -31,7 +31,6 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/addClasses")
-	
 	public ResultVO addClasses(@RequestParam Map<String, String> params) {
 		return classes_impl.addClasses(params);
 	}
@@ -42,7 +41,6 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/classesList")
-	
 	public ResultVO classesList(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.findAllClasses(params));
 	}
@@ -64,7 +62,6 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/saveClasses")
-	
 	public ResultVO saveClasses(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.alterClasses(params));
 	}
@@ -75,7 +72,6 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/deleteClasses")
-	
 	public ResultVO deleteClasses(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.deleteClasses(Integer.valueOf(params.get("id")),params.get("token")));
 	}
@@ -97,7 +93,6 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/queryClassesBySchool")
-	
 	public ResultVO queryClassesBySchool(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.findBySchoolId(Integer.valueOf(params.get("schoolId"))));
 	}
@@ -108,7 +103,6 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/cascade")
-	
 	public ResultVO cascade(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.cascade());
 	}
@@ -119,7 +113,6 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/cascade1")
-	
 	public ResultVO cascade1(@RequestParam Map<String, String> params) {
 		return ResultVOUtil.success(classes_impl.cascade1());
 	}
@@ -130,7 +123,6 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/elevateClass")
-	
 	public ResultVO elevateClass(@RequestParam Map<String, String> params) {
 		return classes_impl.elevateClass(params);
 	}

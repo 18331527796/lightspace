@@ -85,8 +85,8 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public List<StudentMapper> studentList(Map<String, String> params) {
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("4"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
+		if(split[1].equals("2"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("3"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
 		return student_dao.findAll();
 	}
 
@@ -94,8 +94,8 @@ public class StudentServiceImpl implements StudentService{
 	 * 按照学校班级查学生
 	 */
 	@Override
-	public List<StudentMapper> queryBySidCid(Integer sId, Integer cId) {
-		return student_dao.findBySchoolIdAndClassesId(sId, cId);
+	public List<StudentMapper> queryBySidCid(Integer cId) {
+		return student_dao.findByClassesId(cId);
 	}
 
 	/* 
@@ -124,8 +124,8 @@ public class StudentServiceImpl implements StudentService{
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		student_dao.save(student);
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("4"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
+		if(split[1].equals("2"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("3"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
 		return student_dao.findAll();
 	}
 
@@ -137,8 +137,8 @@ public class StudentServiceImpl implements StudentService{
 		record_dao.deleteByStudentId(id);
 		student_dao.deleteById(id);
 		String[] split = token.split("-");
-		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("4"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
+		if(split[1].equals("2"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("3"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
 		return student_dao.findAll();
 	}
 
@@ -178,8 +178,8 @@ public class StudentServiceImpl implements StudentService{
 		}
 		student_dao.save(student);
 		String[] split = params.get("token").split("-");
-		if(split[1].equals("3"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("4"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
+		if(split[1].equals("2"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
+		if(split[1].equals("3"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
 		return student_dao.findAll();
 	}
 
@@ -234,8 +234,8 @@ public class StudentServiceImpl implements StudentService{
         	student_dao.save(studentMapper);
         }
 		String[] split = token.split("-");
-		if(split[1].equals("3"))return ResultVOUtil.success(student_dao.findBySchoolId(Integer.valueOf(split[2])));
-		if(split[1].equals("4"))return ResultVOUtil.success(student_dao.findByClassesId(Integer.valueOf(split[2])));
+		if(split[1].equals("2"))return ResultVOUtil.success(student_dao.findBySchoolId(Integer.valueOf(split[2])));
+		if(split[1].equals("3"))return ResultVOUtil.success(student_dao.findByClassesId(Integer.valueOf(split[2])));
 		return ResultVOUtil.success(student_dao.findAll());
 	}
 

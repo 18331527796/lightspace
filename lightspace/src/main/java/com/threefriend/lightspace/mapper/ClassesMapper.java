@@ -47,6 +47,8 @@ public class ClassesMapper {
 	// 所属地区id
 	@Column(name="region_id")
 	private Integer regionId;
+	//是否毕业
+	private Integer finish;
 	// 备注			
 	private String description = "";
 	
@@ -56,6 +58,13 @@ public class ClassesMapper {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	public Integer getFinish() {
+		return finish;
+	}
+	public void setFinish(Integer finish) {
+		this.finish = finish;
 	}
 	public String getClassName() {
 		return className;
