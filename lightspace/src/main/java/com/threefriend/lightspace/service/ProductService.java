@@ -12,7 +12,7 @@ import com.threefriend.lightspace.vo.ResultVO;
  */
 public interface ProductService {
 	
-	ResultVO productList();
+	ResultVO productList(Map<String, String> params);
 	
 	ResultVO findByName(Map<String, String> params);
 	

@@ -18,9 +18,6 @@ import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.mapper.MsgTempMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
-import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
-import com.threefriend.lightspace.mapper.xcx.ParentMapper;
-import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.repository.GzhUserRepository;
 import com.threefriend.lightspace.repository.MsgTempRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
@@ -30,10 +27,13 @@ import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.service.StudentWordService;
 import com.threefriend.lightspace.util.RedisUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
-import com.threefriend.lightspace.util.xcx.SendMessageUtils;
-import com.threefriend.lightspace.util.xcx.WeChatUtils;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.StudentWordVO;
+import com.threefriend.lightspace.xcx.mapper.GzhUserMapper;
+import com.threefriend.lightspace.xcx.mapper.ParentMapper;
+import com.threefriend.lightspace.xcx.mapper.ParentStudentRelation;
+import com.threefriend.lightspace.xcx.util.SendMessageUtils;
+import com.threefriend.lightspace.xcx.util.WeChatUtils;
 
 /**
  * 学生word逻辑实现类

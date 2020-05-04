@@ -2,7 +2,7 @@ package com.threefriend.lightspace.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.threefriend.lightspace.mapper.xcx.ParentMapper;
+import com.threefriend.lightspace.xcx.mapper.ParentMapper;
 
 /**
  * 家长操作层

@@ -17,7 +17,6 @@ import com.threefriend.lightspace.repository.WechatMenuRepository;
 import com.threefriend.lightspace.service.WechatMenuService;
 import com.threefriend.lightspace.util.RedisUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
-import com.threefriend.lightspace.util.xcx.WeChatUtils;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.WechatMenuVO;
 import com.threefriend.lightspace.vo.wechatmenu.CommonButton;
@@ -25,6 +24,7 @@ import com.threefriend.lightspace.vo.wechatmenu.ComplexButton;
 import com.threefriend.lightspace.vo.wechatmenu.Menu;
 import com.threefriend.lightspace.vo.wechatmenu.MiniprogramButton;
 import com.threefriend.lightspace.vo.wechatmenu.ViewButton;
+import com.threefriend.lightspace.xcx.util.WeChatUtils;
 @Service
 public class WechatMenuServiceImpl implements WechatMenuService{
 	@Resource

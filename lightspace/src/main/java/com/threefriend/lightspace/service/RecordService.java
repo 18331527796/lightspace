@@ -22,17 +22,17 @@ import com.threefriend.lightspace.vo.StudentStatisticsVO;
 public interface RecordService {
 
 	//新增记录
-	public List<RecordMapper> addRecord(Map<String, String> params);
+	public ResultVO addRecord(Map<String, String> params);
 	//修改记录
-	public List<RecordMapper> saveRecord(Map<String, String> params);
+	public ResultVO saveRecord(Map<String, String> params);
 	//删除记录
-	public List<RecordMapper> deleteRecord(Integer id,String token);
+	public ResultVO deleteRecord(Map<String, String> params);
 	//按照id查询记录
-	public RecordVO editRecord(Integer id);
+	public ResultVO editRecord(Integer id);
 	//记录列表
-	public List<RecordMapper> recordList(String token);
+	public ResultVO recordList(Map<String, String> params);
 	//模糊
-	public ResultVO findByName(String name);
+	public ResultVO findByName(Map<String, String> params);
 	//按照学生id查询最新的基础数据
 	public ResultVO findByStudentId(Integer id);
 	//按照学生id查询所有的数据
@@ -42,7 +42,7 @@ public interface RecordService {
 	//按照班级数据分析
 	List<List<StatisticsVO>> classStatisticsOld(Integer classId);
 	//读取导入的excel文件
-	ResultVO readRecordExcel(MultipartFile file, String token);
+	ResultVO readRecordExcel(MultipartFile file, Map<String, String> params);
 	//下载模板（流方式）（暂停使用）
 	void download(HttpServletResponse response);
 	

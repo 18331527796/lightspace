@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.threefriend.lightspace.service.Impl.xcx.ClassXcxServiceImpl;
 import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.lightspace.xcx.service.Impl.ClassXcxServiceImpl;
 
 /**
  * 班级控制器

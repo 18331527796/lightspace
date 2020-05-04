@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.threefriend.lightspace.mapper.xcx.SpecificationsMapper;
 import com.threefriend.lightspace.repository.SpecificationsRepository;
 import com.threefriend.lightspace.service.SpecificationsService;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.lightspace.xcx.mapper.SpecificationsMapper;
 
 /**
  * 规格业务逻辑实现层

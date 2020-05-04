@@ -10,18 +10,21 @@ import java.util.Random;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.UrlEnums;
-import com.threefriend.lightspace.mapper.xcx.ProductMapper;
 import com.threefriend.lightspace.repository.ProductRepository;
 import com.threefriend.lightspace.service.ProductService;
 import com.threefriend.lightspace.util.ImguploadUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ProductVO;
 import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.lightspace.xcx.mapper.ProductMapper;
 
 /**
  * 商品逻辑实现类
@@ -36,18 +39,21 @@ public class ProductServiceImpl implements ProductService{
 	 * 商品列表
 	 */
 	@Override
-	public ResultVO productList() {
-		List<ProductVO> end = new ArrayList<>();
-		List<ProductMapper> findAll = product_dao.findByOrderByGenTimeDesc();
-		for (ProductMapper productMapper : findAll) {
+	public ResultVO productList(Map<String, String> params) {
+		int page = 0;
+		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page"))-1;
+		List<ProductVO> list = new ArrayList<>();
+		Page<ProductMapper> findAll = product_dao.findAllByOrderByIdDesc(PageRequest.of(page,10));
+		for (ProductMapper productMapper : findAll.getContent()) {
 			ProductVO vo = new ProductVO();
 			BeanUtils.copyProperties(productMapper, vo);
 			String[] split = productMapper.getPicture().split(",");
 			for (String string : split) {
 				vo.getPictures().add(UrlEnums.IMG_URL.getUrl()+string);
 			}
-			end.add(vo);
+			list.add(vo);
 		}
+		Page<ProductVO> end = new PageImpl<>(list,findAll.getPageable() , findAll.getTotalElements()) ;
 		return ResultVOUtil.success(end);
 	}
 
@@ -56,6 +62,10 @@ public class ProductServiceImpl implements ProductService{
 	 */
 	@Override
 	public ResultVO addProduct(Map<String, String> params,MultipartFile[] picture,MultipartFile details) {
+		System.out.println(params.get("name"));
+		System.out.println(picture.length);
+		System.out.println();
+		System.out.println(details==null);
 		String detailsstr = ImguploadUtils.uploadImg(details, "product");
 		String picturestr = ImguploadUtils.uploadImg(picture, "product");
 		ProductMapper po = new ProductMapper();
@@ -64,7 +74,7 @@ public class ProductServiceImpl implements ProductService{
 		po.setDetails(detailsstr);
 		po.setGenTime(new Date());
 		product_dao.save(po);
-		return productList();
+		return ResultVOUtil.success();
 	}
 
 	/*
@@ -72,8 +82,23 @@ public class ProductServiceImpl implements ProductService{
 	 */
 	@Override
 	public ResultVO deleteProduct(Map<String, String> params) {
-		product_dao.deleteById(Integer.valueOf(params.get("id")));
-		return productList();
+		ProductMapper productMapper = product_dao.findById(Integer.valueOf(params.get("id"))).get();
+		String picture = productMapper.getPicture();
+		String details = productMapper.getDetails();
+		if(picture!=null) {
+			String[] split = productMapper.getPicture().split(",");
+			for (String string : split) {
+				File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+string);
+				file.delete();
+			}
+		}
+		if(details!=null) {
+			String details2 = productMapper.getDetails();
+			File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+details2);
+			file.delete();
+		}
+		product_dao.delete(productMapper);
+		return ResultVOUtil.success();
 	}
 
 	/*
@@ -116,8 +141,7 @@ public class ProductServiceImpl implements ProductService{
 			productMapper.setDetails(detailsstr);
 		}
 		product_dao.save(productMapper);
-		
-		return productList();
+		return ResultVOUtil.success();
 	}
 
 	/*
@@ -125,17 +149,20 @@ public class ProductServiceImpl implements ProductService{
 	 */
 	@Override
 	public ResultVO findByName(Map<String, String> params) {
-		List<ProductVO> end = new ArrayList<>();
-		List<ProductMapper> findByNameLike = product_dao.findByNameLike("%"+params.get("name")+"%");
-		for (ProductMapper productMapper : findByNameLike) {
+		int page =0;
+		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page"))-1;
+		List<ProductVO> list = new ArrayList<>();
+		Page<ProductMapper> findByNameLike = product_dao.findAllByNameLikeOrderByIdDesc("%"+params.get("name")+"%",new PageRequest(page, 10));
+		for (ProductMapper productMapper : findByNameLike.getContent()) {
 			ProductVO vo = new ProductVO();
 			BeanUtils.copyProperties(productMapper, vo);
 			String[] split = productMapper.getPicture().split(",");
 			for (String string : split) {
 				vo.getPictures().add(UrlEnums.IMG_URL.getUrl()+string);
 			}
-			end.add(vo);
+			list.add(vo);
 		}
+		Page<ProductVO> end = new PageImpl<>(list,findByNameLike.getPageable() , findByNameLike.getTotalElements()) ;
 		return ResultVOUtil.success(end);
 	}
 	

@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.w3c.dom.ls.LSInput;
@@ -35,4 +37,11 @@ public interface RecordRepository extends JpaRepository<RecordMapper, Integer>{
 	//按照学生id查询所有的数据
 	List<RecordMapper> findAllByStudentIdAndGenTimeBetweenOrderByGenTime(Integer id,Date befor , Date after);
 	
+	Page<RecordMapper> findAllByOrderByIdDesc(Pageable Pageable);
+	
+	Page<RecordMapper> findAllByStudentNameLikeOrderByIdDesc(String name,Pageable Pageable);
+	
+	Page<RecordMapper> findByClassesIdOrderByIdDesc(Integer classId,Pageable Pageable);
+	
+	Page<RecordMapper> findBySchoolIdOrderByIdDesc(Integer schoolId,Pageable Pageable);
 }

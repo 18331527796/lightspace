@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 		user.setRoleName(role_dao.findById(Integer.valueOf(params.get("roleId"))).get().getRoleName());
 		user.setPassword(DigestUtils.md5DigestAsHex(params.get("password").getBytes()));
 		if(!StringUtils.isEmpty(params.get("schoolId")))user.setSchoolId(Integer.valueOf(params.get("schoolId")));
-		if(!StringUtils.isEmpty(params.get("classesId")))user.setClassesId(Integer.valueOf(params.get("classesId")));;
+		if(!StringUtils.isEmpty(params.get("classId")))user.setClassesId(Integer.valueOf(params.get("classId")));;
 		user_dao.save(user);
 		UserRoleRelation userRole= new UserRoleRelation();
 		userRole.setUserId(user.getId());

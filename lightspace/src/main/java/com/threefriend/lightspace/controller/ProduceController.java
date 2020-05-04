@@ -18,14 +18,14 @@ public class ProduceController {
 	private ProductServiceImpl product_dao;
 	
 	@PostMapping("productList")
-	public ResultVO productList() {
-		return product_dao.productList();
+	public ResultVO productList(@RequestParam Map<String, String> params) {
+		return product_dao.productList(params);
 	}
 	
 	@PostMapping("addProduct")
 	public ResultVO addProduct(@RequestParam Map<String, String> params,
-								@RequestParam("picture") MultipartFile picture[],
-								@RequestParam("details") MultipartFile details) {
+								@RequestParam(value="picture",required=false) MultipartFile picture[],
+								@RequestParam(value="details",required=false) MultipartFile details) {
 		return product_dao.addProduct(params, picture, details);
 	}
 	
@@ -36,13 +36,13 @@ public class ProduceController {
 	
 	@PostMapping("saveProduct")
 	public ResultVO saveProduct(@RequestParam Map<String, String> params,
-								@RequestParam("picture") MultipartFile picture[],
-								@RequestParam("details") MultipartFile details) {
+								@RequestParam(value="picture",required=false) MultipartFile picture[],
+								@RequestParam(value="details",required=false) MultipartFile details) {
 		return product_dao.saveProduct(params, picture, details);
 	}
 	
 	@PostMapping("deleteProduct")
-	public ResultVO productList(@RequestParam Map<String, String> params) {
+	public ResultVO deleteProduct(@RequestParam Map<String, String> params) {
 		return product_dao.deleteProduct(params);
 	}
 	

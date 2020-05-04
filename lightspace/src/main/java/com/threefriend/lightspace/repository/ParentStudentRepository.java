@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.SysLogMapper;
-import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
-import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
+import com.threefriend.lightspace.xcx.mapper.IntegralMapper;
+import com.threefriend.lightspace.xcx.mapper.ParentStudentRelation;
 
 /**
  * 家长孩子层

@@ -45,4 +45,24 @@ public class ScreeningController {
 	public ResultVO screeningWearExcel(@RequestParam Map<String, String> params) {
 		return screening_impl.screeningWearExcel(params);
 	}
+	
+	@PostMapping("screeningStudentExcel")
+	public ResultVO studentExcel(@RequestParam Map<String, String> params) {
+		return screening_impl.screeningStudentExcel(params);
+	}
+	
+	@PostMapping("screeningWearStudentExcel")
+	public ResultVO studentWearExcel(@RequestParam Map<String, String> params) {
+		return screening_impl.screeningWearStudentExcel(params);
+	}
+	
+	@PostMapping("screeningByStudent")
+	public ResultVO screeningByStudent(@RequestParam Map<String, String> params) {
+		return screening_impl.screeningByStudent(params);
+	}
+	
+	@PostMapping("screeningWearByStudent")
+	public ResultVO screeningWearByStudent(@RequestParam Map<String, String> params) {
+		return screening_impl.screeningWearByStudent(params);
+	}
 }

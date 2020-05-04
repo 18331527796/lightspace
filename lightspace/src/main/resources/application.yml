@@ -20,11 +20,13 @@ spring:
   main:
     allow-bean-definition-overriding: true
   
+  
   jpa:
     hibernate:
       ddl-auto: update
       use-new-id-generator-mappings: false
     show-sql: false  
+  
   servlet:
     multipart:
       enabled: true
@@ -34,6 +36,5 @@ spring:
 server:    
   servlet:
     context-path: /lightspace    
-    
     
 

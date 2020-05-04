@@ -30,7 +30,7 @@ public class RecordController {
 	@PostMapping("/addRecord")
 	
 	public ResultVO addRecord(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.addRecord(params));
+		return record_impl.addRecord(params);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class RecordController {
 	@PostMapping("/editRecord")
 	
 	public ResultVO editRecord(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.editRecord(Integer.valueOf(params.get("id"))));
+		return record_impl.editRecord(Integer.valueOf(params.get("id")));
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class RecordController {
 	@PostMapping("/deleteRecord")
 	
 	public ResultVO deleteRecord(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.deleteRecord(Integer.valueOf(params.get("id")),params.get("token")));
+		return ResultVOUtil.success(record_impl.deleteRecord(params));
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class RecordController {
 	@PostMapping("/recordList")
 	
 	public ResultVO recordList(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.recordList(params.get("token")));
+		return record_impl.recordList(params);
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class RecordController {
 	@PostMapping("/queryRecord")
 	
 	public ResultVO queryRecord(@RequestParam Map<String, String> params) {
-		return record_impl.findByName(params.get("name"));
+		return record_impl.findByName(params);
 	}
 	
 	/**
@@ -140,8 +140,9 @@ public class RecordController {
 	 */
 	
 	@PostMapping(value="/recordExcel")
-	public ResultVO  upload(@RequestParam(value="file",required = false)MultipartFile file,@RequestParam(value="token")String token){
-		return record_impl.readRecordExcel(file,token);
+	public ResultVO  upload(@RequestParam(value="file",required = false)MultipartFile file,
+							@RequestParam Map<String, String> params){
+		return record_impl.readRecordExcel(file,params);
 	}
 	
 	/**

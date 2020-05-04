@@ -25,14 +25,14 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.mapper.StudentMapper;
-import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
 import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
-import com.threefriend.lightspace.service.Impl.xcx.ParentXcxServiceImpl;
 import com.threefriend.lightspace.util.ExcelUtil;
-import com.threefriend.lightspace.util.xcx.HttpClientUtils;
-import com.threefriend.lightspace.util.xcx.SendMessageUtils;
-import com.threefriend.lightspace.util.xcx.WeChatUtils;
+import com.threefriend.lightspace.xcx.mapper.ScreeningMapper;
+import com.threefriend.lightspace.xcx.service.Impl.ParentXcxServiceImpl;
+import com.threefriend.lightspace.xcx.util.HttpClientUtils;
+import com.threefriend.lightspace.xcx.util.SendMessageUtils;
+import com.threefriend.lightspace.xcx.util.WeChatUtils;
 
 import net.coobird.thumbnailator.Thumbnails;
 

@@ -13,6 +13,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,13 +63,28 @@ public class RecordServiceImpl implements RecordService {
 	private ReadRecordExcel readexcel;
 	@Autowired
 	private StudentWordRepository studentword_dao;
+	
+	/*
+	 * 数据列表
+	 */
+	@Override
+	public ResultVO recordList(Map<String, String> params) {
+		int page = 0;
+		if(!StringUtils.isEmpty(params.get("page")))page= Integer.valueOf(params.get("page"))-1;
+		String token = params.get("token");
+		String[] split = token.split("-");
+		if (split[1].equals("2"))
+			return ResultVOUtil.success(record_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2]),new PageRequest(page, 10)));
+		if (split[1].equals("3"))
+			return ResultVOUtil.success(record_dao.findByClassesIdOrderByIdDesc(Integer.valueOf(split[2]),new PageRequest(page, 10)));
+		return ResultVOUtil.success(record_dao.findAllByOrderByIdDesc(new PageRequest(page, 10)));
+	}
 
 	/*
 	 * 新增数据
 	 */
 	@Override
-	public List<RecordMapper> addRecord(Map<String, String> params) {
-		System.out.println(params.get("cvaLeft")+"---"+params.get("curvatureRight")+"---"+params.get("diopterLeft")+"---"+params.get("diopterRight"));
+	public ResultVO addRecord(Map<String, String> params) {
 		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("studentId"))).get();
 		RecordMapper record = new RecordMapper();
 		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
@@ -104,19 +122,14 @@ public class RecordServiceImpl implements RecordService {
 		record.setGenTime(new Date());
 		record_dao.save(record);
 		student_dao.save(student);
-		String[] split = params.get("token").split("-");
-		if (split[1].equals("2"))
-			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if (split[1].equals("3"))
-			return record_dao.findByClassesId(Integer.valueOf(split[2]));
-		return record_dao.findAll();
+		return ResultVOUtil.success();
 	}
 
 	/*
 	 * 修改后保存数据
 	 */
 	@Override
-	public List<RecordMapper> saveRecord(Map<String, String> params) {
+	public ResultVO saveRecord(Map<String, String> params) {
 		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
 			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
@@ -151,33 +164,23 @@ public class RecordServiceImpl implements RecordService {
 		if (!StringUtils.isEmpty(params.get("visionRight")))
 			record.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 		record_dao.save(record);
-		String[] split = params.get("token").split("-");
-		if (split[1].equals("2"))
-			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if (split[1].equals("3"))
-			return record_dao.findByClassesId(Integer.valueOf(split[2]));
-		return record_dao.findAll();
+		return ResultVOUtil.success();
 	}
 
 	/*
 	 * 删除数据
 	 */
 	@Override
-	public List<RecordMapper> deleteRecord(Integer id, String token) {
-		record_dao.deleteById(id);
-		String[] split = token.split("-");
-		if (split[1].equals("2"))
-			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if (split[1].equals("3"))
-			return record_dao.findByClassesId(Integer.valueOf(split[2]));
-		return record_dao.findAll();
+	public ResultVO deleteRecord(Map<String, String> params) {
+		record_dao.deleteById(Integer.valueOf(params.get("id")));
+		return ResultVOUtil.success();
 	}
 
 	/*
 	 * 修改数据
 	 */
 	@Override
-	public RecordVO editRecord(Integer id) {
+	public ResultVO editRecord(Integer id) {
 		RecordMapper po = record_dao.findById(id).get();
 		RecordVO vo= new RecordVO();
 		BeanUtils.copyProperties(po, vo);
@@ -185,29 +188,21 @@ public class RecordServiceImpl implements RecordService {
 		vo.setVisionRight(po.getVisionRightStr());
 		vo.getRecord_cat().add(po.getSchoolId());
 		vo.getRecord_cat().add(po.getClassesId());
-		return vo;
+		return ResultVOUtil.success(vo);
 	}
 
-	/*
-	 * 数据列表
-	 */
-	@Override
-	public List<RecordMapper> recordList(String token) {
-		String[] split = token.split("-");
-		if (split[1].equals("2"))
-			return record_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if (split[1].equals("3"))
-			return record_dao.findByClassesId(Integer.valueOf(split[2]));
-		return record_dao.findAll();
-	}
+	
 
 	/*
 	 * 模糊查询
 	 */
 	@Override
-	public ResultVO findByName(String name) {
-		List<RecordMapper> list = record_dao.findAllByStudentNameLike("%" + name + "%");
-		if(list==null||list.size()==0) return ResultVOUtil.error(ResultEnum.RECORDSIZE_NULL.getStatus(), ResultEnum.RECORDSIZE_NULL.getMessage());
+	public ResultVO findByName(Map<String, String> params) {
+		int page = 0;
+		String name = params.get("name");
+		if(!StringUtils.isEmpty(params.get("page")))page=Integer.valueOf(params.get("page"))-1;
+		Page<RecordMapper> list = record_dao.findAllByStudentNameLikeOrderByIdDesc("%" + name + "%",new PageRequest(page, 10));
+		if(list.getContent()==null||list.getContent().size()==0) return ResultVOUtil.error(ResultEnum.RECORDSIZE_NULL.getStatus(), ResultEnum.RECORDSIZE_NULL.getMessage());
 		return ResultVOUtil.success(list);
 	}
 
@@ -220,7 +215,7 @@ public class RecordServiceImpl implements RecordService {
 		StudentMapper studentMapper = student_dao.findById(id).get();
 		RecordVO vo = new RecordVO();
 		BeanUtils.copyProperties(record, vo);
-		vo.setHeight(Double.valueOf(studentMapper.getSittingHeight())-Double.valueOf(studentMapper.getChairHeight()));
+		vo.setHeight(Double.valueOf(studentMapper.getHeight()));
 		return ResultVOUtil.success(vo);
 	}
 
@@ -400,7 +395,7 @@ public class RecordServiceImpl implements RecordService {
 	 */
 	@Override
 	@Transactional
-	public ResultVO readRecordExcel(MultipartFile file,String token) {
+	public ResultVO readRecordExcel(MultipartFile file,Map<String, String> params) {
 		List<RecordMapper> recordInfo = readexcel.getRecordInfo(file);
 		if(recordInfo==null) {
 			System.out.println("读取excel数据返回值是空的");
@@ -410,13 +405,7 @@ public class RecordServiceImpl implements RecordService {
         for (RecordMapper recordMapper : recordInfo) {
         	record_dao.save(recordMapper);
         }
-        
-		String[] split = token.split("-");
-		if (split[1].equals("2"))
-			return ResultVOUtil.success(record_dao.findBySchoolId(Integer.valueOf(split[2])));
-		if (split[1].equals("3"))
-			return ResultVOUtil.success(record_dao.findByClassesId(Integer.valueOf(split[2])));
-		return ResultVOUtil.success(record_dao.findAll());
+        return ResultVOUtil.success();
 	}
 
 	/* 

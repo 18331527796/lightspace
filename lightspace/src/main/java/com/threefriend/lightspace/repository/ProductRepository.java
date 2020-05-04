@@ -1,15 +1,12 @@
 package com.threefriend.lightspace.repository;
 
-import java.util.List;
 
-import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
-import com.threefriend.lightspace.mapper.ClassesMapper;
-import com.threefriend.lightspace.mapper.SysLogMapper;
-import com.threefriend.lightspace.mapper.xcx.ProductMapper;
+import com.threefriend.lightspace.xcx.mapper.ProductMapper;
 
 /**
  * 商品操作层
@@ -17,7 +14,7 @@ import com.threefriend.lightspace.mapper.xcx.ProductMapper;
  */
 public interface ProductRepository extends JpaRepository<ProductMapper, Integer>{
 	
-	List<ProductMapper> findByOrderByGenTimeDesc();
+	Page<ProductMapper> findAllByOrderByIdDesc(Pageable Pageable);
 	
-	List<ProductMapper> findByNameLike(String name);
+	Page<ProductMapper> findAllByNameLikeOrderByIdDesc(String name,Pageable Pageable);
 }
