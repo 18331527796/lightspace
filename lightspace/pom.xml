@@ -36,7 +36,7 @@
 
 
 		<!--部署成war包时开启↓↓↓↓ -->
-		<!-- <dependency>
+		 <!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
@@ -45,7 +45,7 @@
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 			<scope>provided</scope>
-		</dependency>  -->     
+		</dependency> -->        
 		<!--部署成war包时开启↑↑↑↑ -->
 
 
@@ -184,6 +184,23 @@
 		   <version>0.4.8</version>
 		</dependency>
         <!--图片压缩的包-->
+        <!--word报表的包-->
+        <dependency>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-base</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jcommon</artifactId>
+			<version>1.0.24</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+		<!--word报表的包-->
 		</dependencies>
 
 	<build>

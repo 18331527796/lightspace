@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.threefriend.lightspace.xcx.mapper.TaskMapper;
-import com.threefriend.lightspace.xcx.mapper.TaskRecordMapper;
+import com.threefriend.lightspace.mapper.xcx.TaskMapper;
+import com.threefriend.lightspace.mapper.xcx.TaskRecordMapper;
 
 /**
  * 任务记录层

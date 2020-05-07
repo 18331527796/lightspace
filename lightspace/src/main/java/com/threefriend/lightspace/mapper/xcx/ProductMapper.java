@@ -1,5 +1,6 @@
-package com.threefriend.lightspace.xcx.mapper;
+package com.threefriend.lightspace.mapper.xcx;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -23,7 +24,7 @@ public class ProductMapper {
 	
 	private String details;
 	
-	private Date genTime;
+	private String genTime;
 
 	public Integer getId() {
 		return id;
@@ -57,12 +58,12 @@ public class ProductMapper {
 		this.details = details;
 	}
 
-	public Date getGenTime() {
+	public String getGenTime() {
 		return genTime;
 	}
 
 	public void setGenTime(Date genTime) {
-		this.genTime = genTime;
+		this.genTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(genTime);
 	}
 	
 	

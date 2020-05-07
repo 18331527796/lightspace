@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.threefriend.lightspace.enums.ResultEnum;
+import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentMapper;
+import com.threefriend.lightspace.mapper.xcx.TaskMapper;
+import com.threefriend.lightspace.mapper.xcx.TaskRecordMapper;
 import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.TaskRecordRepository;
@@ -22,10 +26,6 @@ import com.threefriend.lightspace.repository.TaskRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.TaskVO;
-import com.threefriend.lightspace.xcx.mapper.IntegralMapper;
-import com.threefriend.lightspace.xcx.mapper.ParentMapper;
-import com.threefriend.lightspace.xcx.mapper.TaskMapper;
-import com.threefriend.lightspace.xcx.mapper.TaskRecordMapper;
 import com.threefriend.lightspace.xcx.service.TaskXcxService;
 
 @Service

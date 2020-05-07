@@ -11,7 +11,7 @@ import com.threefriend.lightspace.vo.ResultVO;
  */
 public interface SpecificationsService {
 	
-	ResultVO specificationsList(Integer productId);
+	ResultVO specificationsList(Map<String, String> params);
 	
 	ResultVO addSpecifications(Map<String, String> params);
 	

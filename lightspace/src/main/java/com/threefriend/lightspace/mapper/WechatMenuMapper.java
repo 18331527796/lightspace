@@ -27,8 +27,19 @@ public class WechatMenuMapper {
 	private String url;
 	
 	private String pagepath;
+	
+	private String content;
 
 	
+	
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
 	public String getPagepath() {
 		return pagepath;
 	}

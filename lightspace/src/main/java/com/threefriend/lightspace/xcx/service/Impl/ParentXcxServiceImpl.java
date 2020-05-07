@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +15,13 @@ import org.springframework.util.StringUtils;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.ParentStudentRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.mapper.ParentMapper;
-import com.threefriend.lightspace.xcx.mapper.ParentStudentRelation;
 import com.threefriend.lightspace.xcx.service.ParentXcxService;
 import com.threefriend.lightspace.xcx.util.WeChatUtils;
 import com.threefriend.lightspace.xcx.util.XcxDecryptUtils;

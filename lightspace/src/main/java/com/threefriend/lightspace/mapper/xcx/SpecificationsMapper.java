@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.xcx.mapper;
+package com.threefriend.lightspace.mapper.xcx;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +15,9 @@ public class SpecificationsMapper {
 	// 主键
 	private Integer id;
 	
-	private Integer produceId;
+	private Integer productId;
+	
+	private String productName;
 	
 	private String name;
 	
@@ -36,13 +38,23 @@ public class SpecificationsMapper {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	
 
-	public Integer getProduceId() {
-		return produceId;
+	public String getProductName() {
+		return productName;
 	}
 
-	public void setProduceId(Integer produceId) {
-		this.produceId = produceId;
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
 	}
 
 	public String getName() {

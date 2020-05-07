@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.SysLogMapper;
-import com.threefriend.lightspace.xcx.mapper.IntegralMapper;
-import com.threefriend.lightspace.xcx.mapper.MarkMapper;
-import com.threefriend.lightspace.xcx.mapper.TaskRecordMapper;
+import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
+import com.threefriend.lightspace.mapper.xcx.MarkMapper;
+import com.threefriend.lightspace.mapper.xcx.TaskRecordMapper;
 
 /**
  * 每日签到层

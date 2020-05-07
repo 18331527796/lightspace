@@ -3,8 +3,8 @@ package com.threefriend.lightspace.xcx.util;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
 import com.threefriend.lightspace.vo.wechatmenu.Menu;
-import com.threefriend.lightspace.xcx.mapper.GzhUserMapper;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.threefriend.lightspace.xcx.mapper.ScreeningWearMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 
 /**
  * 筛查（戴镜）操作层
@@ -46,6 +46,9 @@ public interface ScreeningWearRepository extends JpaRepository<ScreeningWearMapp
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where school_id = ?1",nativeQuery = true)
 	int findcountBySchoolId(Integer SchoolId);
+	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where class_id in ?1",nativeQuery = true)
+	int findcountByClassId(List<Integer> classId);
+	
 	@Query(value="SELECT *,max(id) from screening_wear_mapper where school_id = ?1 GROUP BY student_id ORDER BY id DESC limit ?2,?3",nativeQuery = true)
 	List<ScreeningWearMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId,int page,int size);
 	@Query(value="SELECT *,max(id) from screening_wear_mapper where school_id = ?1 GROUP BY student_id ORDER BY id DESC",nativeQuery = true)
@@ -60,4 +63,9 @@ public interface ScreeningWearRepository extends JpaRepository<ScreeningWearMapp
 
 	Page<ScreeningWearMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId,Pageable page);
 
+	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where school_id = ?1 and (vision_left_str + vision_right_str)/2 < ?2",nativeQuery = true)
+	int findcountBySchoolId(Integer SchoolId,Double AVG);
+	
+	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where class_id in ?1 and (vision_left_str + vision_right_str)/2 < ?2",nativeQuery = true)
+	int findcountByClassId(List<Integer> classId,Double AVG);
 }

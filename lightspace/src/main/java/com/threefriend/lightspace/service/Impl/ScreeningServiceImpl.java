@@ -15,6 +15,8 @@ import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.ScreeningWearRepository;
@@ -23,8 +25,6 @@ import com.threefriend.lightspace.service.ScreeningService;
 import com.threefriend.lightspace.util.ExcelUtil;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.mapper.ScreeningMapper;
-import com.threefriend.lightspace.xcx.mapper.ScreeningWearMapper;
 
 @Service
 public class ScreeningServiceImpl implements ScreeningService{

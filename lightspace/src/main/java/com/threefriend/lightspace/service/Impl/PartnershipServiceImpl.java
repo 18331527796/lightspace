@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.UrlEnums;
+import com.threefriend.lightspace.mapper.xcx.PartnershipMapper;
 import com.threefriend.lightspace.repository.PartnershipRepository;
 import com.threefriend.lightspace.service.PartnershipService;
 import com.threefriend.lightspace.util.ImguploadUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.mapper.PartnershipMapper;
 import com.threefriend.lightspace.xcx.util.XcxDecryptUtils;
 
 /**

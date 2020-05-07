@@ -2,7 +2,9 @@ package com.threefriend.lightspace.xcx.service.Impl;
 
 
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.threefriend.lightspace.enums.AccountEnums;
+import com.threefriend.lightspace.mapper.WechatMenuMapper;
+import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
 import com.threefriend.lightspace.repository.GzhUserRepository;
+import com.threefriend.lightspace.repository.WechatMenuRepository;
 import com.threefriend.lightspace.util.RedisUtils;
-import com.threefriend.lightspace.xcx.mapper.GzhUserMapper;
 import com.threefriend.lightspace.xcx.service.WechatService;
 import com.threefriend.lightspace.xcx.util.MessageUtil;
 import com.threefriend.lightspace.xcx.util.WeChatUtils;
@@ -28,6 +32,8 @@ public class WechatServiceImpl implements WechatService{
 	private RedisUtils redisUtil;
 	@Autowired
 	private GzhUserRepository gzh_dao;
+	@Autowired
+	private WechatMenuRepository wechat_menu;
 
 	/* 
 	 * 有效url认证
@@ -67,8 +73,11 @@ public class WechatServiceImpl implements WechatService{
 			String msgType = map.get("MsgType");//消息类型
 			String content = map.get("Content");//消息内容
 			String eventType = map.get("Event");
+			String eventKey = map.get("EventKey");
 			if(MessageUtil.MSGTYPE_EVENT.equals(msgType)){//如果为事件类型
+				
 				if(MessageUtil.MESSAGE_SUBSCIBE.equals(eventType)){//处理订阅事件
+					
 					String ACCESS_TOKEN = redisUtil.get("GZHTOKEN");
 					if(ACCESS_TOKEN==null||"".equals(ACCESS_TOKEN)) {
 					    ACCESS_TOKEN = WeChatUtils.findAccessToken(AccountEnums.GZHAPPID.getUrl(), AccountEnums.GZHSECRET.getUrl());
@@ -77,12 +86,22 @@ public class WechatServiceImpl implements WechatService{
 					gzh_dao.save(WeChatUtils.findWxUserInfo(ACCESS_TOKEN, fromUserName));
 					System.out.println(fromUserName+"用户关注了公众号");
 					message = MessageUtil.subscribeForText(toUserName, fromUserName);
+				
 				}else if(MessageUtil.MESSAGE_UNSUBSCIBE.equals(eventType)){//处理取消订阅事件
+					
 					GzhUserMapper findByOpenid = gzh_dao.findByOpenid(fromUserName);
 					if(findByOpenid!=null)gzh_dao.delete(findByOpenid);
 					System.out.println(fromUserName+"用户取消了关注");
 					message = MessageUtil.unsubscribe(toUserName, fromUserName);
-				}
+				
+				}else if(MessageUtil.MESSAGE_CLICK.equals(eventType)){//点击事件
+					Optional<WechatMenuMapper> findById = wechat_menu.findById(Integer.valueOf(eventKey));
+					if(findById!=null) {
+						WechatMenuMapper wechatMenuMapper = findById.get();
+						content = wechatMenuMapper.getContent();
+						message = MessageUtil.textMsg(toUserName, fromUserName, content);
+					}
+			   }
 			}
 		} catch (DocumentException e) {
 			e.printStackTrace();
@@ -95,6 +114,5 @@ public class WechatServiceImpl implements WechatService{
 
     }
     
-
 	
 }

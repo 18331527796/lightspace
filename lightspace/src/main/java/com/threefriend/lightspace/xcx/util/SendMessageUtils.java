@@ -11,9 +11,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.mapper.MsgTempMapper;
+import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
 import com.threefriend.lightspace.repository.GzhUserRepository;
 import com.threefriend.lightspace.util.RedisUtils;
-import com.threefriend.lightspace.xcx.mapper.GzhUserMapper;
 
 /**
  * 发送公众号消息模板推送工具类

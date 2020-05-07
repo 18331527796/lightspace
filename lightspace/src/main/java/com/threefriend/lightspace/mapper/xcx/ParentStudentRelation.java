@@ -1,17 +1,16 @@
-package com.threefriend.lightspace.xcx.mapper;
-
-import java.util.Date;
+package com.threefriend.lightspace.mapper.xcx;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- *  每日签到
+ *	家长学生关联表
  */
 @Entity
-public class MarkMapper {
+public class ParentStudentRelation {
 
+	
 	@Id
 	@GeneratedValue
 	// 主键
@@ -19,7 +18,7 @@ public class MarkMapper {
 	
 	private Integer parentId;
 	
-	private Date genTime;
+	private Integer studentId;
 
 	public Integer getId() {
 		return id;
@@ -37,12 +36,12 @@ public class MarkMapper {
 		this.parentId = parentId;
 	}
 
-	public Date getGenTime() {
-		return genTime;
+	public Integer getStudentId() {
+		return studentId;
 	}
 
-	public void setGenTime(Date genTime) {
-		this.genTime = genTime;
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
 	}
 	
 	

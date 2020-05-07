@@ -49,6 +49,8 @@ public class ClassesMapper {
 	private Integer regionId;
 	//是否毕业
 	private Integer finish;
+	//几年级
+	private Integer grade;
 	// 备注			
 	private String description = "";
 	
@@ -71,6 +73,24 @@ public class ClassesMapper {
 	}
 	public void setClassName(String className) {
 		this.className = className;
+		String substring = className.substring(0, 1);
+		switch (substring) {
+		case "一":this.grade=1;
+			break;
+		case "二":this.grade=2;
+			break;
+		case "三":this.grade=3;
+			break;
+		case "四":this.grade=4;
+			break;
+		case "五":this.grade=5;
+			break;
+		case "六":this.grade=6;
+			break;
+		default:
+			this.grade=0;
+			break;
+		}
 	}
 	public Integer getVolume() {
 		return volume;

@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 public class TestAspect implements HandlerInterceptor {
@@ -21,6 +22,11 @@ public class TestAspect implements HandlerInterceptor {
 //		}
 		//每次操作的时间监控
 		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:dd").format(new Date()));
+		/*//获取控制器的名字
+        System.out.println(((HandlerMethod) o).getBean().getClass().getName());
+        //获取方法名
+        System.out.println(((HandlerMethod) o).getMethod().getName());*/
+		
 		return true;
 	}
 

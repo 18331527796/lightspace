@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.xcx.mapper;
+package com.threefriend.lightspace.mapper.xcx;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

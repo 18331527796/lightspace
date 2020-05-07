@@ -15,6 +15,7 @@ import com.threefriend.lightspace.enums.SortEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.SortMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.ScreeningRepository;
@@ -23,7 +24,6 @@ import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.SortService;
 import com.threefriend.lightspace.util.ListUtils;
 import com.threefriend.lightspace.vo.SortVO;
-import com.threefriend.lightspace.xcx.mapper.ScreeningMapper;
 
 /**
  * 

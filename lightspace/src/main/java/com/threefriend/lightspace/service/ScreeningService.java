@@ -6,9 +6,9 @@ import java.util.Map;
 import org.apache.poi.ss.formula.functions.T;
 
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.mapper.ScreeningMapper;
-import com.threefriend.lightspace.xcx.mapper.ScreeningWearMapper;
 
 public interface ScreeningService {
 	

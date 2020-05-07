@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.xcx.mapper;
+package com.threefriend.lightspace.mapper.xcx;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

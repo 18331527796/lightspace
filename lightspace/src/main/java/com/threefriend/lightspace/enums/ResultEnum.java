@@ -61,6 +61,8 @@ public enum ResultEnum {
     SENDMESSAGE_ERROR(10223,"读取成功，发送失败！"),
     
     SCREENING_ERROR(10224,"今日筛查奖励已领取~"),
+    
+    REPORT_ERROR(10225,"无相关检测数据"),
     ;
 
     private Integer status;

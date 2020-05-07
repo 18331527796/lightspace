@@ -30,6 +30,8 @@ public interface ClassesRepository extends JpaRepository<ClassesMapper, Integer>
 	int countBySchoolIdAndExperiment(Integer schoolId,Integer experiment);
 	
 	int countBySchoolId(Integer schoolId);
+	@Query("select id from ClassesMapper where schoolId = ?1 and grade = ?2")
+	List<Integer> findIdBySchoolIdAndGrade(Integer schoolId,Integer grade);
 	@Query("select id from ClassesMapper where schoolId = ?1 and experiment = ?2")
 	List<Integer> AllclassIdBySchoolIdAndExperiment(Integer schoolId,Integer experiment);
 }

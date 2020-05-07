@@ -10,8 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.threefriend.lightspace.xcx.mapper.ScreeningMapper;
-import com.threefriend.lightspace.xcx.mapper.ScreeningWearMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 
 /**
  * 筛查操作层

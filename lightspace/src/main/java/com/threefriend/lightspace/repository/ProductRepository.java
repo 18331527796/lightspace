@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.threefriend.lightspace.xcx.mapper.ProductMapper;
+import com.threefriend.lightspace.mapper.xcx.ProductMapper;
 
 /**
  * 商品操作层

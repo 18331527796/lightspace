@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.xcx.mapper;
+package com.threefriend.lightspace.mapper.xcx;
 
 
 import java.text.DateFormat;
@@ -13,12 +13,12 @@ import javax.persistence.Id;
 import com.threefriend.lightspace.util.OptotypeUtils;
 
 /**
- * 筛查表
+ * 筛查表（戴镜）
  * @author Administrator
  *
  */
 @Entity
-public class ScreeningMapper {
+public class ScreeningWearMapper {
 
 	@Id
 	@GeneratedValue
@@ -52,7 +52,6 @@ public class ScreeningMapper {
 	private Date genTime;
 	private String date;
 	private String time;
-	
 	
 	
 	public Integer getClassId() {

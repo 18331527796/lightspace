@@ -16,7 +16,7 @@ private Integer id;
 	
 	private String details;
 	
-	private Date genTime;
+	private String genTime;
 
 	public Integer getId() {
 		return id;
@@ -42,11 +42,11 @@ private Integer id;
 		this.details = UrlEnums.IMG_URL.getUrl()+details;
 	}
 
-	public Date getGenTime() {
+	public String getGenTime() {
 		return genTime;
 	}
 
-	public void setGenTime(Date genTime) {
+	public void setGenTime(String genTime) {
 		this.genTime = genTime;
 	}
 

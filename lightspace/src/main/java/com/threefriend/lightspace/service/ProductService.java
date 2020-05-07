@@ -22,6 +22,8 @@ public interface ProductService {
 	
 	ResultVO editProduct(Map<String, String> params);
 	
-	ResultVO saveProduct(Map<String, String> params,MultipartFile picture[],MultipartFile details);
+	ResultVO saveProduct(Map<String, String> params,MultipartFile picture[],MultipartFile details,String []delpic);
+	
+	ResultVO allProduct();
 
 }

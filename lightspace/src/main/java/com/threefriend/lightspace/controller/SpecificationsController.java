@@ -31,7 +31,7 @@ public class SpecificationsController {
 	 */
 	@PostMapping("specificationsList")
 	public ResultVO specificationsList(@RequestParam Map<String, String> params) {
-		return specifications_impl.specificationsList(Integer.valueOf(params.get("productId")));
+		return specifications_impl.specificationsList(params);
 	}
 	
 	/**

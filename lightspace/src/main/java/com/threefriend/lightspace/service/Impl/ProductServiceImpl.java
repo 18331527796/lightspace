@@ -18,13 +18,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.UrlEnums;
+import com.threefriend.lightspace.mapper.xcx.ProductMapper;
 import com.threefriend.lightspace.repository.ProductRepository;
 import com.threefriend.lightspace.service.ProductService;
 import com.threefriend.lightspace.util.ImguploadUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ProductVO;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.mapper.ProductMapper;
 
 /**
  * 商品逻辑实现类
@@ -47,9 +47,11 @@ public class ProductServiceImpl implements ProductService{
 		for (ProductMapper productMapper : findAll.getContent()) {
 			ProductVO vo = new ProductVO();
 			BeanUtils.copyProperties(productMapper, vo);
-			String[] split = productMapper.getPicture().split(",");
-			for (String string : split) {
-				vo.getPictures().add(UrlEnums.IMG_URL.getUrl()+string);
+			if(!productMapper.getPicture().isEmpty()) {
+				String[] split = productMapper.getPicture().split(",");
+				for (String string : split) {
+					vo.getPictures().add(UrlEnums.IMG_URL.getUrl()+string);
+				}
 			}
 			list.add(vo);
 		}
@@ -62,10 +64,6 @@ public class ProductServiceImpl implements ProductService{
 	 */
 	@Override
 	public ResultVO addProduct(Map<String, String> params,MultipartFile[] picture,MultipartFile details) {
-		System.out.println(params.get("name"));
-		System.out.println(picture.length);
-		System.out.println();
-		System.out.println(details==null);
 		String detailsstr = ImguploadUtils.uploadImg(details, "product");
 		String picturestr = ImguploadUtils.uploadImg(picture, "product");
 		ProductMapper po = new ProductMapper();
@@ -85,14 +83,14 @@ public class ProductServiceImpl implements ProductService{
 		ProductMapper productMapper = product_dao.findById(Integer.valueOf(params.get("id"))).get();
 		String picture = productMapper.getPicture();
 		String details = productMapper.getDetails();
-		if(picture!=null) {
+		if(!picture.isEmpty()) {
 			String[] split = productMapper.getPicture().split(",");
 			for (String string : split) {
 				File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+string);
 				file.delete();
 			}
 		}
-		if(details!=null) {
+		if(!details.isEmpty()) {
 			String details2 = productMapper.getDetails();
 			File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+details2);
 			file.delete();
@@ -109,10 +107,12 @@ public class ProductServiceImpl implements ProductService{
 		ProductMapper productMapper = product_dao.findById(Integer.valueOf(params.get("id"))).get();
 		ProductVO vo = new ProductVO();
 		BeanUtils.copyProperties(productMapper, vo);
-		String[] split = productMapper.getPicture().split(",");
-		for (String string : split) {
-			vo.getPictures().add(UrlEnums.IMG_URL.getUrl()+string);
-		}
+		if(!productMapper.getPicture().isEmpty()) {
+			String[] split = productMapper.getPicture().split(",");
+			for (String string : split) {
+				vo.getPictures().add(UrlEnums.IMG_URL.getUrl()+string);
+			}
+		}	
 		return ResultVOUtil.success(vo);
 	}
 
@@ -120,22 +120,55 @@ public class ProductServiceImpl implements ProductService{
 	 * 商品修改后保存
 	 */
 	@Override
-	public ResultVO saveProduct(Map<String, String> params,MultipartFile picture[],MultipartFile details) {
+	public ResultVO saveProduct(Map<String, String> params,MultipartFile picture[],MultipartFile details,String []delpic) {
+		StringBuilder picend = new StringBuilder();
+		int flag;
 		ProductMapper productMapper = product_dao.findById(Integer.valueOf(params.get("id"))).get();
 		productMapper.setGenTime(new Date());
 		if(!StringUtils.isEmpty(params.get("name")))productMapper.setName(params.get("name"));
-		if(picture!=null) {
+		if(delpic.length!=0) {
 			String[] split = productMapper.getPicture().split(",");
-			for (String string : split) {
+			for (String string : delpic) {
+				int begin=string.indexOf('p',30),end=string.length();
+				string=string.substring(begin,end);
 				File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+string);
+				//File file = new File("F:/"+string);
+				System.out.println(string);
 				file.delete();
 			}
-			String picstr = ImguploadUtils.uploadImg(picture, "product");
-			productMapper.setPicture(picstr);
+			for (String picstr : split) {
+				flag = 1;
+				for (String string : delpic) {
+					int begin=string.indexOf('p',30),end=string.length();
+					string=string.substring(begin,end);
+					if(picstr.equals(string))flag=2;
+				}
+				if(flag==1) {
+					if(picend.length()==0) {
+						picend.append(picstr);
+					}else {
+						picend.append(","+picstr);
+					}
+				}
+				
+			}
 		}
+		
+		if(picture!=null) {
+			String picstr = ImguploadUtils.uploadImg(picture, "product");
+			if(picstr.length()!=0) {
+				if(picend.length()==0) {
+					picend.append(picstr);
+				}else {
+					picend.append(","+picstr);
+			}
+			}
+		}
+		if(delpic.length!=0||picture!=null)productMapper.setPicture(picend.toString());
 		if(details!=null) {
 			String details2 = productMapper.getDetails();
 			File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+details2);
+			//File file = new File("F:\\"+details2);
 			file.delete();
 			String detailsstr = ImguploadUtils.uploadImg(details, "product");
 			productMapper.setDetails(detailsstr);
@@ -163,6 +196,19 @@ public class ProductServiceImpl implements ProductService{
 			list.add(vo);
 		}
 		Page<ProductVO> end = new PageImpl<>(list,findByNameLike.getPageable() , findByNameLike.getTotalElements()) ;
+		return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO allProduct() {
+		List<ProductMapper> findAll = product_dao.findAll();
+		List<ProductVO> end = new ArrayList<>();
+		for (ProductMapper productMapper : findAll) {
+			ProductVO vo = new ProductVO();
+			vo.setId(productMapper.getId());
+			vo.setName(productMapper.getName());
+			end.add(vo);
+		}
 		return ResultVOUtil.success(end);
 	}
 	

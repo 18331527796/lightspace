@@ -12,14 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.threefriend.lightspace.enums.ResultEnum;
+import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
+import com.threefriend.lightspace.mapper.xcx.MarkMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.MarkRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.xcx.mapper.IntegralMapper;
-import com.threefriend.lightspace.xcx.mapper.MarkMapper;
-import com.threefriend.lightspace.xcx.mapper.ParentMapper;
 
 @Service
 public class MarkServiceImpl {

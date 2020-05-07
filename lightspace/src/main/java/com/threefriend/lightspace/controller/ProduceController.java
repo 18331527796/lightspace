@@ -37,8 +37,9 @@ public class ProduceController {
 	@PostMapping("saveProduct")
 	public ResultVO saveProduct(@RequestParam Map<String, String> params,
 								@RequestParam(value="picture",required=false) MultipartFile picture[],
-								@RequestParam(value="details",required=false) MultipartFile details) {
-		return product_dao.saveProduct(params, picture, details);
+								@RequestParam(value="details",required=false) MultipartFile details,
+								@RequestParam(value="delPic") String []delpic) {
+		return product_dao.saveProduct(params, picture, details,delpic);
 	}
 	
 	@PostMapping("deleteProduct")
@@ -49,5 +50,10 @@ public class ProduceController {
 	@PostMapping("findProductByName")
 	public ResultVO findProductByName(@RequestParam Map<String, String> params) {
 		return product_dao.findByName(params);
+	}
+	
+	@PostMapping("allProduct")
+	public ResultVO allProduct() {
+		return product_dao.allProduct();
 	}
 }
