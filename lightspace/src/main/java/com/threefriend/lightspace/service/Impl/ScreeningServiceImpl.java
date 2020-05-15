@@ -29,6 +29,7 @@ import com.threefriend.lightspace.vo.ResultVO;
 @Service
 public class ScreeningServiceImpl implements ScreeningService{
 	private final String[] strArray = { "学校名称", "班级名称", "学生姓名", "右眼裸眼视力", "左眼裸眼视力" };
+	private final String[] strwearArray = { "学校名称", "班级名称", "学生姓名", "右眼戴镜视力", "左眼戴镜视力" };
 	
 	@Autowired
 	private ScreeningRepository screening_dao;
@@ -172,7 +173,7 @@ public class ScreeningServiceImpl implements ScreeningService{
 			list = screening_wear_dao.findAllByOrderByGenTimeDesc();
 			student=student_dao.findAll();
 		}
-		ExcelUtil.createExcel(WearExcel(list,student), strArray);
+		ExcelUtil.createExcel(WearExcel(list,student), strwearArray);
 		return ResultVOUtil.success();
 	}
 
@@ -202,7 +203,7 @@ public class ScreeningServiceImpl implements ScreeningService{
 	@Override
 	public ResultVO screeningWearStudentExcel(Map<String, String> params) {
 		List<ScreeningWearMapper> list = screening_wear_dao.findByStudentIdOrderByGenTimeDesc(Integer.valueOf(params.get("id")));
-		ExcelUtil.createExcel(WearExcel(list,null), strArray);
+		ExcelUtil.createExcel(WearExcel(list,null), strwearArray);
 		return ResultVOUtil.success();
 	}
 

@@ -17,10 +17,12 @@ import org.springframework.stereotype.Service;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.xcx.TaskMapper;
 import com.threefriend.lightspace.mapper.xcx.TaskRecordMapper;
 import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
+import com.threefriend.lightspace.repository.ParentStudentRepository;
 import com.threefriend.lightspace.repository.TaskRecordRepository;
 import com.threefriend.lightspace.repository.TaskRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
@@ -38,14 +40,15 @@ public class TaskXcxServiceImpl implements TaskXcxService{
 	private ParentRepository parent_dao;
 	@Autowired
 	private IntegralRepository integral_dao;
+	@Autowired
+	private ParentStudentRepository p_s_dao;
 
 	@Override
 	public ResultVO xcxTaskList(Map<String, String> params) throws Exception {
 		Map<String, Date> map = beginAndEnd();
-		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
-		Integer parentId = parent.getId();
 		List<TaskVO> endList = new ArrayList<>();
-		List<TaskRecordMapper> allRecords = taskrecord_dao.findByParentIdAndGenTimeBetween(parentId, map.get("begin"), map.get("end"));
+		Integer studentId=Integer.valueOf(params.get("studentId")); 
+		List<TaskRecordMapper> allRecords = taskrecord_dao.findByStudentIdAndGenTimeBetween(studentId, map.get("begin"), map.get("end"));
 		List<TaskMapper> allTask = task_dao.findAll();
 		for (TaskMapper task : allTask) {
 			TaskVO vo = new TaskVO();
@@ -53,7 +56,6 @@ public class TaskXcxServiceImpl implements TaskXcxService{
 			vo.setSuccess(0);
 			for (TaskRecordMapper record : allRecords) {
 				if(record.getTaskId()==task.getId()) {
-					System.err.println();
 					vo.setSuccess(1);
 				}
 			}
@@ -67,19 +69,21 @@ public class TaskXcxServiceImpl implements TaskXcxService{
 		Map<String, Date> map = beginAndEnd();
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		Integer parentId = parent.getId();
+		Integer studentId=Integer.valueOf(params.get("studentId")); 
 		Integer taskId = Integer.valueOf(params.get("taskId"));
-		TaskRecordMapper record = taskrecord_dao.findByParentIdAndTaskId(parentId, taskId);
+		TaskRecordMapper record = taskrecord_dao.findByStudentIdAndTaskId(studentId, taskId);
 		if(record!=null) {
 			record.setGenTime(new Date());
 			taskrecord_dao.save(record);
 		}else {
 			TaskRecordMapper po = new TaskRecordMapper();
 			po.setParentId(parentId);
+			po.setStudentId(studentId);
 			po.setTaskId(taskId);
 			po.setGenTime(new Date());
 			taskrecord_dao.save(po);
 		}
-		List<TaskRecordMapper> allRecords = taskrecord_dao.findByParentIdAndGenTimeBetween(parentId, map.get("begin"), map.get("end"));
+		List<TaskRecordMapper> allRecords = taskrecord_dao.findByStudentIdAndGenTimeBetween(studentId, map.get("begin"), map.get("end"));
 		long count = task_dao.count();
 		if(count==allRecords.size()) {
 			IntegralMapper integral = new IntegralMapper();

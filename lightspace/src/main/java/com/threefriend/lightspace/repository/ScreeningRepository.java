@@ -28,9 +28,9 @@ public interface ScreeningRepository extends JpaRepository<ScreeningMapper, Inte
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper ",nativeQuery = true)
 	int findcount();
-	@Query(value="SELECT *,max(id) from screening_mapper GROUP BY student_id ORDER BY id DESC limit ?1,?2",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?1,?2",nativeQuery = true)
 	List<ScreeningMapper> findAllByOrderByGenTimeDesc(int page,int size);
-	@Query(value="SELECT *,max(id) from screening_mapper GROUP BY student_id ORDER BY id DESC",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningMapper> findAllByOrderByGenTimeDesc();
 	
 	
@@ -38,9 +38,9 @@ public interface ScreeningRepository extends JpaRepository<ScreeningMapper, Inte
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where student_id = ?1",nativeQuery = true)
 	int findcountByStudentId(Integer studentId);
-	@Query(value="SELECT *,max(id) from screening_mapper where student_id = ?1 GROUP BY student_id ORDER BY id DESC limit ?2,?3",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where student_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId,int page,int size);
-	@Query(value="SELECT *,max(id) from screening_mapper where student_id = ?1 GROUP BY student_id ORDER BY id DESC",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where student_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningMapper> findExcel(Integer studentId);
 	
 	
@@ -48,9 +48,9 @@ public interface ScreeningRepository extends JpaRepository<ScreeningMapper, Inte
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where school_id = ?1",nativeQuery = true)
 	int findcountBySchoolId(Integer SchoolId);
-	@Query(value="SELECT *,max(id) from screening_mapper where school_id = ?1 GROUP BY student_id ORDER BY id DESC limit ?2,?3",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId,int page,int size);
-	@Query(value="SELECT *,max(id) from screening_mapper where school_id = ?1 GROUP BY student_id ORDER BY id DESC",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId);
  	
 	
@@ -58,9 +58,9 @@ public interface ScreeningRepository extends JpaRepository<ScreeningMapper, Inte
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where class_id = ?1",nativeQuery = true)
 	int findcountByClassId(Integer SchoolId);
-	@Query(value="SELECT *,max(id) from screening_mapper where class_id = ?1 GROUP BY student_id ORDER BY id DESC limit ?2,?3",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where class_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningMapper> findByClassIdOrderByGenTimeDesc(Integer classId,int page,int size);
-	@Query(value="SELECT *,max(id) from screening_mapper where class_id = ?1 GROUP BY student_id ORDER BY id DESC",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where class_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningMapper> findByClassIdOrderByGenTimeDesc(Integer classId);
  	
  	

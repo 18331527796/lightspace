@@ -15,8 +15,10 @@ import org.springframework.util.StringUtils;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
+import com.threefriend.lightspace.repository.GzhUserRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.ParentStudentRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
@@ -35,6 +37,8 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	private StudentRepository student_dao;
 	@Autowired
 	private ParentStudentRepository p_s_dao;
+	@Autowired
+	private GzhUserRepository gzh_dao;
 
 	/* 
 	 * 登陆验证
@@ -43,14 +47,14 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	public ResultVO loginXcx(Map<String, String> params) throws Exception {
 		Map<String, String> end = new HashMap<>();
 		String type="";
+		System.err.println(params.get("code"));
+		System.err.println(params.get("encryptedData"));
+		System.err.println(params.get("iv"));
 		//从微信的接口获取sessionkey openId
 		Map getsessionKey = WeChatUtils.getsessionKey(AccountEnums.APIKEY.getUrl(), AccountEnums.SECRETKEY.getUrl(), params.get("code"));
 		params.put("sessionKey", getsessionKey.get("sessionkey").toString());
 		String openId = getsessionKey.get("openId").toString();
 		//查一下有这个用户吗
-		System.err.println(params.get("code"));
-		System.err.println(params.get("encryptedData"));
-		System.err.println(params.get("iv"));
 		ParentMapper findByOpenId = parent_dao.findByOpenId(openId);
 		if(findByOpenId==null) {
 			Map<String, Object> userData = getUserData(params);
@@ -195,6 +199,14 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	    String phone="";
 	    phone=phoneDate.substring(0, 3)+"****"+phoneDate.substring(7, phoneDate.length());
 		return ResultVOUtil.success(phone);
+	}
+
+	@Override
+	public ResultVO chkGzh(Map<String, String> params) {
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		GzhUserMapper findByUnionid = gzh_dao.findByUnionid(parent.getUnionId());
+		if(findByUnionid==null)return ResultVOUtil.error(ResultEnum.UNFOLLOW_ERROR.getStatus(), ResultEnum.UNFOLLOW_ERROR.getMessage());
+		return ResultVOUtil.success();
 	}
 	
 }

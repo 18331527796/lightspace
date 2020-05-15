@@ -84,4 +84,15 @@ public class ParentXcxController {
 	public ResultVO bindingPhone(@RequestParam Map<String, String> params) throws Exception {
 		return parent_impl.bindingPhone(params);
 	}
+	
+	/**
+	 * 验证是否关注公众号
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/chkGzh")
+	public ResultVO chkGzh(@RequestParam Map<String, String> params) throws Exception {
+		return parent_impl.chkGzh(params);
+	}
 }

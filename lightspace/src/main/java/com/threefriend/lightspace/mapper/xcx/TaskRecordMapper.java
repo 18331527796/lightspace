@@ -17,6 +17,8 @@ public class TaskRecordMapper {
 	private Integer id;
 	//用户id
 	private Integer parentId;
+	//学生id
+	private Integer studentId;
 	//任务id
 	private Integer taskId;
 	//签到时间
@@ -26,6 +28,13 @@ public class TaskRecordMapper {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	public Integer getStudentId() {
+		return studentId;
+	}
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
 	}
 	public Integer getParentId() {
 		return parentId;

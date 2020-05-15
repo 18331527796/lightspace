@@ -65,8 +65,39 @@ public class StudentMapper {
 	//用来进行分析概况以及排座
 	private Double visionLeftStr;
 	private Double visionRightStr;
+	//从哪里来的视力数据 (1:screening 2:screeningwear)
+	private Integer screeningType=1;
+	//教师提醒的状态
+	private Date remindUndetected=new Date();
+	private Date remindDecline=new Date();
+	private Date remindUntask=new Date();
 	
 	
+	
+	public Date getRemindUndetected() {
+		return remindUndetected;
+	}
+	public void setRemindUndetected(Date remindUndetected) {
+		this.remindUndetected = remindUndetected;
+	}
+	public Date getRemindDecline() {
+		return remindDecline;
+	}
+	public void setRemindDecline(Date remindDecline) {
+		this.remindDecline = remindDecline;
+	}
+	public Date getRemindUntask() {
+		return remindUntask;
+	}
+	public void setRemindUntask(Date remindUntask) {
+		this.remindUntask = remindUntask;
+	}
+	public Integer getScreeningType() {
+		return screeningType;
+	}
+	public void setScreeningType(Integer screeningType) {
+		this.screeningType = screeningType;
+	}
 	public Double getVisionLeftStr() {
 		return visionLeftStr;
 	}

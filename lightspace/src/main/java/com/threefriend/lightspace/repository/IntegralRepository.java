@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -21,6 +22,6 @@ public interface IntegralRepository extends JpaRepository<IntegralMapper, Intege
 	List<IntegralMapper> findByParentIdOrderByGenTimeDesc(Integer parentId);
 	
 	//收支标识(0:支出，1:收入)
-	@Query(value="SELECT SUM(integral) FROM integral_mapper  WHERE state = ?1 AND parent_id = ?2 ORDER BY gen_time desc",nativeQuery = true)
-	Long findIntegtalByState(Integer state,Integer openId);
+	@Query(value="SELECT SUM(integral) FROM integral_mapper  WHERE state = ?1 AND parent_id = ?2 AND gen_time between ?3 and ?4 ORDER BY gen_time desc",nativeQuery = true)
+	Long findIntegtalByState(Integer state,Integer openId,Date begin , Date end);
 }

@@ -32,16 +32,16 @@ public interface ScreeningWearRepository extends JpaRepository<ScreeningWearMapp
  	
  	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper ",nativeQuery = true)
 	int findcount();
-	@Query(value="SELECT *,max(id) from screening_wear_mapper GROUP BY student_id ORDER BY id DESC limit ?1,?2",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?1,?2",nativeQuery = true)
 	List<ScreeningWearMapper> findAllByOrderByGenTimeDesc(int page,int size);
-	@Query(value="SELECT *,max(id) from screening_wear_mapper GROUP BY student_id ORDER BY id DESC",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningWearMapper> findAllByOrderByGenTimeDesc();
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where student_id = ?1",nativeQuery = true)
 	int findcountByStudentId(Integer studentId);
-	@Query(value="SELECT *,max(id) from screening_wear_mapper where student_id = ?1 GROUP BY student_id ORDER BY id DESC limit ?2,?3",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper where student_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningWearMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId,int page,int size);
-	@Query(value="SELECT *,max(id) from screening_wear_mapper where student_id = ?1 GROUP BY student_id ORDER BY id DESC",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper where student_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningWearMapper> findExcel(Integer studentId);
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where school_id = ?1",nativeQuery = true)
@@ -49,16 +49,16 @@ public interface ScreeningWearRepository extends JpaRepository<ScreeningWearMapp
 	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where class_id in ?1",nativeQuery = true)
 	int findcountByClassId(List<Integer> classId);
 	
-	@Query(value="SELECT *,max(id) from screening_wear_mapper where school_id = ?1 GROUP BY student_id ORDER BY id DESC limit ?2,?3",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningWearMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId,int page,int size);
-	@Query(value="SELECT *,max(id) from screening_wear_mapper where school_id = ?1 GROUP BY student_id ORDER BY id DESC",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningWearMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId);
  	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where class_id = ?1",nativeQuery = true)
 	int findcountByClassId(Integer SchoolId);
-	@Query(value="SELECT *,max(id) from screening_wear_mapper where class_id = ?1 GROUP BY student_id ORDER BY id DESC limit ?2,?3",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper where class_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningWearMapper> findByClassIdOrderByGenTimeDesc(Integer classId,int page,int size);
-	@Query(value="SELECT *,max(id) from screening_wear_mapper where class_id = ?1 GROUP BY student_id ORDER BY id DESC",nativeQuery = true)
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper where class_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningWearMapper> findByClassIdOrderByGenTimeDesc(Integer classId);
 
 	Page<ScreeningWearMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId,Pageable page);

@@ -50,6 +50,7 @@ public class TeacherServiceImpl implements TeacherService{
 		teacher.setClassName(class_dao.findById(classId).get().getClassName());
 		teacher.setName(params.get("name"));
 		teacher.setPhone(params.get("phone"));
+		teacher.setPassword(params.get("password"));
 		teacher_dao.save(teacher);
 		return ResultVOUtil.success(teacher_dao.findAll());
 	}
@@ -84,6 +85,7 @@ public class TeacherServiceImpl implements TeacherService{
 		}
 		if(!StringUtils.isEmpty(params.get("name")))teacher.setName(params.get("name"));
 		if(!StringUtils.isEmpty(params.get("phone")))teacher.setPhone(params.get("phone"));
+		if(!StringUtils.isEmpty(params.get("password")))teacher.setPassword(params.get("password"));
 		teacher_dao.save(teacher);
 		return ResultVOUtil.success(teacher_dao.findAll());
 	}

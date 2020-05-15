@@ -173,6 +173,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			System.out.println(Double.valueOf(params.get("visionRight"))+"-----------"+params.get("visionRight"));
 			student.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
 			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
+			student.setScreeningType(1);
 			student_dao.save(student);
 			//if(student.getSendTime()==null||new Date().getTime()-student.getSendTime().getTime()>=604800) {
 				//查一下当前选中的筛查模板
@@ -214,6 +215,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			student.setLastTime(new Date());
 			student.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
 			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
+			student.setScreeningType(2);
 			student_dao.save(student);
 			//if(student.getSendTime()==null||new Date().getTime()-student.getSendTime().getTime()>=604800) {
 				//查一下当前选中的筛查模板

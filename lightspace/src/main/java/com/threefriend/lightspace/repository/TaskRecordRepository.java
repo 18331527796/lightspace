@@ -15,7 +15,13 @@ import com.threefriend.lightspace.mapper.xcx.TaskRecordMapper;
  */
 public interface TaskRecordRepository extends JpaRepository<TaskRecordMapper, Integer>{
 
-	List<TaskRecordMapper> findByParentIdAndGenTimeBetween(Integer parentId,Date begin,Date end);
+	List<TaskRecordMapper> findByStudentIdAndGenTimeBetween(Integer studentId,Date begin,Date end);
 	
-	TaskRecordMapper findByParentIdAndTaskId(Integer parentId,Integer taskId);
+	TaskRecordMapper findByStudentIdAndTaskId(Integer studentId,Integer taskId);
+	
+	int countByStudentIdAndGenTimeBetween(Integer studentId,Date begin,Date end);
+	
+	List<TaskRecordMapper> findByParentIdAndGenTimeBetween(Integer studentId,Date begin,Date end);
+	
+	TaskRecordMapper findByParentIdAndTaskId(Integer studentId,Integer taskId);
 }

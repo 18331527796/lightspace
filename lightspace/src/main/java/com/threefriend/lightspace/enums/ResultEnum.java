@@ -63,6 +63,12 @@ public enum ResultEnum {
     SCREENING_ERROR(10224,"今日筛查奖励已领取~"),
     
     REPORT_ERROR(10225,"无相关检测数据"),
+    
+    TEACHER_LOGIN_ERROR(10226,"账号或密码错误，请重新登录~"),
+    
+    CHKSTATE_ERROR(10227,"此账号处于未登录状态"),
+    
+    UNFOLLOW_ERROR(10228,"此账号未关注公众号"),
     ;
 
     private Integer status;

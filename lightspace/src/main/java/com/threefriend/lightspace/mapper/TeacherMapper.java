@@ -21,6 +21,8 @@ public class TeacherMapper {
 	private String name;
 	//手机号
 	private String phone;
+	//密码
+	private String password;
 	//学校Id
 	private Integer schoolId;
 	//学校名称	
@@ -29,11 +31,35 @@ public class TeacherMapper {
 	private Integer classId;
 	//班级名称
 	private String className;
+	//登录状态(0未登录 1登录)
+	private Integer state = 0;
+	//关联的小程序账号
+	private Integer parentId;
+	
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	public Integer getParentId() {
+		return parentId;
+	}
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+	public Integer getState() {
+		return state;
+	}
+	public void setState(Integer state) {
+		this.state = state;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public String getName() {
 		return name;

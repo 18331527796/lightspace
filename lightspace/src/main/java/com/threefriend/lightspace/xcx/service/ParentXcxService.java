@@ -66,4 +66,11 @@ public interface ParentXcxService {
 	 * @return
 	 */
 	Map<String, Object> getUserData(Map<String, String> params)throws Exception;
+	
+	/**
+	 * 判断是否关注公众号
+	 * @param params
+	 * @return
+	 */
+	ResultVO chkGzh(Map<String, String> params);
 }

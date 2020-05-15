@@ -19,4 +19,7 @@ import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
  */
 public interface TeacherRepository extends JpaRepository<TeacherMapper, Integer>{
 
+	List<TeacherMapper> findByPhoneAndPassword(String phone,String password);
+	
+	TeacherMapper findByParentId(Integer parentId);
 }

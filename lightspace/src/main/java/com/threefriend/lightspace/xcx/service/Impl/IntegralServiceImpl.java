@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.xcx.service.Impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.collections.map.HashedMap;
@@ -29,9 +31,19 @@ public class IntegralServiceImpl implements IntegralService{
 	 */
 	@Override
 	public ResultVO IntegralListByParentId(Map<String, String> params) {
+		//获取当前月第一天：
+        Calendar c = Calendar.getInstance();    
+        c.add(Calendar.MONTH, 0);
+        c.set(Calendar.DAY_OF_MONTH,1);
+        Date beginTime = c.getTime();
+        //获取当前月最后一天
+        Calendar ca = Calendar.getInstance();    
+        ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date endTime = ca.getTime();
+        
 		Integer parentId=parent_dao.findByOpenId(params.get("openId")).getId();
-		Long income = Integral_dao.findIntegtalByState(1,parentId);
-		Long expenditure = Integral_dao.findIntegtalByState(0,parentId);
+		Long income = Integral_dao.findIntegtalByState(1,parentId,beginTime,endTime);
+		Long expenditure = Integral_dao.findIntegtalByState(0,parentId,beginTime,endTime);
 		//收入
 		income = (income==null)?0:income;
 		//支出

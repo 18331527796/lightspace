@@ -12,6 +12,8 @@ public class TeacherVO {
 	private String name;
 	//手机号
 	private String phone;
+	//密码
+	private String password;
 	//学校Id
 	private Integer schoolId;
 	//学校名称	
@@ -22,6 +24,14 @@ public class TeacherVO {
 	private String className;
 	// 前台需要
 	private List<Integer> tea_cat = new ArrayList<>();
+	
+	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	public Integer getId() {
 		return id;
 	}

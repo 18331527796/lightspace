@@ -22,8 +22,8 @@ import java.util.Map;
  */
 public class JfreeUtil {
  
-    //private static String tempImgPath=UrlEnums.FILE_PATH.getUrl()+"tempJfree.jpeg";
-    private static String tempImgPath="F:/tempJfree.jpeg";
+    private static String tempImgPath=UrlEnums.FILE_PATH.getUrl()+"tempJfree.jpeg";
+    //private static String tempImgPath="F:/tempJfree.jpeg";
     /**
      * 将图片转化为字节数组
      * @return 字节数组
