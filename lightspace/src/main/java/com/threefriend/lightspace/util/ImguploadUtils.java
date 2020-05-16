@@ -73,8 +73,8 @@ public class ImguploadUtils {
         String fileAdd = sdf.format(new Date());
         
         if(fileName!=null&&fileName!=""){
-        	String path = UrlEnums.TOMCAT_IMG.getUrl()+"\\"+pathname; //文件存储位置  线上
-        	//String path = "F:/"+pathname; //文件存储位置  线下
+        	//String path = UrlEnums.TOMCAT_IMG.getUrl()+"\\"+pathname; //文件存储位置  线上
+        	String path = "F:/"+pathname; //文件存储位置  线下
             String fileF = fileName.substring(fileName.lastIndexOf("."), fileName.length());//文件后缀
             fileName=new Date().getTime()+"_"+new Random().nextInt(1000)+fileF;//新的文件名
             //获取文件夹路径

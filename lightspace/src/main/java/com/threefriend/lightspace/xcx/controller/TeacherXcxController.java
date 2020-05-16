@@ -63,4 +63,9 @@ public class TeacherXcxController {
 		return teacher_impl.remindUntask(params);
 	}
 	
+	@PostMapping("/studentByType")
+	public ResultVO studentByType(@RequestParam Map<String, String> params) throws Exception {
+		return teacher_impl.studentByType(params);
+	}
+	
 }

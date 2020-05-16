@@ -414,4 +414,49 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 		}
 	}
 
+	@Override
+	public ResultVO studentByType(Map<String, String> params) {
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		TeacherMapper po = teacher_dao.findByParentId(parent.getId());
+		List<StudentMapper> student = student_dao.findByClassesId(po.getClassId());
+		List<Map<String, Object>> end = new ArrayList<>();
+		Map<String, Object> endmap = null;
+		String type = params.get("type");
+		Double LEFT=0d,RIGHT=0d;
+			for (StudentMapper spo : student) {
+				if(spo.getVisionLeftStr()==null||spo.getVisionRightStr()==null)continue;
+				endmap = new HashMap<>();
+				endmap.put("id", spo.getId());
+				endmap.put("name", spo.getName());
+				endmap.put("time", spo.getLastTime());
+				endmap.put("gender", spo.getGender());
+				endmap.put("screeningType", spo.getScreeningType());
+				
+				if (spo.getScreeningType() == 1) {
+					ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(spo.getId());
+					LEFT = screening.getVisionLeftStr();
+					RIGHT = screening.getVisionRightStr();
+					endmap.put("left", screening.getVisionLeft());
+					endmap.put("right", screening.getVisionRight());
+				} else{
+					ScreeningWearMapper screening = screening_wear_dao.findTopByStudentIdOrderByGenTimeDesc(spo.getId());
+					LEFT = screening.getVisionLeftStr();
+					RIGHT = screening.getVisionRightStr();
+					endmap.put("left", screening.getVisionLeft());
+					endmap.put("right", screening.getVisionRight());
+				}
+				if (LEFT >= RIGHT) {
+					if (RIGHT < 1.0d && RIGHT >= 0.6d&&"mild".equals(type))end.add(endmap);
+					if (RIGHT < 0.6d && RIGHT >= 0.4d&&"moderate".equals(type))end.add(endmap);
+					if (RIGHT < 0.4d && "serious".equals(type))end.add(endmap);
+				}else {
+					if (LEFT < 1.0d && LEFT >= 0.6d&&"mild".equals(type))end.add(endmap);
+					if (LEFT < 0.6d && LEFT >= 0.4d&&"moderate".equals(type))end.add(endmap);
+					if (LEFT < 0.4d && "serious".equals(type))end.add(endmap);
+				}
+			}
+			return ResultVOUtil.success(end);
+	}
+	
+
 }

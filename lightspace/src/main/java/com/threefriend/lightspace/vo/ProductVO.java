@@ -8,9 +8,11 @@ import com.threefriend.lightspace.enums.UrlEnums;
 
 public class ProductVO {
 	
-private Integer id;
+	private Integer id;
 	
 	private String name; 
+	
+	private Long Integral;
 
 	private List<String> pictures = new ArrayList<>();
 	
@@ -57,6 +59,15 @@ private Integer id;
 	public void setPictures(List<String> picture) {
 		this.pictures = picture;
 	}
+
+	public Long getIntegral() {
+		return Integral;
+	}
+
+	public void setIntegral(Long integral) {
+		Integral = integral;
+	}
+	
 
 	
 }

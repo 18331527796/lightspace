@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.TeacherMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
@@ -73,15 +74,13 @@ public class TeacherServiceImpl implements TeacherService{
 	@Override
 	public ResultVO alertTeacher(Map<String, String> params) {
 		TeacherMapper teacher = teacher_dao.findById(Integer.valueOf(params.get("id"))).get();
-		if(!StringUtils.isEmpty(params.get("schoolId"))) {
-			Integer schoolId = Integer.valueOf(params.get("schoolId"));
-			teacher.setSchoolId(schoolId);
-			teacher.setSchoolName(school_dao.findById(schoolId).get().getName());
-		}
 		if(!StringUtils.isEmpty(params.get("classId"))) {
 			Integer classId = Integer.valueOf(params.get("classId"));
+			ClassesMapper classpo = class_dao.findById(classId).get();
+			teacher.setSchoolId(classpo.getSchoolId());
+			teacher.setSchoolName(classpo.getSchoolName());
 			teacher.setClassId(classId);
-			teacher.setClassName(class_dao.findById(classId).get().getClassName());
+			teacher.setClassName(classpo.getClassName());
 		}
 		if(!StringUtils.isEmpty(params.get("name")))teacher.setName(params.get("name"));
 		if(!StringUtils.isEmpty(params.get("phone")))teacher.setPhone(params.get("phone"));

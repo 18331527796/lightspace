@@ -36,4 +36,6 @@ public interface TeacherXcxService {
 	void sendmsg(StudentMapper student ,String time, String type, String task)throws IOException;
 	//拿公众号的token
 	String getAccessToken();
+	//不同程度视力的孩子列表
+	ResultVO studentByType(Map<String, String> params);
 }
