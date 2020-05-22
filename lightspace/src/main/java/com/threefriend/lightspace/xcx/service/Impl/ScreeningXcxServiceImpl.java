@@ -169,8 +169,6 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			po.setSchoolName(student.getSchoolName());
 			screening_dao.save(po);
 			student.setLastTime(new Date());
-			System.out.println(Double.valueOf(params.get("visionLeft"))+"-----------"+params.get("visionLeft"));
-			System.out.println(Double.valueOf(params.get("visionRight"))+"-----------"+params.get("visionRight"));
 			student.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
 			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 			student.setScreeningType(1);
@@ -446,7 +444,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 		integral.setIntegral(3l);
 		integral.setDetailed("筛查奖励");
 		integral.setState(1);
-		integral.setParentId(parentId);
+		integral.setStudentId(studentId);
 		integral.setGenTime(new Date());
 		integral_dao.save(integral);
 		//这里返回的其实是成功 就是用的err方法带回去的不一样的提示

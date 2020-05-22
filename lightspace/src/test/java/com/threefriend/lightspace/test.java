@@ -2,6 +2,7 @@ package com.threefriend.lightspace;
 
 
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.enums.VisionEnums;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
@@ -51,17 +53,8 @@ public class test {
 	
 	@Test
 	public void test() throws Exception{
-		  //获取当前月第一天：
-        Calendar c = Calendar.getInstance();    
-        c.add(Calendar.MONTH, 0);
-        c.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
-        System.out.println(c.getTime());
-        
-        //获取当前月最后一天
-        Calendar ca = Calendar.getInstance();    
-        ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));  
-        System.out.println(ca.getTime());
-		
+		File file = new File("F:/lol");
+		System.out.println(file.isDirectory());
 	}
 	
 	

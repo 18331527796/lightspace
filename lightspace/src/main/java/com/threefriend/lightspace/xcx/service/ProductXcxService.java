@@ -8,4 +8,5 @@ public interface ProductXcxService {
 
 	ResultVO productPage(Map<String, String> params);
 	
+	ResultVO productDetils(Map<String, String> params);
 }

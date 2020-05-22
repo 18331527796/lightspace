@@ -22,4 +22,9 @@ public class ProductXcxController {
 	public ResultVO productList(@RequestParam Map<String, String> params) {
 		return product_impl.productPage(params);
 	}
+	
+	@PostMapping("/productDetils")
+	public ResultVO productDetils(@RequestParam Map<String, String> params) {
+		return product_impl.productDetils(params);
+	}
 }

@@ -58,7 +58,7 @@ public class MarkServiceImpl {
 		integral.setIntegral(5l);
 		integral.setDetailed("每日签到");
 		integral.setState(1);
-		integral.setParentId(parentId);
+		integral.setStudentId(Integer.valueOf(params.get("studentId")));
 		integral.setGenTime(new Date());
 		integral_dao.save(integral);
 		//这里返回的其实是成功 就是用的err方法带回去的不一样的提示

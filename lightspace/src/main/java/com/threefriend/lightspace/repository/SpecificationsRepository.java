@@ -24,4 +24,6 @@ public interface SpecificationsRepository extends JpaRepository<SpecificationsMa
 	Page<SpecificationsMapper> findByProductId(Integer product,Pageable Pageable);
 	
 	Page<SpecificationsMapper> findAllByOrderByIdDesc(Pageable Pageable);
+	
+	void deleteByProductId(Integer productId);
 }

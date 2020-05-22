@@ -19,9 +19,12 @@ import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
  */
 public interface IntegralRepository extends JpaRepository<IntegralMapper, Integer>{
 
-	List<IntegralMapper> findByParentIdOrderByGenTimeDesc(Integer parentId);
+	List<IntegralMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId);
 	
 	//收支标识(0:支出，1:收入)
-	@Query(value="SELECT SUM(integral) FROM integral_mapper  WHERE state = ?1 AND parent_id = ?2 AND gen_time between ?3 and ?4 ORDER BY gen_time desc",nativeQuery = true)
-	Long findIntegtalByState(Integer state,Integer openId,Date begin , Date end);
+	@Query(value="SELECT SUM(integral) FROM integral_mapper  WHERE state = ?1 AND student_id = ?2 ORDER BY gen_time desc",nativeQuery = true)
+	Long findIntegtalByState(Integer state,Integer studentId);
+	
+	@Query(value="SELECT SUM(integral) FROM integral_mapper  WHERE student_id = ?1",nativeQuery = true)
+	Long findIntegtalByStudentId(Integer studentId);
 }

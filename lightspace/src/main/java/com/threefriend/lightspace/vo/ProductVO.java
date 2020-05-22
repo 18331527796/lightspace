@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.threefriend.lightspace.enums.UrlEnums;
+import com.threefriend.lightspace.mapper.xcx.ProductMapper;
+import com.threefriend.lightspace.mapper.xcx.SpecificationsMapper;
 
 public class ProductVO {
 	
@@ -13,8 +15,12 @@ public class ProductVO {
 	private String name; 
 	
 	private Long Integral;
+	
+	private List<SpecificationsMapper> specificationsList;
 
 	private List<String> pictures = new ArrayList<>();
+	
+	private List<ProductVO> productList = new ArrayList<>();
 	
 	private String details;
 	
@@ -26,6 +32,22 @@ public class ProductVO {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public List<ProductVO> getProductList() {
+		return productList;
+	}
+
+	public void setProductList(List<ProductVO> productList) {
+		this.productList = productList;
+	}
+
+	public List<SpecificationsMapper> getSpecificationsList() {
+		return specificationsList;
+	}
+
+	public void setSpecificationsList(List<SpecificationsMapper> specificationsList) {
+		this.specificationsList = specificationsList;
 	}
 
 	public String getName() {

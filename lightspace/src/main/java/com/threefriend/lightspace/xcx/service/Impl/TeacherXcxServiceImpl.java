@@ -40,6 +40,7 @@ import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.TaskRecordRepository;
 import com.threefriend.lightspace.repository.TaskRepository;
 import com.threefriend.lightspace.repository.TeacherRepository;
+import com.threefriend.lightspace.util.OptotypeUtils;
 import com.threefriend.lightspace.util.RedisUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -121,7 +122,7 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 				, mild = 0// 轻度
 				, moderate = 0// 中度
 				, serious = 0;// 重度
-		Double LEFT = 0d, RIGHT = 0d;
+		Double LEFT = null, RIGHT = null;
 		for (StudentMapper one : student) {
 			LEFT = one.getVisionLeftStr();
 			RIGHT = one.getVisionRightStr();
@@ -133,15 +134,17 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 							.findByStudentIdOrderByGenTimeDesc(one.getId(), PageRequest.of(0, 2)).getContent();
 					if (screening.size() == 2
 							&& (screening.get(0).getVisionLeftStr() < screening.get(1).getVisionLeftStr()
-									|| screening.get(0).getVisionRightStr() < screening.get(1).getVisionRightStr()))
+									|| screening.get(0).getVisionRightStr() < screening.get(1).getVisionRightStr())) {
 						decline++;
+					}
 				} else if (one.getScreeningType() == 2) {
 					List<ScreeningWearMapper> screening = screening_wear_dao
 							.findByStudentIdOrderByGenTimeDesc(one.getId(), PageRequest.of(0, 2)).getContent();
 					if (screening.size() == 2
 							&& (screening.get(0).getVisionLeftStr() < screening.get(1).getVisionLeftStr()
-									|| screening.get(0).getVisionRightStr() < screening.get(1).getVisionRightStr()))
+									|| screening.get(0).getVisionRightStr() < screening.get(1).getVisionRightStr())) {
 						decline++;
+					}
 				}
 			}
 			if (!now.equals(Format.format(one.getRemindUntask()).substring(0, 10))) {
@@ -150,8 +153,9 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 			}
 			if (!now.equals(Format.format(one.getRemindUndetected()).substring(0, 10))) {
 				if (LEFT == null || RIGHT == null || one.getSendTime() == null
-						|| today - one.getSendTime().getTime() >= 604800000)
+						|| today - one.getSendTime().getTime() >= 604800000) {
 					undetected++;
+				}
 			}
 			if (LEFT != null && RIGHT != null) {
 				if (LEFT >= RIGHT) {
@@ -422,37 +426,28 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 		List<Map<String, Object>> end = new ArrayList<>();
 		Map<String, Object> endmap = null;
 		String type = params.get("type");
-		Double LEFT=0d,RIGHT=0d;
+		Double LEFT=null,RIGHT=null;
 			for (StudentMapper spo : student) {
 				if(spo.getVisionLeftStr()==null||spo.getVisionRightStr()==null)continue;
+				LEFT = spo.getVisionLeftStr();
+				RIGHT = spo.getVisionRightStr();
 				endmap = new HashMap<>();
 				endmap.put("id", spo.getId());
 				endmap.put("name", spo.getName());
 				endmap.put("time", spo.getLastTime());
 				endmap.put("gender", spo.getGender());
 				endmap.put("screeningType", spo.getScreeningType());
+				endmap.put("left", OptotypeUtils.vision2vision5(spo.getVisionLeftStr()));
+				endmap.put("right", OptotypeUtils.vision2vision5(spo.getVisionRightStr()));
 				
-				if (spo.getScreeningType() == 1) {
-					ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(spo.getId());
-					LEFT = screening.getVisionLeftStr();
-					RIGHT = screening.getVisionRightStr();
-					endmap.put("left", screening.getVisionLeft());
-					endmap.put("right", screening.getVisionRight());
-				} else{
-					ScreeningWearMapper screening = screening_wear_dao.findTopByStudentIdOrderByGenTimeDesc(spo.getId());
-					LEFT = screening.getVisionLeftStr();
-					RIGHT = screening.getVisionRightStr();
-					endmap.put("left", screening.getVisionLeft());
-					endmap.put("right", screening.getVisionRight());
-				}
 				if (LEFT >= RIGHT) {
 					if (RIGHT < 1.0d && RIGHT >= 0.6d&&"mild".equals(type))end.add(endmap);
 					if (RIGHT < 0.6d && RIGHT >= 0.4d&&"moderate".equals(type))end.add(endmap);
-					if (RIGHT < 0.4d && "serious".equals(type))end.add(endmap);
+					if (RIGHT < 0.4d && "serious".equals(type)) {System.out.println(spo.getId());end.add(endmap);};
 				}else {
 					if (LEFT < 1.0d && LEFT >= 0.6d&&"mild".equals(type))end.add(endmap);
 					if (LEFT < 0.6d && LEFT >= 0.4d&&"moderate".equals(type))end.add(endmap);
-					if (LEFT < 0.4d && "serious".equals(type))end.add(endmap);
+					if (LEFT < 0.4d && "serious".equals(type)){System.out.println(spo.getId());end.add(endmap);};
 				}
 			}
 			return ResultVOUtil.success(end);

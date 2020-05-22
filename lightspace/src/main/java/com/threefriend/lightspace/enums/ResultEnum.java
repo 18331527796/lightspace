@@ -69,6 +69,10 @@ public enum ResultEnum {
     CHKSTATE_ERROR(10227,"此账号处于未登录状态"),
     
     UNFOLLOW_ERROR(10228,"此账号未关注公众号"),
+    
+    STOCK_ERROR(10229,"商品库存不足"),
+    
+    INTEGRAL_ERROR(10230,"您的爱眼币不足"),
     ;
 
     private Integer status;

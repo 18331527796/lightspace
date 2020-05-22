@@ -11,6 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.threefriend.lightspace.service.Impl.RotationPicServiceImpl;
 import com.threefriend.lightspace.vo.ResultVO;
 
+/**
+ * 轮播图
+ * @author Administrator
+ *
+ */
 @RestController
 public class RotationPicController {
 

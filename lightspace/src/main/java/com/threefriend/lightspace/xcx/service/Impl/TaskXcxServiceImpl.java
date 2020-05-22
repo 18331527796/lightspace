@@ -89,7 +89,7 @@ public class TaskXcxServiceImpl implements TaskXcxService{
 			IntegralMapper integral = new IntegralMapper();
 			integral.setIntegral(2l);
 			integral.setDetailed("完成每日任务");
-			integral.setParentId(parentId);
+			integral.setStudentId(studentId);
 			integral.setState(1);
 			integral.setGenTime(new Date());
 			integral_dao.save(integral);

@@ -14,13 +14,23 @@ import javax.persistence.Id;
 @Entity
 public class IntegralMapper {
 
+	public IntegralMapper(Integer studentId,Integer state,Long integral,String detailed,Date genTime) {
+		this.studentId=studentId;
+		this.state=state;
+		this.integral=integral;
+		this.detailed=detailed;
+		this.genTime=genTime;
+	}
+	
+	public IntegralMapper() {
+	}
 	
 	@Id
 	@GeneratedValue
 	// 主键
 	private Integer id;
-	//用户Id、
-	private Integer parentId;
+	//学校Id、
+	private Integer studentId;
 	//收支标识(0:支出，1:收入)
 	private Integer state;
 	//本条的积分数
@@ -59,11 +69,11 @@ public class IntegralMapper {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getParentId() {
-		return parentId;
+	public Integer getStudentId() {
+		return studentId;
 	}
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
 	}
 	public Integer getState() {
 		return state;
@@ -77,5 +87,6 @@ public class IntegralMapper {
 	public void setIntegral(Long integral) {
 		this.integral = integral;
 	}
+	
 	
 }

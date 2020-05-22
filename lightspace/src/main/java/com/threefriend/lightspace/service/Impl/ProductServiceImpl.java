@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.mapper.xcx.ProductMapper;
 import com.threefriend.lightspace.repository.ProductRepository;
+import com.threefriend.lightspace.repository.SpecificationsRepository;
 import com.threefriend.lightspace.service.ProductService;
 import com.threefriend.lightspace.util.ImguploadUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
@@ -34,6 +37,8 @@ public class ProductServiceImpl implements ProductService{
 
 	@Autowired
 	private ProductRepository product_dao;
+	@Autowired
+	private SpecificationsRepository specification_dao;
 
 	/*
 	 * 商品列表
@@ -79,6 +84,7 @@ public class ProductServiceImpl implements ProductService{
 	 * 删除商品
 	 */
 	@Override
+	@Transactional
 	public ResultVO deleteProduct(Map<String, String> params) {
 		ProductMapper productMapper = product_dao.findById(Integer.valueOf(params.get("id"))).get();
 		String picture = productMapper.getPicture();
@@ -95,6 +101,7 @@ public class ProductServiceImpl implements ProductService{
 			File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+details2);
 			file.delete();
 		}
+		specification_dao.deleteByProductId(productMapper.getId());
 		product_dao.delete(productMapper);
 		return ResultVOUtil.success();
 	}
@@ -129,16 +136,17 @@ public class ProductServiceImpl implements ProductService{
 		if(delpic.length!=0) {
 			String[] split = productMapper.getPicture().split(",");
 			for (String string : delpic) {
+				if(!string.contains("product")) continue;
 				int begin=string.indexOf('p',30),end=string.length();
 				string=string.substring(begin,end);
 				File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+string);
 				//File file = new File("F:/"+string);
-				System.out.println(string);
-				file.delete();
+				if(file.exists())file.delete();
 			}
 			for (String picstr : split) {
 				flag = 1;
 				for (String string : delpic) {
+					if(!string.contains("product")) continue;
 					int begin=string.indexOf('p',30),end=string.length();
 					string=string.substring(begin,end);
 					if(picstr.equals(string))flag=2;
@@ -152,6 +160,8 @@ public class ProductServiceImpl implements ProductService{
 				}
 				
 			}
+		}else {
+			picend.append(productMapper.getPicture());
 		}
 		
 		if(picture!=null) {

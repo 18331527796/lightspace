@@ -31,19 +31,9 @@ public class IntegralServiceImpl implements IntegralService{
 	 */
 	@Override
 	public ResultVO IntegralListByParentId(Map<String, String> params) {
-		//获取当前月第一天：
-        Calendar c = Calendar.getInstance();    
-        c.add(Calendar.MONTH, 0);
-        c.set(Calendar.DAY_OF_MONTH,1);
-        Date beginTime = c.getTime();
-        //获取当前月最后一天
-        Calendar ca = Calendar.getInstance();    
-        ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
-        Date endTime = ca.getTime();
-        
-		Integer parentId=parent_dao.findByOpenId(params.get("openId")).getId();
-		Long income = Integral_dao.findIntegtalByState(1,parentId,beginTime,endTime);
-		Long expenditure = Integral_dao.findIntegtalByState(0,parentId,beginTime,endTime);
+        Integer studentId = Integer.valueOf(params.get("studentId"));
+		Long income = Integral_dao.findIntegtalByState(1,studentId);
+		Long expenditure = Integral_dao.findIntegtalByState(0,studentId);
 		//收入
 		income = (income==null)?0:income;
 		//支出
@@ -55,7 +45,7 @@ public class IntegralServiceImpl implements IntegralService{
 		end.put("income", income);
 		end.put("expenditure", expenditure);
 		end.put("balance", balance);
-		end.put("data", Integral_dao.findByParentIdOrderByGenTimeDesc(parentId));
+		end.put("data", Integral_dao.findByStudentIdOrderByGenTimeDesc(studentId));
 		return ResultVOUtil.success(end);
 	}
 

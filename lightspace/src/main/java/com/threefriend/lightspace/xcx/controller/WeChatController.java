@@ -33,4 +33,9 @@ public class WeChatController {
 	public void responseEvent(HttpServletRequest request, HttpServletResponse response)throws Exception {
 		wechat_impl.responseEvent(request,  response);
 	}
+	
+	@RequestMapping("/payReport")
+	public void payReport(HttpServletRequest request, HttpServletResponse response)throws Exception {
+		wechat_impl.notifyWeiXinPay(request,  response);
+	}
 }

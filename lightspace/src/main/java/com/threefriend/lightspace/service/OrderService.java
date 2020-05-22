@@ -1,12 +1,14 @@
 package com.threefriend.lightspace.service;
 
+import java.util.Map;
+
 import com.threefriend.lightspace.vo.ResultVO;
 
 public interface OrderService {
 
-	ResultVO orderList();
+	ResultVO orderList(Map<String, String> params);
 	
-	ResultVO findOne();
+	ResultVO deleteOrder(Map<String, String> params);
 	
-	ResultVO deleteOrder();
+	ResultVO deliveryNumber(Map<String, String> params);
 }
