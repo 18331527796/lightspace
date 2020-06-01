@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.threefriend.lightspace.mapper.xcx.ParentMapper;
@@ -13,5 +15,6 @@ import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 public interface ParentRepository extends JpaRepository<ParentMapper, Integer>{
 	
 	ParentMapper findByOpenId(String openId);
+	
 
 }

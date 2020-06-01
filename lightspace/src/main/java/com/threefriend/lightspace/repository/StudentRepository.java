@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -22,7 +24,14 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	
 	List<StudentMapper> findBySchoolId(Integer id);
 	
+	Page<StudentMapper> findBySchoolId(Integer id ,Pageable Pageable);
+	
+	Page<StudentMapper> findById(Integer id ,Pageable Pageable);
+	
 	List<StudentMapper> findByClassesId(Integer id);
+	
+	Page<StudentMapper> findByClassesId(Integer id ,Pageable Pageable);
+	
 	@Query(value="SELECT * FROM student_mapper  WHERE classes_id in ?1 ",nativeQuery = true)
 	List<StudentMapper> findByClassesId(List<Integer> ids);
 	

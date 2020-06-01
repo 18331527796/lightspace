@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
@@ -142,13 +143,13 @@ public class ReadRecordExcel {
 		String schoolName="";
 		Integer classId=0;
 		String className="";
+		schoolId=0;
+		classId=0;
 		for (int r = 1; r < totalRows; r++) {
 			Row row = sheet.getRow(r);
 			if (row == null) {
 				continue;
 			}
-			schoolId=0;
-			classId=0;
 			StudentMapper student = null;
 			RecordMapper Record = new RecordMapper();
 			Record.setGenTime(new Date());
@@ -208,34 +209,44 @@ public class ReadRecordExcel {
 						}
 						break;
 					case 4://右眼曲率
-						Record.setCurvatureRight(Double.valueOf(cell.getStringCellValue()));
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
+						Record.setCurvatureRight(cell.getStringCellValue());
 						break;
 					case 5://左眼曲率
-						Record.setCurvatureLeft(Double.valueOf(cell.getStringCellValue()));
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
+						Record.setCurvatureLeft(cell.getStringCellValue());
 						break;
 					case 6://右眼矫正视力
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
 						Record.setCvaRight(Double.valueOf(cell.getStringCellValue()));
 						break;
 					case 7://左眼矫正视力
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
 						Record.setCvaLeft(Double.valueOf(cell.getStringCellValue()));
 						break;
 					case 8://右眼屈光度
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
 						Record.setDiopterRight(cell.getStringCellValue());
 						break;
 					case 9://左眼屈光度
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
 						Record.setDiopterLeft(cell.getStringCellValue());
 						break;
 					case 10://右眼眼轴长度
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
 						Record.setEyeAxisLengthRight(Double.valueOf(cell.getStringCellValue()));
 						break;
 					case 11://左眼眼轴长度
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
 						Record.setEyeAxisLengthLeft(Double.valueOf(cell.getStringCellValue()));
 						break;
 					case 12://右眼裸眼视力
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
 						Record.setVisionRightStr(Double.valueOf(cell.getStringCellValue()));
 						if(student!=null) student.setVisionRightStr(Double.valueOf(cell.getStringCellValue()));
 						break;
 					case 13://左眼裸眼视力
+						if(StringUtils.isEmpty(cell.getStringCellValue()))break;
 						Record.setVisionLeftStr(Double.valueOf(cell.getStringCellValue()));
 						if(student!=null) {
 							student.setVisionLeftStr(Double.valueOf(cell.getStringCellValue()));

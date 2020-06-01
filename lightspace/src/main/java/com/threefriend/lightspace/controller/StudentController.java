@@ -39,7 +39,7 @@ public class StudentController {
 	@PostMapping("/studentList")
 	
 	public ResultVO studentList(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.studentList(params));
+		return student_Impl.studentList(params);
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class StudentController {
 	@PostMapping("/addStudent")
 	
 	public ResultVO insertStudent(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.addStudent(params));
+		return student_Impl.addStudent(params);
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class StudentController {
 	@PostMapping("/editStudent")
 	
 	public ResultVO editStudent(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.findById(Integer.valueOf(params.get("id"))));
+		return student_Impl.findById(Integer.valueOf(params.get("id")));
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class StudentController {
 	@PostMapping("/saveStudent")
 	
 	public ResultVO saveStudent(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.saveStudent(params));
+		return student_Impl.saveStudent(params);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ public class StudentController {
 	@PostMapping("/deleteStudent")
 	
 	public ResultVO deleteStudent(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.deleteStudent(Integer.valueOf(params.get("id")),params.get("token")));
+		return student_Impl.deleteStudent(Integer.valueOf(params.get("id")),params.get("token"));
 	}
 	
 	/**
@@ -94,7 +94,7 @@ public class StudentController {
 	@PostMapping("/queryStudentBySidCid")
 	
 	public ResultVO queryStudentsBySidCid(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.queryBySidCid( Integer.valueOf(params.get("classId"))));
+		return student_Impl.queryBySidCid( Integer.valueOf(params.get("classId")));
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class StudentController {
 	@PostMapping("/searchStudents")
 	
 	public ResultVO searchStudents(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(student_Impl.findBySchoolIdAndClassesIdAndNameLike(Integer.valueOf(params.get("schoolId")), Integer.valueOf(params.get("classId")), params.get("name")));
+		return student_Impl.findBySchoolIdAndClassesIdAndNameLike(Integer.valueOf(params.get("schoolId")), Integer.valueOf(params.get("classId")), params.get("name"));
 	}
 	
 	/**
@@ -131,15 +131,6 @@ public class StudentController {
 		return student_Impl.readStudentExcel(file,token);
 	}
 	
-	/**
-	 * 下载模板（流方式）（暂停使用）
-	 * @param res
-	 */
-	
-	@PostMapping(value="/downloadStudent")
-	public void  downloadStudent(HttpServletResponse res){
-		student_Impl.download(res);
-	}
 	
 	
 	

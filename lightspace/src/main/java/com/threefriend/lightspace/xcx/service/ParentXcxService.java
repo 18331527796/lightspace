@@ -73,4 +73,18 @@ public interface ParentXcxService {
 	 * @return
 	 */
 	ResultVO chkGzh(Map<String, String> params);
+	
+	/**
+	 * 社会注册孩子
+	 * @param params
+	 * @return
+	 */
+	ResultVO registerStudent(Map<String, String> params);
+	
+	/**
+	 * 移植孩子
+	 * @param params
+	 * @return
+	 */
+	ResultVO transplantStudent(Map<String, String> params);
 }

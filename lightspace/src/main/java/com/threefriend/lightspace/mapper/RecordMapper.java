@@ -49,9 +49,9 @@ public class RecordMapper {
 	// 右眼眼轴长度
 	private Double eyeAxisLengthRight;
 	// 左眼曲率
-	private Double curvatureLeft;
+	private String curvatureLeft;
 	// 右眼曲率
-	private Double curvatureRight;
+	private String curvatureRight;
 	// 左眼屈光度
 	private String diopterLeft = "";
 	// 右眼屈光度
@@ -186,16 +186,16 @@ public class RecordMapper {
 	public void setEyeAxisLengthRight(Double eyeAxisLengthRight) {
 		this.eyeAxisLengthRight = eyeAxisLengthRight;
 	}
-	public Double getCurvatureLeft() {
+	public String getCurvatureLeft() {
 		return curvatureLeft;
 	}
-	public void setCurvatureLeft(Double curvatureLeft) {
+	public void setCurvatureLeft(String curvatureLeft) {
 		this.curvatureLeft = curvatureLeft;
 	}
-	public Double getCurvatureRight() {
+	public String getCurvatureRight() {
 		return curvatureRight;
 	}
-	public void setCurvatureRight(Double curvatureRight) {
+	public void setCurvatureRight(String curvatureRight) {
 		this.curvatureRight = curvatureRight;
 	}
 	

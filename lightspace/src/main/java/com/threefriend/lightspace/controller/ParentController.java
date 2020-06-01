@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class ParentController {
 	 */
 	
 	@PostMapping("/parentList")
-	public ResultVO parentList() {
-		return parent_Impl.parentList();
+	public ResultVO parentList(@RequestParam Map<String, String> params) {
+		return parent_Impl.parentList(params);
 	}
 }

@@ -95,4 +95,26 @@ public class ParentXcxController {
 	public ResultVO chkGzh(@RequestParam Map<String, String> params) throws Exception {
 		return parent_impl.chkGzh(params);
 	}
+	
+	/**
+	 * 社会注册的孩子
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/registerStudent")
+	public ResultVO registerStudent(@RequestParam Map<String, String> params) throws Exception {
+		return parent_impl.registerStudent(params);
+	}
+	
+	/**
+	 * 移植孩子信息
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/transplantStudent")
+	public ResultVO transplantStudent(@RequestParam Map<String, String> params) throws Exception {
+		return parent_impl.transplantStudent(params);
+	}
 }

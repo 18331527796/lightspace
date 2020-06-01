@@ -41,9 +41,9 @@ public class DrowMailUtils {
 			"此二维码可多次使用，绑定多个手机，方便家长测试！(每周至少三次)";
 	// 生成图片文件
 
-	public static void createImage(String fileLocation) {
+	public synchronized static void createImage(String fileLocation) {
 		if (image != null) {
-				String formatName = fileLocation.substring(fileLocation.lastIndexOf(".") + 1);   
+				String formatName = /*fileLocation.substring(fileLocation.lastIndexOf(".") + 1)*/ "jpg";   
 				try {
 					ImageIO.write(image, /*"GIF"*/ formatName /* format desired */ , new File(fileLocation) /* target */ );
 				} catch (IOException e) {
@@ -64,7 +64,7 @@ public class DrowMailUtils {
 	 * @param outurl
 	 *            输出的Url路径
 	 */
-	public static void graphicsGeneration(String imglogo, String imgcode, String imgsign, String outurl,String studentName) {
+	public synchronized static void graphicsGeneration(String imglogo, String imgcode, String imgsign, String outurl,String studentName) {
 		// 定义长度变量
 		int W_logoPic = 165;
 		int H_logoPic = 50;

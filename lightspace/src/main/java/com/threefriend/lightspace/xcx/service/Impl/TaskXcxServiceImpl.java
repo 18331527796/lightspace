@@ -13,6 +13,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
@@ -45,6 +46,7 @@ public class TaskXcxServiceImpl implements TaskXcxService{
 
 	@Override
 	public ResultVO xcxTaskList(Map<String, String> params) throws Exception {
+		if(StringUtils.isEmpty(params.get("studentId")))return ResultVOUtil.error(ResultEnum.PARAM_ERROR.getStatus(), ResultEnum.PARAM_ERROR.getMessage());
 		Map<String, Date> map = beginAndEnd();
 		List<TaskVO> endList = new ArrayList<>();
 		Integer studentId=Integer.valueOf(params.get("studentId")); 
@@ -66,6 +68,7 @@ public class TaskXcxServiceImpl implements TaskXcxService{
 
 	@Override
 	public ResultVO completeTask(Map<String, String> params) throws Exception {
+		if(StringUtils.isEmpty(params.get("studentId")))return ResultVOUtil.error(ResultEnum.PARAM_ERROR.getStatus(), ResultEnum.PARAM_ERROR.getMessage());
 		Map<String, Date> map = beginAndEnd();
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		Integer parentId = parent.getId();

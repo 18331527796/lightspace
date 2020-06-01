@@ -18,6 +18,7 @@ import com.threefriend.lightspace.enums.OrderStatusEnum;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
 import com.threefriend.lightspace.mapper.xcx.OrderMapper;
 import com.threefriend.lightspace.mapper.xcx.ProductMapper;
 import com.threefriend.lightspace.mapper.xcx.SpecificationsMapper;
@@ -58,6 +59,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 	public ResultVO addOrder(Map<String, String> params) {
 		String openId = params.get("openId");
 		Integer number = Integer.valueOf(params.get("number"));
+		Integer  delivryType= Integer.valueOf(params.get("delivryType"));
 		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("studentId"))).get();
 		SpecificationsMapper specifications = specifications_dao
 				.findById(Integer.valueOf(params.get("specificationsId"))).get();
@@ -71,17 +73,10 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		
 		String pic = UrlEnums.IMG_URL.getUrl()+product.getPicture().split(",")[0];
 		
-		
-		
 		OrderMapper newOrder = new OrderMapper();
 		newOrder.setDelivrytype((Integer.valueOf(params.get("delivryType")) == DeliveryTypeEnums.HOME.getCode())
 				? DeliveryTypeEnums.HOME.getMessage()
 				: DeliveryTypeEnums.SCHOOL.getMessage());
-		if (Integer.valueOf(params.get("delivryType")) == DeliveryTypeEnums.HOME.getCode()) {
-			newOrder.setFreight(specifications.getFreight());
-			newOrder.setAddress(params.get("address"));
-			paymoney += Long.valueOf(specifications.getFreight());
-		}
 		if (!StringUtils.isEmpty(params.get("remark")))
 			newOrder.setRemark(params.get("remark"));
 		newOrder.setContacts(params.get("contacts"));
@@ -95,14 +90,28 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		newOrder.setSchoolName(student.getSchoolName());
 		newOrder.setSpecificationId(specifications.getId());
 		newOrder.setSpecificationName(specifications.getName());
-		newOrder.setStatus(OrderStatusEnum.NEW.getMessage());
 		newOrder.setPic(pic);
+		if (delivryType == DeliveryTypeEnums.HOME.getCode()) {
+			newOrder.setFreight(specifications.getFreight());
+			newOrder.setAddress(params.get("address"));
+			paymoney += Long.valueOf(specifications.getFreight());
+			newOrder.setStatus(OrderStatusEnum.NEW.getMessage());
+			newOrder.setDisplay(2);
+		}else {
+			newOrder.setStatus(OrderStatusEnum.SUCCESS.getMessage());
+			newOrder.setDisplay(1);
+			integral_dao.save(new IntegralMapper(newOrder.getStudentId(), 0, specifications.getIntegral()*newOrder.getNumber(), "兑换"+newOrder.getProductName(), new Date()));
+		}
 		order_dao.save(newOrder);
 
-		Map<String, String> createOrder = createOrder(openId,paymoney,newOrder.getId());
-		createOrder.put("signType", "MD5");
-		System.out.println(createOrder.toString());
-		return ResultVOUtil.success(createOrder);
+		if (delivryType != DeliveryTypeEnums.HOME.getCode()) {
+			return ResultVOUtil.success();
+		}else {
+			Map<String, String> createOrder = createOrder(openId,paymoney,newOrder.getId(),product.getName());
+			createOrder.put("signType", "MD5");
+			System.out.println(createOrder.toString());
+			return ResultVOUtil.success(createOrder);
+		}
 	}
 
 	/* 
@@ -112,7 +121,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 	public ResultVO orderByStudent(Map<String, String> params) {
 		int page = 0 ;
 		if(!StringUtils.isEmpty(params.get("page"))) page = Integer.valueOf(params.get("page")) - 1;
-		List<OrderMapper> content = order_dao.findByStudentIdAndDisplayOrderByIdDesc(Integer.valueOf(params.get("studentId")),1,PageRequest.of(page, 10)).getContent();
+		List<OrderMapper> content = order_dao.findByStudentIdAndDisplayOrderByGenTimeDateDesc(Integer.valueOf(params.get("studentId")),1,PageRequest.of(page, 10)).getContent();
 		return ResultVOUtil.success(content);
 	}
 
@@ -124,7 +133,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 	 * @return
 	 */
 	@Override
-	public Map<String, String> createOrder(String openid, Long money , int orderId) {
+	public Map<String, String> createOrder(String openid, Long money , int orderId , String productName) {
 
 		String mch_id = WXPayConstants.MCH_ID; // 商户号
 
@@ -133,7 +142,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		String out_trade_no =orderId+"-"+ WXPay;// 生成订单号
 		//String out_trade_no ="lightspace-"+orderId+"-"+ WXPay;// 生成订单号
 		Map<String, String> result = new HashMap<String, String>();
-		String formData = getopenid(openid, out_trade_no, money);
+		String formData = getopenid(openid, out_trade_no, money ,productName);
 		// 在servlet层中生成签名成功后，把下单所要的参数以xml的格式拼接，发送下单接口
 		String httpResult = HttpUtils.httpXMLPost("https://api.mch.weixin.qq.com/pay/unifiedorder", formData);
 		try {
@@ -173,7 +182,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
      * @return String
      */
     @Override
-    public String getopenid(String openid,String out_trade_no,Long total_fee) {
+    public String getopenid(String openid,String out_trade_no,Long total_fee,String productName) {
 
         //下单的金额，因为在微信支付中默认是分所以要这样处理
         Long total_fees=total_fee*100;
@@ -185,7 +194,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
         map.put("appid",AccountEnums.APIKEY.getUrl()); //商户appid
         map.put("mch_id", WXPayConstants.MCH_ID);//商户号
         map.put("nonce_str",nonceStr); //随机数
-        map.put("body","lightspace");//商户名称
+        map.put("body",productName);//商户名称
         map.put("out_trade_no",out_trade_no);//商户订单号
         map.put("total_fee",money);//下单金额
         map.put("spbill_create_ip", "47.104.222.22");//终端IP
@@ -205,7 +214,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
         formData += "<appid>"+ AccountEnums.APIKEY.getUrl()+"</appid>"; 
         formData += "<mch_id>"+ WXPayConstants.MCH_ID+"</mch_id>"; 
         formData += "<nonce_str>"+nonceStr+"</nonce_str>";
-        formData += "<body>lightspace</body>";
+        formData += "<body>"+productName+"</body>";
         formData += "<out_trade_no>"+out_trade_no +"</out_trade_no>"; 
         formData += "<total_fee>"+money+"</total_fee>"; 
         formData += "<spbill_create_ip>47.104.222.22</spbill_create_ip>"; 
@@ -227,6 +236,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		OrderMapper order = order_dao.findById(orderId).get();
 		order.setStatus(OrderStatusEnum.FINISHED.getMessage());
 		order.setSuccesstime(new Date());
+		order.setGenTimeDate(new Date());
 		order_dao.save(order);
 		return ResultVOUtil.success();
 	}

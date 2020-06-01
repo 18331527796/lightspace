@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -38,11 +39,14 @@ import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.GzhUserRepository;
+import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.MsgTempRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.ParentStudentRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
+import com.threefriend.lightspace.repository.ScreeningRepository;
+import com.threefriend.lightspace.repository.ScreeningWearRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.service.StudentService;
@@ -60,8 +64,6 @@ import com.threefriend.lightspace.xcx.util.WeChatUtils;
 @Service
 public class StudentServiceImpl implements StudentService{
     		
-	private static final String PATH="E:\\学生导入模板.xlsx"; 
-	private static final String FILENAME="学生导入模板.xlsx"; 
 	@Autowired
 	private StudentRepository student_dao;
 	@Autowired
@@ -76,33 +78,43 @@ public class StudentServiceImpl implements StudentService{
 	private ParentStudentRepository parent_student_dao;
 	@Autowired
 	private ParentRepository parent_dao;
-	
+	@Autowired
+	private IntegralRepository integral_dao;
+	@Autowired
+	private ScreeningRepository screening_dao;
+	@Autowired
+	private ScreeningWearRepository screening_wear_dao;
 	
 
 	/* 
 	 * 学生列表
 	 */
 	@Override
-	public List<StudentMapper> studentList(Map<String, String> params) {
-		String[] split = params.get("token").split("-");
-		if(split[1].equals("2"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("3"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
-		return student_dao.findAll();
+	public ResultVO studentList(Map<String, String> params) {
+		String type = "" ; 
+		int page = 0 ;
+		if(!StringUtils.isEmpty(params.get("page"))) page = Integer.valueOf(params.get("page")) - 1 ;
+		if(!StringUtils.isEmpty(params.get("type"))) type = params.get("type");
+		if("school".equals(type))return ResultVOUtil.success(student_dao.findBySchoolId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10)));
+		if("class".equals(type))return ResultVOUtil.success(student_dao.findByClassesId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10)));
+		if("student".equals(type))return ResultVOUtil.success(student_dao.findById(Integer.valueOf(params.get("id")),PageRequest.of(page, 10)));
+		return ResultVOUtil.success(student_dao.findAll(PageRequest.of(page, 10)));
 	}
+	
 
 	/* 
 	 * 按照学校班级查学生
 	 */
 	@Override
-	public List<StudentMapper> queryBySidCid(Integer cId) {
-		return student_dao.findByClassesId(cId);
+	public ResultVO queryBySidCid(Integer cId) {
+		return ResultVOUtil.success(student_dao.findByClassesId(cId));
 	}
 
 	/* 
 	 * 新增学生信息
 	 */
 	@Override
-	public List<StudentMapper> addStudent(Map<String, String> params) {
+	public ResultVO addStudent(Map<String, String> params) {
 		StudentMapper student = new StudentMapper();
 		student.setAge(Integer.valueOf(params.get("age")));
 		student.setChairHeight(params.get("chairHeight"));
@@ -123,30 +135,28 @@ public class StudentServiceImpl implements StudentService{
 		if(!StringUtils.isEmpty(params.get("nature")))student.setNature(params.get("nature"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));
 		student_dao.save(student);
-		String[] split = params.get("token").split("-");
-		if(split[1].equals("2"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("3"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
-		return student_dao.findAll();
+		return ResultVOUtil.success();
 	}
 
 	/* 
 	 * 删除学生
 	 */
 	@Override
-	public List<StudentMapper> deleteStudent(Integer id,String token) {
+	public ResultVO deleteStudent(Integer id,String token) {
+		screening_dao.deleteAll(screening_dao.findByStudentIdOrderByGenTimeDesc(id));
+		screening_wear_dao.deleteAll(screening_wear_dao.findByStudentIdOrderByGenTimeDesc(id));
+		integral_dao.deleteAll(integral_dao.findByStudentIdOrderByGenTimeDesc(id));
+		parent_student_dao.deleteAll(parent_student_dao.findByStudentId(id));
 		record_dao.deleteByStudentId(id);
 		student_dao.deleteById(id);
-		String[] split = token.split("-");
-		if(split[1].equals("2"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("3"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
-		return student_dao.findAll();
+		return ResultVOUtil.success();
 	}
 
 	/* 
 	 * 保存修改后信息
 	 */
 	@Override
-	public List<StudentMapper> saveStudent(Map<String, String> params) {
+	public ResultVO saveStudent(Map<String, String> params) {
 		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if(!StringUtils.isEmpty(params.get("age")))student.setAge(Integer.valueOf(params.get("age")));
 		if(!StringUtils.isEmpty(params.get("chairHeight")))student.setChairHeight(params.get("chairHeight"));
@@ -177,23 +187,20 @@ public class StudentServiceImpl implements StudentService{
 			student.setClassesName(classes_dao.findById(Integer.valueOf(params.get("classId"))).get().getClassName());
 		}
 		student_dao.save(student);
-		String[] split = params.get("token").split("-");
-		if(split[1].equals("2"))return student_dao.findBySchoolId(Integer.valueOf(split[2]));
-		if(split[1].equals("3"))return student_dao.findByClassesId(Integer.valueOf(split[2]));
-		return student_dao.findAll();
+		return ResultVOUtil.success();
 	}
 
 	/* 
 	 * 按照id查学生
 	 */
 	@Override
-	public StudentVO findById(Integer id) {
+	public ResultVO findById(Integer id) {
 		StudentMapper studentMapper = student_dao.findById(id).get();
 		StudentVO vo = new StudentVO();
 		BeanUtils.copyProperties(studentMapper,vo);
 		vo.getStu_cat().add(studentMapper.getSchoolId());
 		vo.getStu_cat().add(studentMapper.getClassesId());
-		return vo;
+		return ResultVOUtil.success(vo);
 	}
 
 	/* 
@@ -210,13 +217,13 @@ public class StudentServiceImpl implements StudentService{
 	 * 按照学校班级姓名模糊
 	 */
 	@Override
-	public List<StudentVO> findBySchoolIdAndClassesIdAndNameLike(Integer sId, Integer cId, String name) {
+	public ResultVO findBySchoolIdAndClassesIdAndNameLike(Integer sId, Integer cId, String name) {
 		List<StudentMapper> students = student_dao.findBySchoolIdAndClassesIdAndNameLike(sId, cId, "%"+name+"%");
 		List<StudentVO> vo = new ArrayList<>();
 		for (StudentMapper studentMapper : students) {
 			vo.add(new StudentVO(studentMapper.getId(), studentMapper.getName()));
 		}
-		return vo;
+		return ResultVOUtil.success(vo);
 	}
 
 	/* 
@@ -233,19 +240,11 @@ public class StudentServiceImpl implements StudentService{
         for (StudentMapper studentMapper : studentInfo) {
         	student_dao.save(studentMapper);
         }
-		String[] split = token.split("-");
-		if(split[1].equals("2"))return ResultVOUtil.success(student_dao.findBySchoolId(Integer.valueOf(split[2])));
-		if(split[1].equals("3"))return ResultVOUtil.success(student_dao.findByClassesId(Integer.valueOf(split[2])));
-		return ResultVOUtil.success(student_dao.findAll());
+		return ResultVOUtil.success();
 	}
 
-	/* 
-	 * 文件下载（流方式）（暂停使用）
-	 */
-	@Override
-	public void download(HttpServletResponse response) {
-		DownTemplateUtil.downTemplate(response, PATH, FILENAME);
-	}
+	
+
 
 	
 

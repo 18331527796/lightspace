@@ -293,10 +293,10 @@ public class ReportServiceImpl implements ReportService{
         
         //模拟饼状图数据
         HashMap<String, Integer> datas1 = new HashMap<>();
+        datas1.put("其他",other);
+        datas1.put("重度视力不良",avgSerious);
         datas1.put("轻度视力不良",avgMild);
         datas1.put("中度视力不良",avgModerate);
-        datas1.put("重度视力不良",avgSerious);
-        datas1.put("其他",other);
         ImageEntity imageEntity1 = JfreeUtil.pieChart("视力不良分类",datas1, 500, 200);
         map.put("picture1", imageEntity1);
         

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -83,8 +84,10 @@ public class UserServiceImpl implements UserService {
 	 * 查询所有用户
 	 */
 	@Override
-	public List<UserMapper> findAll() {
-		return user_dao.findAll();
+	public ResultVO findAll(Map<String, String> params) {
+		int page = 0 ;
+		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ; 
+		return ResultVOUtil.success(user_dao.findAll(PageRequest.of(page, 10)));
 	}
 
 	/* 

@@ -7,6 +7,9 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -67,26 +70,32 @@ public class ClassesServiceImpl implements ClassesService {
 		if (!StringUtils.isEmpty(params.get("description")))
 			classes.setDescription(params.get("description"));
 		classes_dao.save(classes);
-		String[] split = params.get("token").split("-");
-		if(split[1].equals("2"))return ResultVOUtil.success(classes_dao.findBySchoolIdOrderByFinish(Integer.valueOf(split[2])));
-		return ResultVOUtil.success(classes_dao.findAllByOrderByFinish());
+		return ResultVOUtil.success();
 	}
 
 	/*
 	 * 班级列表
 	 */
 	@Override
-	public List<ClassesMapper> findAllClasses(Map<String, String> params) {
-		String[] split = params.get("token").split("-");
-		if(split[1].equals("2"))return classes_dao.findBySchoolIdOrderByFinish(Integer.valueOf(split[2]));
-		return classes_dao.findAllByOrderByFinish();
+	public ResultVO findAllClasses(Map<String, String> params) {
+		int page = 0 ;
+		String type ="";
+		if(!StringUtils.isEmpty(params.get("page"))) page = Integer.valueOf(params.get("page")) - 1 ;
+		if(!StringUtils.isEmpty(params.get("type"))) type = params.get("type") ;
+		if("school".equals(type)) {
+			return ResultVOUtil.success(classes_dao.findBySchoolId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10,Sort.by("schoolId").and(Sort.by("className")))));
+		}
+		if("class".equals(type)) {
+			return ResultVOUtil.success(classes_dao.findById(Integer.valueOf(params.get("id")),PageRequest.of(page, 10,Sort.by("schoolId").and(Sort.by("className")))));
+		}
+		return ResultVOUtil.success(classes_dao.findAll(PageRequest.of(page, 10,Sort.by("schoolId").and(Sort.by("className")))));
 	}
 
 	/*
 	 * 班级修改方法
 	 */
 	@Override
-	public List<ClassesMapper> alterClasses(Map<String, String> params) {
+	public ResultVO alterClasses(Map<String, String> params) {
 		ClassesMapper classes = classes_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if (!StringUtils.isEmpty(params.get("bbLength")))
 			classes.setBbLength(params.get("bbLength"));
@@ -110,49 +119,36 @@ public class ClassesServiceImpl implements ClassesService {
 			classes.setDescription("");
 		}
 		classes_dao.save(classes);
-		String[] split = params.get("token").split("-");
-		if(split[1].equals("2"))return classes_dao.findBySchoolIdOrderByFinish(Integer.valueOf(split[2]));
-		return classes_dao.findAllByOrderByFinish();
+		return ResultVOUtil.success();
 	}
 
 	/*
 	 * 班级删除方法
 	 */
 	@Override
-	public List<ClassesMapper> deleteClasses(Integer id,String token) {
+	public ResultVO deleteClasses(Integer id,String token) {
 		student_dao.deleteByClassesId(id);
 		record_dao.deleteByClassesId(id);
 		classes_dao.deleteById(id);
-		String[] split = token.split("-");
-		if(split[1].equals("2"))return classes_dao.findBySchoolIdOrderByFinish(Integer.valueOf(split[2]));
-		return classes_dao.findAllByOrderByFinish();
+		return ResultVOUtil.success();
 	}
 
 	/*
 	 * 按照学校查询班级
 	 */
 	@Override
-	public List<ClassesMapper> findBySchoolId(Integer sId) {
-		return classes_dao.findBySchoolIdOrderByFinish(sId);
+	public ResultVO findBySchoolId(Integer sId) {
+		return ResultVOUtil.success(classes_dao.findBySchoolIdOrderByFinish(sId));
 	}
 
 	/*
 	 * 按照id查询班级
 	 */
 	@Override
-	public ClassesMapper findById(Integer id) {
-		return classes_dao.findById(id).get();
+	public ResultVO findById(Integer id) {
+		return ResultVOUtil.success(classes_dao.findById(id).get());
 	}
 
-	/*
-	 * 模糊查询
-	 */
-	@Override
-	public ResultVO findByNameLike(String name) {
-		List<ClassesMapper> list = classes_dao.findByClassNameLikeOrderByFinish("%" + name + "%");
-		if(list==null||list.size()==0)return ResultVOUtil.error(ResultEnum.CLASSSIZE_NULL.getStatus(), ResultEnum.CLASSSIZE_NULL.getMessage());
-		return ResultVOUtil.success(list);
-	}
 
 	/*
 	 * 级联方法（服务于下拉框）学校到学生

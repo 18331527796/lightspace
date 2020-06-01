@@ -68,8 +68,8 @@ public class UserController {
 	 */
 	@PostMapping("/userList")
 	
-	public ResultVO userList() {
-		return ResultVOUtil.success(user_impl.findAll());
+	public ResultVO userList(@RequestParam Map<String, String> params) {
+		return user_impl.findAll(params);
 	}
 	
 	/**

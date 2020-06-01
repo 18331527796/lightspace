@@ -15,11 +15,11 @@ public interface OrderXcxService {
 	
 	ResultVO orderByStudent(Map<String, String> params);
 
-	String getopenid(String openid, String out_trade_no, Long total_fee);
+	String getopenid(String openid, String out_trade_no, Long total_fee, String productName);
 	
 	ResultVO confirmReceipt(Map<String, String> params);
 
-	Map<String, String> createOrder(String openid, Long money, int orderId);
+	Map<String, String> createOrder(String openid, Long money, int orderId ,String productName);
 	
 	ResultVO display(Map<String, String> params);
 }

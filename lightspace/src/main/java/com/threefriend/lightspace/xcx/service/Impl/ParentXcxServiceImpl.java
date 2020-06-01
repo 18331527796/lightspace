@@ -9,19 +9,32 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
+import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
+import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
+import com.threefriend.lightspace.mapper.xcx.OrderMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
+import com.threefriend.lightspace.mapper.xcx.TaskRecordMapper;
+import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.GzhUserRepository;
+import com.threefriend.lightspace.repository.IntegralRepository;
+import com.threefriend.lightspace.repository.OrderRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.ParentStudentRepository;
+import com.threefriend.lightspace.repository.ScreeningRepository;
+import com.threefriend.lightspace.repository.ScreeningWearRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
+import com.threefriend.lightspace.repository.TaskRecordRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.ParentXcxService;
@@ -39,6 +52,16 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	private ParentStudentRepository p_s_dao;
 	@Autowired
 	private GzhUserRepository gzh_dao;
+	@Autowired
+	private ClassesRepository class_Dao;
+	@Autowired
+	private IntegralRepository integral_dao;
+	@Autowired
+	private ScreeningRepository screening_dao;
+	@Autowired
+	private ScreeningWearRepository screening_wear_Dao;
+	@Autowired
+	private OrderRepository order_Dao;
 
 	/* 
 	 * 登陆验证
@@ -47,9 +70,6 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	public ResultVO loginXcx(Map<String, String> params) throws Exception {
 		Map<String, String> end = new HashMap<>();
 		String type="";
-		System.err.println(params.get("code"));
-		System.err.println(params.get("encryptedData"));
-		System.err.println(params.get("iv"));
 		//从微信的接口获取sessionkey openId
 		Map getsessionKey = WeChatUtils.getsessionKey(AccountEnums.APIKEY.getUrl(), AccountEnums.SECRETKEY.getUrl(), params.get("code"));
 		params.put("sessionKey", getsessionKey.get("sessionkey").toString());
@@ -148,6 +168,7 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	 */
 	@Override
 	public ResultVO mine(Map<String, String> params) {
+		if(StringUtils.isEmpty(params.get("openId")))return ResultVOUtil.error(ResultEnum.PARAM_ERROR.getStatus(), ResultEnum.PARAM_ERROR.getMessage());
 		ParentMapper findByOpenId = parent_dao.findByOpenId(params.get("openId"));
 		Map<String , String > end = new HashMap<>();
 		String phone="";
@@ -186,6 +207,9 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		return userInfo;
 	}
 
+	/* 
+	 * 绑定手机号
+	 */
 	@Override
 	public ResultVO bindingPhone(Map<String, String> params) throws Exception {
 		//从微信的接口获取sessionkey openId
@@ -201,11 +225,93 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		return ResultVOUtil.success(phone);
 	}
 
+	/* 验证是否关注公众号
+	 */
 	@Override
 	public ResultVO chkGzh(Map<String, String> params) {
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		GzhUserMapper findByUnionid = gzh_dao.findByUnionid(parent.getUnionId());
 		if(findByUnionid==null)return ResultVOUtil.error(ResultEnum.UNFOLLOW_ERROR.getStatus(), ResultEnum.UNFOLLOW_ERROR.getMessage());
+		return ResultVOUtil.success();
+	}
+
+	/* 
+	 * 社会注册的孩子
+	 */
+	@Override
+	public ResultVO registerStudent(Map<String, String> params) {
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		ClassesMapper classPo = class_Dao.findByClassNameLikeOrderByFinish("社会",PageRequest.of(0, 2)).getContent().get(0);
+		StudentMapper newspo = new StudentMapper();
+		newspo.setBirthday(params.get("birthday"));
+		newspo.setClassesId(classPo.getId());
+		newspo.setClassesName(classPo.getClassName());
+		newspo.setSchoolId(classPo.getSchoolId());
+		newspo.setSchoolName(classPo.getSchoolName());
+		newspo.setRegionId(classPo.getRegionId());
+		newspo.setRegionName(classPo.getRegionName());
+		newspo.setGender(Integer.valueOf(params.get("gender")));
+		newspo.setName(params.get("name"));
+		student_dao.save(newspo);
+		ParentStudentRelation p_s = new ParentStudentRelation();
+		p_s.setParentId(parent.getId());
+		p_s.setStudentId(newspo.getId());
+		p_s_dao.save(p_s);
+		return ResultVOUtil.success();
+	}
+
+	/* 
+	 * 移植孩子信息
+	 */
+	@Override
+	public ResultVO transplantStudent(Map<String, String> params) {
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		Integer oldId = Integer.valueOf(params.get("oldId"));
+		Integer newId = Integer.valueOf(params.get("newId"));
+		StudentMapper newStudent = student_dao.findById(newId).get();
+		
+		List<IntegralMapper> integral = integral_dao.findByStudentIdOrderByGenTimeDesc(oldId);
+		List<ScreeningMapper> screening = screening_dao.findByStudentIdOrderByGenTimeDesc(oldId);
+		List<ScreeningWearMapper> screening_wear = screening_wear_Dao.findByStudentIdOrderByGenTimeDesc(oldId);
+		List<OrderMapper> order = order_Dao.findByStudentId(oldId);
+		//移植订单
+		if(order.size()!=0) {
+			for (OrderMapper orderMapper : order) {
+				orderMapper.setStudentId(newId);
+			}
+			order_Dao.saveAll(order);
+		}
+		//移植戴镜记录
+		if(screening_wear.size()!=0) {
+			for (ScreeningWearMapper screeningWearMapper : screening_wear) {
+				screeningWearMapper.setStudentId(newId);
+			}
+			screening_wear_Dao.saveAll(screening_wear);
+		}
+		//移植裸视记录
+		if(screening.size()!=0) {
+			for (ScreeningMapper screeningMapper : screening) {
+				screeningMapper.setStudentId(newId);
+			}
+			screening_dao.saveAll(screening);
+		}
+		//移植积分
+		if(integral.size()!=0) {
+			for (IntegralMapper integralMapper : integral) {
+				integralMapper.setStudentId(newId);
+			}
+			integral_dao.saveAll(integral);
+		}
+		ParentStudentRelation findByStudentIdAndParentId = p_s_dao.findByStudentIdAndParentId(newId,parent.getId());
+		if(findByStudentIdAndParentId==null) {
+			ParentStudentRelation po = new ParentStudentRelation();
+			po.setParentId(parent.getId());
+			po.setStudentId(newId);
+			p_s_dao.save(po);
+		}else {
+			p_s_dao.deleteByStudentIdAndParentId(oldId, parent.getId());
+		}
+		student_dao.deleteById(oldId);
 		return ResultVOUtil.success();
 	}
 	

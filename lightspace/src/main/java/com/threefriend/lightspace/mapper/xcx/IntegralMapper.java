@@ -20,6 +20,7 @@ public class IntegralMapper {
 		this.integral=integral;
 		this.detailed=detailed;
 		this.genTime=genTime;
+		this.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(genTime);
 	}
 	
 	public IntegralMapper() {

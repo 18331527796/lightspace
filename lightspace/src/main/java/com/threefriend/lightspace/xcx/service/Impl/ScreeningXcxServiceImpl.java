@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -176,7 +177,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			//if(student.getSendTime()==null||new Date().getTime()-student.getSendTime().getTime()>=604800) {
 				//查一下当前选中的筛查模板
 				MsgTempMapper msgtemp = msg_temp_dao.findByTypeAndSelected("screening",1);
-				screeningMessage(msgtemp,student.getId(), params.get("visionLeft"), params.get("visionRight"),1);
+				screeningMessage(msgtemp,student.getId(),1,student.getName());
 				student.setSendTime(new Date());
 				student_dao.save(student);
 			//}
@@ -189,6 +190,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 	 */
 	@Override
 	public ResultVO addScreeningWear(Map<String, String> params) throws ParseException {
+		System.out.println("戴镜检测");
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Integer studentId = Integer.valueOf(params.get("studentId"));
@@ -218,7 +220,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			//if(student.getSendTime()==null||new Date().getTime()-student.getSendTime().getTime()>=604800) {
 				//查一下当前选中的筛查模板
 				MsgTempMapper msgtemp = msg_temp_dao.findByTypeAndSelected("screening",1);
-				screeningMessage(msgtemp,student.getId(), params.get("visionLeft"), params.get("visionRight"),2);
+				screeningMessage(msgtemp,student.getId(),2,student.getName());
 				student.setSendTime(new Date());
 				student_dao.save(student);
 			//}
@@ -397,9 +399,11 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 	}
 
 	@Override
-	public void screeningMessage(MsgTempMapper msg,Integer studentId,String left , String right,Integer type) {
+	public void screeningMessage(MsgTempMapper msg,Integer studentId,Integer type,String name) {
+		System.out.println("现在进来了");
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String accessToken = getAccessToken();
+		String left = "",right = "";
 		// 通过学生id找到所有家长
 		List<ParentStudentRelation> findByStudentId = parent_student_dao.findByStudentId(studentId);
 		try {
@@ -414,9 +418,28 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 				if (parent.getUnionId() != null && !"".equals(parent.getUnionId())) {
 					// 通过unionid查找这个家长的公众号openId
 					GzhUserMapper findByUnionid = gzh_dao.findByUnionid(parent.getUnionId());
+					if(type==1) {
+						List<ScreeningMapper> screening = screening_dao.findByStudentIdOrderByGenTimeDesc(studentId, PageRequest.of(0, 2)).getContent();
+						if(screening.size()>1) {
+							left = screening.get(1).getVisionLeft()+"→"+screening.get(0).getVisionLeft();
+							right = screening.get(1).getVisionLeft()+"→"+screening.get(0).getVisionLeft();
+						}else {
+							left = screening.get(0).getVisionLeft();
+							right = screening.get(0).getVisionLeft();
+						}
+					}else {
+						List<ScreeningWearMapper> screening = screening_wear_dao.findByStudentIdOrderByGenTimeDesc(studentId, PageRequest.of(0, 2)).getContent();
+						if(screening.size()>1) {
+							left = screening.get(1).getVisionLeft()+"→"+screening.get(0).getVisionLeft();
+							right = screening.get(1).getVisionLeft()+"→"+screening.get(0).getVisionLeft();
+						}else {
+							left = screening.get(0).getVisionLeft();
+							right = screening.get(0).getVisionLeft();
+						}
+					}
 					if(findByUnionid!=null)SendMessageUtils.screeningMessage(msg,findByUnionid.getOpenid(), accessToken,
 							left, right,
-							simpleDateFormat.format(new Date()), type);
+							simpleDateFormat.format(new Date()), type,name);
 				}
 			}
 		} catch (Exception e) {

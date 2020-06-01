@@ -31,7 +31,7 @@ public interface ScreeningXcxService {
 	//获取access-token
 	String getAccessToken();
 	//发送通知
-	void screeningMessage(MsgTempMapper msg, Integer studentId, String left, String right, Integer type);
+	void screeningMessage(MsgTempMapper msg, Integer studentId,Integer type,String name);
 	//获得爱眼币  type 是用来判断是不是戴镜筛查
 	ResultVO getCoin(Integer parentId , Integer studentId )throws ParseException;
 }

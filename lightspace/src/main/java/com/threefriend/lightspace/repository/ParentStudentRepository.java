@@ -22,6 +22,8 @@ public interface ParentStudentRepository extends JpaRepository<ParentStudentRela
 	List<ParentStudentRelation> findByParentId(Integer parentId);
 	
 	List<ParentStudentRelation> findByStudentId(Integer studentId);
+	
+	ParentStudentRelation findByStudentIdAndParentId(Integer studentId,Integer parentId);
 	@Transactional
 	void deleteByStudentIdAndParentId(Integer studentId,Integer parentId);
 }

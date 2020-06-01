@@ -88,9 +88,9 @@ public class RecordServiceImpl implements RecordService {
 		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("studentId"))).get();
 		RecordMapper record = new RecordMapper();
 		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
-			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
+			record.setCurvatureLeft(params.get("curvatureLeft"));
 		if (!StringUtils.isEmpty(params.get("curvatureRight")))
-			record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
+			record.setCurvatureRight(params.get("curvatureRight"));
 		if (!StringUtils.isEmpty(params.get("cvaLeft")))
 			record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
 		if (!StringUtils.isEmpty(params.get("cvaRight")))
@@ -132,9 +132,9 @@ public class RecordServiceImpl implements RecordService {
 	public ResultVO saveRecord(Map<String, String> params) {
 		RecordMapper record = record_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if (!StringUtils.isEmpty(params.get("curvatureLeft")))
-			record.setCurvatureLeft(Double.valueOf(params.get("curvatureLeft")));
+			record.setCurvatureLeft(params.get("curvatureLeft"));
 		if (!StringUtils.isEmpty(params.get("curvatureRight")))
-			record.setCurvatureRight(Double.valueOf(params.get("curvatureRight")));
+			record.setCurvatureRight(params.get("curvatureRight"));
 		if (!StringUtils.isEmpty(params.get("cvaLeft"))) {
 			record.setCvaLeft(Double.valueOf(params.get("cvaLeft")));
 		}else{
@@ -235,8 +235,6 @@ public class RecordServiceImpl implements RecordService {
 		OneStatisticsVO visionRight=new OneStatisticsVO();
 		OneStatisticsVO eyeAxisLengthLeft=new OneStatisticsVO();
 		OneStatisticsVO eyeAxisLengthRight=new OneStatisticsVO();
-		OneStatisticsVO curvatureLeft=new OneStatisticsVO();
-		OneStatisticsVO curvatureRight=new OneStatisticsVO();
 		
 		for (RecordMapper po : all) {
 			String time =format.format(po.getGenTime());
@@ -264,23 +262,10 @@ public class RecordServiceImpl implements RecordService {
 			eyeAxisLengthRight.getyDataList().add(po.getEyeAxisLengthRight());
 			eyeAxisLengthRight.getxDataList().add(time);
 			
-			if(curvatureLeft.getName()==null||curvatureLeft.getName()=="") {
-				curvatureLeft.setName(RecordEnums.CURVATURELEFT.getName());
-			}
-			curvatureLeft.getyDataList().add(po.getCurvatureLeft());
-			curvatureLeft.getxDataList().add(time);
-			
-			if(curvatureRight.getName()==null||curvatureRight.getName()=="") {
-				curvatureRight.setName(RecordEnums.CURVATURERIGHT.getName());
-			}
-			curvatureRight.getyDataList().add(po.getCurvatureRight());
-			curvatureRight.getxDataList().add(time);
 			
 		}
 		end.setVisionLeft(visionLeft);
 		end.setVisionRight(visionRight);
-		end.setCurvatureLeft(curvatureLeft);
-		end.setCurvatureRight(curvatureRight);
 		end.setEyeAxisLengthLeft(eyeAxisLengthLeft);
 		end.setEyeAxisLengthRight(eyeAxisLengthRight);
 		end.setStudnetWord(studentword_dao.findTopByStudentIdOrderByGenTimeDesc(id));

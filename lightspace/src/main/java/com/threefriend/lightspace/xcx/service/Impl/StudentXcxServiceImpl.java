@@ -12,7 +12,9 @@ import java.util.Map;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
@@ -72,5 +74,18 @@ public class StudentXcxServiceImpl implements StudentXcxService{
 	@Override
 	public ResultVO queryStudentWordById(Map<String, String> params) {
 		return ResultVOUtil.success(student_word_dao.findById(Integer.valueOf(params.get("id"))).get());
+	}
+
+	@Override
+	public ResultVO perfectStudent(Map<String, String> params) {
+		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("id"))).get();
+		if(!StringUtils.isEmpty(params.get("name")))student.setName(params.get("name"));
+		if(!StringUtils.isEmpty(params.get("gender")))student.setGender(Integer.valueOf(params.get("gender")));
+		if(!StringUtils.isEmpty(params.get("height")))student.setHeight(params.get("height"));
+		if(!StringUtils.isEmpty(params.get("chairHeight")))student.setChairHeight(params.get("chairHeight"));
+		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
+		if(!StringUtils.isEmpty(params.get("birthday")))student.setBirthday(params.get("birthday"));
+		student_dao.save(student);
+		return ResultVOUtil.success();
 	}
 }

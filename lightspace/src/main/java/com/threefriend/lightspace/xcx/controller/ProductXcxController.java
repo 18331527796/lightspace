@@ -27,4 +27,9 @@ public class ProductXcxController {
 	public ResultVO productDetils(@RequestParam Map<String, String> params) {
 		return product_impl.productDetils(params);
 	}
+	
+	@PostMapping("/findProduct")
+	public ResultVO findProduct(@RequestParam Map<String, String> params) {
+		return product_impl.findProduct(params);
+	}
 }

@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +36,7 @@ public class StudentWordController {
 	 * @return
 	 */
 	@PostMapping(value="/studentWordList")
-	public ResultVO  wordList(){
-		return student_word_impl.wordList();
+	public ResultVO  wordList(@RequestParam Map<String, String> params){
+		return student_word_impl.wordList(params);
 	}
 }

@@ -84,32 +84,16 @@ public class SortServiceImpl implements SortService {
 				if(student.getVisionLeftStr()!=null&&student.getVisionRightStr()!=null) {
 					vo.setAvgRecord((student.getVisionLeftStr()+student.getVisionRightStr())/2);
 				}else {
-					nullStudent.add(student.getName());
+					RecordMapper record = record_dao.findTopByStudentIdOrderByGenTimeDesc(id);
+					if(record!=null) {
+						vo.setAvgRecord((record.getVisionLeftStr()+record.getVisionRightStr())/2);
+					}else {
+						nullStudent.add(student.getName());
+					}
 				}
 				//存放集合
 				sort.add(vo);
 				
-				/*// 拿出来每个人的最新数据
-				RecordMapper top = record_dao.findTopByStudentIdOrderByGenTimeDesc(id);
-				// 拿出筛查的最新数据
-				ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(id);
-				if (top != null) {
-					// 筛查数据不是空的 并且 比检测数据更新 那就取筛查数据
-					if(screening != null&& screening.getGenTime().getTime()>top.getGenTime().getTime()) {
-						vo.setAvgRecord((screening.getVisionLeftStr() + screening.getVisionRightStr()) / 2);
-					}else {
-						vo.setAvgRecord((top.getVisionLeftStr() + top.getVisionRightStr()) / 2);
-					}
-					sort.add(vo);
-				}else {
-					//检测数据是空的 但是 筛查记录不是空的 就用筛查记录
-					if(screening != null) {
-						vo.setAvgRecord((screening.getVisionLeftStr() + screening.getVisionRightStr()) / 2);
-						sort.add(vo);
-					}else {
-						nullStudent.add(student.getName());
-					}
-				}*/
 			}
 			//两个数据都是空的 就抛异常
 			if(nullStudent!=null&&!nullStudent.isEmpty())throw new SortException(nullStudent);

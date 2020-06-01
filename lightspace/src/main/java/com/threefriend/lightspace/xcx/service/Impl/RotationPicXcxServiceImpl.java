@@ -1,8 +1,12 @@
 package com.threefriend.lightspace.xcx.service.Impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.threefriend.lightspace.enums.UrlEnums;
+import com.threefriend.lightspace.mapper.RotationPicMapper;
 import com.threefriend.lightspace.repository.RotationPicRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -16,7 +20,11 @@ public class RotationPicXcxServiceImpl implements RotationPicXcxService{
 
 	@Override
 	public ResultVO rotationPic() {
-		return ResultVOUtil.success(rotationpic_dao.findAll());
+		List<RotationPicMapper> findAll = rotationpic_dao.findAll();
+		for (RotationPicMapper rotation : findAll) {
+			rotation.setPath(UrlEnums.IMG_URL.getUrl()+rotation.getPath());
+		}
+		return ResultVOUtil.success(findAll);
 	}
 	
 	

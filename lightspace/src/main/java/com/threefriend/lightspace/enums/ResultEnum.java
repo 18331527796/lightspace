@@ -73,6 +73,8 @@ public enum ResultEnum {
     STOCK_ERROR(10229,"商品库存不足"),
     
     INTEGRAL_ERROR(10230,"您的爱眼币不足"),
+    
+    FINDPRODUCT_ERROR(10231,"未找到相关商品"),
     ;
 
     private Integer status;

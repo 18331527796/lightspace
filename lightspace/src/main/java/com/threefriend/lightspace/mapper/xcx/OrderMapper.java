@@ -39,8 +39,9 @@ public class OrderMapper {
 	private String remark;//备注
 	private String gentime =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//创建时间
 	private String pic;
-	private Integer display = 1; //1 : 显示  2 : 不显示
+	private Integer display; //1 : 显示  2 : 不显示
 	private String specificationName;
+	private Date genTimeDate = new Date();
 	
 	public Integer getId() {
 		return id;
@@ -177,6 +178,12 @@ public class OrderMapper {
 	}
 	public void setSpecificationName(String specificationName) {
 		this.specificationName = specificationName;
+	}
+	public Date getGenTimeDate() {
+		return genTimeDate;
+	}
+	public void setGenTimeDate(Date genTimeDate) {
+		this.genTimeDate = genTimeDate;
 	}
 	
 	

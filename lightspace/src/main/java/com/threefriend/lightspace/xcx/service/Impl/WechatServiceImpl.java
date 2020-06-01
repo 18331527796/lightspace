@@ -187,6 +187,7 @@ public class WechatServiceImpl implements WechatService{
             if(!OrderStatusEnum.NEW.getMessage().equals(order.getStatus()))return WXPayUtil.mapToXml(return_data);
             //更改订单状态为支付成功
 		    order.setStatus(OrderStatusEnum.SUCCESS.getMessage());
+		    order.setDisplay(1);
 		    order_dao.save(order);
 		    //库存减数量
 		    SpecificationsMapper specifications = specifications_dao.findById(order.getSpecificationId()).get();

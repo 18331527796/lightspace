@@ -3,13 +3,19 @@ package com.threefriend.lightspace.service.Impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.Exception.ReadWordException;
@@ -107,24 +113,27 @@ public class StudentWordServiceImpl implements StudentWordService{
 			}
 			}
 			
-		return wordList();
+		return ResultVOUtil.success();
 	}
 
 	/* 
 	 * word列表
 	 */
 	@Override
-	public ResultVO wordList() {
-		List<StudentWordMapper> findAll = studentword_dao.findByOrderByGenTimeDesc();
+	public ResultVO wordList(Map<String, String> params) {
+		int page = 0 ;
+		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ;
+		Page<StudentWordMapper> findAll = studentword_dao.findAll(PageRequest.of(page, 10,Sort.by("id").descending()));
 		List<StudentWordVO> end = new ArrayList<StudentWordVO>();
-		for (StudentWordMapper studentWordMapper : findAll) {
+		for (StudentWordMapper studentWordMapper : findAll.getContent()) {
 			StudentWordVO vo = new StudentWordVO();
 			BeanUtils.copyProperties(studentWordMapper, vo);
 			vo.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(studentWordMapper.getGenTime()));
 			vo.setGender(studentWordMapper.getGender());
 			end.add(vo);
 		}
-		return ResultVOUtil.success(end);
+		Page<StudentWordVO> endList= new PageImpl<>(end, findAll.getPageable(), findAll.getTotalElements());
+		return ResultVOUtil.success(endList);
 	}
 
 	

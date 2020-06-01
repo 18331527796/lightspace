@@ -19,7 +19,7 @@ public class CreateQrcore {
      * 获取 token
      * 普通的 get 可获 token
      */
-    public static String getToken() throws Exception {
+    public synchronized static String getToken() throws Exception {
 		String requestUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+AccountEnums.APIKEY.getUrl()+"&secret="+AccountEnums.SECRETKEY.getUrl();
         URL url = new URL(requestUrl);
         // 打开和URL之间的连接
@@ -63,7 +63,7 @@ public class CreateQrcore {
      * @param scene       要输入的内容
      * @param accessToken token
      */
-    public static String postMiniqrQr(String scene,String name , String accessToken, String path) {
+    public synchronized static String postMiniqrQr(String scene,String name , String accessToken, String path , String type , String className) {
     	try {
             URL url = new URL(UrlEnums.WECHAT_XCX_CODE_PAHT.getUrl()+ accessToken);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -93,8 +93,18 @@ public class CreateQrcore {
                 file.mkdir();
             }
             //创建一个空文件
-            OutputStream os = new FileOutputStream(new File(path + scene + name + ".jpg"));
-            //ByteArrayOutputStream os = new ByteArrayOutputStream();
+        	OutputStream os =null;
+            if(type.equals("school")) {
+            	File file1 = new File(path+className+"/");
+                if (!file1.exists()) {
+                    file1.mkdir();
+                }
+                os=new FileOutputStream(new File(path + className + "/" + scene + name + ".jpg"));
+            }else {
+            	os= new FileOutputStream(new File(path + scene + name + ".jpg"));
+            }
+            
+            
             int len;
             byte[] arr = new byte[1024];
             while ((len = bis.read(arr)) != -1) {
@@ -108,7 +118,11 @@ public class CreateQrcore {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    	return path + scene + name + ".jpg";
+    	if(type.equals("school")) {
+    		return path + className + "/" + scene + name + ".jpg";
+    	}else {
+    		return path + scene + name + ".jpg";
+    	}
     }
 
    

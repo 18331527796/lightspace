@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.mapper.xcx.ProductMapper;
+import com.threefriend.lightspace.mapper.xcx.SpecificationsMapper;
 import com.threefriend.lightspace.repository.ProductRepository;
 import com.threefriend.lightspace.repository.SpecificationsRepository;
 import com.threefriend.lightspace.service.ProductService;
@@ -132,7 +133,14 @@ public class ProductServiceImpl implements ProductService{
 		int flag;
 		ProductMapper productMapper = product_dao.findById(Integer.valueOf(params.get("id"))).get();
 		productMapper.setGenTime(new Date());
-		if(!StringUtils.isEmpty(params.get("name")))productMapper.setName(params.get("name"));
+		if(!StringUtils.isEmpty(params.get("name"))) {
+			productMapper.setName(params.get("name"));
+			List<SpecificationsMapper> content = specification_dao.findByProductId(productMapper.getId(), PageRequest.of(0, 20)).getContent();
+			for (SpecificationsMapper specificationsMapper : content) {
+				specificationsMapper.setProductName(params.get("name"));
+			}
+			specification_dao.saveAll(content);
+		}
 		if(delpic.length!=0) {
 			String[] split = productMapper.getPicture().split(",");
 			for (String string : delpic) {

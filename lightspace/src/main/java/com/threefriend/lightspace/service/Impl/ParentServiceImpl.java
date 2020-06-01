@@ -6,7 +6,12 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
@@ -34,10 +39,12 @@ public class ParentServiceImpl implements ParentService{
 	
 	
 	@Override
-	public ResultVO parentList() {
-		List<ParentMapper> All = parent_dao.findAll();
+	public ResultVO parentList(Map<String, String> params) {
+		int page = 0 ;
+		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ;
+		Page<ParentMapper> All = parent_dao.findAll(PageRequest.of(page, 10));
 		List<ParentVO> end = new ArrayList<>();
-		for (ParentMapper parentMapper : All) {
+		for (ParentMapper parentMapper : All.getContent()) {
 			ParentVO vo = new ParentVO();
 			BeanUtils.copyProperties(parentMapper, vo);
 			List<ParentStudentRelation> findByParentId = p_s_dao.findByParentId(parentMapper.getId());
@@ -46,7 +53,8 @@ public class ParentServiceImpl implements ParentService{
 			}
 			end.add(vo);
 		}
-		return ResultVOUtil.success(end);
+		Page<ParentVO> endlist = new PageImpl<>(end, All.getPageable(), All.getTotalElements());
+		return ResultVOUtil.success(endlist);
 	}
 
 }

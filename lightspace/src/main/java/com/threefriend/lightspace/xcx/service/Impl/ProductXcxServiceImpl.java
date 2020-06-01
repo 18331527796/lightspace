@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.mapper.RotationPicMapper;
 import com.threefriend.lightspace.mapper.xcx.ProductMapper;
@@ -35,8 +36,8 @@ public class ProductXcxServiceImpl implements ProductXcxService{
 
 	@Override
 	public ResultVO productPage(Map<String, String> params) {
-		int page = 0 ;
 		List<ProductVO> productList = new ArrayList<>();
+		int page = 0 ;
 		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page"))-1;
 		Page<ProductMapper> findAll = product_dao.findAll(PageRequest.of(page, 10));
 		for (ProductMapper productMapper : findAll.getContent()) {
@@ -84,6 +85,29 @@ public class ProductXcxServiceImpl implements ProductXcxService{
 			end.getProductList().add(vo);
 		}
 		return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO findProduct(Map<String, String> params) {
+		List<ProductVO> productList = new ArrayList<>();
+		int page = 0 ;
+		String name = "%"+params.get("name")+"%" ;
+		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page"))-1;
+		Page<ProductMapper> findAll = product_dao.findAllByNameLikeOrderByIdDesc(name, PageRequest.of(page, 10));
+		for (ProductMapper productMapper : findAll.getContent()) {
+			List<SpecificationsMapper> content = specifications_dao.findByProductId(productMapper.getId(), PageRequest.of(0, 1)).getContent();
+			if(content.size()==0)continue;
+			ProductVO vo = new ProductVO();
+			BeanUtils.copyProperties(productMapper, vo);
+			if(!productMapper.getPicture().isEmpty()) {
+				String[] split = productMapper.getPicture().split(",");
+				vo.getPictures().add(UrlEnums.IMG_URL.getUrl()+split[0]);
+			}
+			vo.setIntegral(content.get(0).getIntegral());
+			productList.add(vo);
+		}
+		if(productList.size()<1) return ResultVOUtil.error(ResultEnum.FINDPRODUCT_ERROR.getStatus(), ResultEnum.FINDPRODUCT_ERROR.getMessage());
+		return ResultVOUtil.success(productList);
 	}
 	
 	

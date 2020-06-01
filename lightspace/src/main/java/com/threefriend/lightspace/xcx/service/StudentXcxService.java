@@ -16,4 +16,6 @@ public interface StudentXcxService {
 	ResultVO queryStudentWord(Map<String, String> params);
 	
 	ResultVO queryStudentWordById(Map<String, String> params);
+	
+	ResultVO perfectStudent(Map<String, String> params);
 }

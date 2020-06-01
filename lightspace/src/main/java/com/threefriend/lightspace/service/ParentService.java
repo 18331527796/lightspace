@@ -9,5 +9,5 @@ import com.threefriend.lightspace.vo.ResultVO;
  */
 public interface ParentService {
 
-	ResultVO parentList();
+	ResultVO parentList(Map<String, String> params);
 }

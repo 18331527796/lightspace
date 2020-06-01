@@ -15,17 +15,15 @@ public interface ClassesService {
 	//新增班级
 	public ResultVO addClasses(Map<String, String> params);
 	//班级列表
-	public List<ClassesMapper> findAllClasses(Map<String, String> params);
+	public ResultVO findAllClasses(Map<String, String> params);
 	//修改班级信息
-	public List<ClassesMapper> alterClasses(Map<String, String> params);
+	public ResultVO alterClasses(Map<String, String> params);
 	//删除班级
-	public List<ClassesMapper> deleteClasses(Integer id,String token);
+	public ResultVO deleteClasses(Integer id,String token);
 	//按照学校查询班级
-	public List<ClassesMapper> findBySchoolId(Integer sId);
+	public ResultVO findBySchoolId(Integer sId);
 	//按照id查询班级
-	public ClassesMapper findById(Integer id);
-	//模糊查询
-	public ResultVO findByNameLike(String name);
+	public ResultVO findById(Integer id);
 	//升年级
 	public ResultVO elevateClass(Map<String, String> params);
 	//判定年级名称

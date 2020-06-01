@@ -37,4 +37,9 @@ public class StudentXcxController {
 	public ResultVO  queryStudentWordById (@RequestParam Map<String, String> params) {
 		return student_impl.queryStudentWordById(params);
 	}
+	
+	@PostMapping("/perfectStudent")
+	public ResultVO  perfectStudent (@RequestParam Map<String, String> params) {
+		return student_impl.perfectStudent(params);
+	}
 }

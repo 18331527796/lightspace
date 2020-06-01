@@ -94,7 +94,7 @@ public class SendMessageUtils {
 	 * @param unionId
 	 * @throws IOException
 	 */
-	public static void screeningMessage(MsgTempMapper msg,String openId , String ACCESS_TOKEN , String left , String right , String date ,Integer type) throws IOException {
+	public static void screeningMessage(MsgTempMapper msg,String openId , String ACCESS_TOKEN , String left , String right , String date ,Integer type,String name) throws IOException {
 	        String postUrl = URL + ACCESS_TOKEN;
 	        JSONObject jsonObject = new JSONObject();
 	        jsonObject.put("touser", openId);   // openid
@@ -111,7 +111,7 @@ public class SendMessageUtils {
 	        JSONObject data = new JSONObject();
 	        //副标题
 	        JSONObject first = new JSONObject();
-        	first.put("value", msg.getFirst());
+        	first.put("value", msg.getFirst()+" "+name);
 	        //左眼视力
 	        JSONObject keyword1 = new JSONObject();
 	        keyword1.put("value", left);

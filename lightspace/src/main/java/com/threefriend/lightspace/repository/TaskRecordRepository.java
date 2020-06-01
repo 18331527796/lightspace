@@ -17,6 +17,8 @@ public interface TaskRecordRepository extends JpaRepository<TaskRecordMapper, In
 
 	List<TaskRecordMapper> findByStudentIdAndGenTimeBetween(Integer studentId,Date begin,Date end);
 	
+	List<TaskRecordMapper> findByStudentId(Integer studentId);
+	
 	TaskRecordMapper findByStudentIdAndTaskId(Integer studentId,Integer taskId);
 	
 	int countByStudentIdAndGenTimeBetween(Integer studentId,Date begin,Date end);

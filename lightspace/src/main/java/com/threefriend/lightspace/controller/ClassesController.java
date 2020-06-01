@@ -42,7 +42,7 @@ public class ClassesController {
 	 */
 	@PostMapping("/classesList")
 	public ResultVO classesList(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.findAllClasses(params));
+		return classes_impl.findAllClasses(params);
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class ClassesController {
 	@PostMapping("/editClasses")
 	
 	public ResultVO editClasses(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.findById(Integer.valueOf(params.get("id"))));
+		return classes_impl.findById(Integer.valueOf(params.get("id")));
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class ClassesController {
 	 */
 	@PostMapping("/saveClasses")
 	public ResultVO saveClasses(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.alterClasses(params));
+		return classes_impl.alterClasses(params);
 	}
 	
 	/**
@@ -73,19 +73,9 @@ public class ClassesController {
 	 */
 	@PostMapping("/deleteClasses")
 	public ResultVO deleteClasses(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.deleteClasses(Integer.valueOf(params.get("id")),params.get("token")));
+		return classes_impl.deleteClasses(Integer.valueOf(params.get("id")),params.get("token"));
 	}
 	
-	/**
-	 * 模糊查询
-	 * @param params
-	 * @return
-	 */
-	@PostMapping("/queryClasses")
-	
-	public ResultVO queryClasses(@RequestParam Map<String, String> params) {
-		return classes_impl.findByNameLike(params.get("name"));
-	}
 	
 	/**
 	 * 按照学校找班级
@@ -94,7 +84,7 @@ public class ClassesController {
 	 */
 	@PostMapping("/queryClassesBySchool")
 	public ResultVO queryClassesBySchool(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.findBySchoolId(Integer.valueOf(params.get("schoolId"))));
+		return classes_impl.findBySchoolId(Integer.valueOf(params.get("schoolId")));
 	}
 	
 	/**
