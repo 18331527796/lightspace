@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
+import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.RegionRepository;
@@ -71,7 +73,19 @@ public class SchoolServiceImpl implements SchoolService{
 	public List<SchoolMapper> alterSchool(Map<String, String> params) {
 		SchoolMapper findById = school_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if(params.get("address")!=(null) && !params.get("address").equals("")) findById.setAddress(params.get("address"));
-		if(params.get("name")!=(null) && !params.get("name").equals("")) findById.setName(params.get("name"));
+		if(params.get("name")!=(null) && !params.get("name").equals("")) {
+			findById.setName(params.get("name"));
+			List<StudentMapper> student = student_dao.findBySchoolId(findById.getId());
+			for (StudentMapper studentMapper : student) {
+				studentMapper.setSchoolName(params.get("name"));
+			}
+			student_dao.saveAll(student);
+			List<ClassesMapper> allclass = class_dao.findBySchoolId(findById.getId(), PageRequest.of(0, 100)).getContent();
+			for (ClassesMapper classesMapper : allclass) {
+				classesMapper.setSchoolName(params.get("name"));
+			}
+			class_dao.saveAll(allclass);
+		}
 		school_dao.save(findById);
 		return school_dao.findAllByOrderByIdDesc();
 	}

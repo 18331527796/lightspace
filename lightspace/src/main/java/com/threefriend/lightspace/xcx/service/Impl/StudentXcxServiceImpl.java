@@ -81,10 +81,17 @@ public class StudentXcxServiceImpl implements StudentXcxService{
 		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("id"))).get();
 		if(!StringUtils.isEmpty(params.get("name")))student.setName(params.get("name"));
 		if(!StringUtils.isEmpty(params.get("gender")))student.setGender(Integer.valueOf(params.get("gender")));
-		if(!StringUtils.isEmpty(params.get("height")))student.setHeight(params.get("height"));
-		if(!StringUtils.isEmpty(params.get("chairHeight")))student.setChairHeight(params.get("chairHeight"));
-		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
-		if(!StringUtils.isEmpty(params.get("birthday")))student.setBirthday(params.get("birthday"));
+		if(!StringUtils.isEmpty(params.get("height"))&&!params.get("height").equals("null")) 
+			student.setHeight(params.get("height"));
+		if(!StringUtils.isEmpty(params.get("chairHeight"))&&!params.get("chairHeight").equals("null")) 
+			student.setChairHeight(params.get("chairHeight"));
+		
+		if(!StringUtils.isEmpty(params.get("sittingHeight"))&&!params.get("sittingHeight").equals("null")) 
+			student.setSittingHeight(params.get("sittingHeight"));
+		
+		if(!StringUtils.isEmpty(params.get("birthday"))&&!params.get("birthday").equals("null")) 
+			student.setBirthday(params.get("birthday"));
+		
 		student_dao.save(student);
 		return ResultVOUtil.success();
 	}

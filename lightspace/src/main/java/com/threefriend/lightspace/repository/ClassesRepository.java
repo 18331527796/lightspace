@@ -18,6 +18,7 @@ import com.threefriend.lightspace.mapper.ClassesMapper;
  */
 public interface ClassesRepository extends JpaRepository<ClassesMapper, Integer>{
 
+	List<ClassesMapper> findBySchoolIdAndGrade(Integer schoolId,Integer grade);
 	
 	List<ClassesMapper> findBySchoolIdOrderByFinish(Integer sId);
 	

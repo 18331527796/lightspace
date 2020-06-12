@@ -34,4 +34,6 @@ public interface ScreeningXcxService {
 	void screeningMessage(MsgTempMapper msg, Integer studentId,Integer type,String name);
 	//获得爱眼币  type 是用来判断是不是戴镜筛查
 	ResultVO getCoin(Integer parentId , Integer studentId )throws ParseException;
+	//删除档案
+	ResultVO deleteScreening(Map<String, String> params);
 }

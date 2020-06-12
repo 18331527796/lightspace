@@ -64,8 +64,18 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		SpecificationsMapper specifications = specifications_dao
 				.findById(Integer.valueOf(params.get("specificationsId"))).get();
 		ProductMapper product = product_dao.findById(specifications.getProductId()).get();
-		Long studentIntegral = integral_dao.findIntegtalByStudentId(student.getId());
+		
+		Long income = integral_dao.findIntegtalByState(1,student.getId());
+			 income = income == null ? 0 : income;
+		if(income==0)return ResultVOUtil.error(ResultEnum.INTEGRAL_ERROR.getStatus(), ResultEnum.INTEGRAL_ERROR.getMessage());
+		
+		Long expenditure = integral_dao.findIntegtalByState(0,student.getId());
+			 expenditure = expenditure == null ? 0 : expenditure;
+		
+		Long studentIntegral = income-expenditure;
+		
 		Long paymoney = 0l;
+		
 		if (specifications.getStock() < number)
 			return ResultVOUtil.error(ResultEnum.STOCK_ERROR.getStatus(), ResultEnum.STOCK_ERROR.getMessage());
 		if (specifications.getIntegral()*number > (studentIntegral == null ? 0 : studentIntegral))
@@ -74,15 +84,9 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		String pic = UrlEnums.IMG_URL.getUrl()+product.getPicture().split(",")[0];
 		
 		OrderMapper newOrder = new OrderMapper();
-		newOrder.setDelivrytype((Integer.valueOf(params.get("delivryType")) == DeliveryTypeEnums.HOME.getCode())
-				? DeliveryTypeEnums.HOME.getMessage()
-				: DeliveryTypeEnums.SCHOOL.getMessage());
-		if (!StringUtils.isEmpty(params.get("remark")))
-			newOrder.setRemark(params.get("remark"));
 		newOrder.setContacts(params.get("contacts"));
 		newOrder.setPhone(params.get("phone"));
 		newOrder.setNumber(number);
-		newOrder.setPaymoney(paymoney);
 		newOrder.setProductId(product.getId());
 		newOrder.setProductName(product.getName());
 		newOrder.setStudentId(student.getId());
@@ -91,17 +95,28 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		newOrder.setSpecificationId(specifications.getId());
 		newOrder.setSpecificationName(specifications.getName());
 		newOrder.setPic(pic);
-		if (delivryType == DeliveryTypeEnums.HOME.getCode()) {
+		if(delivryType== DeliveryTypeEnums.HOME.getCode()) {
+			newOrder.setDelivrytype(DeliveryTypeEnums.HOME.getMessage());
 			newOrder.setFreight(specifications.getFreight());
 			newOrder.setAddress(params.get("address"));
 			paymoney += Long.valueOf(specifications.getFreight());
 			newOrder.setStatus(OrderStatusEnum.NEW.getMessage());
 			newOrder.setDisplay(2);
-		}else {
+		}else if(delivryType== DeliveryTypeEnums.SCHOOL.getCode()) {
+			newOrder.setDelivrytype(DeliveryTypeEnums.SCHOOL.getMessage());
 			newOrder.setStatus(OrderStatusEnum.SUCCESS.getMessage());
 			newOrder.setDisplay(1);
 			integral_dao.save(new IntegralMapper(newOrder.getStudentId(), 0, specifications.getIntegral()*newOrder.getNumber(), "兑换"+newOrder.getProductName(), new Date()));
+		}else {
+			newOrder.setDelivrytype(DeliveryTypeEnums.SERVICE.getMessage());
+			newOrder.setStatus(OrderStatusEnum.EXCHANGE.getMessage());
+			newOrder.setDisplay(1);
+			integral_dao.save(new IntegralMapper(newOrder.getStudentId(), 0, specifications.getIntegral()*newOrder.getNumber(), "兑换"+newOrder.getProductName(), new Date()));
 		}
+		if (!StringUtils.isEmpty(params.get("remark")))
+			newOrder.setRemark(params.get("remark"));
+		newOrder.setPaymoney(paymoney);
+		
 		order_dao.save(newOrder);
 
 		if (delivryType != DeliveryTypeEnums.HOME.getCode()) {

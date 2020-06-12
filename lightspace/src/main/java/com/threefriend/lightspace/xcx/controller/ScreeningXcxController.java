@@ -102,4 +102,9 @@ public class ScreeningXcxController {
 	public ResultVO allChildrenScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.allChildrenScreening(params);
 	}
+	
+	@PostMapping("/deleteScreening")
+	public ResultVO deleteScreening(@RequestParam Map<String, String> params) {
+		return screening_impl.deleteScreening(params);
+	}
 }

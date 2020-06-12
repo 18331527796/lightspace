@@ -1,6 +1,7 @@
 package com.threefriend.lightspace.xcx.service.Impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ public class ProductXcxServiceImpl implements ProductXcxService{
 			vo.setIntegral(content.get(0).getIntegral());
 			productList.add(vo);
 		}
+		productList.sort(Comparator.comparing(ProductVO::getIntegral));
 		return ResultVOUtil.success(productList);
 	}
 
@@ -80,7 +82,7 @@ public class ProductXcxServiceImpl implements ProductXcxService{
 				String[] split = po.getPicture().split(",");
 				vo.getPictures().add(UrlEnums.IMG_URL.getUrl()+split[0]);
 			}
-			vo.setIntegral(content.get(0).getIntegral());
+			vo.setIntegral(specification.get(0).getIntegral());
 			vo.setSpecificationsList(specification);
 			end.getProductList().add(vo);
 		}

@@ -29,4 +29,9 @@ public class IntegralController {
 		return integral_impl.IntegralListByParentId(params);
 	}
 	
+	@PostMapping("/integralRanking")
+	public ResultVO rankingNO10(@RequestParam Map<String, String> params) {
+		return integral_impl.rankingNO10(params);
+	}
+	
 }

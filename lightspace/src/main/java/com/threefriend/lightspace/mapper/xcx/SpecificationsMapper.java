@@ -16,6 +16,8 @@ public class SpecificationsMapper {
 	private Integer id;
 	
 	private Integer productId;
+	// 1 : 服务类型 2 : 商品类型
+	private Integer productType;
 	
 	private String productName;
 	
@@ -39,7 +41,14 @@ public class SpecificationsMapper {
 		this.id = id;
 	}
 	
-	
+
+	public Integer getProductType() {
+		return productType;
+	}
+
+	public void setProductType(Integer productType) {
+		this.productType = productType;
+	}
 
 	public String getProductName() {
 		return productName;

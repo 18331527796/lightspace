@@ -173,14 +173,12 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			student.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
 			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 			student.setScreeningType(1);
+			MsgTempMapper msgtemp = msg_temp_dao.findByTypeAndSelected("screening",1);
+			screeningMessage(msgtemp,student.getId(),1,student.getName());
+			student.setSendTime(new Date());
+			
+			student.setMyIntegral(integral_dao.findIntegtalByState(1, studentId));
 			student_dao.save(student);
-			//if(student.getSendTime()==null||new Date().getTime()-student.getSendTime().getTime()>=604800) {
-				//查一下当前选中的筛查模板
-				MsgTempMapper msgtemp = msg_temp_dao.findByTypeAndSelected("screening",1);
-				screeningMessage(msgtemp,student.getId(),1,student.getName());
-				student.setSendTime(new Date());
-				student_dao.save(student);
-			//}
 		}
 			return getCoin(parent.getId(),studentId);
 	}
@@ -190,7 +188,6 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 	 */
 	@Override
 	public ResultVO addScreeningWear(Map<String, String> params) throws ParseException {
-		System.out.println("戴镜检测");
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Integer studentId = Integer.valueOf(params.get("studentId"));
@@ -216,14 +213,14 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			student.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
 			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 			student.setScreeningType(2);
+			student.setCorrect(1);
+			
+			MsgTempMapper msgtemp = msg_temp_dao.findByTypeAndSelected("screening",1);
+			screeningMessage(msgtemp,student.getId(),2,student.getName());
+			student.setSendTime(new Date());
+			student.setMyIntegral(integral_dao.findIntegtalByState(1, studentId));
+			
 			student_dao.save(student);
-			//if(student.getSendTime()==null||new Date().getTime()-student.getSendTime().getTime()>=604800) {
-				//查一下当前选中的筛查模板
-				MsgTempMapper msgtemp = msg_temp_dao.findByTypeAndSelected("screening",1);
-				screeningMessage(msgtemp,student.getId(),2,student.getName());
-				student.setSendTime(new Date());
-				student_dao.save(student);
-			//}
 			
 		}
 			return getCoin(parent.getId(),studentId);
@@ -296,6 +293,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 		ScreeningVO vo = new ScreeningVO();
 		BeanUtils.copyProperties(screeningMapper, vo);
 		JSONArray leftarray = JSONArray.fromObject(screeningMapper.getProcessLeft());
+		vo.setMyIntegral(student_dao.findById(screeningMapper.getStudentId()).get().getMyIntegral());
 		vo.setProcessLeftList(pushjosn(screeningMapper.getProcessLeft()));
 		vo.setProcessRightList(pushjosn(screeningMapper.getProcessRight()));
 		return ResultVOUtil.success(vo);
@@ -343,6 +341,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			map.put("id", student.getId());
 			map.put("name", student.getName());
 			map.put("gender", student.getGender());
+			map.put("myIntegral", student.getMyIntegral());
 			map.put("birthday", student.getBirthday());
 			map.put("dataList", dataList);
 			map.put("picList", picList);
@@ -380,6 +379,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 		ScreeningVO vo = new ScreeningVO();
 		BeanUtils.copyProperties(screeningMapper, vo);
 		JSONArray leftarray = JSONArray.fromObject(screeningMapper.getProcessLeft());
+		vo.setMyIntegral(student_dao.findById(screeningMapper.getStudentId()).get().getMyIntegral());
 		vo.setProcessLeftList(pushjosn(screeningMapper.getProcessLeft()));
 		vo.setProcessRightList(pushjosn(screeningMapper.getProcessRight()));
 		return ResultVOUtil.success(vo);
@@ -471,6 +471,18 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 		integral.setGenTime(new Date());
 		integral_dao.save(integral);
 		//这里返回的其实是成功 就是用的err方法带回去的不一样的提示
+		return ResultVOUtil.success();
+	}
+
+	@Override
+	public ResultVO deleteScreening(Map<String, String> params) {
+		Integer type = Integer.valueOf(params.get("type"));
+		Integer id = Integer.valueOf(params.get("id"));
+		if(type == 1) {
+			screening_dao.deleteById(id);
+		}else {
+			screening_wear_dao.deleteById(id);
+		}
 		return ResultVOUtil.success();
 	}
 

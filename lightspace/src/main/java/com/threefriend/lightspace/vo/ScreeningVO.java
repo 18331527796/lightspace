@@ -18,6 +18,8 @@ public class ScreeningVO {
 		private String studentName;
 		//生日
 		private String birthday;
+		//总获得积分
+		private Long myIntegral;
 		// 左眼裸眼视力
 		private String visionLeft;
 		private String vision5Left;
@@ -36,6 +38,12 @@ public class ScreeningVO {
 		
 		
 		
+		public Long getMyIntegral() {
+			return myIntegral;
+		}
+		public void setMyIntegral(Long myIntegral) {
+			this.myIntegral = myIntegral;
+		}
 		public String getBirthday() {
 			return birthday;
 		}

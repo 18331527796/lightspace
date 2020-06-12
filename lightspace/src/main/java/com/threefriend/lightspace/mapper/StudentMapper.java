@@ -55,7 +55,7 @@ public class StudentMapper {
 	// 性格
 	private String nature ="";
 	// 是否矫正 (0:未校正 1:未校正)
-	private Integer correct;
+	private Integer correct = 0;
 	//上次检测时间
 	private String lastTime;
 	//上次推送时间
@@ -71,9 +71,17 @@ public class StudentMapper {
 	private Date remindUndetected=new Date();
 	private Date remindDecline=new Date();
 	private Date remindUntask=new Date();
+	//头像积分
+	private Long myIntegral = 0l;
 	
 	
 	
+	public Long getMyIntegral() {
+		return myIntegral;
+	}
+	public void setMyIntegral(Long myIntegral) {
+		this.myIntegral = myIntegral;
+	}
 	public Date getRemindUndetected() {
 		return remindUndetected;
 	}

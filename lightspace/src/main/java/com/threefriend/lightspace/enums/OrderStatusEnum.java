@@ -11,6 +11,8 @@ public enum OrderStatusEnum implements CodeEnum {
     SUCCESS(1, "待发货"),
     WAIT(2, "已发货"),
     FINISHED(3, "完结"),
+    EXCHANGE(4,"待体验"),
+    
     ;
 
     private Integer code;

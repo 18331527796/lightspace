@@ -119,7 +119,7 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	 * 绑定孩子
 	 */
 	@Override
-	public ResultVO insertStudent(Map<String, String> params) {
+	public synchronized ResultVO  insertStudent(Map<String, String> params) {
 		Integer studentId=Integer.valueOf(params.get("studentId"));
 		//查找家长学生表中的信息 看看这个孩子有没有被绑定
 		List<ParentStudentRelation> findByStudentId = p_s_dao.findByStudentId(studentId);
@@ -145,6 +145,13 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	public ResultVO relieveStudent(Map<String, String> params) {
 		Integer parentId = parent_dao.findByOpenId(params.get("openId")).getId();
 		Integer studentId=Integer.valueOf(params.get("studentId"));
+		String classesName = student_dao.findById(studentId).get().getClassesName();
+		if("社会".equals(classesName)) {
+			screening_dao.deleteAll(screening_dao.findByStudentIdOrderByGenTimeDesc(studentId));
+			screening_wear_Dao.deleteAll(screening_wear_Dao.findByStudentIdOrderByGenTimeDesc(studentId));
+			integral_dao.deleteAll(integral_dao.findByStudentIdOrderByGenTimeDesc(studentId));
+			student_dao.deleteById(studentId);
+		}
 		p_s_dao.deleteByStudentIdAndParentId(studentId,parentId);
 		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentId(parentId);
 		List<StudentMapper> end = new ArrayList<>();

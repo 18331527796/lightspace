@@ -14,4 +14,6 @@ import com.threefriend.lightspace.vo.ResultVO;
 public interface CreateQrcoreService {
 
 	ResultVO download(HttpServletResponse response,Map<String, String> params);
+	
+	ResultVO downloadXcx(HttpServletResponse response,Map<String, String> params);
 }

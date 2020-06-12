@@ -4,6 +4,7 @@ public enum DeliveryTypeEnums implements CodeEnum{
 
 	HOME(1,"邮寄"),
 	SCHOOL(2,"学校自取"),
+	SERVICE(3,"到店领取"),
 	;
 	private Integer code;
 	

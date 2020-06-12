@@ -53,6 +53,7 @@ public class SpecificationsServiceImpl implements SpecificationsService{
 		po.setIntegral(Long.valueOf(params.get("integral")));
 		po.setFreight(Integer.valueOf(params.get("freight")));
 		po.setProductId(Integer.valueOf(params.get("productId")));
+		po.setProductType(Integer.valueOf(params.get("productType")));
 		po.setProductName(product_dao.findById(Integer.valueOf(params.get("productId"))).get().getName());
 		po.setStock(Integer.valueOf(params.get("stock")));
 		if(!StringUtils.isEmpty(params.get("price")))po.setPrice(Long.valueOf(params.get("price")));
@@ -82,6 +83,7 @@ public class SpecificationsServiceImpl implements SpecificationsService{
 		if(!StringUtils.isEmpty(params.get("freight")))po.setFreight(Integer.valueOf(params.get("freight")));
 		if(!StringUtils.isEmpty(params.get("percentage")))po.setPercentage(Integer.valueOf(params.get("percentage")));
 		if(!StringUtils.isEmpty(params.get("stock")))po.setStock(Integer.valueOf(params.get("stock")));
+		if(!StringUtils.isEmpty(params.get("productType")))po.setProductType(Integer.valueOf(params.get("productType")));
 		if(!StringUtils.isEmpty(params.get("productId"))) {
 			po.setProductId(Integer.valueOf(params.get("productId")));
 			po.setProductName(product_dao.findById(Integer.valueOf(params.get("productId"))).get().getName());

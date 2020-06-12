@@ -1,16 +1,22 @@
 package com.threefriend.lightspace.xcx.service.Impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
+import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.vo.IntegralVO;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.IntegralService;
 
@@ -25,6 +31,8 @@ public class IntegralServiceImpl implements IntegralService{
 	private ParentRepository parent_dao;
 	@Autowired
 	private IntegralRepository Integral_dao;
+	@Autowired
+	private StudentRepository student_dao;
 
 	/* 
 	 * 这个账号的 积分列表
@@ -46,6 +54,25 @@ public class IntegralServiceImpl implements IntegralService{
 		end.put("expenditure", expenditure);
 		end.put("balance", balance);
 		end.put("data", Integral_dao.findByStudentIdOrderByGenTimeDesc(studentId));
+		return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO rankingNO10(Map<String, String> params) {
+		Integer studentId = Integer.valueOf(params.get("studentId"));
+		Map<String, Object> end = new HashMap<>();
+		List<IntegralVO> integtalRanking = new ArrayList<>();
+		Long myIntegral = Integral_dao.findIntegtalByState(1,studentId);
+		Long myRanking = Integral_dao.myRanking(studentId);
+		List<Integer> ids = Integral_dao.integtalRanking();
+		for (Integer id : ids) {
+			StudentMapper student = student_dao.findById(id).get();
+			IntegralVO vo = new IntegralVO(id, student.getName(), student.getSchoolName(), Integral_dao.findIntegtalByState(1, id));
+			integtalRanking.add(vo);
+		}
+		end.put("myIntegral", myIntegral==null?0:myIntegral);
+		end.put("myRanking", myRanking);
+		end.put("integtalRanking", integtalRanking);
 		return ResultVOUtil.success(end);
 	}
 

@@ -75,6 +75,12 @@ public enum ResultEnum {
     INTEGRAL_ERROR(10230,"您的爱眼币不足"),
     
     FINDPRODUCT_ERROR(10231,"未找到相关商品"),
+    
+    CREATEQRCORE_CHK(10232,"您的身份验证未通过"),
+    
+    ANSWER_ERROR(10233,"今日答题奖励已领取~"),
+    
+    ANSWER_ZERO_ERROR(10234,"今日答题奖励尚未领取，请再接再厉~"),
     ;
 
     private Integer status;

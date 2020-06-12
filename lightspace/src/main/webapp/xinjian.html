@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta  charset="utf-8"  name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title></title>
+		<style type="text/css">
+			body{
+				margin: 0 auto;
+				font-size: 12px;
+				overflow: hidden;
+			}
+			.index-container {
+				width: 100vw;
+				height: 100vh;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				background: skyblue
+			}
+			.titleBox {
+				font-size: 30px;
+				font-weight: bold;
+				text-align: center;
+				display: block;
+			}
+			.titleBox> img {
+				width: 200px !important;
+				height: auto;
+			}
+			.box {
+				width: 100%;
+				height: 40px;
+				line-height: 40px;
+				border: 1px solid lightgray;
+				border-radius: 8px;
+				padding-left: 8px;
+				box-sizing: border-box;
+				background-color: #fff;
+			}
+			.input-group {
+				margin: 10px auto;
+				clear: both;
+				width: 80%;
+			}
+			.input-group > input {
+				display: block;
+				width: 100%;
+				line-height: 40px;
+				border: 1px solid lightgray;
+				border-radius: 8px;
+				padding-left: 8px;
+				box-sizing: border-box;
+			}
+			.btnWrap {
+				margin: 30px auto;
+				clear: both;
+			}
+			.btn {
+				padding: 10px 20px;
+				background: darkorange;
+				border-radius: 8px;
+				text-align: center;
+				font-size: 16px;
+				font-weight: 600;
+				letter-spacing: 3px;
+				color: #fff;
+			}
+			/* 	蒙层 */
+			.mask {
+				width: 100%;
+				height: 100vh;
+				display: none;
+			}
+			.maskInner {
+				width: 100%;
+				height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			.mask img {
+				width: 200px;
+				height: auto;
+			}
+			select{
+				padding: 5px;
+				border-radius: 5px;
+				outline: none;
+			}
+			.birthday {
+				display: inline-block;
+				width: 31%;
+				background: #fff;
+			}
+			.birthWrap{
+				display: block;
+				width: 100%;
+				line-height: 40px;
+				font-size: 16px;
+				text-align: center;
+			}
+			.confirmWrap {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				background: rgba(10,10,10, 0.8);
+				display: none;
+			}
+			.confirmBox {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				width: 100vw;
+				height: 100vh;
+			}
+			.innerConfirm {
+				width: 60%;
+				padding: 10px;
+				background: #fff;
+				border-radius: 10px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+			}
+			.title {
+				font-size: 18px;
+				text-align: center;
+				letter-spacing: 3px;
+			}
+			.errmsg {
+				color: red;
+				font-weight: 500;
+				padding: 10px 0;
+				font-size: 16px;
+				text-align: center;
+			}
+			.resetBtn {
+				width: 100px;
+				color: #fff;
+				letter-spacing: 1px;
+				background: #3385ff;
+				border-bottom: 1px solid #2d78f4;
+				padding: 10px;
+				text-align: center;	
+				border-radius: 16px;
+			}
+			
+		</style>
+		<!-- 引入样式 -->
+		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../lightspace/select/select.js"></script>
+	</head>
+	<body>
+		<div class="mask">
+			<div class="maskInner">
+				<img src="https://www.guangliangkongjian.com/images/time2.gif" >
+			</div>
+		</div>
+		<div class="index-container">
+			<div class="input-group">
+				<div class="titleBox">
+					<img src="https://www.guangliangkongjian.com/images/login.png" style="width: 100%"/>
+				</div>
+			</div>
+			<div class="input-group">
+				<select id="school" class="box">
+					<option>学校选择</option>
+				</select>
+			</div>
+			<div class="input-group">
+				<select id="grade" class="box">
+					<option selected="selected">年级选择</option>
+					<option value="1">一年级</option>
+					<option value="2">二年级</option>
+					<option value="3">三年级</option>
+					<option value="4">四年级</option>
+					<option value="5">五年级</option>
+					<option value="6">六年级</option>
+				</select>
+			</div>
+			<div class="input-group">
+				<select id="classList" class="box">
+					<option>班级选择</option>
+				</select>
+			</div>
+			<div class="input-group">
+				<select id="studentList" class="box">
+					<option>学生选择</option>
+				</select>
+			</div>
+			<div class="birthWrap">
+				孩子出生日期选择
+			</div>
+			<div class="input-group">
+				<select name="year" id="year" class="birthday">
+					<option value="">选择年份</option>
+				</select>
+				<select name="month" id="month" class="birthday">
+					<option value="">选择月份</option>
+				</select>
+				<select id="days"class="birthday">
+					<option value="">选择日期</option>
+				</select>
+			</div>
+			<div  class="btnWrap">
+					<div class="btn" >
+						下载二维码
+					</div>
+			</div>
+			<div class="confirmWrap">
+				<div class="confirmBox">
+					<div class="innerConfirm">
+						 <div class="title">光亮空间</div>
+						 <div class = "errmsg">
+						 	出生日期与校方提供信息不符
+						 </div>
+						 <div class = "resetBtn">
+						 	请重新选择
+						 </div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<script type="text/javascript">
+		let schoolId, grade,classId,studentId, year, month,day, birthday;
+		let that = this;
+		$('#school').change((() => {
+			schoolId = $('#school option:selected').val();
+			if(grade !== undefined) {
+				$('#grade option').attr('selected', '');
+				$('#classList > option').remove();
+				$('#studentList > option').remove();
+				$('#grade option:first').prop("selected", 'selected');
+				$('#classList').append("<option>" + '班级选择' + "</option>")
+				$('#studentList').append("<option>" + '学生选择' + "</option>")
+			}
+		}));
+		$('#grade').change((() => {
+			if(schoolId == undefined) {
+				alert('请先选择学校')
+				return 
+			}
+			if(grade !== undefined) {
+				$('#classList option').remove();
+			}
+			// 如果班级不为空，先清空
+			if(classId !== undefined) {
+				$('#classList > option').remove();
+				$('#studentList > option').remove();
+				$('#classList').append("<option selected= 'selected'>" + '班级选择' + "</option>")
+				$('#studentList').append("<option selected= 'selected'>" + '学生选择' + "</option>")
+			}
+			grade = $('#grade option:selected').val();
+			this.getClassList(schoolId, grade);
+		}));
+		$('#classList').change((() => {
+			if(classId !== undefined) {
+				$('#studentList > option').remove();
+			}
+			if(studentId !== undefined) {
+				$('#studentList > option').remove();
+				$('#studentList').append("<option selected='selected'>" + '学生选择' + "</option>")
+			}
+			 classId = $('#classList option:selected').val();
+			this.getStudentList(classId)
+		}));
+		$('#studentList').change((() => {
+			 studentId = $('#studentList option:selected').val();
+		}));
+		$('.btn').click((() => {
+			if(studentId == undefined) {
+				alert('请先选择学生');
+				return;
+			}
+			if(birthday == undefined) {
+				alert('请先选择出生日期')
+				return;
+			}
+			$('.mask').css('display', 'block');
+			$.ajax({
+				type: 'post',
+				data: {
+					id: studentId,
+					birthday: birthday
+				},
+			    url : "https://www.guangliangkongjian.com/lightspace/xcx/chkStudent",
+			    success : function(res) {
+					if(res.status == 200) {
+						$('.mask').css('display', 'none');
+						that.downLoad()
+					}else {
+						$('.confirmWrap').css('display', 'block');
+						$('.mask').css('display', 'none');
+					}
+					
+			    },
+				fail: function(err) {
+					
+				}
+			});
+		}))
+		$('.resetBtn').click(() => {
+			$('.confirmWrap').css('display', 'none');
+		})
+		function downLoad() {
+			$.ajax({
+				type: 'post',
+				data: {
+					id: studentId
+				},
+				url : "https://www.guangliangkongjian.com/lightspace/xcx/download",
+				success : function(res) {
+					const downloadElement = document.createElement('a'); // 创建a标签
+					downloadElement.href = res.data;
+					document.body.appendChild(downloadElement);
+					downloadElement.click();
+				},
+				fail: function(err) {
+					
+			}	
+		})
+		};
+		function getClassList(schoolId, grade) {
+			$.ajax({
+				type: 'post',
+				data: {
+					schoolId: schoolId,
+					grade: grade,
+				},
+			    url : "https://www.guangliangkongjian.com/lightspace/xcx/allClass",
+			    success : function(res) {
+					var classList = res.data;
+					if(classList.length) {
+						for(var key in classList) {
+							
+							$('#classList').append("<option value='" + classList[key].id + "'>" + classList[key].className + "</option>")
+						}
+					}else {
+						alert('该年级下班级为空');
+						return;
+					}
+					
+			    },
+				fail: function(err) {
+					console.log(err, )
+				} 
+			});
+		};
+		function getStudentList(classId) {
+			$.ajax({
+				type: 'post',
+				data: {
+					classId: classId
+				},
+			    url : "https://www.guangliangkongjian.com/lightspace/xcx/allStudent",
+			    success : function(res) {
+					var studentList = res.data;
+					
+					if(studentList.length) {
+						for(var key in studentList) {
+							$('#studentList').append("<option value='" + studentList[key].id + "'>" + studentList[key].name + "</option>")
+						}	
+					}else {
+						alert('该班级下无学生');
+						return;
+					}
+			    }
+				
+			});
+		};
+		 $(document).ready(function() {
+		        $.ajax({
+		        	type: 'post',
+		            url : "https://www.guangliangkongjian.com/lightspace/xcx/allSchool",
+		            success : function(res) {
+						// console.log(res)
+						var school = res.data;
+						for(var key in school) {
+							$('#school').append("<option value='" + school[key].id + "'>" + school[key].name + "</option>")
+						}
+						
+		            }
+					
+		        });
+		    });  
+		
+		$(function(){
+			$("#date").selectDate()
+			$("#days").focusout(function(){
+				 year = $("#year option:selected").html().match(/\d+/g)
+				 month = $("#month option:selected").html().match(/\d+/g)
+				 day = $("#days option:selected").html().match(/\d+/g)
+				 birthday = year + '/' + month + '/' + day;
+				
+			})
+		})
+	</script>
+	</body>
+</html>

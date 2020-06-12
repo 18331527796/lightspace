@@ -110,8 +110,7 @@ public class UserServiceImpl implements UserService {
 		if(roleId==3)mark=user.get(0).getClassesId().toString();
 		tokenstr=tokenstr+"-"+roleId+"-"+mark;
 		token.put("token", tokenstr);
-		//用户名放session里面
-		session.setAttribute("userName", user.get(0).getName());
+		token.put("name", user.get(0).getName());
 		return ResultVOUtil.success(token);
 	}
 

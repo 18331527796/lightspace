@@ -1,6 +1,10 @@
 package com.threefriend.lightspace;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -8,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
@@ -26,24 +31,9 @@ public class test {
 	@Autowired
 	private StudentRepository student;
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void test() throws Exception{
-		
-		List<ParentStudentRelation> findByStudentId = p_s.findByStudentId(617);
-		
-		for (ParentStudentRelation parentStudentRelation : findByStudentId) {
-			
-			List<ParentStudentRelation> findByParentId = p_s.findByParentId(parentStudentRelation.getParentId());
-			System.out.println(findByParentId.size());
-			for (ParentStudentRelation parentStudentRelation2 : findByParentId) {
-				
-				System.out.println(student.findById(parentStudentRelation2.getStudentId()).get().getName());
-				
-			}
-			Thread.currentThread().sleep(200);
-			System.err.println("NEXT PAEENT SYSO");
-		}
-		
 	}
 	
 	

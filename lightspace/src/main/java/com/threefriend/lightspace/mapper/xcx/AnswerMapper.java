@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.mapper.xcx;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,7 +11,12 @@ import javax.persistence.Id;
  *
  */
 @Entity
-public class AnswerMapper {
+public class AnswerMapper implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue
@@ -22,6 +29,10 @@ public class AnswerMapper {
 	private String keyStr;
 	
 	private Integer type;
+	
+	private Integer level;
+	
+	private String explains;
 
 	public Integer getId() {
 		return id;
@@ -61,6 +72,22 @@ public class AnswerMapper {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+
+	public String getExplains() {
+		return explains;
+	}
+
+	public void setExplains(String explains) {
+		this.explains = explains;
 	}
 	
 	

@@ -101,8 +101,14 @@ public class ClassesServiceImpl implements ClassesService {
 			classes.setBbLength(params.get("bbLength"));
 		if (!StringUtils.isEmpty(params.get("experiment")))
 			classes.setExperiment(Integer.valueOf(params.get("experiment")));
-		if (!StringUtils.isEmpty(params.get("className")))
+		if (!StringUtils.isEmpty(params.get("className"))) {
+			List<StudentMapper> student = student_dao.findByClassesId(classes.getId());
+			for (StudentMapper studentMapper : student) {
+				studentMapper.setClassesName(params.get("className"));
+			}
 			classes.setClassName(params.get("className"));
+			student_dao.saveAll(student);
+		}
 		if (!StringUtils.isEmpty(params.get("roomLength")))
 			classes.setRoomLength(params.get("roomLength"));
 		if (!StringUtils.isEmpty(params.get("roomWidth")))

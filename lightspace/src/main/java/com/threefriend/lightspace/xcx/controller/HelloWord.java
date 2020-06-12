@@ -40,6 +40,8 @@ public class HelloWord {
 	private StudentRepository dao;
 	@Autowired
 	private ClassesRepository class_dao;
+	@Autowired
+	private StudentRepository student_dao;
 
 	@RequestMapping("/hello")
 	public String HelloWorld() {
@@ -70,6 +72,19 @@ public class HelloWord {
        }
        class_dao.saveAll(findAll);
         return ResultVOUtil.success();
+    }
+    
+    @RequestMapping("/shengri")
+    public ResultVO testsss() {
+    	List<StudentMapper> all = student_dao.findAll();
+    	for (StudentMapper po : all) {
+    		String birthday = po.getBirthday();
+    		if(birthday==null)continue;
+    		if(birthday.contains("-"))po.setBirthday(birthday.replace("-", "/"));
+    		if(birthday.contains("."))po.setBirthday(birthday.replace(".", "/"));
+		}
+    	student_dao.saveAll(all);
+    	return ResultVOUtil.success();
     }
 	
 	

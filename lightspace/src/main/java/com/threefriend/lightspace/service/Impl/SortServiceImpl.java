@@ -79,6 +79,10 @@ public class SortServiceImpl implements SortService {
 				vo.setStudentName(student.getName());
 				vo.setGender(student.getGender());
 				vo.setCorrect(student.getCorrect());
+				if(student.getSittingHeight()==null||student.getSittingHeight()==""||student.getChairHeight()==null||student.getChairHeight()=="") {
+					nullStudent.add(student.getName());
+					continue;
+				}
 				vo.setSittingHeight(Double.valueOf(student.getSittingHeight())-Double.valueOf(student.getChairHeight()));
 				//通过判断学生是否有最新的视力记录
 				if(student.getVisionLeftStr()!=null&&student.getVisionRightStr()!=null) {
@@ -89,6 +93,7 @@ public class SortServiceImpl implements SortService {
 						vo.setAvgRecord((record.getVisionLeftStr()+record.getVisionRightStr())/2);
 					}else {
 						nullStudent.add(student.getName());
+						continue;
 					}
 				}
 				//存放集合
@@ -101,11 +106,11 @@ public class SortServiceImpl implements SortService {
 			ListUtils.sort(sort, true,"sittingHeight", "avgRecord");
 			StringBuilder sortMark = new StringBuilder("");
 			//遍历身高的集合 添加进临时行的集合
-			for (int i = 0; i < size ; i++) {
+			for (int i = 1; i < size+1 ; i++) {
 				// 临时行的排序
-				temporary.add(sort.get(i));
+				temporary.add(sort.get(i-1));
 				//判断是不是一行已经完成添加
-				if ((i % number == 0 && i != 0) || (((size - i) < number) && i == (size - 1))) {
+				if ((i % number == 0 && i != 0) || (((size - i) < number) && i == size)) {
 					// 组合最后的list
 					end.add(temporary);
 					//遍历这一行的孩子 append 记录座位顺序

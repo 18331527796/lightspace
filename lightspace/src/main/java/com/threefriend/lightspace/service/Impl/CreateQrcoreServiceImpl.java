@@ -69,15 +69,7 @@ public class CreateQrcoreServiceImpl implements CreateQrcoreService{
 				accessToken = CreateQrcore.getToken();
 				redisUtil.setValueTime("XCXTOKEN", accessToken, 7000);
 			}
-            /*for (StudentMapper student : ids) {
-            	String studentId = student.getId().toString();
-            	//生成二维码
-            	String imgcode = CreateQrcore.postMiniqrQr(studentId,student.getName(), accessToken, path);
-            	//添加图片
-            	//String imgcode = WaterMarkUtils.graphicsGeneration(studentId,student.getName(), path);
-            	//生成一封信
-            	DrowMailUtils.graphicsGeneration(UrlEnums.TOMCAT_IMG+"\\光亮空间logo.png", imgcode, "", imgcode,student.getName());
-			}*/
+            
             //开启线程池 生成一封信
             long start = System.currentTimeMillis();
     		ExecutorService executor = Executors.newFixedThreadPool(5);
@@ -137,6 +129,34 @@ public class CreateQrcoreServiceImpl implements CreateQrcoreService{
         }
 
         }
+	}
+	
+	@Override
+	public synchronized ResultVO downloadXcx(HttpServletResponse response, Map<String, String> params) {
+		String path = UrlEnums.CODE_PATH.getUrl();
+		Integer id = Integer.valueOf(params.get("id"));
+		StudentMapper studentMapper = student_dao.findById(id).get();
+		try {
+			//生成token
+			String accessToken = redisUtil.get("XCXTOKEN");
+			if (accessToken == null || "".equals(accessToken)) {
+				accessToken = CreateQrcore.getToken();
+				redisUtil.setValueTime("XCXTOKEN", accessToken, 7000);
+			}
+			long start = System.currentTimeMillis();
+        	String studentId = studentMapper.getId().toString();
+        	//生成二维码
+        	String imgcode = CreateQrcore.postMiniqrQr(studentMapper.getId()+"",studentMapper.getName(), accessToken, path,"",studentMapper.getClassesName());
+        	//生成一封信
+        	DrowMailUtils.graphicsGeneration(UrlEnums.TOMCAT_IMG+"\\光亮空间logo.png", imgcode, "", imgcode,studentMapper.getName());
+			
+            long date = System.currentTimeMillis() - start;
+			System.out.println("===========================总共用时===========================");
+			System.out.println("===========================" + date/1000 + "===========================");
+        } catch (Exception e) {
+        	System.err.println("二维码生成失败");
+        }
+		return ResultVOUtil.success("https://www.guangliangkongjian.com/code/"+studentMapper.getId()+studentMapper.getName()+".jpg");
 	}
 
 }
