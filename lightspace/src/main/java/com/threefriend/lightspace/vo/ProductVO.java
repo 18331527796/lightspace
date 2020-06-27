@@ -16,6 +16,14 @@ public class ProductVO {
 	
 	private Long Integral;
 	
+	private String buyNumber;
+	
+	private Integer PartnershipId;
+	
+	private String PartnershipName;
+	
+	private Integer disPlayBuyer;
+	
 	private List<SpecificationsMapper> specificationsList;
 
 	private List<String> pictures = new ArrayList<>();
@@ -88,6 +96,38 @@ public class ProductVO {
 
 	public void setIntegral(Long integral) {
 		Integral = integral;
+	}
+
+	public String getBuyNumber() {
+		return buyNumber;
+	}
+
+	public void setBuyNumber(String buyNumber) {
+		this.buyNumber = buyNumber;
+	}
+
+	public Integer getPartnershipId() {
+		return PartnershipId;
+	}
+
+	public void setPartnershipId(Integer partnershipId) {
+		PartnershipId = partnershipId;
+	}
+
+	public String getPartnershipName() {
+		return PartnershipName;
+	}
+
+	public void setPartnershipName(String partnershipName) {
+		PartnershipName = partnershipName;
+	}
+
+	public Integer getDisPlayBuyer() {
+		return disPlayBuyer;
+	}
+
+	public void setDisPlayBuyer(Integer disPlayBuyer) {
+		this.disPlayBuyer = disPlayBuyer;
 	}
 	
 

@@ -282,4 +282,23 @@ public class ClassesServiceImpl implements ClassesService {
 		return str+end;
 	}
 
+	@Override
+	public ResultVO queryClassInStatistics(Map<String, String> params) {
+		String type = "";
+		int page = 0 ;
+		Integer id = 0;
+		if(!StringUtils.isEmpty(params.get("type"))) {
+			type = params.get("type");
+			id = Integer.valueOf(params.get("id"));
+		}
+		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ;
+		if("school".equals(type)) {
+			return ResultVOUtil.success(classes_dao.findBySchoolId(id, PageRequest.of(page, 10)));
+		}else if("class".equals(type)){
+			return ResultVOUtil.success(classes_dao.findById(id,PageRequest.of(page, 1)));
+		}else {
+			return ResultVOUtil.success(classes_dao.findAll(PageRequest.of(page, 10)));
+		}
+	}
+
 }

@@ -117,6 +117,16 @@ public class ClassesController {
 		return classes_impl.elevateClass(params);
 	}
 	
+	/**
+	 * 班级概况的查询
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/queryClassInStatistics")
+	public ResultVO queryClassInStatistics(@RequestParam Map<String, String> params) {
+		return classes_impl.queryClassInStatistics(params);
+	}
+	
 	
 
 }

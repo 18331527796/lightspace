@@ -19,7 +19,7 @@ import com.threefriend.lightspace.vo.StudentVO;
  */
 public interface TeacherService {
 	//教师列表
-	ResultVO teacherList();
+	ResultVO teacherList(Map<String, String> params);
 	//新增教师
 	ResultVO addTeacher(Map<String, String> params);
 	//修改教师
@@ -28,4 +28,6 @@ public interface TeacherService {
 	ResultVO alertTeacher(Map<String, String> params);
 	//删除教师
 	ResultVO deleteTeacher(Map<String, String> params);
+	//搜索教师
+	ResultVO queryTeacher(Map<String, String> params);
 }

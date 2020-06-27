@@ -9,19 +9,21 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import com.threefriend.lightspace.aspect.TestTimer;
+
 @SpringBootApplication
 @ComponentScan("com") // 1. 多模块项目需要扫描的包
 @EnableJpaRepositories("com.threefriend.lightspace.repository") // 2. Dao 层所在的包 
 @EntityScan("com.threefriend.lightspace.mapper") // 3. Entity 所在的包
 @EnableCaching
-public class LightspaceApplication extends SpringBootServletInitializer {
+public class LightspaceApplication /*extends SpringBootServletInitializer*/ {
 
-	@Override
+	/*@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		// 注意这里要指向原先用main方法执行的Application启动类
 		System.out.println("这里是启动类 这是真的启动了");
 		return builder.sources(LightspaceApplication.class);
-	}
+	}*/
 	
 
 	public static void main(String[] args) {

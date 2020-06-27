@@ -52,6 +52,9 @@ public class AnswerXcxServiceImpl implements AnswerXcxService{
 			poList.addAll(answer_dao.findByLevel(2, 2));
 			poList.addAll(answer_dao.findByLevel(3, 1));
 		}
+		//测试用的方法
+		/*poList.addAll(answer_dao.findByType(1,PageRequest.of(41, 4,Sort.by("id").ascending())).getContent());
+		poList.addAll(answer_dao.findByLevel(3, 1));*/
 		for (AnswerMapper answerMapper : poList) {
 			AnswerXcxVO vo = new AnswerXcxVO(answerMapper);
 			end.add(vo);

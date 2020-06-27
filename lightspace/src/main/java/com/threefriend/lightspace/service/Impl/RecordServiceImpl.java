@@ -27,18 +27,15 @@ import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
-import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.service.RecordService;
 import com.threefriend.lightspace.util.DownTemplateUtil;
 import com.threefriend.lightspace.util.ResultVOUtil;
-import com.threefriend.lightspace.vo.ClassStatisticsVO;
 import com.threefriend.lightspace.vo.OneStatisticsVO;
 import com.threefriend.lightspace.vo.RecordVO;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.vo.SchoolStatisticsVO;
 import com.threefriend.lightspace.vo.StatisticsVO;
 import com.threefriend.lightspace.vo.StudentStatisticsVO;
 

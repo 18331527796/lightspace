@@ -81,6 +81,10 @@ public enum ResultEnum {
     ANSWER_ERROR(10233,"今日答题奖励已领取~"),
     
     ANSWER_ZERO_ERROR(10234,"今日答题奖励尚未领取，请再接再厉~"),
+    
+    TASK_FABULOUS_ERROR(10235,"你已经点过赞"),
+    
+    TASK_FLOWERS_ERROR(10236,"你今天的花已全部送完"),
     ;
 
     private Integer status;

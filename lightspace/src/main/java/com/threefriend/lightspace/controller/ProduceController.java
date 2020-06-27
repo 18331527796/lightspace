@@ -56,4 +56,9 @@ public class ProduceController {
 	public ResultVO allProduct() {
 		return product_dao.allProduct();
 	}
+	
+	@PostMapping("disPlayBuyer")
+	public ResultVO disPlay() {
+		return product_dao.disPlay();
+	}
 }

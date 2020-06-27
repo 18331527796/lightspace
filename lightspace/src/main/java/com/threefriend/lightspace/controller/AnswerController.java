@@ -37,4 +37,15 @@ public class AnswerController {
 		return answer_impl.list(params);
 	}
 	
+	@PostMapping("editAnswerConfig")
+	public ResultVO editAnswerConfig(@RequestParam Map<String, String> params) {
+		return answer_impl.editAnswerConfig(params);
+	}
+	
+	@PostMapping("saveAnswerConfig")
+	public ResultVO saveAnswerConfig(@RequestParam Map<String, String> params,
+									 @RequestParam(value="file",required = false)MultipartFile file) {
+		return answer_impl.saveAnswerConfig(params,file);
+	}
+	
 }

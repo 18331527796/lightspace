@@ -85,7 +85,7 @@ public class AnswerXcxVO {
 	}
 
 	public AnswerXcxVO(AnswerMapper po) {
-		List<String> wordList = null;
+		List<String> wordList = new ArrayList<>();
 		this.id = po.getId();
 		this.title = po.getTitle();
 		this.level = po.getLevel();
@@ -93,10 +93,8 @@ public class AnswerXcxVO {
 		this.type = po.getType() == AnswerTypeEnums.SINGLE.getCode() ? AnswerTypeEnums.SINGLE.getMessage()
 				: AnswerTypeEnums.MULTIPLE.getMessage();
 		String[] split = po.getOptionStr().split("-");
-		if (split.length == 3) {
-			wordList = Arrays.asList("1", "2", "3");
-		} else {
-			wordList = Arrays.asList("1", "2", "3", "4");
+		for (int i = 1; i <= split.length; i++) {
+			wordList.add(i+"");
 		}
 		Collections.shuffle(wordList);
 		for (int i = 0 ; i<wordList.size() ; i++) {

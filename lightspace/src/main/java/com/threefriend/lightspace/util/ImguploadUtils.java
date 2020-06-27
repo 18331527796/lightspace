@@ -21,13 +21,13 @@ public class ImguploadUtils {
 	        File targetFile=null; 
 	        String fileName=file.getOriginalFilename();//获取文件名加后缀
 	        //先判断文件是否存在
-	        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	        SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
 	        String fileAdd = sdf.format(new Date());
 	        
 	        if(fileName!=null&&fileName!=""){
 	        	String path = UrlEnums.TOMCAT_IMG.getUrl()+"\\"+pathname; //文件存储位置  线上
 	        	//String path = "F:/"+pathname; //文件存储位置  线下
-	            fileName=new Date().getTime()+"_"+new Random().nextInt(1000)+".jpg";//新的文件名
+	            fileName=new Date().getTime()+"_"+new Random().nextInt(100)+".jpg";//新的文件名
 	 
 	            //获取文件夹路径
 	            File file2 =new File(path);

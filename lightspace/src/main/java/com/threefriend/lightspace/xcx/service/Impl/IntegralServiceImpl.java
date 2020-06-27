@@ -9,7 +9,10 @@ import java.util.Map;
 
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.IntegralRepository;
@@ -39,21 +42,28 @@ public class IntegralServiceImpl implements IntegralService{
 	 */
 	@Override
 	public ResultVO IntegralListByParentId(Map<String, String> params) {
-        Integer studentId = Integer.valueOf(params.get("studentId"));
-		Long income = Integral_dao.findIntegtalByState(1,studentId);
-		Long expenditure = Integral_dao.findIntegtalByState(0,studentId);
-		//收入
-		income = (income==null)?0:income;
-		//支出
-		expenditure = (expenditure==null)?0:expenditure;
-		//余额
-		Long balance = income - expenditure;
 		Map<String, Object> end = new HashedMap();
-		//收入
-		end.put("income", income);
-		end.put("expenditure", expenditure);
-		end.put("balance", balance);
-		end.put("data", Integral_dao.findByStudentIdOrderByGenTimeDesc(studentId));
+		int page = 0 ; 
+		//当type == 1 时，携带积分的运算数据 否则就是下拉加载 所以不用带
+		Integer type = Integer.valueOf(params.get("integralType"));
+		Integer studentId = Integer.valueOf(params.get("studentId"));
+		if(!StringUtils.isEmpty(params.get("integralPage")))page = Integer.valueOf(params.get("integralPage")) - 1 ;
+		
+		if(type == 1) {
+			Long income = Integral_dao.findIntegtalByState(1,studentId);
+			Long expenditure = Integral_dao.findIntegtalByState(0,studentId);
+			//收入
+			income = (income==null)?0:income;
+			//支出
+			expenditure = (expenditure==null)?0:expenditure;
+			//余额
+			Long balance = income - expenditure;
+			//收入
+			end.put("income", income);
+			end.put("expenditure", expenditure);
+			end.put("balance", balance);
+		}
+		end.put("data", Integral_dao.findByStudentId(studentId,PageRequest.of(page, 5,Sort.by("genTime").descending())).getContent());
 		return ResultVOUtil.success(end);
 	}
 

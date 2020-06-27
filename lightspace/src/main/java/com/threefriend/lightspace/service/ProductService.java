@@ -25,5 +25,7 @@ public interface ProductService {
 	ResultVO saveProduct(Map<String, String> params,MultipartFile picture[],MultipartFile details,String []delpic);
 	
 	ResultVO allProduct();
+	
+	ResultVO disPlay();
 
 }

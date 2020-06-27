@@ -20,8 +20,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.UrlEnums;
+import com.threefriend.lightspace.mapper.xcx.PartnershipMapper;
 import com.threefriend.lightspace.mapper.xcx.ProductMapper;
 import com.threefriend.lightspace.mapper.xcx.SpecificationsMapper;
+import com.threefriend.lightspace.repository.PartnershipRepository;
 import com.threefriend.lightspace.repository.ProductRepository;
 import com.threefriend.lightspace.repository.SpecificationsRepository;
 import com.threefriend.lightspace.service.ProductService;
@@ -40,6 +42,9 @@ public class ProductServiceImpl implements ProductService{
 	private ProductRepository product_dao;
 	@Autowired
 	private SpecificationsRepository specification_dao;
+	@Autowired
+	private PartnershipRepository partnership_dao;
+	
 
 	/*
 	 * 商品列表
@@ -72,10 +77,13 @@ public class ProductServiceImpl implements ProductService{
 	public ResultVO addProduct(Map<String, String> params,MultipartFile[] picture,MultipartFile details) {
 		String detailsstr = ImguploadUtils.uploadImg(details, "product");
 		String picturestr = ImguploadUtils.uploadImg(picture, "product");
+		PartnershipMapper partnership = partnership_dao.findById(Integer.valueOf(params.get("partnership"))).get();
 		ProductMapper po = new ProductMapper();
 		po.setName(params.get("name"));
 		po.setPicture(picturestr);
 		po.setDetails(detailsstr);
+		po.setPartnershipId(partnership.getId());
+		po.setPartnershipName(partnership.getName());
 		po.setGenTime(new Date());
 		product_dao.save(po);
 		return ResultVOUtil.success();
@@ -133,6 +141,11 @@ public class ProductServiceImpl implements ProductService{
 		int flag;
 		ProductMapper productMapper = product_dao.findById(Integer.valueOf(params.get("id"))).get();
 		productMapper.setGenTime(new Date());
+		if(!StringUtils.isEmpty(params.get("partnershipId"))) {
+			PartnershipMapper partnership = partnership_dao.findById(Integer.valueOf(params.get("partnershipId"))).get();
+			productMapper.setPartnershipId(partnership.getId());
+			productMapper.setPartnershipName(partnership.getName());
+		}
 		if(!StringUtils.isEmpty(params.get("name"))) {
 			productMapper.setName(params.get("name"));
 			List<SpecificationsMapper> content = specification_dao.findByProductId(productMapper.getId(), PageRequest.of(0, 20)).getContent();
@@ -228,6 +241,22 @@ public class ProductServiceImpl implements ProductService{
 			end.add(vo);
 		}
 		return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO disPlay() {
+		List<ProductMapper> product = product_dao.findAll();
+		if(product.get(0).getDisPlayBuyer()==1||product.get(0).getDisPlayBuyer()==null) {
+			for (ProductMapper po : product) {
+				po.setDisPlayBuyer(2);
+			}
+		}else {
+			for (ProductMapper po : product) {
+				po.setDisPlayBuyer(1);
+			}
+		}
+		product_dao.saveAll(product);
+		return ResultVOUtil.success();
 	}
 	
 	

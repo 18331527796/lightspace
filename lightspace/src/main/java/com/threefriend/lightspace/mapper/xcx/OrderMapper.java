@@ -36,6 +36,8 @@ public class OrderMapper {
 	private String delivrytype;//配送方式 
 	private String successtime;//订单完成时间
 	private String deliverynumber;//运单号
+	private String partnership;//合作机构
+	private String partnershipAddress;//合作机构地址
 	private String remark;//备注
 	private String gentime =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//创建时间
 	private String pic;
@@ -184,6 +186,18 @@ public class OrderMapper {
 	}
 	public void setGenTimeDate(Date genTimeDate) {
 		this.genTimeDate = genTimeDate;
+	}
+	public String getPartnership() {
+		return partnership;
+	}
+	public void setPartnership(String partnership) {
+		this.partnership = partnership;
+	}
+	public String getPartnershipAddress() {
+		return partnershipAddress;
+	}
+	public void setPartnershipAddress(String partnershipAddress) {
+		this.partnershipAddress = partnershipAddress;
 	}
 	
 	

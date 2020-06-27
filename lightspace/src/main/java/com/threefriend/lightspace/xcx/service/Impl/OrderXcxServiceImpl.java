@@ -20,10 +20,12 @@ import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
 import com.threefriend.lightspace.mapper.xcx.OrderMapper;
+import com.threefriend.lightspace.mapper.xcx.PartnershipMapper;
 import com.threefriend.lightspace.mapper.xcx.ProductMapper;
 import com.threefriend.lightspace.mapper.xcx.SpecificationsMapper;
 import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.OrderRepository;
+import com.threefriend.lightspace.repository.PartnershipRepository;
 import com.threefriend.lightspace.repository.ProductRepository;
 import com.threefriend.lightspace.repository.SpecificationsRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
@@ -51,6 +53,8 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 	private IntegralRepository integral_dao;
 	@Autowired
 	private SpecificationsRepository specifications_dao;
+	@Autowired
+	private PartnershipRepository partnership_dao;
 
 	/* 
 	 * 新增
@@ -64,7 +68,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		SpecificationsMapper specifications = specifications_dao
 				.findById(Integer.valueOf(params.get("specificationsId"))).get();
 		ProductMapper product = product_dao.findById(specifications.getProductId()).get();
-		
+		PartnershipMapper partnership = partnership_dao.findById(product.getPartnershipId()).get();
 		Long income = integral_dao.findIntegtalByState(1,student.getId());
 			 income = income == null ? 0 : income;
 		if(income==0)return ResultVOUtil.error(ResultEnum.INTEGRAL_ERROR.getStatus(), ResultEnum.INTEGRAL_ERROR.getMessage());
@@ -89,6 +93,8 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		newOrder.setNumber(number);
 		newOrder.setProductId(product.getId());
 		newOrder.setProductName(product.getName());
+		newOrder.setPartnership(product.getPartnershipName());
+		newOrder.setPartnershipAddress(partnership.getAddress());
 		newOrder.setStudentId(student.getId());
 		newOrder.setSchoolId(student.getSchoolId());
 		newOrder.setSchoolName(student.getSchoolName());
@@ -120,7 +126,9 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 		order_dao.save(newOrder);
 
 		if (delivryType != DeliveryTypeEnums.HOME.getCode()) {
-			return ResultVOUtil.success();
+			return ResultVOUtil.success(new HashMap<String, String>(){{put("orderId",newOrder.getId()+"");
+																	   put("partnership", newOrder.getPartnership());
+																	   put("address",partnership.getAddress());}});
 		}else {
 			Map<String, String> createOrder = createOrder(openId,paymoney,newOrder.getId(),product.getName());
 			createOrder.put("signType", "MD5");
@@ -136,7 +144,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 	public ResultVO orderByStudent(Map<String, String> params) {
 		int page = 0 ;
 		if(!StringUtils.isEmpty(params.get("page"))) page = Integer.valueOf(params.get("page")) - 1;
-		List<OrderMapper> content = order_dao.findByStudentIdAndDisplayOrderByGenTimeDateDesc(Integer.valueOf(params.get("studentId")),1,PageRequest.of(page, 10)).getContent();
+		List<OrderMapper> content = order_dao.findByStudentIdAndDisplayOrderByGenTimeDateDesc(Integer.valueOf(params.get("studentId")),1,PageRequest.of(page, 5)).getContent();
 		return ResultVOUtil.success(content);
 	}
 
@@ -150,9 +158,6 @@ public class OrderXcxServiceImpl implements OrderXcxService {
 	@Override
 	public Map<String, String> createOrder(String openid, Long money , int orderId , String productName) {
 
-		String mch_id = WXPayConstants.MCH_ID; // 商户号
-
-		String today = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 		String WXPay = WXPayUtil.createCode(8);
 		String out_trade_no =orderId+"-"+ WXPay;// 生成订单号
 		//String out_trade_no ="lightspace-"+orderId+"-"+ WXPay;// 生成订单号
@@ -202,7 +207,7 @@ public class OrderXcxServiceImpl implements OrderXcxService {
         //下单的金额，因为在微信支付中默认是分所以要这样处理
         Long total_fees=total_fee*100;
         //微信下单的金额是String类型的所以要转换类型
-        String money=/*total_fees.toString();*/ "1";
+        String money=total_fees.toString();/*"1";*/
         String nonceStr=WXPayUtil.generateUUID(); //设置UUID作为随机字符串
 
         Map<String ,String> map = new HashMap<String ,String>();

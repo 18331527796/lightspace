@@ -24,6 +24,12 @@ public class ProductMapper {
 	
 	private String details;
 	
+	private Integer PartnershipId;
+	
+	private String PartnershipName;
+	
+	private Integer disPlayBuyer = 1;
+	
 	private String genTime;
 
 	public Integer getId() {
@@ -56,6 +62,30 @@ public class ProductMapper {
 
 	public void setDetails(String details) {
 		this.details = details;
+	}
+
+	public Integer getPartnershipId() {
+		return PartnershipId;
+	}
+
+	public void setPartnershipId(Integer partnershipId) {
+		PartnershipId = partnershipId;
+	}
+
+	public String getPartnershipName() {
+		return PartnershipName;
+	}
+
+	public void setPartnershipName(String partnershipName) {
+		PartnershipName = partnershipName;
+	}
+
+	public Integer getDisPlayBuyer() {
+		return disPlayBuyer;
+	}
+
+	public void setDisPlayBuyer(Integer disPlayBuyer) {
+		this.disPlayBuyer = disPlayBuyer;
 	}
 
 	public String getGenTime() {

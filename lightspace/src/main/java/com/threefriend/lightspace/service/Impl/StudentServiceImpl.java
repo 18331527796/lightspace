@@ -116,21 +116,21 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public ResultVO addStudent(Map<String, String> params) {
 		StudentMapper student = new StudentMapper();
-		student.setAge(Integer.valueOf(params.get("age")));
-		student.setChairHeight(params.get("chairHeight"));
+		if(!StringUtils.isEmpty(params.get("age")))student.setAge(Integer.valueOf(params.get("age")));
+		if(!StringUtils.isEmpty(params.get("chairHeight")))student.setChairHeight(params.get("chairHeight"));
 		student.setClassesId(Integer.valueOf(params.get("classId")));
 		student.setClassesName(classes_dao.findById(Integer.valueOf(params.get("classId"))).get().getClassName());
-		student.setCorrect(Integer.valueOf(params.get("correct")));
+		if(!StringUtils.isEmpty(params.get("correct")))student.setCorrect(Integer.valueOf(params.get("correct")));
 		student.setGender(Integer.valueOf(params.get("gender")));
-		student.setHeight(params.get("height"));
+		if(!StringUtils.isEmpty(params.get("height")))student.setHeight(params.get("height"));
 		student.setName(params.get("name"));
 		student.setRegionId(1);
 		student.setRegionName("唐山");
 		student.setSchoolId(Integer.valueOf(params.get("schoolId")));
 		student.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
-		student.setSittingHeight(params.get("sittingHeight"));
-		student.setWeight(params.get("weight"));
-		student.setParentPhone(params.get("parentPhone"));
+		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
+		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(params.get("weight"));
+		if(!StringUtils.isEmpty(params.get("parentPhone")))student.setParentPhone(params.get("parentPhone"));
 		if(!StringUtils.isEmpty(params.get("birthday")))student.setBirthday(params.get("birthday"));
 		if(!StringUtils.isEmpty(params.get("nature")))student.setNature(params.get("nature"));
 		if(!StringUtils.isEmpty(params.get("description")))student.setDescription(params.get("description"));

@@ -19,4 +19,8 @@ public interface AnswerService {
 	
 	ResultVO list(Map<String, String> params);
 	
+	ResultVO editAnswerConfig(Map<String, String> params);
+
+	ResultVO saveAnswerConfig(Map<String, String> params,MultipartFile file);
+	
 }

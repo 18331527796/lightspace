@@ -1,9 +1,12 @@
 package com.threefriend.lightspace.service.Impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -33,8 +36,13 @@ public class TeacherServiceImpl implements TeacherService{
 	 * 教师列表
 	 */
 	@Override
-	public ResultVO teacherList() {
-		return ResultVOUtil.success(teacher_dao.findAll());
+	public ResultVO teacherList(Map<String, String> params) {
+		int page = 0 ; 
+		String type = "";
+		if(!StringUtils.isEmpty(params.get("type"))) type = params.get("type");
+		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ;
+		if("school".equals(type))return ResultVOUtil.success(teacher_dao.findBySchoolId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10,Sort.by("id").descending())));
+		return ResultVOUtil.success(teacher_dao.findAll(PageRequest.of(page, 10,Sort.by("id").descending())));
 	}
 
 	/*  
@@ -53,7 +61,7 @@ public class TeacherServiceImpl implements TeacherService{
 		teacher.setPhone(params.get("phone"));
 		teacher.setPassword(params.get("password"));
 		teacher_dao.save(teacher);
-		return ResultVOUtil.success(teacher_dao.findAll());
+		return ResultVOUtil.success();
 	}
 
 	/*  
@@ -86,7 +94,7 @@ public class TeacherServiceImpl implements TeacherService{
 		if(!StringUtils.isEmpty(params.get("phone")))teacher.setPhone(params.get("phone"));
 		if(!StringUtils.isEmpty(params.get("password")))teacher.setPassword(params.get("password"));
 		teacher_dao.save(teacher);
-		return ResultVOUtil.success(teacher_dao.findAll());
+		return ResultVOUtil.success();
 	}
 	/*  
 	 * 删除教师
@@ -94,7 +102,13 @@ public class TeacherServiceImpl implements TeacherService{
 	@Override
 	public ResultVO deleteTeacher(Map<String, String> params) {
 		teacher_dao.deleteById(Integer.valueOf(params.get("id")));
-		return ResultVOUtil.success(teacher_dao.findAll());
+		return ResultVOUtil.success();
+	}
+
+	@Override
+	public ResultVO queryTeacher(Map<String, String> params) {
+		List<TeacherMapper> list = teacher_dao.findByNameLike("%"+params.get("name")+"%");
+		return ResultVOUtil.success(list);
 	}
 
 }

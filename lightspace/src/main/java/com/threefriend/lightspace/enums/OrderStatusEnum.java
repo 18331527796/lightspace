@@ -10,7 +10,7 @@ public enum OrderStatusEnum implements CodeEnum {
     NEW(0, "新订单"),
     SUCCESS(1, "待发货"),
     WAIT(2, "已发货"),
-    FINISHED(3, "完结"),
+    FINISHED(3, "已完成"),
     EXCHANGE(4,"待体验"),
     
     ;

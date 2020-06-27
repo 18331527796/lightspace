@@ -30,8 +30,8 @@ public class TeacherController {
 	 */
 	
 	@PostMapping("/teacherList")
-	public ResultVO teacherList() {
-		return teacher_impl.teacherList();
+	public ResultVO teacherList(@RequestParam Map<String, String> params) {
+		return teacher_impl.teacherList(params);
 	}
 	
 	/**
@@ -76,5 +76,16 @@ public class TeacherController {
 	@PostMapping("/deleteTeacher")
 	public ResultVO deleteTeacher(@RequestParam Map<String, String> params) {
 		return teacher_impl.deleteTeacher(params);
+	}
+	
+	/**
+	 * 搜索教师
+	 * @param params
+	 * @return
+	 */
+	
+	@PostMapping("/queryTeacher")
+	public ResultVO queryTeacher(@RequestParam Map<String, String> params) {
+		return teacher_impl.queryTeacher(params);
 	}
 }

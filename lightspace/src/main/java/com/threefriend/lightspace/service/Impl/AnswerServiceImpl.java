@@ -38,6 +38,8 @@ public class AnswerServiceImpl implements AnswerService{
 	private AnswerRepository answer_dao;
 	@Autowired
 	private ReadAnswerExcel excel_dao;
+	@Autowired
+	private AnswerConfigRepository config_dao;
 	
 	
 	/* 批量导入	 */
@@ -75,6 +77,30 @@ public class AnswerServiceImpl implements AnswerService{
 		}
 		Page<AnswerVO> end = new PageImpl<>(endlist, findAll.getPageable(), findAll.getTotalElements());
 		return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO editAnswerConfig(Map<String, String> params) {
+		AnswerConfigMapper po = config_dao.findById(1).get();
+		po.setPic(UrlEnums.IMG_URL.getUrl()+po.getPic());
+		return ResultVOUtil.success(po);
+	}
+
+	@Override
+	public ResultVO saveAnswerConfig(Map<String, String> params, MultipartFile file) {
+		AnswerConfigMapper po = config_dao.findById(1).get();
+		if(file!=null) {
+			File oldfile = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+po.getPic());
+			oldfile.delete();
+			String path = ImguploadUtils.uploadImg(file, "answer");
+			po.setPic(path);
+		}
+		if(!StringUtils.isEmpty(params.get("title")))po.setTitle(params.get("title"));
+		if(!StringUtils.isEmpty(params.get("subtitle")))po.setSubtitle(params.get("subtitle"));
+		if(!StringUtils.isEmpty(params.get("introduction")))po.setIntroduction(params.get("introduction"));
+		if(!StringUtils.isEmpty(params.get("details")))po.setDetails(params.get("details"));
+		config_dao.save(po);
+		return ResultVOUtil.success();
 	}
 
 

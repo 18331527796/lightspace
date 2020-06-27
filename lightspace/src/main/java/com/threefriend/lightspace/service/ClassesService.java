@@ -32,4 +32,6 @@ public interface ClassesService {
 	public List<SchoolVO> cascade();
 	//方便于下拉框的方法 （学校——>班级）
 	public List<SchoolVO> cascade1();
+	//概况的班级查询
+	public ResultVO queryClassInStatistics(Map<String, String> params);
 }
