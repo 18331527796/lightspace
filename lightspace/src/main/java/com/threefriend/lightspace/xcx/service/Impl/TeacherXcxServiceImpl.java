@@ -368,10 +368,10 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 					if (taskMapper.getId() == taskRecordMapper.getTaskId())
 						flag = 2;
 				}
-				if (flag == 1 && taskstr.length() == 0)
-					taskstr.append(taskMapper.getTitle());
 				if (flag == 1 && taskstr.length() != 0)
 					taskstr.append("，" + taskMapper.getTitle());
+				if (flag == 1 && taskstr.length() == 0)
+					taskstr.append(taskMapper.getTitle());
 			}
 			sendmsg(student, null, "untask", taskstr.toString());
 			student.setRemindUntask(new Date());

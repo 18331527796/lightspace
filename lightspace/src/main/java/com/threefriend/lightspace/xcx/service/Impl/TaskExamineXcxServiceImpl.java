@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.xcx.service.Impl;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -220,6 +221,25 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 	public ResultVO configPic() {
 		TaskExamineConfigMapper po = config_dao.findByStatus(1);
 		return ResultVOUtil.success(UrlEnums.IMG_URL.getUrl()+po.getPath());
+	}
+
+	@Override
+	public ResultVO deleteMyMoments(Map<String, String> params) {
+		TaskExamineMapper po = task_examine_dao.findById(Integer.valueOf(params.get("id"))).get();
+		if(!StringUtils.isEmpty(po.getPath())) {
+			if(po.getPath().contains(",")) {
+				String[] split = po.getPath().split(",");
+				for (String string : split) {
+					File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+string);
+					file.delete();
+				}
+			}else {
+				File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+po.getPath());
+				file.delete();
+			}
+		}	
+		task_examine_dao.delete(po);
+		return ResultVOUtil.success();
 	}
 
 }

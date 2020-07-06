@@ -35,6 +35,11 @@ public class TaskExamineXcxController {
 	public ResultVO myMomentsList(@RequestParam Map<String, String> params) {
 		return task_examine_impl.myMomentsList(params);
 	}
+
+	@PostMapping("/deleteMyMoments")
+	public synchronized ResultVO deleteMyMoments(@RequestParam Map<String, String> params) {
+		return task_examine_impl.deleteMyMoments(params);
+	}
 	
 	@PostMapping("/fabulous")
 	public synchronized ResultVO fabulous(@RequestParam Map<String, String> params) {

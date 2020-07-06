@@ -20,6 +20,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -231,7 +232,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 	 */
 	@Override
 	public ResultVO selectOptotype() {
-		List<OptotypeMapper> allOptotype = optotype_dao.findAll();
+		List<OptotypeMapper> allOptotype = optotype_dao.findAll(Sort.by("id").ascending());
 		// 准备封装的数据类型
 		List<OptotypeVO> voList = new ArrayList<>();
 		// 遍历拷贝

@@ -45,13 +45,13 @@ public class TaskExamineServiceImpl implements TaskExamineService{
 		String type = params.get("type"); 
 		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ;
 		if("NULL".equals(type)) {
-			Page<TaskExamineMapper> all = task_examine_dao.findByExamineStatus(TaskExamineStatesEnum.NULL.getCode(),PageRequest.of(page, 10));
+			Page<TaskExamineMapper> all = task_examine_dao.findByExamineStatus(TaskExamineStatesEnum.NULL.getCode(),PageRequest.of(page, 10, Sort.by("id").descending()));
 			for (TaskExamineMapper po : all.getContent()) {
 				list.add(new TaskExamineVO(po));
 			}
 			return ResultVOUtil.success(new PageImpl<>(list, all.getPageable(), all.getTotalElements()));
 		}else {
-			Page<TaskExamineMapper> all = task_examine_dao.findByExamineStatusNot(TaskExamineStatesEnum.NULL.getCode(),PageRequest.of(page, 10));
+			Page<TaskExamineMapper> all = task_examine_dao.findByExamineStatusNot(TaskExamineStatesEnum.NULL.getCode(),PageRequest.of(page, 10, Sort.by("id").descending()));
 			for (TaskExamineMapper po : all.getContent()) {
 				list.add(new TaskExamineVO(po));
 			}
@@ -112,8 +112,18 @@ public class TaskExamineServiceImpl implements TaskExamineService{
 	@Override
 	public ResultVO deleteMomentsConfig(Map<String, String> params) {
 		TaskExamineConfigMapper po = config_dao.findById(Integer.valueOf(params.get("id"))).get();
-		File oldfile= new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+po.getPath());
-		oldfile.delete();
+		if(!StringUtils.isEmpty(po.getPath())) {
+			if(po.getPath().contains(",")) {
+				String[] split = po.getPath().split(",");
+				for (String string : split) {
+					File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+string);
+					file.delete();
+				}
+			}else {
+				File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+po.getPath());
+				file.delete();
+			}
+		}	
 		config_dao.delete(po);
 		return ResultVOUtil.success();
 	}

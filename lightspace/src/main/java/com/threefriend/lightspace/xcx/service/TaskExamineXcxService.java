@@ -20,4 +20,6 @@ public interface TaskExamineXcxService {
 	ResultVO flowers(Map<String, String> params)throws ParseException;
 	
 	ResultVO configPic();
+	
+	ResultVO deleteMyMoments(Map<String, String> params);
 }

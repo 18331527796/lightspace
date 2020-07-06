@@ -45,7 +45,9 @@ public class IntegralServiceImpl implements IntegralService{
 		Map<String, Object> end = new HashedMap();
 		int page = 0 ; 
 		//当type == 1 时，携带积分的运算数据 否则就是下拉加载 所以不用带
-		Integer type = Integer.valueOf(params.get("integralType"));
+		Integer type = 1 ;
+		if(!StringUtils.isEmpty(params.get("integralType")))
+			type = Integer.valueOf(params.get("integralType"));
 		Integer studentId = Integer.valueOf(params.get("studentId"));
 		if(!StringUtils.isEmpty(params.get("integralPage")))page = Integer.valueOf(params.get("integralPage")) - 1 ;
 		
