@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.xcx.service.Impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,9 @@ import org.springframework.util.StringUtils;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ClassesMapper;
+import com.threefriend.lightspace.mapper.RegionMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.CalibrationMapper;
 import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
 import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
 import com.threefriend.lightspace.mapper.xcx.OrderMapper;
@@ -25,12 +29,14 @@ import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
 import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 import com.threefriend.lightspace.mapper.xcx.TaskRecordMapper;
+import com.threefriend.lightspace.repository.CalibrationRepository;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.GzhUserRepository;
 import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.OrderRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.ParentStudentRepository;
+import com.threefriend.lightspace.repository.RegionRepository;
 import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.ScreeningWearRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
@@ -62,6 +68,12 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	private ScreeningWearRepository screening_wear_Dao;
 	@Autowired
 	private OrderRepository order_Dao;
+	@Autowired
+	private RegionRepository region_dao;
+	@Autowired
+	private TaskRecordRepository taskrecord_dao;
+	@Autowired
+	private CalibrationRepository calibration_dao;
 
 	/* 
 	 * 登陆验证
@@ -101,7 +113,7 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	@Override
 	public ResultVO childrenList(Map<String, String> params) {
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
-		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentId(parent.getId());
+		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentIdOrderByIdDesc(parent.getId());
 		//如果这个账号没有绑定孩子 返回错误提示
 		if(findByParentId.size()==0)return ResultVOUtil.error(ResultEnum.BINDINGSTUDENT_ERROR.getStatus(),ResultEnum.BINDINGSTUDENT_ERROR.getMessage());
 		List<StudentMapper> end =new ArrayList<>();
@@ -135,7 +147,7 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		po.setParentId(parentId);
 		po.setStudentId(studentId);
 		p_s_dao.save(po);
-		return childrenList(params);
+		return childrenIntegral(params);
 	}
 
 	/* 
@@ -153,7 +165,7 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 			student_dao.deleteById(studentId);
 		}
 		p_s_dao.deleteByStudentIdAndParentId(studentId,parentId);
-		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentId(parentId);
+		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentIdOrderByIdDesc(parentId);
 		List<StudentMapper> end = new ArrayList<>();
 		for (ParentStudentRelation parentStudentRelation : findByParentId) {
 			Optional<StudentMapper> findById = student_dao.findById(parentStudentRelation.getStudentId());
@@ -255,8 +267,14 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		newspo.setClassesName(classPo.getClassName());
 		newspo.setSchoolId(classPo.getSchoolId());
 		newspo.setSchoolName(classPo.getSchoolName());
-		newspo.setRegionId(classPo.getRegionId());
-		newspo.setRegionName(classPo.getRegionName());
+		if(!StringUtils.isEmpty(params.get("regionId"))) {
+			RegionMapper region = region_dao.findById(Integer.valueOf(params.get("regionId"))).get();
+			newspo.setRegionId(region.getId());
+			newspo.setRegionName(region.getName());
+		}else {
+			newspo.setRegionId(classPo.getRegionId());
+			newspo.setRegionName(classPo.getRegionName());
+		}
 		newspo.setGender(Integer.valueOf(params.get("gender")));
 		newspo.setName(params.get("name"));
 		student_dao.save(newspo);
@@ -264,7 +282,10 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		p_s.setParentId(parent.getId());
 		p_s.setStudentId(newspo.getId());
 		p_s_dao.save(p_s);
-		return ResultVOUtil.success();
+		Map<String, String> end = new HashMap<>();
+		end.put("id", newspo.getId()+"");
+		end.put("balance", "0");
+		return ResultVOUtil.success(end);
 	}
 
 	/* 
@@ -321,5 +342,145 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		student_dao.deleteById(oldId);
 		return ResultVOUtil.success();
 	}
+
+	@Override
+	public ResultVO firstPage(Map<String, String> params) throws Exception {
+		Map<String, Date> map = beginAndEnd();
+		
+		Integer studentId = Integer.valueOf(params.get("studentId"));
+		StudentMapper student = student_dao.findById(studentId).get();
+		Map<String , String> end = new HashMap<String, String>();
+		
+		SimpleDateFormat Format = new SimpleDateFormat("yyyy-MM-dd"); // 定义想要的格式
+		String now = Format.format(new Date()).substring(0, 10);
+		
+		Long income = integral_dao.findIntegtalByState(1,studentId);
+		Long expenditure = integral_dao.findIntegtalByState(0,studentId);
+		//收入
+		income = (income==null)?0:income;
+		//支出
+		expenditure = (expenditure==null)?0:expenditure;
+		//余额
+		Long balance = income - expenditure;
+		//我的排名
+		Long myRanking = integral_dao.myRanking(studentId);
+		//打卡记录
+		List<TaskRecordMapper> allRecords = taskrecord_dao.findByStudentIdAndGenTimeBetween(studentId, map.get("begin"), map.get("end"));
+		
+		IntegralMapper answer = integral_dao.findByStudentIdAndDetailedAndGenTimeBetween(studentId,"获得爱眼答题奖励",map.get("begin"), map.get("end"));
+		
+		//爱眼币数量
+		end.put("balance", balance.toString());
+		//爱眼币排名
+		end.put("ranking", myRanking.toString());
+		
+		
+		if(student.getSendTime()!=null) {
+			if(now.equals(Format.format(student.getSendTime()).substring(0, 10))) {
+				//筛查情况
+				end.put("undetected", "1");
+			}else {
+				end.put("undetected", "0");
+			}
+			end.put("lastTime", student.getLastTime());
+		}else {
+			end.put("undetected", "0");
+			end.put("lastTime", "");
+		}
+		//打卡任务
+		end.put("task", allRecords.size()+"");
+		//答题竞赛
+		if(answer==null) {
+			end.put("answer", "0");
+		}else {
+			end.put("answer", answer.getIntegral()==null?"0":(answer.getIntegral()+""));
+		}
+		//秀  一  秀
+		return ResultVOUtil.success(end);
+	}
 	
+	public Map<String, Date> beginAndEnd() throws Exception {
+		Map<String, Date> map = new HashMap<String, Date>();
+		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date begin = simpleDateFormat.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00"));
+		Date end = simpleDateFormat.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59"));
+		map.put("begin", begin);
+		map.put("end", end);
+		return map;
+	}
+
+	/**
+	 * 验证校验信息
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ResultVO chkCalibration(Map<String, String> params) {
+		CalibrationMapper findByOpenId = calibration_dao.findByOpenId(params.get("openId"));
+		if(findByOpenId==null) {
+			return ResultVOUtil.success();
+		}else {
+			return ResultVOUtil.success(findByOpenId.getLv());
+		}
+	}
+
+	/**
+	 * 更改校验信息
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public ResultVO editCalibration(Map<String, String> params) {
+		CalibrationMapper findByOpenId = calibration_dao.findByOpenId(params.get("openId"));
+		if(findByOpenId!=null) {
+			findByOpenId.setLv(params.get("scale"));
+			calibration_dao.save(findByOpenId);
+			return ResultVOUtil.success(findByOpenId.getLv());
+		}else {
+			CalibrationMapper po = new CalibrationMapper();
+			po.setOpenId(params.get("openId"));
+			po.setLv(params.get("scale"));
+			calibration_dao.save(po);
+			return ResultVOUtil.success(po.getLv());
+		}
+	}
+	
+	
+	@Override
+	public ResultVO childrenIntegral(Map<String, String> params) {
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentIdOrderByIdDesc(parent.getId());
+		//如果这个账号没有绑定孩子 返回错误提示
+		if(findByParentId.size()==0)return ResultVOUtil.error(ResultEnum.BINDINGSTUDENT_ERROR.getStatus(),ResultEnum.BINDINGSTUDENT_ERROR.getMessage());
+		Long income = 0l,expenditure = 0l, balance = 0l , myRanking = 0l;
+		List<Map<String, String>> end =new ArrayList<>();
+		
+		for (ParentStudentRelation id : findByParentId) {
+			Map<String, String> object = new HashMap<>();
+			StudentMapper studentMapper = student_dao.findById(id.getStudentId()).get();
+			
+			myRanking = integral_dao.myRanking(studentMapper.getId());
+			income = integral_dao.findIntegtalByState(1,studentMapper.getId());
+			expenditure = integral_dao.findIntegtalByState(0,studentMapper.getId());
+			//收入
+			income = (income==null)?0:income;
+			//支出
+			expenditure = (expenditure==null)?0:expenditure;
+			//余额
+			balance = income - expenditure;
+			
+			object.put("id", studentMapper.getId()+"");
+			object.put("name", studentMapper.getName());
+			object.put("balance", balance+"");
+			object.put("income", income+"");
+			object.put("myIntegral", income+"");
+			object.put("gender", studentMapper.getGender()+"");
+			object.put("ranking", myRanking+"");
+			object.put("birthday", studentMapper.getBirthday());
+			
+			end.add(object);
+		}
+		return ResultVOUtil.success(end);
+	}
 }

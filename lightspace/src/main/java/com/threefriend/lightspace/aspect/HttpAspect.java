@@ -86,7 +86,7 @@ public class HttpAspect {
         String className = joinPoint.getTarget().getClass().getName();
         //获取请求的方法名
         String methodName = method.getName();
-        sysLog.setMethod(className + "." + methodName);
+        sysLog.setMethod(methodName);
 
         //请求的参数
         Object[] args = joinPoint.getArgs();

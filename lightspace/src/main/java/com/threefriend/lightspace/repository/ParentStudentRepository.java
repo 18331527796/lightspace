@@ -19,7 +19,7 @@ import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
  */
 public interface ParentStudentRepository extends JpaRepository<ParentStudentRelation, Integer>{
 
-	List<ParentStudentRelation> findByParentId(Integer parentId);
+	List<ParentStudentRelation> findByParentIdOrderByIdDesc(Integer parentId);
 	
 	List<ParentStudentRelation> findByStudentId(Integer studentId);
 	

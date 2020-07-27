@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.ParentXcxServiceImpl;
 
@@ -74,12 +75,13 @@ public class ParentXcxController {
 	 * @param params
 	 * @return
 	 */
-	
+	@Mylog(value=("我的首页"))
 	@PostMapping("/mine")
 	public ResultVO mind(@RequestParam Map<String, String> params) {
 		return parent_impl.mine(params);
 	}
 	
+	@Mylog(value=("绑定手机"))
 	@PostMapping("/bindingPhone")
 	public ResultVO bindingPhone(@RequestParam Map<String, String> params) throws Exception {
 		return parent_impl.bindingPhone(params);
@@ -102,6 +104,7 @@ public class ParentXcxController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Mylog(value=("社会注册"))
 	@PostMapping("/registerStudent")
 	public ResultVO registerStudent(@RequestParam Map<String, String> params) throws Exception {
 		return parent_impl.registerStudent(params);
@@ -116,5 +119,44 @@ public class ParentXcxController {
 	@PostMapping("/transplantStudent")
 	public ResultVO transplantStudent(@RequestParam Map<String, String> params) throws Exception {
 		return parent_impl.transplantStudent(params);
+	}
+	
+	/**
+	 * 程序首页信息
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/firstPage")
+	public ResultVO firstPage(@RequestParam Map<String, String> params) throws Exception {
+		return parent_impl.firstPage(params);
+	}
+	
+	/**
+	 * 验证校验信息
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/chkCalibration")
+	public ResultVO chkCalibration(@RequestParam Map<String, String> params){
+		return parent_impl.chkCalibration(params);
+	}
+	
+	/**
+	 * 更改校验信息
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/editCalibration")
+	public ResultVO editCalibration(@RequestParam Map<String, String> params){
+		return parent_impl.editCalibration(params);
+	}
+	
+	
+	@PostMapping("/childrenIntegral")
+	public ResultVO childrenIntegral(@RequestParam Map<String, String> params) {
+		return parent_impl.childrenIntegral(params);
 	}
 }

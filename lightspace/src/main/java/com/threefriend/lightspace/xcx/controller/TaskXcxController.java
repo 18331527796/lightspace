@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.TaskXcxServiceImpl;
 
@@ -22,7 +23,7 @@ public class TaskXcxController {
 	@Autowired
 	private TaskXcxServiceImpl task_impl;
 	
-	
+	@Mylog(value=("打卡列表"))
 	@PostMapping("/xcxTaskList")
 	public ResultVO xcxTaskList(@RequestParam Map<String, String> params) throws Exception {
 		return task_impl.xcxTaskList(params);

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.ProductXcxServiceImpl;
 
@@ -18,6 +19,7 @@ public class ProductXcxController {
 	@Autowired
 	private ProductXcxServiceImpl product_impl;
 	
+	@Mylog(value=("护眼城"))
 	@PostMapping("/productList")
 	public ResultVO productList(@RequestParam Map<String, String> params) {
 		return product_impl.productPage(params);

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.PartnershipXcxServiceImpl;
 
@@ -23,7 +24,7 @@ public class PartnershipXcxController {
 	private PartnershipXcxServiceImpl partnership_Impl;
 
 	
-	
+	@Mylog(value=("合作机构"))
 	@PostMapping("/partnershipList")
 	public ResultVO selectStudent() {
 		return partnership_Impl.partnershipList();

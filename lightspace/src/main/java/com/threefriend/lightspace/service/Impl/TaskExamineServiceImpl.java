@@ -62,10 +62,17 @@ public class TaskExamineServiceImpl implements TaskExamineService{
 	@Override
 	public ResultVO deleteTaskExamine(Map<String, String> params) {
 		TaskExamineMapper po = task_examine_dao.findById(Integer.valueOf(params.get("id"))).get();
-		String[] split = po.getPath().split(",");
-		for (String string : split) {
-			File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+string);
-			file.delete();
+		if(!StringUtils.isEmpty(po.getPath())) {
+			if(po.getPath().contains(",")) {
+				String[] split = po.getPath().split(",");
+				for (String string : split) {
+					File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+string);
+					file.delete();
+				}
+			}else {
+				File file = new File(UrlEnums.TOMCAT_IMG.getUrl()+"\\"+po.getPath());
+				file.delete();
+			}
 		}
 		task_examine_dao.delete(po);
 		return ResultVOUtil.success();

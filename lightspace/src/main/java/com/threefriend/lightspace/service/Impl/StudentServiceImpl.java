@@ -32,6 +32,7 @@ import com.threefriend.lightspace.Exception.SendMessageException;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.MsgTempMapper;
+import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
 import com.threefriend.lightspace.mapper.xcx.GzhUserMapper;
@@ -116,6 +117,7 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public ResultVO addStudent(Map<String, String> params) {
 		StudentMapper student = new StudentMapper();
+		SchoolMapper school = school_dao.findById(Integer.valueOf(params.get("schoolId"))).get();
 		if(!StringUtils.isEmpty(params.get("age")))student.setAge(Integer.valueOf(params.get("age")));
 		if(!StringUtils.isEmpty(params.get("chairHeight")))student.setChairHeight(params.get("chairHeight"));
 		student.setClassesId(Integer.valueOf(params.get("classId")));
@@ -124,10 +126,10 @@ public class StudentServiceImpl implements StudentService{
 		student.setGender(Integer.valueOf(params.get("gender")));
 		if(!StringUtils.isEmpty(params.get("height")))student.setHeight(params.get("height"));
 		student.setName(params.get("name"));
-		student.setRegionId(1);
-		student.setRegionName("唐山");
+		student.setRegionId(school.getRegionId());
+		student.setRegionName(school.getRegionName());
 		student.setSchoolId(Integer.valueOf(params.get("schoolId")));
-		student.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
+		student.setSchoolName(school.getName());
 		if(!StringUtils.isEmpty(params.get("sittingHeight")))student.setSittingHeight(params.get("sittingHeight"));
 		if(!StringUtils.isEmpty(params.get("weight")))student.setWeight(params.get("weight"));
 		if(!StringUtils.isEmpty(params.get("parentPhone")))student.setParentPhone(params.get("parentPhone"));

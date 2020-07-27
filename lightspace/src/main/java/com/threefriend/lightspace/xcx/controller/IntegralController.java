@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.IntegralServiceImpl;
@@ -23,7 +24,7 @@ public class IntegralController {
 	@Autowired
 	private IntegralServiceImpl integral_impl;
 	
-	
+	@Mylog(value=("爱眼币明细"))
 	@PostMapping("/integralList")
 	public ResultVO integralListByParentId(@RequestParam Map<String, String> params) {
 		return integral_impl.IntegralListByParentId(params);
@@ -33,5 +34,7 @@ public class IntegralController {
 	public ResultVO rankingNO10(@RequestParam Map<String, String> params) {
 		return integral_impl.rankingNO10(params);
 	}
+	
+	
 	
 }

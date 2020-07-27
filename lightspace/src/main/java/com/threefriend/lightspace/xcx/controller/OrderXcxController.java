@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.OrderXcxServiceImpl;
 
@@ -38,6 +39,7 @@ public class OrderXcxController {
 	 * @param params
 	 * @return
 	 */
+	@Mylog(value=("领取列表"))
 	@PostMapping("/orderByStudent")
 	public ResultVO orderByStudent(@RequestParam Map<String, String> params) {
 		return order_impl.orderByStudent(params);

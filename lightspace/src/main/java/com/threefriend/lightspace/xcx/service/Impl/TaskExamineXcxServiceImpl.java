@@ -6,10 +6,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -36,6 +38,7 @@ import com.threefriend.lightspace.repository.TaskExamineConfigRepository;
 import com.threefriend.lightspace.repository.TaskExamineRepository;
 import com.threefriend.lightspace.util.ImguploadUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.vo.FabulousRecordVO;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.TaskExamineVO;
 import com.threefriend.lightspace.xcx.service.TaskExamineXcxService;
@@ -93,16 +96,23 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		TaskExamine.setStudentId(studentId);
 		TaskExamine.setStudentName(student.getName());
 		task_examine_dao.save(TaskExamine);
+		Thread.currentThread().sleep(200);
 		return ResultVOUtil.success(TaskExamine.getId());
 	}
 
 	@Override
 	public ResultVO momentsList(Map<String, String> params) {
-		List<TaskExamineVO> end = new ArrayList<>();
+		Map<String, Object> end = new HashMap<String, Object>();
+		Map<String, String > msg = new HashMap<>();
+		List<TaskExamineVO> list = new ArrayList<>();
 		int page = 0 ; 
 		if(!StringUtils.isEmpty(params.get("page"))) page = Integer.valueOf(params.get("page")) - 1 ; 
 		Integer parentId = parent_dao.findByOpenId(params.get("openId")).getId();
+		
+		List<FabulousRecordMapper> fabulousRecord = fabulous_record_dao.findBySendIdAndSendType(parentId, 2);
+
 		List<TaskExamineMapper> content = task_examine_dao.findByExamineStatus(TaskExamineStatesEnum.EXAMINE.getCode(),PageRequest.of(page, 5 ,Sort.by("id").descending() )).getContent();
+		
 		for (TaskExamineMapper taskExamineMapper : content) {
 			List<FabulousRecordMapper> FabulousRecord = fabulous_record_dao.findByParentIdAndTaskExamineIdOrderByIdDesc(parentId, taskExamineMapper.getId());
 			TaskExamineVO vo = new TaskExamineVO(taskExamineMapper);
@@ -111,8 +121,15 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 			}else {
 				vo.setIsFabulous(1);
 			}
-			end.add(vo);
+			list.add(vo);
 		}
+		
+		msg.put("value", fabulousRecord.size()+"");
+		if(fabulousRecord.size()!=0)
+		msg.put("avatarUrl", fabulousRecord.get(0).getAvatarUrl());
+		
+		end.put("list", list);
+		end.put("newMessage", msg);
 		return ResultVOUtil.success(end);
 	}
 
@@ -141,25 +158,29 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 	 */
 	@Override
 	public synchronized ResultVO fabulous(Map<String, String> params) {
-		Integer studentId = Integer.valueOf(params.get("studentId"));
 		TaskExamineMapper taskExamineMapper = task_examine_dao.findById(Integer.valueOf(params.get("id"))).get();
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		//查看这个用户 有没有对这条 点过赞
 		List<FabulousRecordMapper> FabulousRecord = fabulous_record_dao.findByParentIdAndTaskExamineIdOrderByIdDesc(parent.getId(), taskExamineMapper.getId());
 		//点过返回提示
-		if(FabulousRecord.size()!=0)ResultVOUtil.error(ResultEnum.TASK_FABULOUS_ERROR.getStatus(), ResultEnum.TASK_FABULOUS_ERROR.getMessage());
+		if(FabulousRecord.size()!=0)return ResultVOUtil.error(ResultEnum.TASK_FABULOUS_ERROR.getStatus(), ResultEnum.TASK_FABULOUS_ERROR.getMessage());
 		//没点过 向下进行 这条的点赞数量加1
-		taskExamineMapper.setFabulous((taskExamineMapper.getFabulous()==null?0:taskExamineMapper.getFabulous())+1);
+		taskExamineMapper.setFabulous((taskExamineMapper.getFabulous()==null?1:taskExamineMapper.getFabulous())+1);
 		task_examine_dao.save(taskExamineMapper);
 		//判断这条点赞的数量是不是可以奖励 爱眼币      
 		if(taskExamineMapper.getFabulous()>1&&taskExamineMapper.getFabulous()%10==0) {
-			IntegralMapper integralMapper = new IntegralMapper(studentId, 1, Long.valueOf(1), "爱眼秀点赞奖励", new Date());
+			IntegralMapper integralMapper = new IntegralMapper(taskExamineMapper.getStudentId(), 1, Long.valueOf(1), "爱眼秀点赞奖励", new Date());
 			integral_dao.save(integralMapper);
 		}
 		//新增记录用户的点赞行为 匹配用户和这一条
 		FabulousRecordMapper po = new FabulousRecordMapper();
 		po.setParentId(parent.getId());
 		po.setTaskExamineId(taskExamineMapper.getId());
+		po.setAvatarUrl(params.get("avatarUrl"));
+		po.setDate(new Date());
+		po.setNickName(params.get("nickName"));
+		po.setSendId(taskExamineMapper.getParentId());
+		po.setSendType(2);
 		fabulous_record_dao.save(po);
 		//po to vo
 		TaskExamineVO vo = new TaskExamineVO(taskExamineMapper);
@@ -240,6 +261,31 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		}	
 		task_examine_dao.delete(po);
 		return ResultVOUtil.success();
+	}
+
+	@Override
+	public ResultVO allFabulousMsg(Map<String, String> params) {
+		List<FabulousRecordVO> end = new ArrayList<>();
+		Integer parentId = parent_dao.findByOpenId(params.get("openId")).getId();
+		List<FabulousRecordMapper> allrecord = fabulous_record_dao.findBySendIdAndSendType(parentId, 2);
+		for (FabulousRecordMapper po : allrecord) {
+			po.setSendType(1);
+			TaskExamineMapper taskExamineMapper = task_examine_dao.findById(po.getTaskExamineId()).get();
+			FabulousRecordVO vo = new FabulousRecordVO();
+			BeanUtils.copyProperties(po, vo);
+			if(!StringUtils.isEmpty(taskExamineMapper.getPath())) {
+				if(taskExamineMapper.getPath().contains(",")) {
+					vo.setContent(UrlEnums.IMG_URL.getUrl()+taskExamineMapper.getPath().split(",")[0]);
+				}else {
+					vo.setContent(UrlEnums.IMG_URL.getUrl()+taskExamineMapper.getPath());
+				}
+			}else {
+				vo.setContent(taskExamineMapper.getContents());
+			}
+			end.add(vo);
+		}
+		fabulous_record_dao.saveAll(allrecord);
+		return ResultVOUtil.success(end);
 	}
 
 }

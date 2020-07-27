@@ -6,10 +6,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ClassesMapper;
+import com.threefriend.lightspace.mapper.RegionMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
@@ -46,13 +48,14 @@ public class SchoolServiceImpl implements SchoolService{
 	@Override
 	@Mylog(value=("添加学校"))
 	public ResultVO addSchool(Map<String, String> params) { 
+		Integer regionId = Integer.valueOf(params.get("regionId"));
 		List<SchoolMapper> findByName = school_dao.findByName(params.get("name"));
 		if(findByName.size()>=1) return ResultVOUtil.error(ResultEnum.SCHOOLNAME_REPEAT.getStatus(),ResultEnum.SCHOOLNAME_REPEAT.getMessage());
 		SchoolMapper newSchool = new SchoolMapper();
 		newSchool.setAddress(params.get("address"));
 		newSchool.setName(params.get("name"));
-		newSchool.setRegionId(1);
-		newSchool.setRegionName(region_dao.findById(1).get().getName());
+		newSchool.setRegionId(regionId);
+		newSchool.setRegionName(region_dao.findById(regionId).get().getName());
 		school_dao.save(newSchool);
 		return ResultVOUtil.success(school_dao.findAllByOrderByIdDesc());
 	}
@@ -72,18 +75,18 @@ public class SchoolServiceImpl implements SchoolService{
 	@Override
 	public List<SchoolMapper> alterSchool(Map<String, String> params) {
 		SchoolMapper findById = school_dao.findById(Integer.valueOf(params.get("id"))).get();
-		if(params.get("address")!=(null) && !params.get("address").equals("")) findById.setAddress(params.get("address"));
-		if(params.get("name")!=(null) && !params.get("name").equals("")) {
+		List<ClassesMapper> allclass = class_dao.findBySchoolId(findById.getId(), PageRequest.of(0, 100)).getContent();
+		List<StudentMapper> student = student_dao.findBySchoolId(findById.getId());
+		if(!StringUtils.isEmpty(params.get("address"))) findById.setAddress(params.get("address"));
+		if(!StringUtils.isEmpty(params.get("name"))) {
 			findById.setName(params.get("name"));
-			List<StudentMapper> student = student_dao.findBySchoolId(findById.getId());
 			for (StudentMapper studentMapper : student) {
 				studentMapper.setSchoolName(params.get("name"));
 			}
-			student_dao.saveAll(student);
-			List<ClassesMapper> allclass = class_dao.findBySchoolId(findById.getId(), PageRequest.of(0, 100)).getContent();
 			for (ClassesMapper classesMapper : allclass) {
 				classesMapper.setSchoolName(params.get("name"));
 			}
+			student_dao.saveAll(student);
 			class_dao.saveAll(allclass);
 		}
 		school_dao.save(findById);

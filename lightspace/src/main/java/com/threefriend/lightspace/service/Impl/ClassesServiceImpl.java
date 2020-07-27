@@ -56,16 +56,17 @@ public class ClassesServiceImpl implements ClassesService {
 	public ResultVO addClasses(Map<String, String> params) {
 		List<ClassesMapper> findBySchoolIdAndClassName = classes_dao.findBySchoolIdAndClassName(Integer.valueOf(params.get("schoolId")), params.get("className"));
 		if(findBySchoolIdAndClassName.size()>=1)return ResultVOUtil.error(ResultEnum.CLASSNAME_REPEAT.getStatus(), ResultEnum.CLASSNAME_REPEAT.getMessage());
+		SchoolMapper school = school_dao.findById(Integer.valueOf(params.get("schoolId"))).get();
 		ClassesMapper classes = new ClassesMapper();
 		classes.setBbLength(params.get("bbLength"));
 		classes.setExperiment(Integer.valueOf(params.get("experiment")));
 		classes.setClassName(params.get("className"));
-		classes.setRegionId(1);
-		classes.setRegionName("唐山");
+		classes.setRegionId(school.getRegionId());
+		classes.setRegionName(school.getRegionName());
 		classes.setRoomLength(params.get("roomLength"));
 		classes.setRoomWidth(params.get("roomWidth"));
-		classes.setSchoolId(Integer.valueOf(params.get("schoolId")));
-		classes.setSchoolName(school_dao.findById(Integer.valueOf(params.get("schoolId"))).get().getName());
+		classes.setSchoolId(school.getId());
+		classes.setSchoolName(school.getName());
 		classes.setVolume(Integer.valueOf(params.get("volume")));
 		if (!StringUtils.isEmpty(params.get("description")))
 			classes.setDescription(params.get("description"));

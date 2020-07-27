@@ -27,6 +27,8 @@ public interface IntegralRepository extends JpaRepository<IntegralMapper, Intege
 	
 	List<IntegralMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId);
 	
+	IntegralMapper findByStudentIdAndDetailedAndGenTimeBetween(Integer studentId,String detailed,Date begin , Date end);
+	
 	int countByStudentIdAndDetailedAndGenTimeBetween(Integer studentId,String detailed,Date begin , Date end);
 	
 	//收支标识(0:支出，1:收入)

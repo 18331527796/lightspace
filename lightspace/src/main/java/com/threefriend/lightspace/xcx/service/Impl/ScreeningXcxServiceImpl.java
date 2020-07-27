@@ -316,7 +316,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 		// 获取这个账号的唯一标识
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		// 找到这个账号绑定的孩子
-		List<ParentStudentRelation> all = p_s_dao.findByParentId(parent.getId());
+		List<ParentStudentRelation> all = p_s_dao.findByParentIdOrderByIdDesc(parent.getId());
 		// 如果这个账号没有绑定孩子 返回错误提示
 		if (all.size() == 0)
 			return ResultVOUtil.error(ResultEnum.BINDINGSTUDENT_ERROR.getStatus(),

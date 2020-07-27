@@ -87,4 +87,27 @@ public interface ParentXcxService {
 	 * @return
 	 */
 	ResultVO transplantStudent(Map<String, String> params);
+	
+	/**
+	 * 进入首页
+	 * @param params
+	 * @return
+	 */
+	ResultVO firstPage(Map<String, String> params)throws Exception;
+	
+	/**
+	 * 验证校验信息
+	 * @param params
+	 * @return
+	 */
+	ResultVO chkCalibration(Map<String, String> params);
+	
+	/**
+	 * 更改校验信息
+	 * @param params
+	 * @return
+	 */
+	ResultVO editCalibration(Map<String, String> params);
+	
+	ResultVO childrenIntegral(Map<String, String> params);
 }

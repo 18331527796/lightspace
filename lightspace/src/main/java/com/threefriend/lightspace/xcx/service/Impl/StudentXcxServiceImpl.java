@@ -51,7 +51,7 @@ public class StudentXcxServiceImpl implements StudentXcxService{
 	public ResultVO queryStudentWord(Map<String, String> params) {
 		DateFormat Format = new SimpleDateFormat("yyyy-MM-dd");
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
-		List<ParentStudentRelation> allstudent = parent_student_dao.findByParentId(parent.getId());
+		List<ParentStudentRelation> allstudent = parent_student_dao.findByParentIdOrderByIdDesc(parent.getId());
 		List<StudentWordVO> end = new ArrayList<StudentWordVO>();
 		for (ParentStudentRelation student : allstudent) {
 			List<StudentWordMapper> words = student_word_dao.findByStudentIdOrderByGenTimeDesc(student.getStudentId());

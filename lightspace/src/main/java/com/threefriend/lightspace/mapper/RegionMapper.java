@@ -1,8 +1,6 @@
 package com.threefriend.lightspace.mapper;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -14,16 +12,13 @@ import javax.persistence.Id;
 public class RegionMapper {
 
 	@Id
-	@GeneratedValue
-	//主键
 	private Integer id;
-	//地区名称
+	
 	private String name;
-	//地区等级
-	private String type;
-	//父级
-	@Column(name="parent_id")
-	private Integer ParentId;
+	
+	private Integer parentid;
+	//顺序
+	private Integer vieworder;
 	public Integer getId() {
 		return id;
 	}
@@ -36,16 +31,18 @@ public class RegionMapper {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
 	public Integer getParentId() {
-		return ParentId;
+		return parentid;
 	}
 	public void setParentId(Integer parentId) {
-		ParentId = parentId;
+		this.parentid = parentId;
 	}
+	public Integer getVieworder() {
+		return vieworder;
+	}
+	public void setVieworder(Integer vieworder) {
+		this.vieworder = vieworder;
+	}
+	
+	
 }

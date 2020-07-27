@@ -19,17 +19,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.enums.AnswerTypeEnums;
-import com.threefriend.lightspace.mapper.ClassesMapper;
-import com.threefriend.lightspace.mapper.RecordMapper;
-import com.threefriend.lightspace.mapper.RegionMapper;
-import com.threefriend.lightspace.mapper.SchoolMapper;
-import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.xcx.AnswerMapper;
 import com.threefriend.lightspace.repository.AnswerRepository;
-import com.threefriend.lightspace.repository.ClassesRepository;
-import com.threefriend.lightspace.repository.RegionRepository;
-import com.threefriend.lightspace.repository.SchoolRepository;
-import com.threefriend.lightspace.repository.StudentRepository;
 
 /**
  *	读取answerexcel

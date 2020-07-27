@@ -25,9 +25,13 @@ import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.enums.VisionEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.RecordRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
+import com.threefriend.lightspace.repository.ScreeningRepository;
+import com.threefriend.lightspace.repository.ScreeningWearRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.service.RecordService;
@@ -50,6 +54,10 @@ public class RecordServiceImpl implements RecordService {
 
 	@Autowired
 	private RecordRepository record_dao;
+	@Autowired
+	private ScreeningRepository screening_dao;
+	@Autowired
+	private ScreeningWearRepository screening_wear_dao;
 	@Autowired
 	private SchoolRepository school_dao;
 	@Autowired
@@ -108,8 +116,8 @@ public class RecordServiceImpl implements RecordService {
 			record.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 		}
-		record.setRegionId(1);
-		record.setRegionName("唐山");
+		record.setRegionId(student.getRegionId());
+		record.setRegionName(student.getRegionName());
 		record.setStudentId(Integer.valueOf(params.get("studentId")));
 		record.setStudentName(student.getName());
 		record.setSchoolId(Integer.valueOf(params.get("schoolId")));
@@ -225,7 +233,6 @@ public class RecordServiceImpl implements RecordService {
 		Date after= new Date();
 		Date befor= new Date(after.getTime()-(timeLong*1000));
 		DateFormat format =new SimpleDateFormat("yyyy/MM/dd");
-		List<RecordMapper> all = record_dao.findAllByStudentIdAndGenTimeBetweenOrderByGenTime(id,befor,after);
 		StudentStatisticsVO end = new StudentStatisticsVO();
 		
 		OneStatisticsVO visionLeft=new OneStatisticsVO();
@@ -233,34 +240,61 @@ public class RecordServiceImpl implements RecordService {
 		OneStatisticsVO eyeAxisLengthLeft=new OneStatisticsVO();
 		OneStatisticsVO eyeAxisLengthRight=new OneStatisticsVO();
 		
-		for (RecordMapper po : all) {
-			String time =format.format(po.getGenTime());
-			if(visionLeft.getName()==null||visionLeft.getName()=="") {
-				visionLeft.setName(RecordEnums.VISIONLEFT.getName());
+		Integer screeningType = student_dao.findById(id).get().getScreeningType();
+		//这里注释是因为个人概况不能好好的展示  改用日常检测的数据展示
+		//List<RecordMapper> all = record_dao.findAllByStudentIdAndGenTimeBetweenOrderByGenTime(id,befor,after);
+		
+		
+		if(screeningType==1) {
+			List<ScreeningMapper> screening = screening_dao.findByStudentIdAndGenTimeBetweenOrderById(id, befor, after);
+			for (ScreeningMapper po : screening) {
+				String time =format.format(po.getGenTime());
+				if(visionLeft.getName()==null||visionLeft.getName()=="") {
+					visionLeft.setName(RecordEnums.VISIONLEFT.getName());
+				}
+				visionLeft.getyDataList().add(po.getVisionLeftStr());
+				visionLeft.getxDataList().add(time);
+				
+				if(visionRight.getName()==null||visionRight.getName()=="") {
+					visionRight.setName(RecordEnums.VISIONRIGHT.getName());
+				}
+				visionRight.getyDataList().add(po.getVisionRightStr());
+				visionRight.getxDataList().add(time);
+				
+				/*if(eyeAxisLengthLeft.getName()==null||eyeAxisLengthLeft.getName()=="") {
+					eyeAxisLengthLeft.setName(RecordEnums.EYEAXISLENGTHLEFT.getName());
+				}
+				eyeAxisLengthLeft.getyDataList().add(po.getEyeAxisLengthLeft());
+				eyeAxisLengthLeft.getxDataList().add(time);
+				
+				if(eyeAxisLengthRight.getName()==null||eyeAxisLengthRight.getName()=="") {
+					eyeAxisLengthRight.setName(RecordEnums.EYEAXISLENGTHRIGHT.getName());
+				}
+				eyeAxisLengthRight.getyDataList().add(po.getEyeAxisLengthRight());
+				eyeAxisLengthRight.getxDataList().add(time);*/
 			}
-			visionLeft.getyDataList().add(po.getVisionLeftStr());
-			visionLeft.getxDataList().add(time);
+		}else {
+			List<ScreeningWearMapper> screeningwear = screening_wear_dao.findByStudentIdAndGenTimeBetweenOrderById(id, befor, after);
 			
-			if(visionRight.getName()==null||visionRight.getName()=="") {
-				visionRight.setName(RecordEnums.VISIONRIGHT.getName());
+			for (ScreeningWearMapper po : screeningwear) {
+				String time =format.format(po.getGenTime());
+				if(visionLeft.getName()==null||visionLeft.getName()=="") {
+					visionLeft.setName(RecordEnums.VISIONLEFT.getName());
+				}
+				visionLeft.getyDataList().add(po.getVisionLeftStr());
+				visionLeft.getxDataList().add(time);
+				
+				if(visionRight.getName()==null||visionRight.getName()=="") {
+					visionRight.setName(RecordEnums.VISIONRIGHT.getName());
+				}
+				visionRight.getyDataList().add(po.getVisionRightStr());
+				visionRight.getxDataList().add(time);
 			}
-			visionRight.getyDataList().add(po.getVisionRightStr());
-			visionRight.getxDataList().add(time);
-			
-			if(eyeAxisLengthLeft.getName()==null||eyeAxisLengthLeft.getName()=="") {
-				eyeAxisLengthLeft.setName(RecordEnums.EYEAXISLENGTHLEFT.getName());
-			}
-			eyeAxisLengthLeft.getyDataList().add(po.getEyeAxisLengthLeft());
-			eyeAxisLengthLeft.getxDataList().add(time);
-			
-			if(eyeAxisLengthRight.getName()==null||eyeAxisLengthRight.getName()=="") {
-				eyeAxisLengthRight.setName(RecordEnums.EYEAXISLENGTHRIGHT.getName());
-			}
-			eyeAxisLengthRight.getyDataList().add(po.getEyeAxisLengthRight());
-			eyeAxisLengthRight.getxDataList().add(time);
-			
-			
 		}
+		
+		
+		
+		
 		end.setVisionLeft(visionLeft);
 		end.setVisionRight(visionRight);
 		end.setEyeAxisLengthLeft(eyeAxisLengthLeft);

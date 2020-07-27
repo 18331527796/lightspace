@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
+import com.threefriend.lightspace.repository.ParentStudentRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.IntegralVO;
@@ -36,6 +41,8 @@ public class IntegralServiceImpl implements IntegralService{
 	private IntegralRepository Integral_dao;
 	@Autowired
 	private StudentRepository student_dao;
+	@Autowired
+	private ParentStudentRepository p_s_dao;
 
 	/* 
 	 * 这个账号的 积分列表
@@ -87,6 +94,7 @@ public class IntegralServiceImpl implements IntegralService{
 		end.put("integtalRanking", integtalRanking);
 		return ResultVOUtil.success(end);
 	}
+
 
 	
 }

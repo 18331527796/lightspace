@@ -22,4 +22,6 @@ public interface TaskExamineXcxService {
 	ResultVO configPic();
 	
 	ResultVO deleteMyMoments(Map<String, String> params);
+	
+	ResultVO allFabulousMsg(Map<String, String> params);
 }

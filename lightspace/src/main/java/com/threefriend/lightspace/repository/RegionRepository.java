@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.threefriend.lightspace.mapper.RegionMapper;
@@ -12,4 +14,6 @@ import com.threefriend.lightspace.mapper.RegionMapper;
 public interface RegionRepository extends JpaRepository<RegionMapper, Integer>{
 
 	RegionMapper findByName(String name);
+	
+	List<RegionMapper> findByParentidOrderByVieworder(Integer parentId);
 }

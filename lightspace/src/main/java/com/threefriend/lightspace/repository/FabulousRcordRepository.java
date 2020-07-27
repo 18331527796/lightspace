@@ -13,4 +13,6 @@ import com.threefriend.lightspace.mapper.xcx.FabulousRecordMapper;
 public interface FabulousRcordRepository extends JpaRepository<FabulousRecordMapper, Integer>{
 
 	List<FabulousRecordMapper> findByParentIdAndTaskExamineIdOrderByIdDesc(Integer parentId,Integer taskExamineId);
+	
+	List<FabulousRecordMapper> findBySendIdAndSendType(Integer sendId,Integer sendType);
 }

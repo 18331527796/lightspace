@@ -47,7 +47,7 @@ public class ParentServiceImpl implements ParentService{
 		for (ParentMapper parentMapper : All.getContent()) {
 			ParentVO vo = new ParentVO();
 			BeanUtils.copyProperties(parentMapper, vo);
-			List<ParentStudentRelation> findByParentId = p_s_dao.findByParentId(parentMapper.getId());
+			List<ParentStudentRelation> findByParentId = p_s_dao.findByParentIdOrderByIdDesc(parentMapper.getId());
 			for (ParentStudentRelation p_s : findByParentId) {
 				vo.getStudent().add(student_dao.findById(p_s.getStudentId()).get());
 			}

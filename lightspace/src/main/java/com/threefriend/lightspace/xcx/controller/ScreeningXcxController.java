@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.ScreeningXcxService;
 
@@ -41,7 +42,7 @@ public class ScreeningXcxController {
 	 * @return
 	 * @throws ParseException 
 	 */
-	
+	@Mylog(value=("裸视筛查"))
 	@PostMapping("/addScreening")
 	public ResultVO addScreening(@RequestParam Map<String, String> params) throws ParseException {
 		return screening_impl.addScreening(params);
@@ -53,7 +54,7 @@ public class ScreeningXcxController {
 	 * @return
 	 * @throws ParseException 
 	 */
-	
+	@Mylog(value=("戴镜筛查"))
 	@PostMapping("/addWearScreening")
 	public ResultVO addWearScreening(@RequestParam Map<String, String> params) throws ParseException {
 		return screening_impl.addScreeningWear(params);
@@ -74,7 +75,6 @@ public class ScreeningXcxController {
 	 * @param params
 	 * @return
 	 */
-	
 	@PostMapping("/findScreening")
 	public ResultVO findScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.findById(params);
@@ -85,7 +85,6 @@ public class ScreeningXcxController {
 	 * @param params
 	 * @return
 	 */
-	
 	@PostMapping("/findWearScreening")
 	public ResultVO findWearScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.findWearById(params);
@@ -97,7 +96,7 @@ public class ScreeningXcxController {
 	 * @param params
 	 * @return
 	 */
-	
+	@Mylog(value=("查看档案"))
 	@PostMapping("/screeningList")
 	public ResultVO allChildrenScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.allChildrenScreening(params);

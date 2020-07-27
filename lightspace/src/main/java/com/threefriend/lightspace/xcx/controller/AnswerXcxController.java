@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.lightspace.aspect.Mylog;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.Impl.AnswerXcxServiceImpl;
 
@@ -20,6 +21,7 @@ public class AnswerXcxController {
 	@Autowired
 	private AnswerXcxServiceImpl impl;
 	
+	@Mylog(value=("爱眼答题"))
 	@PostMapping("/answerList")
 	public ResultVO answerList() {
 		return impl.list();
