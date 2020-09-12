@@ -1,8 +1,10 @@
 package com.threefriend.lightspace.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.threefriend.lightspace.mapper.SortMapper;
+import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SortVO;
 
 /**
@@ -12,10 +14,15 @@ import com.threefriend.lightspace.vo.SortVO;
  */
 public interface SortService {
 	
-	public List<List<SortVO>> studentSort(Integer classId,Integer type, Integer time);
+	public ResultVO studentSort(Map<String, String> params);
 	
-	public List<List<SortVO>> sortShow(Integer Id);
+	public ResultVO sortShow(Integer Id);
+	
+	public ResultVO chkSort(Map<String, String> params);
+	
+	public ResultVO adjustSort(Map<String, String> params);
 	
 	public List<SortMapper> byClassId(Integer classId);
 
+	public ResultVO saveSort(Map<String, String> params);
 }

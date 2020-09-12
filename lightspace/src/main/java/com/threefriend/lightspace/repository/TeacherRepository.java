@@ -27,5 +27,11 @@ public interface TeacherRepository extends JpaRepository<TeacherMapper, Integer>
 	
 	List<TeacherMapper> findByNameLike(String name);
 	
+	List<TeacherMapper> findBySchoolIdAndNameLike(Integer schoolId ,String name);
+	
+	List<TeacherMapper> findByClassId(Integer classId);
+	
 	Page<TeacherMapper> findBySchoolId(Integer schoolId,Pageable page);
+	
+	Page<TeacherMapper> findByRegionId(Integer regionId,Pageable page);
 }

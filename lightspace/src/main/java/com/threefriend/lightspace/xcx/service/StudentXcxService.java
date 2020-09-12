@@ -18,4 +18,8 @@ public interface StudentXcxService {
 	ResultVO queryStudentWordById(Map<String, String> params);
 	
 	ResultVO perfectStudent(Map<String, String> params);
+	
+	ResultVO chkDominantEye(Map<String, String> params);
+	
+	ResultVO saveDominantEye(Map<String, String> params);
 }

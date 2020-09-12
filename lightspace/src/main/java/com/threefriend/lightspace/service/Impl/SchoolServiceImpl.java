@@ -3,6 +3,9 @@ package com.threefriend.lightspace.service.Impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -47,7 +50,7 @@ public class SchoolServiceImpl implements SchoolService{
 	 */
 	@Override
 	@Mylog(value=("添加学校"))
-	public ResultVO addSchool(Map<String, String> params) { 
+	public ResultVO addSchool(Map<String, String> params,HttpSession session) { 
 		Integer regionId = Integer.valueOf(params.get("regionId"));
 		List<SchoolMapper> findByName = school_dao.findByName(params.get("name"));
 		if(findByName.size()>=1) return ResultVOUtil.error(ResultEnum.SCHOOLNAME_REPEAT.getStatus(),ResultEnum.SCHOOLNAME_REPEAT.getMessage());
@@ -57,15 +60,19 @@ public class SchoolServiceImpl implements SchoolService{
 		newSchool.setRegionId(regionId);
 		newSchool.setRegionName(region_dao.findById(regionId).get().getName());
 		school_dao.save(newSchool);
-		return ResultVOUtil.success(school_dao.findAllByOrderByIdDesc());
+		return ResultVOUtil.success(findAllSchool(null,session));
 	}
 
 	/* 
 	 * 学校列表
 	 */
 	@Override
-	public List<SchoolMapper> findAllSchool(String token) {
-		System.out.println("这里是学校列表方法"+token);
+	public List<SchoolMapper> findAllSchool(String token,HttpSession session) {
+		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
+		if(roleId == 5 ) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			return school_dao.findByRegionIdOrderByIdDesc(regionId);
+		}
 		return school_dao.findAllByOrderByIdDesc();
 	}
 
@@ -73,7 +80,7 @@ public class SchoolServiceImpl implements SchoolService{
 	 * 修改学校信息
 	 */
 	@Override
-	public List<SchoolMapper> alterSchool(Map<String, String> params) {
+	public List<SchoolMapper> alterSchool(Map<String, String> params,HttpSession session) {
 		SchoolMapper findById = school_dao.findById(Integer.valueOf(params.get("id"))).get();
 		List<ClassesMapper> allclass = class_dao.findBySchoolId(findById.getId(), PageRequest.of(0, 100)).getContent();
 		List<StudentMapper> student = student_dao.findBySchoolId(findById.getId());
@@ -90,7 +97,7 @@ public class SchoolServiceImpl implements SchoolService{
 			class_dao.saveAll(allclass);
 		}
 		school_dao.save(findById);
-		return school_dao.findAllByOrderByIdDesc();
+		return findAllSchool(null,session);
 	}
 
 	/*
@@ -98,7 +105,7 @@ public class SchoolServiceImpl implements SchoolService{
 	 */
 	@Override
 	@Mylog(value=("删除学校"))
-	public List<SchoolMapper> deleteSchool(Integer id) {
+	public List<SchoolMapper> deleteSchool(Integer id,HttpSession session) {
 		List<ClassesMapper> findBySchoolId = class_dao.findBySchoolIdOrderByFinish(id);
 		List<Integer> classids= new ArrayList<>();
 		for (ClassesMapper po : findBySchoolId) {
@@ -108,7 +115,7 @@ public class SchoolServiceImpl implements SchoolService{
 		record_dao.deleteBySchoolId(id);
 		class_dao.deleteBySchoolId(id);
 		school_dao.deleteById(id);
-		return school_dao.findAllByOrderByIdDesc();
+		return findAllSchool(null,session);
 	}
 
 	/* 

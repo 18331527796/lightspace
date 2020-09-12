@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -27,7 +28,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.threefriend.lightspace.mapper.SchoolMapper;
+import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
+import com.threefriend.lightspace.repository.SchoolRepository;
+import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.StudentWordRepository;
 
 import org.apache.poi.hwpf.usermodel.TableCell;  
@@ -41,6 +46,8 @@ public class ReadStudentWord {
 	
 	@Autowired
 	private StudentWordRepository studentword_dao;
+	@Autowired
+	private StudentRepository student_dao;
 	
 	
 	public void readStudentWord(MultipartFile file,Integer studentId,String fliename) throws Exception {
@@ -84,12 +91,14 @@ public class ReadStudentWord {
         HWPFDocument hwpf = new HWPFDocument(pfs);     
         Range range = hwpf.getRange();//得到文档的读取范围  
         TableIterator it = new TableIterator(range);  
-        String[] split2 = fliename.split("\\.")[0].split("\\+");
+        StudentMapper studentMapper = student_dao.findById(studentId).get();
         //新建记录
         StudentWordMapper po = new StudentWordMapper();
         po.setStudentId(studentId);
-        po.setSchoolName(split2[0]);
-        po.setClassName(split2[1]);
+        po.setSchoolId(studentMapper.getSchoolId());
+        po.setSchoolName(studentMapper.getSchoolName());
+        po.setClassId(studentMapper.getClassesId());
+        po.setClassName(studentMapper.getClassesName());
         po.setGenTime(new Date());
        //迭代文档中的表格  
         while (it.hasNext()) {     

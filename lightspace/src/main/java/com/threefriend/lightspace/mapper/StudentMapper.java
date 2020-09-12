@@ -52,6 +52,8 @@ public class StudentMapper {
 	private String weight;
 	// 家长联系方式
 	private String parentPhone;
+	// 主视眼
+	private String dominantEye;
 	// 性格
 	private String nature ="";
 	// 是否矫正 (0:未校正 1:未校正)
@@ -247,6 +249,12 @@ public class StudentMapper {
 	}
 	public void setSendTime(Date sendTime) {
 		this.sendTime = sendTime;
+	}
+	public String getDominantEye() {
+		return dominantEye;
+	}
+	public void setDominantEye(String dominantEye) {
+		this.dominantEye = dominantEye;
 	}
 
 

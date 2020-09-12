@@ -3,6 +3,8 @@ package com.threefriend.lightspace.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SchoolVO;
@@ -15,7 +17,7 @@ public interface ClassesService {
 	//新增班级
 	public ResultVO addClasses(Map<String, String> params);
 	//班级列表
-	public ResultVO findAllClasses(Map<String, String> params);
+	public ResultVO findAllClasses(Map<String, String> params,HttpSession session);
 	//修改班级信息
 	public ResultVO alterClasses(Map<String, String> params);
 	//删除班级
@@ -25,13 +27,13 @@ public interface ClassesService {
 	//按照id查询班级
 	public ResultVO findById(Integer id);
 	//升年级
-	public ResultVO elevateClass(Map<String, String> params);
+	public ResultVO elevateClass(Map<String, String> params,HttpSession session);
 	//判定年级名称
 	public String equalsClass(String name);
 	//方便于下拉框的方法 （学校——>班级——>学生）
 	public List<SchoolVO> cascade();
 	//方便于下拉框的方法 （学校——>班级）
-	public List<SchoolVO> cascade1();
+	public List<SchoolVO> cascade1(HttpSession session);
 	//概况的班级查询
 	public ResultVO queryClassInStatistics(Map<String, String> params);
 }

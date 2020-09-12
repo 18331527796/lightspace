@@ -18,4 +18,6 @@ public interface SchoolRepository extends JpaRepository<SchoolMapper, Integer>{
 	List<SchoolMapper> findByName(String name);
 	
 	List<SchoolMapper> findAllByOrderByIdDesc();
+	
+	List<SchoolMapper> findByRegionIdOrderByIdDesc(Integer regionId);
 }

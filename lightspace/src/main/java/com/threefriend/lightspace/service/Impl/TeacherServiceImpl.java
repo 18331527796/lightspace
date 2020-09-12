@@ -3,6 +3,8 @@ package com.threefriend.lightspace.service.Impl;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
+import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.TeacherMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
@@ -36,12 +39,15 @@ public class TeacherServiceImpl implements TeacherService{
 	 * 教师列表
 	 */
 	@Override
-	public ResultVO teacherList(Map<String, String> params) {
+	public ResultVO teacherList(Map<String, String> params,HttpSession session) {
 		int page = 0 ; 
 		String type = "";
 		if(!StringUtils.isEmpty(params.get("type"))) type = params.get("type");
 		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ;
 		if("school".equals(type))return ResultVOUtil.success(teacher_dao.findBySchoolId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10,Sort.by("id").descending())));
+		Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
+		if(roleId==5)return ResultVOUtil.success(teacher_dao.findByRegionId(regionId,PageRequest.of(page, 10,Sort.by("id").descending())));
 		return ResultVOUtil.success(teacher_dao.findAll(PageRequest.of(page, 10,Sort.by("id").descending())));
 	}
 
@@ -52,11 +58,14 @@ public class TeacherServiceImpl implements TeacherService{
 	public ResultVO addTeacher(Map<String, String> params) {
 		Integer schoolId = Integer.valueOf(params.get("schoolId"));
 		Integer classId = Integer.valueOf(params.get("classId"));
+		SchoolMapper school = school_dao.findById(schoolId).get();		
 		TeacherMapper teacher = new TeacherMapper();
 		teacher.setSchoolId(schoolId);
-		teacher.setSchoolName(school_dao.findById(schoolId).get().getName());
+		teacher.setSchoolName(school.getName());
 		teacher.setClassId(classId);
 		teacher.setClassName(class_dao.findById(classId).get().getClassName());
+		teacher.setRegionId(school.getRegionId());
+		teacher.setRegionName(school.getRegionName());
 		teacher.setName(params.get("name"));
 		teacher.setPhone(params.get("phone"));
 		teacher.setPassword(params.get("password"));

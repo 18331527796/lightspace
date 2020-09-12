@@ -1,5 +1,7 @@
 package com.threefriend.lightspace.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.threefriend.lightspace.mapper.UserMapper;
@@ -12,6 +14,8 @@ import java.util.List;
  *
  */
 public interface UserRepository extends JpaRepository<UserMapper, Integer>{
+	
+	Page<UserMapper> findByRegionId(Pageable page , Integer regionId);
 
 	List<UserMapper> findByloginNameAndPassword(String loginname, String password);
 

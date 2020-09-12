@@ -1,25 +1,18 @@
 package com.threefriend.lightspace.service;
 
-import java.io.File;
-import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.vo.ResultVO;
-import com.threefriend.lightspace.vo.StudentVO;
 
 /**
  *	教师业务逻辑接口
  */
 public interface TeacherService {
 	//教师列表
-	ResultVO teacherList(Map<String, String> params);
+	ResultVO teacherList(Map<String, String> params,HttpSession session);
 	//新增教师
 	ResultVO addTeacher(Map<String, String> params);
 	//修改教师

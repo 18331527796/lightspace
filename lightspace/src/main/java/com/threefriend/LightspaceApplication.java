@@ -8,14 +8,15 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.threefriend.lightspace.aspect.TestTimer;
 
 @SpringBootApplication
 @ComponentScan("com") // 1. 多模块项目需要扫描的包
 @EnableJpaRepositories("com.threefriend.lightspace.repository") // 2. Dao 层所在的包 
 @EntityScan("com.threefriend.lightspace.mapper") // 3. Entity 所在的包
 @EnableCaching
+@EnableScheduling
 public class LightspaceApplication extends SpringBootServletInitializer {
 
 	@Override

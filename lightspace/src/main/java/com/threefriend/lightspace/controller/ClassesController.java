@@ -2,6 +2,8 @@ package com.threefriend.lightspace.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,8 +43,8 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/classesList")
-	public ResultVO classesList(@RequestParam Map<String, String> params) {
-		return classes_impl.findAllClasses(params);
+	public ResultVO classesList(@RequestParam Map<String, String> params,HttpSession session) {
+		return classes_impl.findAllClasses(params,session);
 	}
 	
 	/**
@@ -103,8 +105,8 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/cascade1")
-	public ResultVO cascade1(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(classes_impl.cascade1());
+	public ResultVO cascade1(@RequestParam Map<String, String> params,HttpSession session) {
+		return ResultVOUtil.success(classes_impl.cascade1(session));
 	}
 	
 	/**
@@ -113,8 +115,8 @@ public class ClassesController {
 	 * @return
 	 */
 	@PostMapping("/elevateClass")
-	public ResultVO elevateClass(@RequestParam Map<String, String> params) {
-		return classes_impl.elevateClass(params);
+	public ResultVO elevateClass(@RequestParam Map<String, String> params,HttpSession session) {
+		return classes_impl.elevateClass(params,session);
 	}
 	
 	/**

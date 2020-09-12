@@ -2,6 +2,8 @@ package com.threefriend.lightspace.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,8 +32,8 @@ public class SchoolController {
 	 */
 	@PostMapping("/addSchool")
 	
-	public ResultVO insertSchool(@RequestParam Map<String, String> params) {
-		return school_Impl.addSchool(params);
+	public ResultVO insertSchool(@RequestParam Map<String, String> params,HttpSession session) {
+		return school_Impl.addSchool(params,session);
 	}
 	
 	/**
@@ -40,8 +42,8 @@ public class SchoolController {
 	 */
 	@PostMapping("/schoolList")
 	
-	public ResultVO findAllSchool(@RequestParam("token") String token) {
-		return ResultVOUtil.success(school_Impl.findAllSchool(token));
+	public ResultVO findAllSchool(@RequestParam("token") String token,HttpSession session) {
+		return ResultVOUtil.success(school_Impl.findAllSchool(token,session));
 	}
 	
 	/**
@@ -62,8 +64,8 @@ public class SchoolController {
 	 */
 	@PostMapping("/saveSchool")
 	
-	public ResultVO saveSchool(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(school_Impl.alterSchool(params));
+	public ResultVO saveSchool(@RequestParam Map<String, String> params,HttpSession session) {
+		return ResultVOUtil.success(school_Impl.alterSchool(params,session));
 	}
 	
 	/**
@@ -73,8 +75,8 @@ public class SchoolController {
 	 */
 	@PostMapping("/deleteSchool")
 	
-	public ResultVO deleteSchool(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(school_Impl.deleteSchool(Integer.valueOf(params.get("id"))));
+	public ResultVO deleteSchool(@RequestParam Map<String, String> params,HttpSession session) {
+		return ResultVOUtil.success(school_Impl.deleteSchool(Integer.valueOf(params.get("id")),session));
 	}
 	
 	/**

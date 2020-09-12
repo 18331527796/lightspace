@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentMapper;
@@ -92,6 +93,23 @@ public class StudentXcxServiceImpl implements StudentXcxService{
 		if(!StringUtils.isEmpty(params.get("birthday"))&&!params.get("birthday").equals("null")) 
 			student.setBirthday(params.get("birthday"));
 		
+		student_dao.save(student);
+		return ResultVOUtil.success();
+	}
+
+	@Override
+	public ResultVO chkDominantEye(Map<String, String> params) {
+		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("studentId"))).get();
+		if(student.getDominantEye()==null||"".equals(student.getDominantEye())) {
+			return ResultVOUtil.error(ResultEnum.CHK_DOMINANTEYE_ERROR.getStatus(), ResultEnum.CHK_DOMINANTEYE_ERROR.getMessage());
+		}
+		return ResultVOUtil.success();
+	}
+
+	@Override
+	public ResultVO saveDominantEye(Map<String, String> params) {
+		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("studentId"))).get();
+		student.setDominantEye(params.get("dominantEye"));
 		student_dao.save(student);
 		return ResultVOUtil.success();
 	}

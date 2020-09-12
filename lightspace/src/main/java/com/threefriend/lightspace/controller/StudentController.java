@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -38,8 +39,8 @@ public class StudentController {
 	 */
 	@PostMapping("/studentList")
 	
-	public ResultVO studentList(@RequestParam Map<String, String> params) {
-		return student_Impl.studentList(params);
+	public ResultVO studentList(@RequestParam Map<String, String> params,HttpSession session) {
+		return student_Impl.studentList(params,session);
 	}
 	
 	/**

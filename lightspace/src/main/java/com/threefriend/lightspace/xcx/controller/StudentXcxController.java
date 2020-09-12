@@ -42,4 +42,14 @@ public class StudentXcxController {
 	public ResultVO  perfectStudent (@RequestParam Map<String, String> params) {
 		return student_impl.perfectStudent(params);
 	}
+	
+	@PostMapping("/chkDominantEye")
+	public ResultVO  chkDominantEye (@RequestParam Map<String, String> params) {
+		return student_impl.chkDominantEye(params);
+	}
+	
+	@PostMapping("/saveDominantEye")
+	public ResultVO  saveDominantEye (@RequestParam Map<String, String> params) {
+		return student_impl.saveDominantEye(params);
+	}
 }

@@ -37,6 +37,8 @@ public interface RecordRepository extends JpaRepository<RecordMapper, Integer>{
 	//按照学生id查询所有的数据
 	List<RecordMapper> findAllByStudentIdAndGenTimeBetweenOrderByGenTime(Integer id,Date befor , Date after);
 	
+	Page<RecordMapper> findAllByRegionIdOrderByIdDesc(Pageable Pageable,Integer regionId);
+	
 	Page<RecordMapper> findAllByOrderByIdDesc(Pageable Pageable);
 	
 	Page<RecordMapper> findAllByStudentNameLikeOrderByIdDesc(String name,Pageable Pageable);

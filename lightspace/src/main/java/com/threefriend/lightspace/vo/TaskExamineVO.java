@@ -44,6 +44,8 @@ public class TaskExamineVO {
 	
 	private String date;
 	
+	private List<String> fabulousList = new ArrayList<>();
+	
 	private List<String> path = new ArrayList<>();
 	
 	public TaskExamineVO (TaskExamineMapper po){
@@ -208,6 +210,14 @@ public class TaskExamineVO {
 
 	public void setIsFabulous(Integer isFabulous) {
 		this.isFabulous = isFabulous;
+	}
+
+	public List<String> getFabulousList() {
+		return fabulousList;
+	}
+
+	public void setFabulousList(List<String> fabulousList) {
+		this.fabulousList = fabulousList;
 	}
 	
 	

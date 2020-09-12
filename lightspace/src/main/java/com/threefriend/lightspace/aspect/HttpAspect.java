@@ -54,6 +54,22 @@ public class HttpAspect {
         redisUtil.setTime(split[0], 1800);//1800
 	}
 	
+	
+	@Pointcut("execution(public * com.threefriend.schoolclient.controller.*.*(..))"+
+			"&& !execution(public * com.threefriend.schoolclient.controller.SchoolUserController.school(..))"
+			+ "&& !execution(public * com.threefriend.schoolclient.controller.SchoolClassController.classNumber(..))")
+		    public void schoolclient() {}
+	
+	
+	@Before("schoolclient()")
+	public void doSchoolclient() {
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        //开启token验证
+        if(request.getSession(false)==null)throw new TokenException(ResultEnum.TOKEN_OVERDUE);
+	}
+	
+	
 	//定义切点 @Pointcut
     //在注解的位置切入代码
     @Pointcut("@annotation( com.threefriend.lightspace.aspect.Mylog)")

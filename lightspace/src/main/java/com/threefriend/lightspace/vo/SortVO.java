@@ -7,6 +7,8 @@ public class SortVO{
 	private String studentName;
 	
 	private Integer gender;
+	//前台用的添加间隔用
+	private Boolean mr=false;
 	
 	private Integer correct;
 	
@@ -63,6 +65,14 @@ public class SortVO{
 
 	public void setCorrect(Integer correct) {
 		this.correct = correct;
+	}
+
+	public Boolean getMr() {
+		return mr;
+	}
+
+	public void setMr(Boolean mr) {
+		this.mr = mr;
 	}
 	
 

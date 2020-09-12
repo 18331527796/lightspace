@@ -2,6 +2,7 @@ package com.threefriend.lightspace.service;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +15,7 @@ public interface StudentService {
 
 	
 	//学生列表
-	ResultVO studentList(Map<String, String> params);
+	ResultVO studentList(Map<String, String> params,HttpSession session);
 	//按照学校班级查询
 	ResultVO queryBySidCid(Integer cId);
 	//新增学生

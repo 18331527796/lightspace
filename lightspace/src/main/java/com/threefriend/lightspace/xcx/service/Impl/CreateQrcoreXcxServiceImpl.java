@@ -36,7 +36,7 @@ public class CreateQrcoreXcxServiceImpl implements CreateQrcoreXcxService{
 	public ResultVO classByGradeAndSchool(Map<String, String> params) {
 		Integer schoolId = Integer.valueOf(params.get("schoolId"));
 		Integer grade = Integer.valueOf(params.get("grade"));
-		return ResultVOUtil.success(class_dao.findBySchoolIdAndGrade(schoolId,grade));
+		return ResultVOUtil.success(class_dao.findBySchoolIdAndGradeOrderByClassNumber(schoolId,grade));
 	}
 
 	@Override

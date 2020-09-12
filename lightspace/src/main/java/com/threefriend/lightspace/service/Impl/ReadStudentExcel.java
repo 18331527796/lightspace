@@ -134,13 +134,8 @@ public class ReadStudentExcel {
 		}
 		List<StudentMapper> studentList = new ArrayList<StudentMapper>();
 		// 用来优化查询数据库操作
-		Integer regionId = 0;
-		String regionName = "";
-		Integer schoolId = 0;
-		String schoolName = "";
-		Integer classId = 0;
-		String className = "";
-		String name = "";
+		Integer regionId = 0,classId = 0,schoolId = 0;
+		String regionName = "",schoolName = "",className = "",name = "";
 		// 循环Excel行数
 		for (int r = 1; r < totalRows; r++) {
 			Row row = sheet.getRow(r);
@@ -169,23 +164,19 @@ public class ReadStudentExcel {
 						if (!StringUtils.isEmpty(cell.getStringCellValue()))
 							student.setBirthday(cell.getStringCellValue());
 						break;
-					case 3:// 年齡
-						if (!StringUtils.isEmpty(cell.getStringCellValue()))
-							student.setAge(Integer.valueOf(cell.getStringCellValue()));
-						break;
-					case 4:// 身高
+					case 3:// 身高
 						if (!StringUtils.isEmpty(cell.getStringCellValue()))
 							student.setHeight(cell.getStringCellValue());
 						break;
-					case 5:// 体重
+					case 4:// 体重
 						if (!StringUtils.isEmpty(cell.getStringCellValue()))
 							student.setWeight(cell.getStringCellValue());
 						break;
-					case 6:// 性格
+					case 5:// 性格
 						if (!StringUtils.isEmpty(cell.getStringCellValue()))
 							student.setNature(cell.getStringCellValue());
 						break;
-					case 7:// 是否矫正（0：否 1：是）
+					case 6:// 是否矫正（0：否 1：是）
 						if (!StringUtils.isEmpty(cell.getStringCellValue())) {
 							if (cell.getStringCellValue().equals("是")) {
 								student.setCorrect(1);
@@ -195,43 +186,33 @@ public class ReadStudentExcel {
 							}
 						}
 						break;
-					case 8:// 坐姿高度
+					case 7:// 坐姿高度
 						if (!StringUtils.isEmpty(cell.getStringCellValue()))
 							student.setSittingHeight(cell.getStringCellValue());
 						break;
-					case 9:// 椅子高度
+					case 8:// 椅子高度
 						if (!StringUtils.isEmpty(cell.getStringCellValue()))
 							student.setChairHeight(cell.getStringCellValue());
 						break;
-					case 10:// 地区名称
-						if (cell.getStringCellValue().equals(regionName)) {
-							student.setRegionId(regionId);
-							student.setRegionName(regionName);
-						} else {
-							RegionMapper region = region_dao.findByName(cell.getStringCellValue());
-							if (region != null) {
-								regionId = region.getId();
-								regionName = region.getName();
-								student.setRegionId(regionId);
-								student.setRegionName(regionName);
-							}
-						}
-						break;
-					case 11:// 学校名称
+					case 9:// 学校名称
 						if (cell.getStringCellValue().equals(schoolName)) {
 							student.setSchoolId(schoolId);
 							student.setSchoolName(schoolName);
+							student.setRegionId(regionId);
+							student.setRegionName(regionName);
 						} else {
 							SchoolMapper school = school_dao.findByName(cell.getStringCellValue()).get(0);
 							if (school != null) {
 								schoolId = school.getId();
 								schoolName = school.getName();
+								regionId = school.getRegionId();
+								regionName = school.getRegionName();
 								student.setSchoolId(schoolId);
 								student.setSchoolName(schoolName);
 							}
 						}
 						break;
-					case 12:// 班級名称
+					case 10:// 班級名称
 						if (cell.getStringCellValue().equals(className)) {
 							student.setClassesId(classId);
 							student.setClassesName(className);
@@ -245,12 +226,6 @@ public class ReadStudentExcel {
 								student.setClassesName(className);
 							}
 						}
-						break;
-					case 13:
-						student.setParentPhone(cell.getStringCellValue());
-						break;
-					case 14:// 备注
-						student.setDescription(cell.getStringCellValue());
 						break;
 					default:
 						break;

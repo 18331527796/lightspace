@@ -8,6 +8,8 @@ public class StatisticsVO {
 	
 	private Integer value;
 	
+	private String url;
+	
 	private Map<String, String> itemStyle;
 	
 
@@ -31,9 +33,18 @@ public class StatisticsVO {
 		this.value = value;
 	}
 	
-	public StatisticsVO (String name,Integer value,Map<String, String> itemStyle) {
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public StatisticsVO (String name,Integer value,String url,Map<String, String> itemStyle) {
         this.name=name;
         this.value=value;
+        this.url=url;
         this.itemStyle=itemStyle;
 	}
 	

@@ -16,5 +16,7 @@ public interface OrderRepository extends JpaRepository<OrderMapper,Integer>{
 	
 	List<OrderMapper> findByStudentId(Integer studentId);
 	
+	Page<OrderMapper> findByStudentIdAndStatus(Integer studentId,String  status,Pageable Pageable);
+	
 	int countByProductId(Integer productId);
 }

@@ -24,7 +24,11 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	
 	List<StudentMapper> findBySchoolId(Integer id);
 	
+	Page<StudentMapper> findByRegionId(Integer regionId ,Pageable Pageable);
+	
 	Page<StudentMapper> findBySchoolId(Integer id ,Pageable Pageable);
+	
+	Page<StudentMapper> findBySchoolIdAndNameLike(Integer id ,String name ,Pageable Pageable);
 	
 	Page<StudentMapper> findById(Integer id ,Pageable Pageable);
 	
@@ -55,74 +59,5 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	
 	int countBySchoolId(Integer school);
 	
-	
-	//学校 左眼 大于
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper t1" + 
-				" WHERE school_id = ?1 and vision_left_str > ?2",nativeQuery = true)
-		int countTopBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(Integer schoolId,Double min);
-		//学校 左眼 区间
-		@Query(value="SELECT count(1) FROM student_mapper t1" + 
-				" WHERE school_id = ?1 and vision_left_str BETWEEN ?2 and ?3",nativeQuery = true)
-		int countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(Integer schoolId,Double min,Double max);
-		//学校 右眼 大于
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper t1" + 
-				" WHERE school_id = ?1 and vision_right_str > ?2",nativeQuery = true)
-		int countTopBySchoolIdAndVisionRightGreaterThanOrderByStudentId(Integer schoolId,Double min);
-		//学校 右眼区间
-		@Query(value="SELECT count(1) FROM student_mapper t1" + 
-				" WHERE school_id = ?1 and vision_right_str BETWEEN ?2 and ?3",nativeQuery = true)
-		int countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(Integer schoolId,Double min,Double max);
-		//学校 双眼 区间
-		@Query(value="SELECT count(1) FROM student_mapper t1" + 
-				" WHERE school_id = ?1 and (vision_left_str + vision_right_str)/2 BETWEEN ?2 and ?3",nativeQuery = true)
-		int schoolAvgVision(Integer school,Double min,Double max);
-		//学校 双眼 大于
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper t1" + 
-				" WHERE school_id = ?1 and (vision_left_str + vision_right_str)/2 > ?2",nativeQuery = true)
-		int schoolAvgVision(Integer school,Double min);
-		
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper t1" + 
-				" WHERE school_id = ?1 and gender = ?2 and (vision_left_str + vision_right_str)/2 < ?3",nativeQuery = true)
-		int schoolAvgVisionSmaller(Integer school,Integer gender ,Double min);
-		
-		
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper t1" + 
-				" WHERE classes_id IN ?1 and vision_left_str BETWEEN ?2 and ?3",nativeQuery = true)
-		int countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(List<Integer> ClassId,Double min,Double max);
-		
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper t1" + 
-				" WHERE classes_id IN ?1 and vision_left_str > ?2",nativeQuery = true)
-		int countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(List<Integer> ClassId,Double min);
-		
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper t1" + 
-				" WHERE classes_id IN ?1 and vision_right_str > ?2",nativeQuery = true)
-		int countTopByClassesIdInAndVisionRightGreaterThanOrderByStudentId(List<Integer> ClassId,Double min);
-		
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper " + 
-				" WHERE classes_id IN ?1 and vision_right_str BETWEEN ?2 and ?3",nativeQuery = true)
-		int countTopByClassesIdInAndVisionRightBetweenOrderByStudentId(List<Integer> ClassId,Double min,Double max);
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper " + 
-				" WHERE classes_id IN ?1 and (vision_left_str + vision_right_str)/2 BETWEEN ?2 and ?3",nativeQuery = true)
-		int classInAvgVision(List<Integer> ClassId,Double min,Double max);
-		
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper " + 
-				" WHERE  classes_id IN ?1  and (vision_left_str + vision_right_str)/2 > ?2",nativeQuery = true)
-		int classInAvgVision(List<Integer> ClassId,Double min);
-		
-		@Query(value="SELECT count(1)" + 
-				" FROM student_mapper " + 
-				" WHERE  classes_id IN ?1 and gender = ?2 and (vision_left_str + vision_right_str)/2 < ?3",nativeQuery = true)
-		int classInAvgVisionSmaller(List<Integer> ClassId,Integer gender,Double min);
-		
 		
 }

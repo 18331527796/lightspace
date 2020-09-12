@@ -1,16 +1,22 @@
 package com.threefriend.lightspace.service.Impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.google.common.collect.Lists;
 import com.threefriend.lightspace.Exception.SortException;
+import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.enums.SortEnums;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.SortMapper;
@@ -23,6 +29,8 @@ import com.threefriend.lightspace.repository.SortRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.SortService;
 import com.threefriend.lightspace.util.ListUtils;
+import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SortVO;
 
 /**
@@ -50,122 +58,263 @@ public class SortServiceImpl implements SortService {
 	 * 时间单位 传输过来单位为（秒）
 	 */
 	@Override
-	public List<List<SortVO>> studentSort(Integer classId, Integer type,Integer time) {
+	public ResultVO studentSort(Map<String, String> params) {
+		Long time = Long.valueOf(params.get("time"));
+		Integer classId = Integer.valueOf(params.get("classId"));
+		Integer type = Integer.valueOf(params.get("type"));
 		time=time*1000;
 		Date nowtime=new Date();
-			Integer number = 0;
-			// 根据不同的type来确定一行多少人 在进行下列的数据处理
-			if (type == SortEnums.TYPEONE.getType())
-				number = SortEnums.TYPEONE.getNumber();
-			if (type == SortEnums.TYPETWO.getType())
-				number = SortEnums.TYPETWO.getNumber();
-			if (type == SortEnums.TYPETHREE.getType())
-				number = SortEnums.TYPETHREE.getNumber();
-			if (type == SortEnums.TYPEFOUR.getType())
-				number = SortEnums.TYPEFOUR.getNumber();
-			// 接收按照坐姿高度排序后的
-			List<SortVO> sort = new ArrayList<>();
-			List<SortVO> temporary = new ArrayList<>();
-			// 排座完成后的
-			List<List<SortVO>> end = new ArrayList<>();
-			//用来存放数据空的学生姓名返回前台 告知老师哪个学生都需要检测
-			List<String> nullStudent= new ArrayList<>();
-			List<StudentMapper> allStudent = student_dao.findByClassesIdOrderBySittingHeight(classId);
-			//循环每个学生的数据做封装
-			for (StudentMapper student : allStudent) {
-				Integer id=student.getId();
-				SortVO vo = new SortVO();
-				vo.setStudentId(student.getId());
-				vo.setStudentName(student.getName());
-				vo.setGender(student.getGender());
-				vo.setCorrect(student.getCorrect());
-				if(student.getSittingHeight()==null||student.getSittingHeight()==""||student.getChairHeight()==null||student.getChairHeight()=="") {
-					nullStudent.add(student.getName());
+		//一个初始的坐高
+		Double sittingHeight = 0d;
+		
+		// 这里是暂时移除的（本来是用来分行的临时行数据）
+		List<SortVO> temporary = new ArrayList<>();
+		List<List<SortVO>> sort_group= new ArrayList<>();
+		// 排座完成后的
+		List<SortVO> end = new ArrayList<>();
+		
+		Map<String, Object> endMap = new HashMap<>();
+		
+		// 接收按照坐姿高度排序后的
+		List<SortVO> sort = new ArrayList<>();
+		//用来存放数据空的学生姓名返回前台 告知老师哪个学生都需要检测
+		List<Map<String, String>> nullStudent= new ArrayList<>();
+		List<StudentMapper> allStudent = student_dao.findByClassesIdOrderBySittingHeight(classId);
+		System.out.println("这个班一共:"+allStudent.size()+"人");
+		//循环每个学生的数据做封装
+		for (StudentMapper student : allStudent) {
+			Integer id=student.getId();
+			SortVO vo = new SortVO();
+			vo.setStudentId(student.getId());
+			vo.setStudentName(student.getName());
+			vo.setGender(student.getGender());
+			vo.setCorrect(student.getCorrect());
+			if(student.getSittingHeight()==null||student.getSittingHeight()=="") {
+				nullStudent.add(new HashMap<String, String>() {{ put("name", student.getName());put("cause", "坐姿高度信息不完整");}});
+				continue;
+			}
+			vo.setSittingHeight(Double.valueOf(student.getSittingHeight()));
+			//通过判断学生是否有最新的视力记录
+			if(student.getVisionLeftStr()!=null&&student.getVisionRightStr()!=null) {
+				vo.setAvgRecord(student.getVisionLeftStr()>=student.getVisionRightStr()?student.getVisionRightStr():student.getVisionLeftStr());
+			}else {
+				RecordMapper record = record_dao.findTopByStudentIdOrderByGenTimeDesc(id);
+				if(record!=null) {
+					vo.setAvgRecord(record.getVisionLeftStr()>=record.getVisionRightStr()?record.getVisionRightStr():record.getVisionLeftStr());
+				}else {
+					nullStudent.add(new HashMap<String, String>() {{ put("name", student.getName());put("cause", "视力信息不完整");}});
 					continue;
 				}
-				vo.setSittingHeight(Double.valueOf(student.getSittingHeight())-Double.valueOf(student.getChairHeight()));
-				//通过判断学生是否有最新的视力记录
-				if(student.getVisionLeftStr()!=null&&student.getVisionRightStr()!=null) {
-					vo.setAvgRecord((student.getVisionLeftStr()+student.getVisionRightStr())/2);
-				}else {
-					RecordMapper record = record_dao.findTopByStudentIdOrderByGenTimeDesc(id);
-					if(record!=null) {
-						vo.setAvgRecord((record.getVisionLeftStr()+record.getVisionRightStr())/2);
-					}else {
-						nullStudent.add(student.getName());
-						continue;
-					}
-				}
-				//存放集合
-				sort.add(vo);
-				
 			}
-			//两个数据都是空的 就抛异常
-			if(nullStudent!=null&&!nullStudent.isEmpty())throw new SortException(nullStudent);
-			int size = sort.size();
-			ListUtils.sort(sort, true,"sittingHeight", "avgRecord");
-			StringBuilder sortMark = new StringBuilder("");
-			//遍历身高的集合 添加进临时行的集合
-			for (int i = 1; i < size+1 ; i++) {
-				// 临时行的排序
-				temporary.add(sort.get(i-1));
-				//判断是不是一行已经完成添加
-				if ((i % number == 0 && i != 0) || (((size - i) < number) && i == size)) {
-					// 组合最后的list
-					end.add(temporary);
-					//遍历这一行的孩子 append 记录座位顺序
-					for (int j = 0; j < temporary.size(); j++) {
-						if (j == 0) {
-							sortMark.append("-" + temporary.get(j).getStudentId());
-						} else {
-							sortMark.append("," + temporary.get(j).getStudentId());
-						}
-					}
-					// 清除临时的list 进入下一行存储
-					temporary = new ArrayList<>();
-				}
-			}
-			Integer count = sort_dao.countByClassId(classId);
-			 SortMapper po = new SortMapper(); 
-			 po.setName("第"+(count+1)+"次排座");
-			 po.setClassId(classId); 
-			 po.setType(type);
-			 po.setGenTime(nowtime); 
-			 po.setEndTime(new Date(nowtime.getTime()+time));
-			 po.setSort(sortMark.toString());
-			 sort_dao.save(po);
-			 Collections.reverse(end);
-			return end;
+			//存放集合
+			sort.add(vo);
+			
 		}
+		//两个数据都是空的 就抛异常
+		System.out.println("数据异常的人"+nullStudent.toString());
+		if(nullStudent!=null&&!nullStudent.isEmpty())throw new SortException(nullStudent);
+		int size = sort.size();
+		ListUtils.sort(sort, true,"sittingHeight"/*, "avgRecord"*/);
+		StringBuilder sortMark = new StringBuilder("");
+		sittingHeight = sort.get(0).getSittingHeight();
+		
+		while (sittingHeight<=sort.get(size-1).getSittingHeight()) {
+			for (SortVO vo : sort) {
+				if(vo.getSittingHeight()>=sittingHeight&&vo.getSittingHeight()<sittingHeight+3)temporary.add(vo);
+			}
+			sittingHeight+=3;
+			if(temporary.size()<1) {
+				// 清除临时的list 进入下一行存储
+				temporary = new ArrayList<>();
+				continue;
+			}
+			Collections.shuffle(temporary);
+			sort_group.add(temporary);
+			end.addAll(temporary);
+			// 清除临时的list 进入下一行存储
+			temporary = new ArrayList<>();
+		}
+		//这里是修改后的逻辑
+		for (int i = 0; i < end.size() ; i++) {
+			if (i == 0) {
+				sortMark.append(end.get(i).getStudentId());
+			} else {
+				sortMark.append("," + end.get(i).getStudentId());
+			}
+		}
+		
+		SortMapper po = sort_dao.findByClassId(classId);
+		if(po==null)po = new SortMapper();
+		po.setName(allStudent.get(0).getClassesName()+"座次表");
+		po.setClassId(classId); 
+		po.setType(type);
+		po.setGenTime(nowtime); 
+		po.setEndTime(time);
+		po.setSort(sortMark.toString());
+		sort_dao.save(po);
+		//这里本来是用来颠倒顺序的（面向黑板坐的顺序）
+		//Collections.reverse(end);
+		
+		endMap.put("id", po.getId());
+		endMap.put("data", end);
+		endMap.put("sort_group", sort_group);
+		return ResultVOUtil.success(endMap);
+	}
 
 	@Override
-	public List<List<SortVO>> sortShow(Integer Id) {
+	public ResultVO sortShow(Integer Id) {
 		SortMapper sortmapper = sort_dao.findById(Id).get();
-		List<List<SortVO>> end = new ArrayList<>();
-			// 排座完成后的
-			String[] split = sortmapper.getSort().split("-");
-			for (String string : split) {
-				if(StringUtils.isEmpty(string))continue;
-				List<SortVO> temporary=new ArrayList<>();
-				String[] split2 = string.split(",");
-				for (String string2 : split2) {
-					if(StringUtils.isEmpty(string2))continue;
-					SortVO vo=new SortVO();
-					StudentMapper studentMapper = student_dao.findById(Integer.valueOf(string2)).get();
-					vo.setStudentId(Integer.valueOf(string2));
-					vo.setStudentName(studentMapper.getName());
-					vo.setGender(studentMapper.getGender());
-					vo.setCorrect(studentMapper.getCorrect());
-					temporary.add(vo);
+		List<SortVO> sort = new ArrayList<>();
+		
+		String[] split = sortmapper.getSort().split(",");
+		String[] mr = null;
+		if(sortmapper.getMr()!=null) mr=sortmapper.getMr().split(",");
+		List<String> list = Arrays.asList(split);
+		
+		for (String string : list) {
+			if(StringUtils.isEmpty(string))continue;
+			if(string.contains("m")) {
+				SortVO vo=new SortVO();
+				vo.setGender(2);
+				if(mr.length!=0&&mr!=null&&"1".equals(mr[list.indexOf(string)])) {
+					vo.setMr(true);
 				}
-				end.add(temporary);
+				sort.add(vo);
+				continue;
 			}
-			Collections.reverse(end);
-		return end;
+			SortVO vo=new SortVO();
+			StudentMapper studentMapper = student_dao.findById(Integer.valueOf(string)).get();
+			vo.setStudentId(Integer.valueOf(string));
+			vo.setStudentName(studentMapper.getName());
+			vo.setGender(studentMapper.getGender());
+			vo.setCorrect(studentMapper.getCorrect());
+			if(mr.length!=0&&mr!=null&&"1".equals(mr[list.indexOf(string)])) {
+				vo.setMr(true);
+			}
+			sort.add(vo);
+		}
+		
+		return ResultVOUtil.success(sort);
 	}
 
 	@Override
 	public List<SortMapper> byClassId(Integer classId) {
 		return sort_dao.findByClassIdOrderByGenTimeDesc(classId);
+	}
+
+	@Override
+	public ResultVO saveSort(Map<String, String> params) {
+		SortMapper sortmapper = sort_dao.findByClassId(Integer.valueOf(params.get("classId")));
+		sortmapper.setGenTime(new Date());
+		sortmapper.setSort(params.get("sort"));
+		sortmapper.setType(Integer.valueOf(params.get("type")));
+		sortmapper.setMr(params.get("mr"));
+		sort_dao.save(sortmapper);
+		return ResultVOUtil.success();
+	}
+
+	@Override
+	public ResultVO adjustSort(Map<String, String> params) {
+		SortMapper sortmapper = sort_dao.findByClassId(Integer.valueOf(params.get("classId")));
+		if(sortmapper==null)return ResultVOUtil.error(ResultEnum.SORT_ERROR.getStatus(), ResultEnum.SORT_ERROR.getMessage());
+		List<SortVO> sort = new ArrayList<>();
+		List<SortVO> sortGroups = new ArrayList<>();
+		String[] split = sortmapper.getSort().split(",");
+		String[] mr = null;
+		if(sortmapper.getMr()!=null) mr=sortmapper.getMr().split(",");
+		List<String> list = Arrays.asList(split);
+		
+		for (String string : list) {
+			if(StringUtils.isEmpty(string))continue;
+			if(string.contains("m")) {
+				SortVO vo=new SortVO();
+				vo.setGender(2);
+				if(mr.length!=0&&mr!=null&&"1".equals(mr[list.indexOf(string)])) {
+					vo.setMr(true);
+				}
+				sort.add(vo);
+				continue;
+			}
+			SortVO vo=new SortVO();
+			StudentMapper studentMapper = student_dao.findById(Integer.valueOf(string)).get();
+			vo.setStudentId(Integer.valueOf(string));
+			vo.setStudentName(studentMapper.getName());
+			vo.setGender(studentMapper.getGender());
+			vo.setCorrect(studentMapper.getCorrect());
+			vo.setSittingHeight(Double.valueOf(studentMapper.getSittingHeight()));
+			//通过判断学生是否有最新的视力记录
+			if(studentMapper.getVisionLeftStr()!=null&&studentMapper.getVisionRightStr()!=null) {
+				vo.setAvgRecord(studentMapper.getVisionLeftStr()>=studentMapper.getVisionRightStr()?studentMapper.getVisionRightStr():studentMapper.getVisionLeftStr());
+			}else {
+				RecordMapper record = record_dao.findTopByStudentIdOrderByGenTimeDesc(studentMapper.getId());
+				if(record!=null) {
+					vo.setAvgRecord(record.getVisionLeftStr()>=record.getVisionRightStr()?record.getVisionRightStr():record.getVisionLeftStr());
+				} 
+			}
+			if(mr.length!=0&&mr!=null&&"1".equals(mr[list.indexOf(string)])) {
+				vo.setMr(true);
+			}
+			sort.add(vo);
+		}
+		
+		
+		Double sittingHeight = 0d;
+		List<StudentMapper> allStudent = student_dao.findByClassesIdOrderBySittingHeight(Integer.valueOf(params.get("classId")));
+		//循环每个学生的数据做封装
+		for (StudentMapper student : allStudent) {
+			Integer id=student.getId();
+			SortVO vo = new SortVO();
+			vo.setStudentId(student.getId());
+			vo.setStudentName(student.getName());
+			vo.setGender(student.getGender());
+			vo.setCorrect(student.getCorrect());
+			vo.setSittingHeight(Double.valueOf(student.getSittingHeight()));
+			//通过判断学生是否有最新的视力记录
+			if(student.getVisionLeftStr()!=null&&student.getVisionRightStr()!=null) {
+				vo.setAvgRecord(student.getVisionLeftStr()>=student.getVisionRightStr()?student.getVisionRightStr():student.getVisionLeftStr());
+			}else {
+				RecordMapper record = record_dao.findTopByStudentIdOrderByGenTimeDesc(id);
+				if(record!=null) {
+					vo.setAvgRecord(record.getVisionLeftStr()>=record.getVisionRightStr()?record.getVisionRightStr():record.getVisionLeftStr());
+				} 
+			}
+			//存放集合
+			sortGroups.add(vo);
+			
+		}
+		int size = sortGroups.size();
+		ListUtils.sort(sortGroups, true,"sittingHeight"/*, "avgRecord"*/);
+		sittingHeight = sortGroups.get(0).getSittingHeight();
+		// 这里是暂时移除的（本来是用来分行的临时行数据）
+		List<SortVO> temporary = new ArrayList<>();
+		List<List<SortVO>> sort_group= new ArrayList<>();
+		
+		while (sittingHeight<=sortGroups.get(size-1).getSittingHeight()) {
+			for (SortVO vo : sortGroups) {
+				if(vo.getSittingHeight()>=sittingHeight&&vo.getSittingHeight()<sittingHeight+3)temporary.add(vo);
+			}
+			sittingHeight+=3;
+			if(temporary.size()<1) {
+				// 清除临时的list 进入下一行存储
+				temporary = new ArrayList<>();
+				continue;
+			}
+			sort_group.add(temporary);
+			// 清除临时的list 进入下一行存储
+			temporary = new ArrayList<>();
+		}
+		Map<String, Object> endMap = new HashMap<>();
+		endMap.put("data", sort);
+		endMap.put("sort_group", sort_group);
+		
+		return ResultVOUtil.success(endMap);
+	}
+
+	@Override
+	public ResultVO chkSort(Map<String, String> params) {
+		SortMapper sortmapper = sort_dao.findByClassId(Integer.valueOf(params.get("classId")));
+		if(sortmapper==null)return ResultVOUtil.error(ResultEnum.SORT_ERROR.getStatus(), ResultEnum.SORT_ERROR.getMessage());
+		if(sortmapper.getType()!=Integer.valueOf(params.get("type")))return ResultVOUtil.error(ResultEnum.SORT_TYPE_ERROR.getStatus(), ResultEnum.SORT_TYPE_ERROR.getMessage());
+		return ResultVOUtil.success();
 	}
 }

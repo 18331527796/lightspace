@@ -65,6 +65,9 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 	@Autowired
 	private TaskExamineConfigRepository config_dao;
 	
+	/* 
+	 * 发布爱眼秀
+	 */
 	@Override
 	public ResultVO addTaskPic(Map<String, String> params, MultipartFile[] file) throws Exception {
 		if(!StringUtils.isEmpty(params.get("id"))) {
@@ -100,6 +103,9 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		return ResultVOUtil.success(TaskExamine.getId());
 	}
 
+	/* 
+	 * 爱眼秀首页列表
+	 */
 	@Override
 	public ResultVO momentsList(Map<String, String> params) {
 		Map<String, Object> end = new HashMap<String, Object>();
@@ -115,7 +121,11 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		
 		for (TaskExamineMapper taskExamineMapper : content) {
 			List<FabulousRecordMapper> FabulousRecord = fabulous_record_dao.findByParentIdAndTaskExamineIdOrderByIdDesc(parentId, taskExamineMapper.getId());
+			List<FabulousRecordMapper>  fabulousLists= fabulous_record_dao.findByTaskExamineIdOrderByIdDesc(taskExamineMapper.getId());
 			TaskExamineVO vo = new TaskExamineVO(taskExamineMapper);
+			for (FabulousRecordMapper fabulousList : fabulousLists) {
+				vo.getFabulousList().add(fabulousList.getNickName());
+			}
 			if(FabulousRecord.size()==0) {
 				vo.setIsFabulous(2);
 			}else {
@@ -133,6 +143,9 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		return ResultVOUtil.success(end);
 	}
 
+	/* 
+	 * 我的爱眼秀列表
+	 */
 	@Override
 	public ResultVO myMomentsList(Map<String, String> params) {
 		List<TaskExamineVO> end = new ArrayList<>();
@@ -142,7 +155,11 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		List<TaskExamineMapper> content = task_examine_dao.findByParentId(parentId,PageRequest.of(page, 5 ,Sort.by("id").descending())).getContent();
 		for (TaskExamineMapper taskExamineMapper : content) {
 			List<FabulousRecordMapper> FabulousRecord = fabulous_record_dao.findByParentIdAndTaskExamineIdOrderByIdDesc(parentId, taskExamineMapper.getId());
+			List<FabulousRecordMapper>  fabulousLists= fabulous_record_dao.findByTaskExamineIdOrderByIdDesc(taskExamineMapper.getId());
 			TaskExamineVO vo = new TaskExamineVO(taskExamineMapper);
+			for (FabulousRecordMapper fabulousList : fabulousLists) {
+				vo.getFabulousList().add(fabulousList.getNickName());
+			}
 			if(FabulousRecord.size()==0) {
 				vo.setIsFabulous(2);
 			}else {
@@ -184,6 +201,10 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		fabulous_record_dao.save(po);
 		//po to vo
 		TaskExamineVO vo = new TaskExamineVO(taskExamineMapper);
+		List<FabulousRecordMapper>  fabulousLists= fabulous_record_dao.findByTaskExamineIdOrderByIdDesc(taskExamineMapper.getId());
+		for (FabulousRecordMapper fabulousList : fabulousLists) {
+			vo.getFabulousList().add(fabulousList.getNickName());
+		}
 		vo.setIsFabulous(1);
 		return ResultVOUtil.success(vo);
 	}
@@ -238,12 +259,18 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		return ResultVOUtil.success(vo);
 	}
 
+	/* 
+	 * 爱眼秀首页图片更改
+	 */
 	@Override
 	public ResultVO configPic() {
 		TaskExamineConfigMapper po = config_dao.findByStatus(1);
 		return ResultVOUtil.success(UrlEnums.IMG_URL.getUrl()+po.getPath());
 	}
 
+	/* 
+	 * 删除爱眼秀
+	 */
 	@Override
 	public ResultVO deleteMyMoments(Map<String, String> params) {
 		TaskExamineMapper po = task_examine_dao.findById(Integer.valueOf(params.get("id"))).get();
@@ -263,6 +290,9 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		return ResultVOUtil.success();
 	}
 
+	/* 
+	 * 爱眼秀点赞的新消息列表
+	 */
 	@Override
 	public ResultVO allFabulousMsg(Map<String, String> params) {
 		List<FabulousRecordVO> end = new ArrayList<>();
@@ -286,6 +316,16 @@ public class TaskExamineXcxServiceImpl implements TaskExamineXcxService{
 		}
 		fabulous_record_dao.saveAll(allrecord);
 		return ResultVOUtil.success(end);
+	}
+
+	
+	/* 
+	 * 单条的详细点赞信息
+	 */
+	@Override
+	public ResultVO fabulousMsg(Map<String, String> params) {
+		
+		return null;
 	}
 
 }

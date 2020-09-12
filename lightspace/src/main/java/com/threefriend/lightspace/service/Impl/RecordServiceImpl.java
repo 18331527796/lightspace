@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.threefriend.lightspace.enums.RecordEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.enums.VisionEnums;
+import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.RecordMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
@@ -73,7 +74,7 @@ public class RecordServiceImpl implements RecordService {
 	 * 数据列表
 	 */
 	@Override
-	public ResultVO recordList(Map<String, String> params) {
+	public ResultVO recordList(Map<String, String> params,HttpSession session) {
 		int page = 0;
 		if(!StringUtils.isEmpty(params.get("page")))page= Integer.valueOf(params.get("page"))-1;
 		String token = params.get("token");
@@ -82,6 +83,12 @@ public class RecordServiceImpl implements RecordService {
 			return ResultVOUtil.success(record_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2]),new PageRequest(page, 10)));
 		if (split[1].equals("3"))
 			return ResultVOUtil.success(record_dao.findByClassesIdOrderByIdDesc(Integer.valueOf(split[2]),new PageRequest(page, 10)));
+		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
+		if(roleId == 5 ) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			return ResultVOUtil.success(record_dao.findAllByRegionIdOrderByIdDesc(new PageRequest(page, 10),regionId));
+		}
+		
 		return ResultVOUtil.success(record_dao.findAllByOrderByIdDesc(new PageRequest(page, 10)));
 	}
 
@@ -313,95 +320,149 @@ public class RecordServiceImpl implements RecordService {
 		List<StatisticsVO> right = new ArrayList<>();
 		List<StatisticsVO> avg = new ArrayList<>();
 		List<List<StatisticsVO>> end = new ArrayList<>();
-		Integer leftGood = student_dao.countTopBySchoolIdAndVisionLeftGreaterThanOrderByStudentId(schoolId,
-				VisionEnums.NORMAL.getType());
-		Integer leftMild = student_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
-				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer leftModerate = student_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
-				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer leftSerious = student_dao.countTopBySchoolIdAndVisionLeftBetweenOrderByStudentId(schoolId,
-				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer rightGood = student_dao.countTopBySchoolIdAndVisionRightGreaterThanOrderByStudentId(schoolId,
-				VisionEnums.NORMAL.getType());
-		Integer rightMild = student_dao.countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
-				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer rightModerate = student_dao.countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
-				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer rightSerious = student_dao.countTopBySchoolIdAndVisionRightBetweenOrderByStudentId(schoolId,
-				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer avgGood = student_dao.schoolAvgVision(schoolId, VisionEnums.NORMAL.getType());
-		Integer avgMild = student_dao.schoolAvgVision(schoolId, VisionEnums.MILD.getType(),
-				VisionEnums.NORMAL.getType());
-		Integer avgModerate = student_dao.schoolAvgVision(schoolId, VisionEnums.MODERATE.getType(),
-				VisionEnums.MILD1.getType());
-		Integer avgSerious = student_dao.schoolAvgVision(schoolId, VisionEnums.SERIOUS1.getType(),
-				VisionEnums.SERIOUS.getType());
-		left.add(new StatisticsVO("良好", leftGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
-		left.add(new StatisticsVO("轻度不良", leftMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
-		left.add(new StatisticsVO("中度不良", leftModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
-		left.add(new StatisticsVO("重度不良", leftSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
+		
+		int leftGood=0,leftMild=0,leftModerate=0,leftSerious=0,rightGood=0,rightMild=0,rightModerate=0,rightSerious=0,
+				avgGood=0,avgMild=0,avgModerate=0,avgSerious=0;
+		Double visionLeft=0d,visionRight=0d,visionavg = 0d;
+		
+		
+		List<StudentMapper> allStudent = student_dao.findBySchoolId(schoolId);
+		
+		for (StudentMapper student : allStudent) {
+			visionLeft=student.getVisionLeftStr();
+			visionRight=student.getVisionRightStr();
+			if(visionLeft==null||visionRight==null)continue;
+			if(visionLeft>=visionRight) {
+				visionavg = visionRight;
+			}else {
+				visionavg = visionLeft;
+			}
+				
+			if(visionLeft>VisionEnums.MILD.getType()) {
+				leftGood++;
+			}else if(visionLeft<VisionEnums.MILD.getType()&&visionLeft>VisionEnums.MODERATE.getType()) {
+				leftMild++;
+			}else if(visionLeft<VisionEnums.MODERATE.getType()&&visionLeft>VisionEnums.SERIOUS.getType()){
+				leftModerate++;
+			}else if(visionLeft<VisionEnums.SERIOUS.getType()){
+				leftSerious++;
+			}
+			
+			if(visionRight>VisionEnums.MILD.getType()) {
+				rightGood++;
+			}else if(visionRight<VisionEnums.MILD.getType()&&visionRight>VisionEnums.MODERATE.getType()) {
+				rightMild++;
+			}else if(visionRight<VisionEnums.MODERATE.getType()&&visionRight>VisionEnums.SERIOUS.getType()){
+				rightModerate++;
+			}else if(visionRight<VisionEnums.SERIOUS.getType()){
+				rightSerious++;
+			}
+			
+			if(visionavg>VisionEnums.MILD.getType()) {
+				avgGood++;
+			}else if(visionavg<VisionEnums.MILD.getType()&&visionavg>VisionEnums.MODERATE.getType()) {
+				avgMild++;
+			}else if(visionavg<VisionEnums.MODERATE.getType()&&visionavg>VisionEnums.SERIOUS.getType()){
+				avgModerate++;
+			}else if(visionavg<VisionEnums.SERIOUS.getType()){
+				avgSerious++;
+			}
+		}
+		
+		left.add(new StatisticsVO("良好", leftGood,"leftGood",new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		left.add(new StatisticsVO("轻度不良", leftMild,"leftMild",new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		left.add(new StatisticsVO("中度不良", leftModerate,"leftModerate",new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		left.add(new StatisticsVO("重度不良", leftSerious,"leftSerious",new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(left);
-		right.add(new StatisticsVO("良好", rightGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
-		right.add(new StatisticsVO("轻度不良", rightMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
-		right.add(new StatisticsVO("中度不良", rightModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
-		right.add(new StatisticsVO("重度不良", rightSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
+		right.add(new StatisticsVO("良好", rightGood,"rightGood",new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		right.add(new StatisticsVO("轻度不良", rightMild,"rightMild",new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		right.add(new StatisticsVO("中度不良", rightModerate,"rightModerate",new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		right.add(new StatisticsVO("重度不良", rightSerious,"rightSerious",new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(right);
-		avg.add(new StatisticsVO("良好", avgGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
-		avg.add(new StatisticsVO("轻度不良", avgMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
-		avg.add(new StatisticsVO("中度不良", avgModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
-		avg.add(new StatisticsVO("重度不良", avgSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
+		avg.add(new StatisticsVO("良好", avgGood,"avgGood",new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		avg.add(new StatisticsVO("轻度不良", avgMild,"avgMild",new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		avg.add(new StatisticsVO("中度不良", avgModerate,"avgModerate",new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		avg.add(new StatisticsVO("重度不良", avgSerious,"avgSerious",new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(avg);
 		return end;
 	}
 	
 	@SuppressWarnings("serial")
 	@Override
-	public List<List<StatisticsVO>> classStatisticsOld(Integer id) {
+	public ResultVO classStatisticsOld(Integer id , List<Integer> ids) {
 		List<Integer> classId = new ArrayList<>();
-		classId.add(id);
+		if(ids==null||ids.size()==0) {
+			classId.add(id);
+		}else {
+			classId.addAll(ids);
+		}
 		List<StatisticsVO> left = new ArrayList<>();
 		List<StatisticsVO> right = new ArrayList<>();
 		List<StatisticsVO> avg = new ArrayList<>();
 		List<List<StatisticsVO>> end = new ArrayList<>();
-		Integer leftGood = student_dao.countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(classId,
-				VisionEnums.NORMAL.getType());
-		Integer leftMild = student_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
-				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer leftModerate = student_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
-				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer leftSerious = student_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
-				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer rightGood = student_dao.countTopByClassesIdInAndVisionLeftGreaterThanOrderByStudentId(classId,
-				VisionEnums.NORMAL.getType());
-		Integer rightMild = student_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
-				VisionEnums.MILD.getType(), VisionEnums.NORMAL.getType());
-		Integer rightModerate = student_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
-				VisionEnums.MODERATE.getType(), VisionEnums.MILD1.getType());
-		Integer rightSerious = student_dao.countTopByClassesIdInAndVisionLeftBetweenOrderByStudentId(classId,
-				VisionEnums.SERIOUS1.getType(), VisionEnums.SERIOUS.getType());
-		Integer avgGood = student_dao.classInAvgVision(classId, VisionEnums.NORMAL.getType());
-		Integer avgMild = student_dao.classInAvgVision(classId, VisionEnums.MILD.getType(),
-				VisionEnums.NORMAL.getType());
-		Integer avgModerate = student_dao.classInAvgVision(classId, VisionEnums.MODERATE.getType(),
-				VisionEnums.MILD1.getType());
-		Integer avgSerious = student_dao.classInAvgVision(classId, VisionEnums.SERIOUS1.getType(),
-				VisionEnums.SERIOUS.getType());
-		left.add(new StatisticsVO("良好", leftGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
-		left.add(new StatisticsVO("轻度不良", leftMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
-		left.add(new StatisticsVO("中度不良", leftModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
-		left.add(new StatisticsVO("重度不良", leftSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
+		
+		int leftGood=0,leftMild=0,leftModerate=0,leftSerious=0,rightGood=0,rightMild=0,rightModerate=0,rightSerious=0,
+				avgGood=0,avgMild=0,avgModerate=0,avgSerious=0;
+		Double visionLeft=0d,visionRight=0d,visionavg = 0d;
+		
+		List<StudentMapper> allStudent = student_dao.findByClassesId(classId);
+		
+		for (StudentMapper student : allStudent) {
+			visionLeft=student.getVisionLeftStr();
+			visionRight=student.getVisionRightStr();
+			if(visionLeft==null||visionRight==null)continue;
+			if(visionLeft>=visionRight) {
+				visionavg = visionRight;
+			}else {
+				visionavg = visionLeft;
+			}
+			if(visionLeft>VisionEnums.MILD.getType()) {
+				leftGood++;
+			}else if(visionLeft<VisionEnums.MILD.getType()&&visionLeft>VisionEnums.MODERATE.getType()) {
+				leftMild++;
+			}else if(visionLeft<VisionEnums.MODERATE.getType()&&visionLeft>VisionEnums.SERIOUS.getType()){
+				leftModerate++;
+			}else if(visionLeft<VisionEnums.SERIOUS.getType()){
+				leftSerious++;
+			}
+			
+			if(visionRight>VisionEnums.MILD.getType()) {
+				rightGood++;
+			}else if(visionRight<VisionEnums.MILD.getType()&&visionRight>VisionEnums.MODERATE.getType()) {
+				rightMild++;
+			}else if(visionRight<VisionEnums.MODERATE.getType()&&visionRight>VisionEnums.SERIOUS.getType()){
+				rightModerate++;
+			}else if(visionRight<VisionEnums.SERIOUS.getType()){
+				rightSerious++;
+			}
+			
+			if(visionavg>VisionEnums.MILD.getType()) {
+				avgGood++;
+			}else if(visionavg<VisionEnums.MILD.getType()&&visionavg>VisionEnums.MODERATE.getType()) {
+				avgMild++;
+			}else if(visionavg<VisionEnums.MODERATE.getType()&&visionavg>VisionEnums.SERIOUS.getType()){
+				avgModerate++;
+			}else if(visionavg<VisionEnums.SERIOUS.getType()){
+				avgSerious++;
+			}
+		}
+		
+		left.add(new StatisticsVO("良好", leftGood,"leftGood",new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		left.add(new StatisticsVO("轻度不良", leftMild,"leftMild",new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		left.add(new StatisticsVO("中度不良", leftModerate,"leftModerate",new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		left.add(new StatisticsVO("重度不良", leftSerious,"leftSerious",new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(left);
-		right.add(new StatisticsVO("良好", rightGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
-		right.add(new StatisticsVO("轻度不良", rightMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
-		right.add(new StatisticsVO("中度不良", rightModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
-		right.add(new StatisticsVO("重度不良", rightSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
+		right.add(new StatisticsVO("良好", rightGood,"rightGood",new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		right.add(new StatisticsVO("轻度不良", rightMild,"rightMild",new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		right.add(new StatisticsVO("中度不良", rightModerate,"rightModerate",new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		right.add(new StatisticsVO("重度不良", rightSerious,"rightSerious",new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(right);
-		avg.add(new StatisticsVO("良好", avgGood,new HashMap<String,String>() {{put("color", "#0793FF");}}));
-		avg.add(new StatisticsVO("轻度不良", avgMild,new HashMap<String,String>() {{put("color", "#FFAA07");}}));
-		avg.add(new StatisticsVO("中度不良", avgModerate,new HashMap<String,String>() {{put("color", "#FF0724");}}));
-		avg.add(new StatisticsVO("重度不良", avgSerious,new HashMap<String,String>() {{put("color", "#6F0427");}}));
+		avg.add(new StatisticsVO("良好", avgGood,"avgGood",new HashMap<String,String>() {{put("color", "#0793FF");}}));
+		avg.add(new StatisticsVO("轻度不良", avgMild,"avgMild",new HashMap<String,String>() {{put("color", "#FFAA07");}}));
+		avg.add(new StatisticsVO("中度不良", avgModerate,"avgModerate",new HashMap<String,String>() {{put("color", "#FF0724");}}));
+		avg.add(new StatisticsVO("重度不良", avgSerious,"avgSerious",new HashMap<String,String>() {{put("color", "#6F0427");}}));
 		end.add(avg);
-		return end;
+		return ResultVOUtil.success(end);
 	}
 	
 	
@@ -431,4 +492,223 @@ public class RecordServiceImpl implements RecordService {
 	public void download(HttpServletResponse response) {
 		DownTemplateUtil.downTemplate(response, PATH, FILENAME);
 	}
+
+	@Override
+	public ResultVO classInfiltration(Map<String, String> params) {
+		Integer classId = Integer.valueOf(params.get("classId"));
+		//哪个眼
+		int type =Integer.valueOf(params.get("type"));
+		//哪个状态
+		int state=Integer.valueOf(params.get("state"));
+		Double visionLeft=0d,visionRight=0d,visionavg = 0d;
+		List<StudentMapper> end = new ArrayList<>();
+		List<StudentMapper> allStudent = student_dao.findByClassesId(new ArrayList<Integer>() {{add(classId);}});
+		for (StudentMapper student : allStudent) {
+			visionLeft=student.getVisionLeftStr();
+			visionRight=student.getVisionRightStr();
+			if(visionLeft==null||visionRight==null)continue;
+			visionavg = (visionLeft+visionRight)/2;
+			if(state==1) {
+				if(type==1) {
+					if(visionLeft>VisionEnums.MILD.getType())end.add(student);
+					continue;
+				}else if(type==2) {
+					if(visionRight>VisionEnums.MILD.getType())end.add(student);
+					continue;
+				}else if(type==3) {
+					if(visionavg>VisionEnums.MILD.getType())end.add(student);
+					continue;
+				}
+			}else if(state==2) {
+				if(type==1) {
+					if(visionLeft<VisionEnums.MILD.getType()&&visionLeft>VisionEnums.MODERATE.getType())end.add(student);
+					continue;
+				}else if(type==2) {
+					if(visionRight<VisionEnums.MILD.getType()&&visionRight>VisionEnums.MODERATE.getType())end.add(student);
+					continue;
+				}else if(type==3) {
+					if(visionavg<VisionEnums.MILD.getType()&&visionavg>VisionEnums.MODERATE.getType())end.add(student);
+					continue;
+				}
+			}else if(state==3) {
+				if(type==1) {
+					if(visionLeft<VisionEnums.MODERATE.getType()&&visionLeft>VisionEnums.SERIOUS.getType())end.add(student);
+					continue;
+				}else if(type==2) {
+					if(visionRight<VisionEnums.MODERATE.getType()&&visionRight>VisionEnums.SERIOUS.getType())end.add(student);
+					continue;
+				}else if(type==3) {
+					if(visionavg<VisionEnums.MODERATE.getType()&&visionavg>VisionEnums.SERIOUS.getType())end.add(student);
+					continue;
+				}
+			}else if(state==4) {
+				if(type==1) {
+					if(visionLeft<VisionEnums.SERIOUS.getType())end.add(student);
+				}else if(type==2) {
+					if(visionRight<VisionEnums.SERIOUS.getType())end.add(student);
+				}else if(type==3) {
+					if(visionavg<VisionEnums.SERIOUS.getType())end.add(student);
+				}
+			}
+		}
+		return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO gradeInfiltration(Map<String, String> params) {
+		//哪个眼
+		int type =Integer.valueOf(params.get("type"));
+		//哪个状态
+		int state=Integer.valueOf(params.get("state"));
+		Double visionLeft=0d,visionRight=0d,visionavg = 0d;
+		Integer value=0;
+		Integer schoolId = Integer.valueOf(params.get("schoolId"));
+		List<Map<String, String>> end = new ArrayList<>();
+		List<Integer> grades = new ArrayList<Integer>() {{add(1);add(2);add(3);add(4);add(5);add(6);}};
+		for (Integer grade : grades) {
+			List<Integer> classids = class_dao.findIdBySchoolIdAndGrade(schoolId, grade);
+			if(classids==null||classids.size()==0)continue;
+			List<StudentMapper> allStudent = student_dao.findByClassesId(classids);
+			value=0;
+			for (StudentMapper student : allStudent) {
+				visionLeft=student.getVisionLeftStr();
+				visionRight=student.getVisionRightStr();
+				if(visionLeft==null||visionRight==null)continue;
+				visionavg = (visionLeft+visionRight)/2;
+				if(state==1) {
+					if(type==1) {
+						if(visionLeft>VisionEnums.MILD.getType())value++;
+					}else if(type==2) {
+						if(visionRight>VisionEnums.MILD.getType())value++;
+					}else if(type==3) {
+						if(visionavg>VisionEnums.MILD.getType())value++;
+					}
+				}else if(state==2) {
+					if(type==1) {
+						if(visionLeft<VisionEnums.MILD.getType()&&visionLeft>VisionEnums.MODERATE.getType())value++;
+					}else if(type==2) {
+						if(visionRight<VisionEnums.MILD.getType()&&visionRight>VisionEnums.MODERATE.getType())value++;
+					}else if(type==3) {
+						if(visionavg<VisionEnums.MILD.getType()&&visionavg>VisionEnums.MODERATE.getType())value++;
+					}
+				}else if(state==3) {
+					if(type==1) {
+						if(visionLeft<VisionEnums.MODERATE.getType()&&visionLeft>VisionEnums.SERIOUS.getType())value++;
+					}else if(type==2) {
+						if(visionRight<VisionEnums.MODERATE.getType()&&visionRight>VisionEnums.SERIOUS.getType())value++;
+					}else if(type==3) {
+						if(visionavg<VisionEnums.MODERATE.getType()&&visionavg>VisionEnums.SERIOUS.getType())value++;
+					}
+				}else if(state==4) {
+					if(type==1) {
+						if(visionLeft<VisionEnums.SERIOUS.getType())value++;
+					}else if(type==2) {
+						if(visionRight<VisionEnums.SERIOUS.getType())value++;
+					}else if(type==3) {
+						if(visionavg<VisionEnums.SERIOUS.getType())value++;
+					}
+				}
+			}
+			String number = value.toString();
+			end.add(new HashMap<String,String>() {{
+				put("value", number+"");
+				put("grade", chengeGrade(grade));
+			}});
+		}
+		return ResultVOUtil.success(end);
+	}
+	
+	public String chengeGrade(Integer grade) {
+		String gradeStr = null;
+		switch (grade) {
+		case 1:
+			gradeStr = "一年級";
+			break;
+		case 2:
+			gradeStr = "二年級";
+			break;
+		case 3:
+			gradeStr = "三年級";
+			break;
+		case 4:
+			gradeStr = "四年級";
+			break;
+		case 5:
+			gradeStr = "五年級";
+			break;
+		case 6:
+			gradeStr = "六年級";
+			break;
+		}
+		return gradeStr;
+	}
+	
+	@Override
+	public ResultVO grade2ClassInfiltration(Map<String, String> params) {
+		//哪个眼
+		int type =Integer.valueOf(params.get("type"));
+		//哪个状态
+		int state=Integer.valueOf(params.get("state"));
+		Double visionLeft=0d,visionRight=0d,visionavg = 0d;
+		Integer value=0;
+		Integer schoolId = Integer.valueOf(params.get("schoolId"));
+		Integer grade = Integer.valueOf(params.get("grade"));
+		List<Map<String, String>> end = new ArrayList<>();
+		List<Integer> classids = class_dao.findIdBySchoolIdAndGrade(schoolId, grade);
+		for (Integer integer : classids) {
+			List<StudentMapper> allStudent = student_dao.findByClassesId(integer);
+			value=0;
+			for (StudentMapper student : allStudent) {
+				visionLeft=student.getVisionLeftStr();
+				visionRight=student.getVisionRightStr();
+				if(visionLeft==null||visionRight==null)continue;
+				visionavg = (visionLeft+visionRight)/2;
+				if(state==1) {
+					if(type==1) {
+						if(visionLeft>VisionEnums.MILD.getType())value++;
+					}else if(type==2) {
+						if(visionRight>VisionEnums.MILD.getType())value++;
+					}else if(type==3) {
+						if(visionavg>VisionEnums.MILD.getType())value++;
+					}
+				}else if(state==2) {
+					if(type==1) {
+						if(visionLeft<VisionEnums.MILD.getType()&&visionLeft>VisionEnums.MODERATE.getType())value++;
+					}else if(type==2) {
+						if(visionRight<VisionEnums.MILD.getType()&&visionRight>VisionEnums.MODERATE.getType())value++;
+					}else if(type==3) {
+						if(visionavg<VisionEnums.MILD.getType()&&visionavg>VisionEnums.MODERATE.getType())value++;
+					}
+				}else if(state==3) {
+					if(type==1) {
+						if(visionLeft<VisionEnums.MODERATE.getType()&&visionLeft>VisionEnums.SERIOUS.getType())value++;
+					}else if(type==2) {
+						if(visionRight<VisionEnums.MODERATE.getType()&&visionRight>VisionEnums.SERIOUS.getType())value++;
+					}else if(type==3) {
+						if(visionavg<VisionEnums.MODERATE.getType()&&visionavg>VisionEnums.SERIOUS.getType())value++;
+					}
+				}else if(state==4) {
+					if(type==1) {
+						if(visionLeft<VisionEnums.SERIOUS.getType())value++;
+					}else if(type==2) {
+						if(visionRight<VisionEnums.SERIOUS.getType())value++;
+					}else if(type==3) {
+						if(visionavg<VisionEnums.SERIOUS.getType())value++;
+					}
+				}
+			}
+			String number = value.toString();
+			end.add(new HashMap<String,String>() {{
+				put("classId", allStudent.get(0).getClassesId()+"");
+				put("schoolNmae", allStudent.get(0).getSchoolName());
+				put("name", allStudent.get(0).getClassesName());
+				put("value", number+"");
+			}});
+		}
+		return ResultVOUtil.success(end);
+	}
+	
+	
+	
+	
 }

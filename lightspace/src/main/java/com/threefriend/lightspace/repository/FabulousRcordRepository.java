@@ -14,5 +14,7 @@ public interface FabulousRcordRepository extends JpaRepository<FabulousRecordMap
 
 	List<FabulousRecordMapper> findByParentIdAndTaskExamineIdOrderByIdDesc(Integer parentId,Integer taskExamineId);
 	
+	List<FabulousRecordMapper> findByTaskExamineIdOrderByIdDesc(Integer taskExamineId);
+	
 	List<FabulousRecordMapper> findBySendIdAndSendType(Integer sendId,Integer sendType);
 }

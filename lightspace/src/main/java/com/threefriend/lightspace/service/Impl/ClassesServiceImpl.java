@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -58,6 +59,17 @@ public class ClassesServiceImpl implements ClassesService {
 		if(findBySchoolIdAndClassName.size()>=1)return ResultVOUtil.error(ResultEnum.CLASSNAME_REPEAT.getStatus(), ResultEnum.CLASSNAME_REPEAT.getMessage());
 		SchoolMapper school = school_dao.findById(Integer.valueOf(params.get("schoolId"))).get();
 		ClassesMapper classes = new ClassesMapper();
+		if(params.get("className").length()==5&&params.get("className").contains("(")) {
+			String grade = params.get("className").substring(0, 1);
+			String classNumber = params.get("className").substring(2, 3);
+			classes.setGrade(equlsGrade(grade));
+			classes.setClassNumber(Integer.valueOf(classNumber));
+		}else if(params.get("className").length()==6&&params.get("className").contains("(")){
+			String grade = params.get("className").substring(0, 1);
+			String classNumber = params.get("className").substring(2, 4);
+			classes.setGrade(equlsGrade(grade));
+			classes.setClassNumber(Integer.valueOf(classNumber));
+		}
 		classes.setBbLength(params.get("bbLength"));
 		classes.setExperiment(Integer.valueOf(params.get("experiment")));
 		classes.setClassName(params.get("className"));
@@ -78,7 +90,7 @@ public class ClassesServiceImpl implements ClassesService {
 	 * 班级列表
 	 */
 	@Override
-	public ResultVO findAllClasses(Map<String, String> params) {
+	public ResultVO findAllClasses(Map<String, String> params,HttpSession session) {
 		int page = 0 ;
 		String type ="";
 		if(!StringUtils.isEmpty(params.get("page"))) page = Integer.valueOf(params.get("page")) - 1 ;
@@ -89,6 +101,10 @@ public class ClassesServiceImpl implements ClassesService {
 		if("class".equals(type)) {
 			return ResultVOUtil.success(classes_dao.findById(Integer.valueOf(params.get("id")),PageRequest.of(page, 10,Sort.by("schoolId").and(Sort.by("className")))));
 		}
+		
+		Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
+		if(roleId==5)return ResultVOUtil.success(classes_dao.findByRegionId(regionId,PageRequest.of(page, 10,Sort.by("schoolId").and(Sort.by("className")))));
 		return ResultVOUtil.success(classes_dao.findAll(PageRequest.of(page, 10,Sort.by("schoolId").and(Sort.by("className")))));
 	}
 
@@ -134,8 +150,6 @@ public class ClassesServiceImpl implements ClassesService {
 	 */
 	@Override
 	public ResultVO deleteClasses(Integer id,String token) {
-		student_dao.deleteByClassesId(id);
-		record_dao.deleteByClassesId(id);
 		classes_dao.deleteById(id);
 		return ResultVOUtil.success();
 	}
@@ -206,9 +220,20 @@ public class ClassesServiceImpl implements ClassesService {
 	 * 级联方法（服务于下拉框）学校到班级
 	 */
 	@Override
-	public List<SchoolVO> cascade1() {
-		List<SchoolMapper> school = school_dao.findAll();
-		List<ClassesMapper> classes = classes_dao.findAll();
+	public List<SchoolVO> cascade1(HttpSession session) {
+		
+		List<SchoolMapper> school = null;
+		List<ClassesMapper> classes = null ;
+		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
+		if(roleId == 5 ) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			school = school_dao.findByRegionIdOrderByIdDesc(regionId);
+			classes = classes_dao.findByRegionId(regionId);
+		}else {
+			school = school_dao.findAll();
+			classes = classes_dao.findAll();
+		}
+		
 		List<SchoolVO> list = new ArrayList<>();
 		for (SchoolMapper school1 : school) {
 			SchoolVO po = new SchoolVO();
@@ -236,22 +261,28 @@ public class ClassesServiceImpl implements ClassesService {
 	 * 一键升年级
 	 */
 	@Override
-	public ResultVO elevateClass(Map<String, String> params) {
+	public ResultVO elevateClass(Map<String, String> params,HttpSession session) {
 		List<ClassesMapper> findAll = classes_dao.findAll();
 		for (ClassesMapper cpo : findAll) {
+			if(cpo.getClassName().contains("社会")||cpo.getClassName().contains("已毕业")) {
+				System.out.println(cpo.getClassName()+"跳过");
+				continue;
+			}
 			String name = equalsClass(cpo.getClassName());
-			if(name.contains("(")) {
+			if(name.contains("已毕业")) {
 				cpo.setFinish(1);
 			}
 			cpo.setClassName(name);
+			cpo.setGrade(cpo.getGrade()+1);
+			cpo.setClassNumber(cpo.getClassNumber()+1);
 			List<StudentMapper> student = student_dao.findByClassesId(cpo.getId());
 			for (StudentMapper spo : student) {
 				spo.setClassesName(cpo.getClassName());
-				student_dao.save(spo);
 			}
-			classes_dao.save(cpo);
+			student_dao.saveAll(student);
 		}
-		return ResultVOUtil.success(findAllClasses(params));
+		classes_dao.saveAll(findAll);
+		return ResultVOUtil.success(findAllClasses(params,session));
 	}
 
 	@Override
@@ -302,4 +333,28 @@ public class ClassesServiceImpl implements ClassesService {
 		}
 	}
 
+	private Integer equlsGrade(String str) {
+		Integer grade = 0;
+		switch (str) {
+		case "一":
+			grade = 1;
+			break;
+		case "二":
+			grade = 2;
+			break;
+		case "三":
+			grade = 3;
+			break;
+		case "四":
+			grade = 4;
+			break;
+		case "五":
+			grade = 5;
+			break;
+		case "六":
+			grade = 6;
+			break;
+		}
+		return grade;
+	}
 }

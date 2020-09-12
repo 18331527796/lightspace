@@ -15,6 +15,7 @@ import java.util.Optional;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
@@ -91,7 +92,7 @@ public class StudentServiceImpl implements StudentService{
 	 * 学生列表
 	 */
 	@Override
-	public ResultVO studentList(Map<String, String> params) {
+	public ResultVO studentList(Map<String, String> params,HttpSession session) {
 		String type = "" ; 
 		int page = 0 ;
 		if(!StringUtils.isEmpty(params.get("page"))) page = Integer.valueOf(params.get("page")) - 1 ;
@@ -99,6 +100,12 @@ public class StudentServiceImpl implements StudentService{
 		if("school".equals(type))return ResultVOUtil.success(student_dao.findBySchoolId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10)));
 		if("class".equals(type))return ResultVOUtil.success(student_dao.findByClassesId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10)));
 		if("student".equals(type))return ResultVOUtil.success(student_dao.findById(Integer.valueOf(params.get("id")),PageRequest.of(page, 10)));
+		
+		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
+		if(roleId == 5 ) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			return ResultVOUtil.success(student_dao.findByRegionId(regionId, PageRequest.of(page, 10)));
+		}
 		return ResultVOUtil.success(student_dao.findAll(PageRequest.of(page, 10)));
 	}
 	

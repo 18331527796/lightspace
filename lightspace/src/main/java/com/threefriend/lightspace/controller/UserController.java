@@ -68,8 +68,8 @@ public class UserController {
 	 */
 	@PostMapping("/userList")
 	
-	public ResultVO userList(@RequestParam Map<String, String> params) {
-		return user_impl.findAll(params);
+	public ResultVO userList(@RequestParam Map<String, String> params,HttpSession session) {
+		return user_impl.findAll(params,session);
 	}
 	
 	/**

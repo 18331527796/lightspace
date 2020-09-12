@@ -3,6 +3,7 @@ package com.threefriend.lightspace.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.threefriend.lightspace.mapper.SortMapper;
 
@@ -17,5 +18,7 @@ public interface SortRepository extends JpaRepository<SortMapper, Integer>{
 	
 	List<SortMapper> findByClassIdOrderByGenTimeDesc(Integer classId);
 	
-	int countByClassId(Integer classId);
+	SortMapper findByClassId(Integer classId);
+	@Query(value="select * from sort_mapper GROUP BY class_id ORDER BY id desc",nativeQuery = true)
+	List<SortMapper> findAllGroupByClassIdOrderById();
 }

@@ -310,5 +310,52 @@ public class SendMessageUtils {
 		}
 	
 	
+	/**
+	 * 排座调整提醒
+	 * @param unionId
+	 * @throws IOException
+	 */
+	public static void sortChangeMessage(String openId , String ACCESS_TOKEN , String className ) throws IOException {
+		String postUrl = URL + ACCESS_TOKEN;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("touser", openId);   // openid
+        jsonObject.put("template_id", "KDH38tbNJ1kxO7KBk7x_QjoUp9r_g5I6fa9s0oVziW8");
+        
+        JSONObject data = new JSONObject();
+        //副标题
+        JSONObject first = new JSONObject();
+    	first.put("value", "光量空间提醒你，你班级的座次表已重新生成，请注意查看！");
+        //姓名
+        JSONObject keyword1 = new JSONObject();
+        keyword1.put("value", className);
+        //时间
+        JSONObject keyword2 = new JSONObject();
+        keyword2.put("value", new SimpleDateFormat("yyyy年MM月dd日").format(new Date()));
+        //计划内容
+        JSONObject keyword3 = new JSONObject();
+        keyword3.put("value", "排座周期提醒");
+        //温馨提示
+        JSONObject remark = new JSONObject();
+        remark.put("value", "如不需要打乱顺序重新排座，可直接查看新的座次。");
+        
+        data.put("first",first);
+        data.put("keyword1",keyword1);
+        data.put("keyword2",keyword2);
+        data.put("keyword3",keyword3);
+        data.put("remark",remark);
+ 
+        jsonObject.put("data", data);
+ 
+        String string = HttpClientUtils.sendPostJsonStr(postUrl, jsonObject.toJSONString());
+        JSONObject result = JSON.parseObject(string);
+        int errcode = result.getIntValue("errcode");
+        if(errcode == 0){
+            // 发送成功
+            System.out.println("排座提醒，发送成功");
+        } else {
+            // 发送失败
+            System.out.println("未排座提醒，发送失败");
+        }
+		}
 	
 }

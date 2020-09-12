@@ -2,6 +2,9 @@ package com.threefriend.lightspace;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.google.common.collect.Lists;
+import com.threefriend.lightspace.mapper.SortMapper;
 import com.threefriend.lightspace.mapper.xcx.FabulousRecordMapper;
 import com.threefriend.lightspace.repository.FabulousRcordRepository;
+import com.threefriend.lightspace.repository.SortRepository;
 
 
 
@@ -22,9 +28,27 @@ import com.threefriend.lightspace.repository.FabulousRcordRepository;
 @SpringBootTest
 public class test {
 	@Autowired
-	private FabulousRcordRepository fabulous_record_dao;
+	private SortRepository sort_dao;
 	@Test
 	public void test(){
+		//计算当前的学年学期
+        Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH )+1;
+		String term = "1学期";
+		if(month < 9)
+			year = year - 1;
+		if (month>=7 && month<9) {
+			term = "暑假";
+		}else if(month>=9 && month<1){
+			term = "1学期";
+		}else if(month>=1 && month<3) {
+			term = "寒假";
+		}else {
+			term = "2学期";
+		}
+		System.out.println("现在是：" + year + " - " + (year + 1) +  "学年，" + term + "。");
+		
 	}
 	
 		

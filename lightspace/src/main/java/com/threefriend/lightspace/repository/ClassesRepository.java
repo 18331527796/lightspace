@@ -18,17 +18,30 @@ import com.threefriend.lightspace.mapper.ClassesMapper;
  */
 public interface ClassesRepository extends JpaRepository<ClassesMapper, Integer>{
 
-	List<ClassesMapper> findBySchoolIdAndGrade(Integer schoolId,Integer grade);
+	List<ClassesMapper> findBySchoolIdAndGradeOrderByClassNumber(Integer schoolId,Integer grade);
+	
+	List<ClassesMapper> findBySchoolIdAndGradeAndClassNumber(Integer schoolId,Integer grade,Integer classNumber);
 	
 	List<ClassesMapper> findBySchoolIdOrderByFinish(Integer sId);
 	
 	List<ClassesMapper> findBySchoolIdAndClassName(Integer sId,String name);
+	
+	List<ClassesMapper> findByRegionId(Integer regionId);
+	
+	Page<ClassesMapper> findByRegionId(Integer regionId,Pageable page);
 	
 	Page<ClassesMapper> findByClassNameLikeOrderByFinish(String name,Pageable page);
 	
 	Page<ClassesMapper> findById(Integer id,Pageable page);
 	
 	Page<ClassesMapper> findBySchoolId(Integer id,Pageable page);
+	
+	List<ClassesMapper> findBySchoolId(Integer id);
+	
+	List<ClassesMapper> findBySchoolIdAndGradeIn(Integer id , List<Integer> grades);
+	
+	@Query("select id from ClassesMapper where schoolId = ?1")
+	List<Integer> findIdBySchoolId(Integer schoolId);
 	
 	@Transactional
 	void deleteBySchoolId(Integer schoolId);

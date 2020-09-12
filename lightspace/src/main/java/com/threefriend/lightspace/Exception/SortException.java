@@ -1,8 +1,8 @@
 package com.threefriend.lightspace.Exception;
 
 import java.util.List;
+import java.util.Map;
 
-import com.threefriend.lightspace.enums.ResultEnum;
 
 /**
  *	排座错误类
@@ -14,13 +14,13 @@ public class SortException extends RuntimeException{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private List<String> studentName;
+	private List<Map<String, String>> studentName;
 	
-	public SortException(List<String> studentName) {
-		this.studentName=studentName;
+	public SortException(List<Map<String, String>> nullStudent) {
+		this.studentName=nullStudent;
     }
 
-	public List<String> getStudentName() {
+	public List<Map<String, String>> getStudentName() {
 		return studentName;
 	}
 

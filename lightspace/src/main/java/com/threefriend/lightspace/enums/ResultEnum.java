@@ -85,6 +85,12 @@ public enum ResultEnum {
     TASK_FABULOUS_ERROR(10235,"你已经点过赞"),
     
     TASK_FLOWERS_ERROR(10236,"你今天的花已全部送完"),
+    
+    CHK_DOMINANTEYE_ERROR(10237,"没有测试过主视眼"),
+    
+    SORT_ERROR(10238,"没有进行过排座"),
+    
+    SORT_TYPE_ERROR(10239,"座位列数与之前不符，请打乱重新排列"),
     ;
 
     private Integer status;

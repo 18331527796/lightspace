@@ -64,16 +64,16 @@ public class ReportServiceImpl implements ReportService{
 			allstudent = student_dao.countBySchoolId(id);
 			students= student_dao.findBySchoolId(id);
 			for (StudentMapper s : students) {
-				if(s.getVisionLeftStr()==null||s.getVisionRightStr()==null) {
+				if(s.getLastTime()==null) {
 					nullstudent++;
 					continue;
 				}
-				ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(s.getId());
 				ScreeningWearMapper screeningwear = screening_wear_dao.findTopByStudentIdOrderByGenTimeDesc(s.getId());
 				
-				if(screening!=null) {//如果裸眼不为空
-					LEFT = screening.getVisionLeftStr();
-					RIGHT = screening.getVisionRightStr();
+				LEFT = s.getVisionLeftStr();
+				RIGHT = s.getVisionRightStr();
+				
+				if(s.getScreeningType()==1) {//如果裸眼不为空
 					//双眼大于1.0 并且没有戴镜记录 就是良好
 					if(LEFT>=1.0d&&RIGHT>=1.0d&&screeningwear==null) {
 							good++;
@@ -115,8 +115,6 @@ public class ReportServiceImpl implements ReportService{
 						if(screeningwear.getVisionLeftStr()<1.0d||screeningwear.getVisionRightStr()<1.0d)screeningbad++;
 					}
 				}else {
-					LEFT = screeningwear.getVisionLeftStr();
-					RIGHT = screeningwear.getVisionRightStr();
 					bad++;avgbad++;other++;correct++;
 					if(LEFT<1.0d||RIGHT<1.0d) {
 						screeningbad++;
@@ -139,16 +137,16 @@ public class ReportServiceImpl implements ReportService{
 			allstudent = student_dao.countByClassesId(allclass);
 			students = student_dao.findByClassesId(allclass);
 			for (StudentMapper s : students) {
-				if(s.getVisionLeftStr()==null||s.getVisionRightStr()==null) {
+				if(s.getLastTime()==null) {
 					nullstudent++;
 					continue;
 				}
-				ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(s.getId());
 				ScreeningWearMapper screeningwear = screening_wear_dao.findTopByStudentIdOrderByGenTimeDesc(s.getId());
 				
-				if(screening!=null) {//如果裸眼不为空
-					LEFT = screening.getVisionLeftStr();
-					RIGHT = screening.getVisionRightStr();
+				LEFT = s.getVisionLeftStr();
+				RIGHT = s.getVisionRightStr();
+				
+				if(s.getScreeningType()==1) {//如果裸眼不为空
 					//双眼大于1.0 并且没有戴镜记录 就是良好
 					if(LEFT>=1.0d&&RIGHT>=1.0d&&screeningwear==null) {
 							good++;
@@ -190,8 +188,6 @@ public class ReportServiceImpl implements ReportService{
 						if(screeningwear.getVisionLeftStr()<1.0d||screeningwear.getVisionRightStr()<1.0d)screeningbad++;
 					}
 				}else {
-					LEFT = screeningwear.getVisionLeftStr();
-					RIGHT = screeningwear.getVisionRightStr();
 					bad++;avgbad++;other++;correct++;
 					if(LEFT<1.0d||RIGHT<1.0d) {
 						screeningbad++;
@@ -212,16 +208,16 @@ public class ReportServiceImpl implements ReportService{
 			allstudent = student_dao.countByClassesId(id);
 			students = student_dao.findByClassesId(id);
 			for (StudentMapper s : students) {
-				if(s.getVisionLeftStr()==null||s.getVisionRightStr()==null) {
+				if(s.getLastTime()==null) {
 					nullstudent++;
 					continue;
 				}
-				ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(s.getId());
 				ScreeningWearMapper screeningwear = screening_wear_dao.findTopByStudentIdOrderByGenTimeDesc(s.getId());
 				
-				if(screening!=null) {//如果裸眼不为空
-					LEFT = screening.getVisionLeftStr();
-					RIGHT = screening.getVisionRightStr();
+				LEFT = s.getVisionLeftStr();
+				RIGHT = s.getVisionRightStr();
+				
+				if(s.getScreeningType()==1) {//如果裸眼不为空
 					//双眼大于1.0 并且没有戴镜记录 就是良好
 					if(LEFT>=1.0d&&RIGHT>=1.0d&&screeningwear==null) {
 							good++;
@@ -263,8 +259,6 @@ public class ReportServiceImpl implements ReportService{
 						if(screeningwear.getVisionLeftStr()<1.0d||screeningwear.getVisionRightStr()<1.0d)screeningbad++;
 					}
 				}else {
-					LEFT = screeningwear.getVisionLeftStr();
-					RIGHT = screeningwear.getVisionRightStr();
 					bad++;avgbad++;other++;correct++;
 					if(LEFT<1.0d||RIGHT<1.0d) {
 						screeningbad++;

@@ -35,7 +35,25 @@ public class TeacherMapper {
 	private Integer state = 0;
 	//关联的小程序账号
 	private Integer parentId;
+	//地区id
+	private Integer regionId;
+	//地区名称
+	private String regionName;
 	
+	
+	
+	public Integer getRegionId() {
+		return regionId;
+	}
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
+	}
+	public String getRegionName() {
+		return regionName;
+	}
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
+	}
 	public Integer getId() {
 		return id;
 	}

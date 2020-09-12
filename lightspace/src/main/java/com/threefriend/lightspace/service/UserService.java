@@ -18,7 +18,7 @@ public interface UserService {
 	//新增用户
 	public Object insertUser(Map<String, String> params);
 	//用户列表
-	public ResultVO findAll(Map<String, String> params);
+	public ResultVO findAll(Map<String, String> params,HttpSession session);
 	//用户登录
 	public Object login(String loginname, String password,HttpSession session);
 	//用户权限

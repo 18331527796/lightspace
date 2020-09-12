@@ -20,24 +20,35 @@ public class UserMapper {
 	// 用户姓名
 	private String name;
 	// 用户账号
-	@Column(name="login_name")
 	private String loginName;
 	// 用户密码
 	private String password;
 	// 创建时间
-	@Column(name="gen_time")
 	private Date genTime;
 	//对应的学校
-	@Column(name="school_id")
 	private Integer schoolId;
 	//对应的班级
-	@Column(name="classes_id")
 	private Integer classesId;
 	//角色名称
-	@Column(name="role_name")
 	private String roleName;
+	//地区id
+	private Integer regionId;
+	//地区名称
+	private String regionName;
 	
 	
+	public Integer getRegionId() {
+		return regionId;
+	}
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
+	}
+	public String getRegionName() {
+		return regionName;
+	}
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
+	}
 	public String getRoleName() {
 		return roleName;
 	}

@@ -3,6 +3,7 @@ package com.threefriend.lightspace.controller;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,8 +74,8 @@ public class RecordController {
 	 */
 	@PostMapping("/recordList")
 	
-	public ResultVO recordList(@RequestParam Map<String, String> params) {
-		return record_impl.recordList(params);
+	public ResultVO recordList(@RequestParam Map<String, String> params,HttpSession session) {
+		return record_impl.recordList(params,session);
 	}
 	
 	/**
@@ -129,7 +130,7 @@ public class RecordController {
 	@PostMapping("/classStatistics")
 	
 	public ResultVO classStatistics(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(record_impl.classStatisticsOld(Integer.valueOf(params.get("classId"))));
+		return record_impl.classStatisticsOld(Integer.valueOf(params.get("classId")),null);
 	}
 	
 	/**
@@ -153,5 +154,38 @@ public class RecordController {
 	@PostMapping(value="/downloadRecord")
 	public void  downloadStudent(HttpServletResponse res){
 		record_impl.download(res);
+	}
+	
+	/**
+	 * 班级概况渗透
+	 * @param res
+	 * @return 
+	 */
+	
+	@PostMapping(value="/classInfiltration")
+	public ResultVO  classInfiltration(@RequestParam Map<String, String> params){
+		return record_impl.classInfiltration(params);
+	}
+	
+	/**
+	 * 年级概况渗透
+	 * @param res
+	 * @return 
+	 */
+	
+	@PostMapping(value="/gradeInfiltration")
+	public ResultVO  gradeInfiltration(@RequestParam Map<String, String> params){
+		return record_impl.gradeInfiltration(params);
+	}
+	
+	/**
+	 * 年级-->班级概况渗透
+	 * @param res
+	 * @return 
+	 */
+	
+	@PostMapping(value="/grade2ClassInfiltration")
+	public ResultVO  grade2ClassInfiltration(@RequestParam Map<String, String> params){
+		return record_impl.grade2ClassInfiltration(params);
 	}
 }

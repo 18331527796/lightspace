@@ -1,10 +1,16 @@
 package com.threefriend.lightspace.xcx.service.Impl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,14 +19,24 @@ import org.springframework.util.StringUtils;
 import com.threefriend.lightspace.enums.OrderStatusEnum;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ClertMapper;
+import com.threefriend.lightspace.mapper.SortMapper;
+import com.threefriend.lightspace.mapper.StudentMapper;
+import com.threefriend.lightspace.mapper.StudentWordMapper;
 import com.threefriend.lightspace.mapper.xcx.OrderMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentMapper;
+import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.xcx.ScanningCodeMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 import com.threefriend.lightspace.repository.ClertRepository;
 import com.threefriend.lightspace.repository.OrderRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
 import com.threefriend.lightspace.repository.ScanningCodeRepository;
+import com.threefriend.lightspace.repository.ScreeningRepository;
+import com.threefriend.lightspace.repository.ScreeningWearRepository;
+import com.threefriend.lightspace.repository.SortRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
+import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.ClertXcxService;
@@ -38,6 +54,14 @@ public class ClertXcxServiceImpl implements ClertXcxService {
 	private StudentRepository student_dao;
 	@Autowired
 	private ScanningCodeRepository scanning_code_dao;
+	@Autowired
+	private ScreeningRepository screening_dao;
+	@Autowired
+	private ScreeningWearRepository screening_wear_dao;
+	@Autowired
+	private SortRepository sort_dao;
+	@Autowired
+	private StudentWordRepository student_word_dao;
 
 	/*
 	 * 店员登录
@@ -72,10 +96,9 @@ public class ClertXcxServiceImpl implements ClertXcxService {
 
 	@Override
 	public ResultVO clertSanningCode(Map<String, String> params) {
-		System.err.println("刺激");
 		Integer orderId = Integer.valueOf(params.get("id"));
 		ScanningCodeMapper findByOrderId = scanning_code_dao.findByOrderId(orderId);
-		if(findByOrderId!=null)ResultVOUtil.success();
+		if(findByOrderId!=null)return ResultVOUtil.success();
 		
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		ClertMapper clert = clert_dao.findByParentId(parent.getId());
@@ -111,6 +134,78 @@ public class ClertXcxServiceImpl implements ClertXcxService {
 		return ResultVOUtil.success(content);
 	}
 
+	
+	/*
+	 * 这个账号的所有绑定孩子的档案
+	 */
+	@Override
+	public ResultVO childrenScreening(Map<String, String> params) {
+		Calendar c = Calendar.getInstance();
+		// 过去90天
+		c.setTime(new Date());
+		c.add(Calendar.DATE, -90);
+		Date beginTime = c.getTime();
+		Date eneTime = new Date();
+		// ↑定义时间 用来满足前台要求的图表返回数据
+		List<Map<String, Object>> end = new ArrayList<>();
+		// 找到这个孩子的所有信息
+		StudentMapper student = student_dao.findById(Integer.valueOf(params.get("studentId"))).get();
+		// 建立map容器
+		Map<String, Object> map = new HashMap<>();
+		// 找到这个孩子所有的档案数据
+		List<ScreeningMapper> dataList = screening_dao.findByStudentIdOrderByGenTimeDesc(student.getId());
+		// 找到这个孩子90内的档案数据
+		List<ScreeningMapper> picList = screening_dao.findByStudentIdAndGenTimeBetweenOrderById(student.getId(), beginTime,
+				eneTime);
+		// 找到这个孩子所有的档案数据（戴镜）
+		List<ScreeningWearMapper> weardataList = screening_wear_dao.findByStudentIdOrderByGenTimeDesc(student.getId());
+		// 找到这个孩子90天内的档案数据（戴镜）
+		List<ScreeningWearMapper> wearpicList = screening_wear_dao.findByStudentIdAndGenTimeBetweenOrderById(student.getId(),
+				beginTime, eneTime);
+
+		map.put("id", student.getId());
+		map.put("name", student.getName());
+		map.put("gender", student.getGender());
+		map.put("myIntegral", student.getMyIntegral());
+		map.put("birthday", student.getBirthday());
+		map.put("dataList", dataList);
+		map.put("picList", picList);
+		map.put("weardataList", weardataList);
+		map.put("wearpicList", wearpicList);
+		end.add(map);
+		return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO orderShow(Map<String, String> params) {
+		Integer studentId = Integer.valueOf(params.get("studentId"));
+		StudentMapper studentMapper = student_dao.findById(studentId).get();
+		int page = 0;
+		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ;
+		Page<OrderMapper> orders = order_dao.findByStudentIdAndStatus(studentId , OrderStatusEnum.EXCHANGE.getMessage(), PageRequest.of(page, 5));
+		List<Map<String, String>> list = new ArrayList<>();
+		
+		for (OrderMapper order : orders.getContent()) {
+			list.add(new HashMap<String, String>() {{
+				put("id", order.getId()+"");
+				put("productName", order.getProductName());
+				put("specificationName", order.getSpecificationName());
+				put("studentName", studentMapper.getName());}});
+		}
+		Page<Map<String, String>> end =new PageImpl<>(list, orders.getPageable(), orders.getTotalElements());
+		
+		return ResultVOUtil.success(end);
+	}
+
+
+	@Override
+	public ResultVO insertStudentWord(StudentWordMapper word) {
+		StudentWordMapper po = new StudentWordMapper();
+		BeanUtils.copyProperties(word, po);
+		po.setGenTime(new Date());
+		student_word_dao.save(word);
+		return ResultVOUtil.success();
+	}
 	
 
 }

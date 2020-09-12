@@ -306,9 +306,9 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 	@Override
 	public ResultVO allChildrenScreening(Map<String, String> params) {
 		Calendar c = Calendar.getInstance();
-		// 过去七天
+		// 过去90天
 		c.setTime(new Date());
-		c.add(Calendar.DATE, -7);
+		c.add(Calendar.DATE, -90);
 		Date beginTime = c.getTime();
 		Date eneTime = new Date();
 		// ↑定义时间 用来满足前台要求的图表返回数据
@@ -329,13 +329,13 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			Map<String, Object> map = new HashMap<>();
 			// 找到这个孩子所有的档案数据
 			List<ScreeningMapper> dataList = screening_dao.findByStudentIdOrderByGenTimeDesc(student.getId());
-			// 找到这个孩子七天内的档案数据
+			// 找到这个孩子90内的档案数据
 			List<ScreeningMapper> picList = screening_dao.findByStudentIdAndGenTimeBetweenOrderById(student.getId(), beginTime,
 					eneTime);
 			// 找到这个孩子所有的档案数据（戴镜）
 			List<ScreeningWearMapper> weardataList = screening_wear_dao
 					.findByStudentIdOrderByGenTimeDesc(student.getId());
-			// 找到这个孩子七天内的档案数据（戴镜）
+			// 找到这个孩子90天内的档案数据（戴镜）
 			List<ScreeningWearMapper> wearpicList = screening_wear_dao.findByStudentIdAndGenTimeBetweenOrderById(student.getId(),
 					beginTime, eneTime);
 

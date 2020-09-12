@@ -32,7 +32,7 @@ public class SortController {
 	@PostMapping("/sortList")
 	
 	public ResultVO sortList(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(sort_impl.studentSort(Integer.valueOf(params.get("classId")),Integer.valueOf(params.get("type")),Integer.valueOf(params.get("time"))));
+		return sort_impl.studentSort(params);
 	}
 	
 	/**
@@ -54,8 +54,38 @@ public class SortController {
 	@PostMapping("/showSort")
 	
 	public ResultVO showSort(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(sort_impl.sortShow(Integer.valueOf(params.get("sortId"))));
+		return sort_impl.sortShow(Integer.valueOf(params.get("sortId")));
 	}
 	
+	/**
+	 * 排座拖拽后保存
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/saveSort")
+	
+	public ResultVO saveSort(@RequestParam Map<String, String> params) {
+		return sort_impl.saveSort(params);
+	}
+	
+	/**
+	 * 调整排座
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/adjustSort")
+	public ResultVO adjustSort(@RequestParam Map<String, String> params) {
+		return sort_impl.adjustSort(params);
+	}
+	
+	/**
+	 * 验证排座
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/chkSort")
+	public ResultVO chkSort(@RequestParam Map<String, String> params) {
+		return sort_impl.chkSort(params);
+	}
 
 }
