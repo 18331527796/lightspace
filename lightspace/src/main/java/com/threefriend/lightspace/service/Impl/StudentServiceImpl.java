@@ -101,11 +101,6 @@ public class StudentServiceImpl implements StudentService{
 		if("class".equals(type))return ResultVOUtil.success(student_dao.findByClassesId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10)));
 		if("student".equals(type))return ResultVOUtil.success(student_dao.findById(Integer.valueOf(params.get("id")),PageRequest.of(page, 10)));
 		
-		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
-		if(roleId == 5 ) {
-			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
-			return ResultVOUtil.success(student_dao.findByRegionId(regionId, PageRequest.of(page, 10)));
-		}
 		return ResultVOUtil.success(student_dao.findAll(PageRequest.of(page, 10)));
 	}
 	

@@ -80,7 +80,7 @@ public class UserController {
 	@PostMapping("/deleteUser")
 	
 	public ResultVO deleteUser(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(user_impl.deleteUser(Integer.valueOf(params.get("id"))));
+		return user_impl.deleteUser(Integer.valueOf(params.get("id")));
 	}
 	
 	/**
@@ -93,5 +93,17 @@ public class UserController {
 	public ResultVO queryUser(@RequestParam Map<String, String> params) {
 		return user_impl.findByNameLike(params.get("name"));
 	}
+	
+	@PostMapping("/addUserSchool")
+	public ResultVO addUserSchool(@RequestParam Map<String, String> params) {
+		return user_impl.addUserSchool(params);
+	}
+	
+	@PostMapping("/deleteUserSchool")
+	public ResultVO deleteUserSchool(@RequestParam Map<String, String> params) {
+		return user_impl.deleteUserSchool(params);
+	}
+	
+	
 
 }

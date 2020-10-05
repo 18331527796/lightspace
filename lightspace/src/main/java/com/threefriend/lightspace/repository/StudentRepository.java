@@ -24,7 +24,15 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	
 	List<StudentMapper> findBySchoolId(Integer id);
 	
+	List<StudentMapper> findBySchoolIdIn(List<Integer> ids);
+	
 	Page<StudentMapper> findByRegionId(Integer regionId ,Pageable Pageable);
+	
+	List<Integer> findIdByRegionId(Integer id);
+	
+	List<StudentMapper> findByRegionId(Integer id);
+	
+	List<Integer> findIdBySchoolId(Integer id);
 	
 	Page<StudentMapper> findBySchoolId(Integer id ,Pageable Pageable);
 	
@@ -58,6 +66,8 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	int countByClassesId(Integer classId);
 	
 	int countBySchoolId(Integer school);
+	
+	int countBySchoolIdIn(List<Integer> schoolIds);
 	
 		
 }

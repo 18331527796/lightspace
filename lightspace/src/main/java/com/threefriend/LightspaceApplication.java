@@ -17,14 +17,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EntityScan("com.threefriend.lightspace.mapper") // 3. Entity 所在的包
 @EnableCaching
 @EnableScheduling
-public class LightspaceApplication extends SpringBootServletInitializer {
+public class LightspaceApplication /*extends SpringBootServletInitializer*/ {
 
-	@Override
+	/*@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		// 注意这里要指向原先用main方法执行的Application启动类
 		System.out.println("这里是启动类 这是真的启动了");
 		return builder.sources(LightspaceApplication.class);
-	}
+	}*/
 	
 
 	public static void main(String[] args) {

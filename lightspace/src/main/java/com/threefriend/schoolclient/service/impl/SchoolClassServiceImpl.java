@@ -107,6 +107,8 @@ public class SchoolClassServiceImpl implements SchoolClassService{
 		po.setClassName(getClassName(grade, classNumber));
 		po.setSchoolId(schoolId);
 		po.setSchoolName(school.getName());
+		po.setRegionId(school.getRegionId());
+		po.setRegionName(school.getRegionName());
 		class_dao.save(po);
 		return classList(session);
 	}

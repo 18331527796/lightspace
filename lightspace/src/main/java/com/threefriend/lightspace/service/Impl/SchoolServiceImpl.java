@@ -67,20 +67,15 @@ public class SchoolServiceImpl implements SchoolService{
 	 * 学校列表
 	 */
 	@Override
-	public List<SchoolMapper> findAllSchool(String token,HttpSession session) {
-		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
-		if(roleId == 5 ) {
-			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
-			return school_dao.findByRegionIdOrderByIdDesc(regionId);
-		}
-		return school_dao.findAllByOrderByIdDesc();
+	public ResultVO findAllSchool(Map<String, String> params,HttpSession session) {
+		return ResultVOUtil.success(school_dao.findAllByOrderByIdDesc());
 	}
 
 	/*  
 	 * 修改学校信息
 	 */
 	@Override
-	public List<SchoolMapper> alterSchool(Map<String, String> params,HttpSession session) {
+	public ResultVO alterSchool(Map<String, String> params,HttpSession session) {
 		SchoolMapper findById = school_dao.findById(Integer.valueOf(params.get("id"))).get();
 		List<ClassesMapper> allclass = class_dao.findBySchoolId(findById.getId(), PageRequest.of(0, 100)).getContent();
 		List<StudentMapper> student = student_dao.findBySchoolId(findById.getId());
@@ -105,7 +100,8 @@ public class SchoolServiceImpl implements SchoolService{
 	 */
 	@Override
 	@Mylog(value=("删除学校"))
-	public List<SchoolMapper> deleteSchool(Integer id,HttpSession session) {
+	public ResultVO deleteSchool(Map<String, String> params,HttpSession session) {
+		Integer id = Integer.valueOf(params.get("id"));
 		List<ClassesMapper> findBySchoolId = class_dao.findBySchoolIdOrderByFinish(id);
 		List<Integer> classids= new ArrayList<>();
 		for (ClassesMapper po : findBySchoolId) {
@@ -122,9 +118,9 @@ public class SchoolServiceImpl implements SchoolService{
 	 * 按照id查找学校
 	 */
 	@Override
-	public SchoolMapper findSchoolById(Map<String, String> params) {
+	public ResultVO findSchoolById(Map<String, String> params) {
 		SchoolMapper findById = school_dao.findById(Integer.valueOf(params.get("id"))).get();
-		return findById;
+		return ResultVOUtil.success(findById);
 	}
 
 	/* 

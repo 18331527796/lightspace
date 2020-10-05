@@ -154,7 +154,7 @@
 		<!-- 引入样式 -->
 		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
 		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-		<script type="text/javascript" src="../lightspace/select/select.js"></script>
+		<!-- <script type="text/javascript" src="../lightspace/select/select.js"></script> -->
 	</head>
 	<body>
 		<div class="mask">
@@ -194,10 +194,10 @@
 					<option>学生选择</option>
 				</select>
 			</div>
-			<div class="birthWrap">
+			<!-- <div class="birthWrap">
 				孩子出生日期选择
-			</div>
-			<div class="input-group">
+			</div> -->
+			<!-- <div class="input-group">
 				<select name="year" id="year" class="birthday">
 					<option value="">选择年份</option>
 				</select>
@@ -207,7 +207,7 @@
 				<select id="days"class="birthday">
 					<option value="">选择日期</option>
 				</select>
-			</div>
+			</div> -->
 			<div  class="btnWrap">
 					<div class="btn" >
 						下载二维码
@@ -279,32 +279,32 @@
 				alert('请先选择学生');
 				return;
 			}
-			if(birthday == undefined) {
-				alert('请先选择出生日期')
-				return;
-			}
+			// if(birthday == undefined) {
+			// 	alert('请先选择出生日期')
+			// 	return;
+			// }
 			$('.mask').css('display', 'block');
-			$.ajax({
-				type: 'post',
-				data: {
-					id: studentId,
-					birthday: birthday
-				},
-			    url : "https://www.guangliangkongjian.com/lightspace/xcx/chkStudent",
-			    success : function(res) {
-					if(res.status == 200) {
-						$('.mask').css('display', 'none');
-						that.downLoad()
-					}else {
-						$('.confirmWrap').css('display', 'block');
-						$('.mask').css('display', 'none');
-					}
+			that.downLoad()
+			// $.ajax({
+			// 	type: 'post',
+			// 	data: {
+			// 		id: studentId
+			// 	},
+			//     url : "https://www.guangliangkongjian.com/lightspace/xcx/chkStudent",
+			//     success : function(res) {
+			// 		if(res.status == 200) {
+			// 			$('.mask').css('display', 'none');
+			// 			that.downLoad()
+			// 		}else {
+			// 			$('.confirmWrap').css('display', 'block');
+			// 			$('.mask').css('display', 'none');
+			// 		}
 					
-			    },
-				fail: function(err) {
+			//     },
+			// 	fail: function(err) {
 					
-				}
-			});
+			// 	}
+			// });
 		}))
 		$('.resetBtn').click(() => {
 			$('.confirmWrap').css('display', 'none');

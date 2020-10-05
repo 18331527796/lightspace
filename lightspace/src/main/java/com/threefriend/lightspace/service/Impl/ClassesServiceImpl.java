@@ -102,9 +102,6 @@ public class ClassesServiceImpl implements ClassesService {
 			return ResultVOUtil.success(classes_dao.findById(Integer.valueOf(params.get("id")),PageRequest.of(page, 10,Sort.by("schoolId").and(Sort.by("className")))));
 		}
 		
-		Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
-		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
-		if(roleId==5)return ResultVOUtil.success(classes_dao.findByRegionId(regionId,PageRequest.of(page, 10,Sort.by("schoolId").and(Sort.by("className")))));
 		return ResultVOUtil.success(classes_dao.findAll(PageRequest.of(page, 10,Sort.by("schoolId").and(Sort.by("className")))));
 	}
 
@@ -224,15 +221,8 @@ public class ClassesServiceImpl implements ClassesService {
 		
 		List<SchoolMapper> school = null;
 		List<ClassesMapper> classes = null ;
-		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
-		if(roleId == 5 ) {
-			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
-			school = school_dao.findByRegionIdOrderByIdDesc(regionId);
-			classes = classes_dao.findByRegionId(regionId);
-		}else {
 			school = school_dao.findAll();
 			classes = classes_dao.findAll();
-		}
 		
 		List<SchoolVO> list = new ArrayList<>();
 		for (SchoolMapper school1 : school) {

@@ -2,6 +2,7 @@ package com.threefriend.lightspace.service;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
 
 import com.threefriend.lightspace.vo.ResultVO;
 
@@ -10,7 +11,7 @@ import com.threefriend.lightspace.vo.ResultVO;
  */
 public interface ClertService {
 	//店员列表
-	ResultVO clertList(Map<String, String> params);
+	ResultVO clertList(Map<String, String> params,HttpSession session);
 	//新增店员
 	ResultVO addClert(Map<String, String> params);
 	//修改店员

@@ -2,7 +2,9 @@ package com.threefriend.lightspace.service.Impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -147,72 +149,32 @@ public class ReadStudentExcel {
 			for (int c = 0; c < this.totalCells; c++) {
 				Cell cell = row.getCell(c);
 				if (null != cell) {
-					cell.setCellType(Cell.CELL_TYPE_STRING);
+					if(c!=4) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+					}
 					switch (c) {
-					case 0:// 姓名
-						name = cell.getStringCellValue();
-						student.setName(cell.getStringCellValue());
-						break;
-					case 1:// 性别 ( 0 : 男 1 ：女)
-						if (cell.getStringCellValue().equals("男")) {
-							student.setGender(0);
-						} else {
-							student.setGender(1);
-						}
-						break;
-					case 2:// 年齡
-						if (!StringUtils.isEmpty(cell.getStringCellValue()))
-							student.setBirthday(cell.getStringCellValue());
-						break;
-					case 3:// 身高
-						if (!StringUtils.isEmpty(cell.getStringCellValue()))
-							student.setHeight(cell.getStringCellValue());
-						break;
-					case 4:// 体重
-						if (!StringUtils.isEmpty(cell.getStringCellValue()))
-							student.setWeight(cell.getStringCellValue());
-						break;
-					case 5:// 性格
-						if (!StringUtils.isEmpty(cell.getStringCellValue()))
-							student.setNature(cell.getStringCellValue());
-						break;
-					case 6:// 是否矫正（0：否 1：是）
-						if (!StringUtils.isEmpty(cell.getStringCellValue())) {
-							if (cell.getStringCellValue().equals("是")) {
-								student.setCorrect(1);
-							} else {
-								student.setCorrect(0);
-								;
-							}
-						}
-						break;
-					case 7:// 坐姿高度
-						if (!StringUtils.isEmpty(cell.getStringCellValue()))
-							student.setSittingHeight(cell.getStringCellValue());
-						break;
-					case 8:// 椅子高度
-						if (!StringUtils.isEmpty(cell.getStringCellValue()))
-							student.setChairHeight(cell.getStringCellValue());
-						break;
-					case 9:// 学校名称
+					case 0:// 学校名称
 						if (cell.getStringCellValue().equals(schoolName)) {
 							student.setSchoolId(schoolId);
 							student.setSchoolName(schoolName);
 							student.setRegionId(regionId);
 							student.setRegionName(regionName);
 						} else {
+							System.out.println(cell.getStringCellValue());
 							SchoolMapper school = school_dao.findByName(cell.getStringCellValue()).get(0);
 							if (school != null) {
 								schoolId = school.getId();
 								schoolName = school.getName();
 								regionId = school.getRegionId();
 								regionName = school.getRegionName();
+								student.setRegionId(regionId);
+								student.setRegionName(regionName);
 								student.setSchoolId(schoolId);
 								student.setSchoolName(schoolName);
 							}
 						}
 						break;
-					case 10:// 班級名称
+					case 1:// 班級名称
 						if (cell.getStringCellValue().equals(className)) {
 							student.setClassesId(classId);
 							student.setClassesName(className);
@@ -226,6 +188,38 @@ public class ReadStudentExcel {
 								student.setClassesName(className);
 							}
 						}
+						break;
+					case 2:// 姓名
+						name = cell.getStringCellValue();
+						student.setName(cell.getStringCellValue());
+						break;
+					case 3:// 性别 ( 0 : 男 1 ：女)
+						if (cell.getStringCellValue().equals("男")) {
+							student.setGender(0);
+						} else {
+							student.setGender(1);
+						}
+						break;
+					case 4:// 出生日期
+						if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {  
+			                Date theDate = cell.getDateCellValue();
+			                SimpleDateFormat dff = new SimpleDateFormat("yyyy/MM/dd");
+			                student.setBirthday(dff.format(theDate));
+			            }else{
+							student.setBirthday(cell.getStringCellValue());
+						}
+						break;
+					case 5:// 身高
+						if (!StringUtils.isEmpty(cell.getStringCellValue()))
+							student.setHeight(cell.getStringCellValue());
+						break;
+					case 6:// 坐姿高度
+						if (!StringUtils.isEmpty(cell.getStringCellValue()))
+							student.setSittingHeight(cell.getStringCellValue());
+						break;
+					case 7:// 体重
+						if (!StringUtils.isEmpty(cell.getStringCellValue()))
+							student.setWeight(cell.getStringCellValue());
 						break;
 					default:
 						break;

@@ -53,8 +53,15 @@ public interface ScreeningRepository extends JpaRepository<ScreeningMapper, Inte
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where school_id = ?1",nativeQuery = true)
 	int findcountBySchoolId(Integer SchoolId);
+	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where school_id in ?1",nativeQuery = true)
+	int findcountBySchoolId(List<Integer> schoolId);
+	
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId,int page,int size);
+	
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id in ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
+	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(List<Integer> schoolId,int page,int size);
+	
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId);
  	

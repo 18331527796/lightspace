@@ -132,7 +132,7 @@ public class ReadStudentWord {
 								for(int k=0;k<td.numParagraphs();k++){     
 									Paragraph para =td.getParagraph(k);     
 									String[] s = para.text().split("：");  
-									if(s.length>1)po.setGender(s[1].trim());
+									if(s.length>1)po.setGender(s[1].trim().equals("男")?"0":"1");
 								} //end for  
 							}
 							

@@ -79,16 +79,6 @@ public class RecordServiceImpl implements RecordService {
 		if(!StringUtils.isEmpty(params.get("page")))page= Integer.valueOf(params.get("page"))-1;
 		String token = params.get("token");
 		String[] split = token.split("-");
-		if (split[1].equals("2"))
-			return ResultVOUtil.success(record_dao.findBySchoolIdOrderByIdDesc(Integer.valueOf(split[2]),new PageRequest(page, 10)));
-		if (split[1].equals("3"))
-			return ResultVOUtil.success(record_dao.findByClassesIdOrderByIdDesc(Integer.valueOf(split[2]),new PageRequest(page, 10)));
-		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
-		if(roleId == 5 ) {
-			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
-			return ResultVOUtil.success(record_dao.findAllByRegionIdOrderByIdDesc(new PageRequest(page, 10),regionId));
-		}
-		
 		return ResultVOUtil.success(record_dao.findAllByOrderByIdDesc(new PageRequest(page, 10)));
 	}
 

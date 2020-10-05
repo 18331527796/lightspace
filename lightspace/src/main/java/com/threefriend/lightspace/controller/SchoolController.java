@@ -42,8 +42,8 @@ public class SchoolController {
 	 */
 	@PostMapping("/schoolList")
 	
-	public ResultVO findAllSchool(@RequestParam("token") String token,HttpSession session) {
-		return ResultVOUtil.success(school_Impl.findAllSchool(token,session));
+	public ResultVO findAllSchool(@RequestParam Map<String, String> params,HttpSession session) {
+		return school_Impl.findAllSchool(params,session);
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class SchoolController {
 	@PostMapping("/editSchool")
 	
 	public ResultVO editSchool(@RequestParam Map<String, String> params) {
-		return ResultVOUtil.success(school_Impl.findSchoolById(params));
+		return school_Impl.findSchoolById(params);
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class SchoolController {
 	@PostMapping("/saveSchool")
 	
 	public ResultVO saveSchool(@RequestParam Map<String, String> params,HttpSession session) {
-		return ResultVOUtil.success(school_Impl.alterSchool(params,session));
+		return school_Impl.alterSchool(params,session);
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class SchoolController {
 	@PostMapping("/deleteSchool")
 	
 	public ResultVO deleteSchool(@RequestParam Map<String, String> params,HttpSession session) {
-		return ResultVOUtil.success(school_Impl.deleteSchool(Integer.valueOf(params.get("id")),session));
+		return school_Impl.deleteSchool(params,session);
 	}
 	
 	/**

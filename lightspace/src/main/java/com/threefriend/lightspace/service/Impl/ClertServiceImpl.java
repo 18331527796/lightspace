@@ -3,6 +3,8 @@ package com.threefriend.lightspace.service.Impl;
 import java.util.Date;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +30,7 @@ public class ClertServiceImpl implements ClertService{
 	private PartnershipRepository partnership_dao;
 
 	@Override
-	public ResultVO clertList(Map<String, String> params) {
+	public ResultVO clertList(Map<String, String> params,HttpSession session) {
 		int page = 0 ;
 		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ;
 		Page<ClertMapper> findAll = clert_dao.findAll(PageRequest.of(page, 10));

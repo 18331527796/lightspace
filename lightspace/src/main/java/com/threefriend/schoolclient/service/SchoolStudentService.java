@@ -28,5 +28,7 @@ public interface SchoolStudentService {
 	ResultVO getAllWord(Map<String, String> params,HttpSession session);
 
 	ResultVO  findAllByStudentId(Map<String, String> params);
+	//爱眼币排行榜
+	ResultVO integralRanking(Map<String, String> params,HttpSession session);
 	
 }

@@ -4,6 +4,14 @@ import java.util.Date;
 
 public class IntegralVO {
 	
+	public IntegralVO(Integer studentId,String studentName,String schoolName,String className,Long sum) {
+		this.studentId = studentId;
+		this.sum = sum;
+		this.studentName = studentName;
+		this.schoolName = schoolName;
+		this.className = className;
+	}
+	
 	public IntegralVO(Integer studentId,String studentName,String schoolName,Long sum) {
 		this.studentId = studentId;
 		this.sum = sum;
@@ -17,8 +25,11 @@ public class IntegralVO {
 	private String studentName;
 	
 	private String schoolName;
+	
+	private String className;
 	//总积分
 	private Long sum;
+	
 	public Integer getStudentId() {
 		return studentId;
 	}
@@ -42,6 +53,12 @@ public class IntegralVO {
 	}
 	public void setSum(Long sum) {
 		this.sum = sum;
+	}
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
 	}
 	
 	

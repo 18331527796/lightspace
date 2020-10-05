@@ -40,6 +40,8 @@ public interface ClassesRepository extends JpaRepository<ClassesMapper, Integer>
 	
 	List<ClassesMapper> findBySchoolIdAndGradeIn(Integer id , List<Integer> grades);
 	
+	List<ClassesMapper> findBySchoolIdInAndGradeIn(List<Integer> schoolIds , List<Integer> grades);
+	
 	@Query("select id from ClassesMapper where schoolId = ?1")
 	List<Integer> findIdBySchoolId(Integer schoolId);
 	
@@ -51,6 +53,10 @@ public interface ClassesRepository extends JpaRepository<ClassesMapper, Integer>
 	int countBySchoolId(Integer schoolId);
 	@Query("select id from ClassesMapper where schoolId = ?1 and grade = ?2")
 	List<Integer> findIdBySchoolIdAndGrade(Integer schoolId,Integer grade);
+	
+	@Query("select id from ClassesMapper where schoolId in ?1 and grade = ?2")
+	List<Integer> findIdBySchoolIdAndGrade(List<Integer> schoolIds,Integer grade);
+	
 	@Query("select id from ClassesMapper where schoolId = ?1 and experiment = ?2")
 	List<Integer> AllclassIdBySchoolIdAndExperiment(Integer schoolId,Integer experiment);
 }

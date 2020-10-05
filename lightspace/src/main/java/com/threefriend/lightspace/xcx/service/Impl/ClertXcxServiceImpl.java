@@ -200,11 +200,17 @@ public class ClertXcxServiceImpl implements ClertXcxService {
 
 	@Override
 	public ResultVO insertStudentWord(StudentWordMapper word) {
+		StudentMapper student = student_dao.findById(word.getStudentId()).get();
 		StudentWordMapper po = new StudentWordMapper();
 		BeanUtils.copyProperties(word, po);
 		po.setGenTime(new Date());
-		student_word_dao.save(word);
-		return ResultVOUtil.success();
+		po.setSchoolId(student.getSchoolId());
+		po.setSchool(student.getSchoolName());
+		po.setSchoolName(student.getSchoolName());
+		po.setClassId(student.getClassesId());
+		po.setClassName(student.getClassesName());
+		student_word_dao.save(po);
+		return ResultVOUtil.success(po.getId());
 	}
 	
 

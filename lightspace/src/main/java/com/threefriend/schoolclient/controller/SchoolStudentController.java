@@ -65,6 +65,11 @@ public class SchoolStudentController {
 		return student_impl.findAllByStudentId(params);
 	}
 	
+	@PostMapping("/integralRanking")
+	public ResultVO integralRanking(@RequestParam Map<String, String> params,HttpSession session) {
+		return student_impl.integralRanking(params,session);
+	}
+	
 	/**
 	 * 批量导入学生信息
 	 * @param file

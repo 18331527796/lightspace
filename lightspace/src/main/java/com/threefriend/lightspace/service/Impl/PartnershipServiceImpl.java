@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,12 @@ public class PartnershipServiceImpl implements PartnershipService{
 	private PartnershipRepository partnership_dao;
 
 	@Override
-	public ResultVO partnershipList() {
+	public ResultVO partnershipList(Map<String, String> params,HttpSession session) {
 		return ResultVOUtil.success(partnership_dao.findAll());
 	}
 
 	@Override
-	public ResultVO addPartnership(MultipartFile file,Map<String, String> params,HttpServletRequest request) {
+	public ResultVO addPartnership(MultipartFile file,Map<String, String> params,HttpServletRequest request,HttpSession session) {
 		String imgurl= UrlEnums.IMG_URL.getUrl()+ImguploadUtils.uploadImg(file,"partnership");
 		PartnershipMapper partner = new PartnershipMapper();
 		partner.setAddress(params.get("address"));
@@ -53,6 +54,20 @@ public class PartnershipServiceImpl implements PartnershipService{
 	public ResultVO deletePartnership(Map<String, String> params) {
 		partnership_dao.deleteById(Integer.valueOf(params.get("id")));
 		return ResultVOUtil.success(partnership_dao.findAll());
+	}
+
+	//咩用的
+	@Override
+	public ResultVO undetectedList(HttpSession session) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	//咩用的
+	@Override
+	public ResultVO badList(HttpSession session) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

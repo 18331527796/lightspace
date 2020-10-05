@@ -10,7 +10,7 @@ public interface SchoolUserService {
 
 	ResultVO login(Map<String, String> params,HttpSession session);
 	
-	ResultVO getUserRight(HttpSession session);
+	ResultVO regionLogin(Map<String, String> params,HttpSession session);
 	
 	ResultVO survey(HttpSession session);
 	
@@ -33,5 +33,11 @@ public interface SchoolUserService {
 	ResultVO badList(HttpSession session);
 	
 	ResultVO loginOut(HttpSession session);
+	
+	ResultVO getUserSchools(HttpSession session);
+	
+	ResultVO getRegionSchools(HttpSession session);
+	
+	ResultVO changeSession(Map<String, String> params,HttpSession session);
 	
 }

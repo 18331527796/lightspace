@@ -57,7 +57,8 @@ public class HttpAspect {
 	
 	@Pointcut("execution(public * com.threefriend.schoolclient.controller.*.*(..))"+
 			"&& !execution(public * com.threefriend.schoolclient.controller.SchoolUserController.school(..))"
-			+ "&& !execution(public * com.threefriend.schoolclient.controller.SchoolClassController.classNumber(..))")
+			+ "&& !execution(public * com.threefriend.schoolclient.controller.SchoolClassController.classNumber(..))"
+			+ "&& !execution(public * com.threefriend.schoolclient.controller.RegionClientController.regionPage(..))\"")
 		    public void schoolclient() {}
 	
 	

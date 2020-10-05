@@ -50,11 +50,18 @@ public interface ScreeningWearRepository extends JpaRepository<ScreeningWearMapp
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where school_id = ?1",nativeQuery = true)
 	int findcountBySchoolId(Integer SchoolId);
+	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where school_id in ?1",nativeQuery = true)
+	int findcountBySchoolId(List<Integer> SchoolId);
+	
+	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_wear_mapper where class_id in ?1",nativeQuery = true)
 	int findcountByClassId(List<Integer> classId);
 	
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningWearMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId,int page,int size);
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper where school_id in ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
+	List<ScreeningWearMapper> findBySchoolIdOrderByGenTimeDesc(List<Integer> schoolId,int page,int size);
+	
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_wear_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningWearMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId);
  	

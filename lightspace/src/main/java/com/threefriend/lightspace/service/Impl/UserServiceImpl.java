@@ -13,8 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -31,6 +35,7 @@ import com.threefriend.lightspace.mapper.SortMapper;
 import com.threefriend.lightspace.mapper.TeacherMapper;
 import com.threefriend.lightspace.mapper.UserMapper;
 import com.threefriend.lightspace.mapper.UserRoleRelation;
+import com.threefriend.lightspace.mapper.schoolclient.UserSchoolsMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.GzhUserRepository;
 import com.threefriend.lightspace.repository.ParentRepository;
@@ -43,12 +48,14 @@ import com.threefriend.lightspace.repository.SortRepository;
 import com.threefriend.lightspace.repository.TeacherRepository;
 import com.threefriend.lightspace.repository.UserRepository;
 import com.threefriend.lightspace.repository.UserRoleRepository;
+import com.threefriend.lightspace.repository.schoolclient.UserSchoolsRepository;
 import com.threefriend.lightspace.service.UserService;
 import com.threefriend.lightspace.util.RedisUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.util.TokenUtils;
 import com.threefriend.lightspace.vo.MenuListVo;
 import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.lightspace.vo.UserVO;
 import com.threefriend.lightspace.xcx.util.SendMessageUtils;
 import com.threefriend.lightspace.xcx.util.WeChatUtils;
 
@@ -87,6 +94,8 @@ public class UserServiceImpl implements UserService {
 	private SchoolRepository school_dao;
 	@Autowired
 	private ClassesRepository class_dao;
+	@Autowired
+	private UserSchoolsRepository user_school_dao;
 	
 	
 	/*
@@ -96,7 +105,7 @@ public class UserServiceImpl implements UserService {
 	public ResultVO insertUser(Map<String, String> params) {
 		List<UserMapper> list = user_dao.findByLoginName(params.get("loginName"));
 		if(list.size()>=1)return ResultVOUtil.error(ResultEnum.LOGINNAME_REPEAT.getStatus(),ResultEnum.LOGINNAME_REPEAT.getMessage());
-		Integer regionId = null;
+		Integer regionId = null ,schoolId = null;
 		UserMapper user = new UserMapper();
 		user.setGenTime(new Date());
 		user.setName(params.get("name"));
@@ -115,11 +124,19 @@ public class UserServiceImpl implements UserService {
 		}
 		if(!StringUtils.isEmpty(params.get("regionId"))) {
 			regionId = Integer.valueOf(params.get("regionId"));
+			schoolId = 0;
 		}
+		System.out.println(regionId+"-------");
 		RegionMapper region = region_dao.findById(regionId).get();
 		user.setRegionId(region.getId());
 		user.setRegionName(region.getName());
 		user_dao.save(user);
+		
+		UserSchoolsMapper u_s = new UserSchoolsMapper();
+		u_s.setSchoolId(schoolId);
+		u_s.setUserId(user.getId());
+		user_school_dao.save(u_s);
+		
 		UserRoleRelation userRole= new UserRoleRelation();
 		userRole.setUserId(user.getId());
 		userRole.setRoleId(Integer.valueOf(params.get("roleId")));
@@ -134,12 +151,22 @@ public class UserServiceImpl implements UserService {
 	public ResultVO findAll(Map<String, String> params,HttpSession session) {
 		int page = 0 ;
 		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ; 
-		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
-		if(roleId == 5 ) {
-			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
-			return ResultVOUtil.success(user_dao.findByRegionId(new PageRequest(page, 10),regionId));
+		List<UserVO> endList = new ArrayList<>();
+		Page<UserMapper> pageList = user_dao.findAll(PageRequest.of(page, 10 ,Sort.by("genTime").descending()));
+		for (UserMapper userMapper : pageList.getContent()) {
+			UserVO vo =new UserVO();
+			BeanUtils.copyProperties(userMapper, vo);
+			List<UserSchoolsMapper> u_s_list = user_school_dao.findByUserId(userMapper.getId());
+			List<SchoolMapper> schoolList = new ArrayList<>();
+			for (UserSchoolsMapper userSchoolsMapper : u_s_list) {
+				if(userSchoolsMapper.getSchoolId()==0)continue;
+				schoolList.add(school_dao.findById(userSchoolsMapper.getSchoolId()).get());
+			}
+			if(schoolList.size()!=0)vo.setChildren(schoolList);
+			endList.add(vo);
 		}
-		return ResultVOUtil.success(user_dao.findAll(PageRequest.of(page, 10)));
+		Page<UserVO> end = new PageImpl<>(endList, pageList.getPageable(), pageList.getTotalElements());
+		return ResultVOUtil.success(end);
 	}
 
 	/* 
@@ -270,10 +297,11 @@ public class UserServiceImpl implements UserService {
 	 * 删除用户
 	 */
 	@Override
-	public List<UserMapper> deleteUser(Integer id) {
+	public ResultVO deleteUser(Integer id) {
 		user_dao.deleteById(id);
 		user_role_dao.deleteByUserId(id);
-		return user_dao.findAll();
+		user_school_dao.deleteByUserId(id);
+		return ResultVOUtil.success(user_dao.findAll());
 	}
 
 	/* 
@@ -298,4 +326,28 @@ public class UserServiceImpl implements UserService {
 		}
 		return ACCESS_TOKEN;
 	}
+
+	@Override
+	public ResultVO addUserSchool(Map<String, String> params) {
+		Integer userId = Integer.valueOf(params.get("userId"));
+		Integer schoolId = Integer.valueOf(params.get("schoolId"));
+		UserSchoolsMapper chk = user_school_dao.findBySchoolIdAndUserId(schoolId,userId);
+		if(chk!=null) return ResultVOUtil.error(ResultEnum.SCHOOLNAME_REPEAT.getStatus(), ResultEnum.SCHOOLNAME_REPEAT.getMessage());
+		
+		UserSchoolsMapper po = new UserSchoolsMapper();
+		po.setSchoolId(schoolId);
+		po.setUserId(userId);
+		user_school_dao.save(po);
+		return ResultVOUtil.success();
+	}
+
+	@Override
+	public ResultVO deleteUserSchool(Map<String, String> params) {
+		System.out.println(params.get("userId")+"--"+params.get("schoolId"));
+		Integer userId = Integer.valueOf(params.get("userId"));
+		Integer schoolId = Integer.valueOf(params.get("schoolId"));
+		user_school_dao.deleteBySchoolIdAndUserId(schoolId,userId);
+		return ResultVOUtil.success();
+	}
+
 }

@@ -25,8 +25,26 @@ public class PartnershipMapper {
 	//图片
 	private String imgurl;
 	
+	private Integer regionId;
+	
+	private String regionName;
 	
 	
+	
+	
+	
+	public Integer getRegionId() {
+		return regionId;
+	}
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
+	}
+	public String getRegionName() {
+		return regionName;
+	}
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
+	}
 	public String getImgurl() {
 		return imgurl;
 	}

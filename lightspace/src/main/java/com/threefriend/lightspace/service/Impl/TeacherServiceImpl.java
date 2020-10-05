@@ -45,9 +45,6 @@ public class TeacherServiceImpl implements TeacherService{
 		if(!StringUtils.isEmpty(params.get("type"))) type = params.get("type");
 		if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page")) - 1 ;
 		if("school".equals(type))return ResultVOUtil.success(teacher_dao.findBySchoolId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10,Sort.by("id").descending())));
-		Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
-		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
-		if(roleId==5)return ResultVOUtil.success(teacher_dao.findByRegionId(regionId,PageRequest.of(page, 10,Sort.by("id").descending())));
 		return ResultVOUtil.success(teacher_dao.findAll(PageRequest.of(page, 10,Sort.by("id").descending())));
 	}
 

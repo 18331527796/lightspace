@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<UserMapper, Integer>{
 	
 	List<UserMapper> findByNameLike(String name);
 	
+	Page<UserMapper> findBySchoolIdIn(List<Integer> ids,Pageable page);
+	
 }

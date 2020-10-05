@@ -18,11 +18,13 @@ import org.springframework.stereotype.Service;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.mapper.AnswerConfigMapper;
+import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.xcx.AnswerMapper;
 import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
 import com.threefriend.lightspace.repository.AnswerConfigRepository;
 import com.threefriend.lightspace.repository.AnswerRepository;
 import com.threefriend.lightspace.repository.IntegralRepository;
+import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.AnswerXcxVO;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -37,6 +39,8 @@ public class AnswerXcxServiceImpl implements AnswerXcxService{
 	private IntegralRepository integral_dao;
 	@Autowired
 	private AnswerConfigRepository config_dao;
+	@Autowired
+	private StudentRepository student_dao;
 
 	@Override
 	public ResultVO list() {
@@ -81,6 +85,10 @@ public class AnswerXcxServiceImpl implements AnswerXcxService{
 		po.setIntegral(number);
 		po.setStudentId(studentId);
 		integral_dao.save(po);
+		
+		StudentMapper student = student_dao.findById(studentId).get();
+		student.setMyIntegral(integral_dao.findIntegtalByState(1, studentId));
+		student_dao.save(student);
 		return ResultVOUtil.success();
 	}
 

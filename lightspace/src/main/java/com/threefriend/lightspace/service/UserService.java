@@ -24,10 +24,12 @@ public interface UserService {
 	//用户权限
 	public Object getUserRight(String token);
 	//删除账户
-	public List<UserMapper> deleteUser(Integer id);
+	public ResultVO deleteUser(Integer id);
 	//所属人模糊查询
 	public ResultVO findByNameLike(String name);
 	
+	ResultVO addUserSchool(Map<String, String> params);
 	
+	ResultVO deleteUserSchool(Map<String, String> params);
 	
 }

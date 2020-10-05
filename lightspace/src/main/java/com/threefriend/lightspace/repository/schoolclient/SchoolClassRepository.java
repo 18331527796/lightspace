@@ -14,9 +14,9 @@ public interface SchoolClassRepository extends JpaRepository<SchoolClassesMapper
 	
 	SchoolClassesMapper findBySemesterIdAndClassId(Integer semesterId,Integer classId);
 	
-	List<SchoolClassesMapper> findBySemesterIdAndGradeOrderByClassNumber(Integer semesterId , Integer grade);
+	List<SchoolClassesMapper> findBySemesterIdInAndGradeOrderByClassNumber(List<Integer> semesterId , Integer grade);
 	
 	
 	@Transactional
-	void deleteBySemesterId(Integer semesterId);
+	void deleteBySchoolIdAndSemesterId(Integer schoolId , Integer semesterId);
 }

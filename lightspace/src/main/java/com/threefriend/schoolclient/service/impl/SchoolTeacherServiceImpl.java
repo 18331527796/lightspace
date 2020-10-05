@@ -186,7 +186,7 @@ public class SchoolTeacherServiceImpl implements SchoolTeacherService{
 		for (StudentMapper s : student) {
 			if (now.equals(Format.format(s.getRemindUndetected()).substring(0, 10)))
 				continue;
-			if (s.getVisionLeftStr() == null || s.getVisionRightStr() == null
+			if (s.getVisionLeftStr() == null || s.getVisionRightStr() == null || s.getSendTime() == null
 					|| today - s.getSendTime().getTime() >= 604800000) {
 				end.add(s);
 			}

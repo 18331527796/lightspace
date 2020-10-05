@@ -2,6 +2,8 @@ package com.threefriend.lightspace.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +19,8 @@ public class ClertController {
 	private ClertServiceImpl impl;
 	
 	@PostMapping("/clertList")
-	public ResultVO clertList(@RequestParam Map<String, String> params) {
-		return impl.clertList(params);
+	public ResultVO clertList(@RequestParam Map<String, String> params,HttpSession session) {
+		return impl.clertList(params,session);
 	}
 	
 	@PostMapping("/addClert")

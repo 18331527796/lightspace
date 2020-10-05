@@ -3,6 +3,7 @@ package com.threefriend.lightspace.controller;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,15 +21,16 @@ public class PartnershipController {
 	private PartnershipServiceImpl partnership_impl;
 	
 	@PostMapping("/partnershipList")
-	public ResultVO partnershipList() {
-		return partnership_impl.partnershipList();
+	public ResultVO partnershipList(@RequestParam Map<String, String> params,HttpSession session) {
+		return partnership_impl.partnershipList(params,session);
 	}
 	
 	@PostMapping("/addPartnership")
 	public ResultVO addPartnership(@RequestParam(value="file",required=false) MultipartFile file,
 			@RequestParam Map<String, String> params,
-			HttpServletRequest request) {
-		return partnership_impl.addPartnership(file, params,request);
+			HttpServletRequest request,
+			HttpSession session) {
+		return partnership_impl.addPartnership(file, params,request,session);
 	}
 	
 	@PostMapping("/deletePartnership")

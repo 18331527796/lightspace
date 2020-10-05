@@ -31,6 +31,7 @@ import com.threefriend.lightspace.mapper.schoolclient.SchoolRightMapper;
 import com.threefriend.lightspace.mapper.schoolclient.SchoolRoleRightRelation;
 import com.threefriend.lightspace.mapper.schoolclient.SchoolSemesterMapper;
 import com.threefriend.lightspace.mapper.schoolclient.SchoolStudentRecordMapper;
+import com.threefriend.lightspace.mapper.schoolclient.UserSchoolsMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
@@ -42,6 +43,7 @@ import com.threefriend.lightspace.repository.schoolclient.SchoolRightRepository;
 import com.threefriend.lightspace.repository.schoolclient.SchoolRoleRightRepository;
 import com.threefriend.lightspace.repository.schoolclient.SchoolSemesterRepository;
 import com.threefriend.lightspace.repository.schoolclient.SchoolStudentRecordRepository;
+import com.threefriend.lightspace.repository.schoolclient.UserSchoolsRepository;
 import com.threefriend.lightspace.util.ListUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -55,36 +57,24 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 	
 	@Autowired
 	private UserRepository user_dao;
-	
 	@Autowired
 	private UserRoleRepository user_role_dao;
-	
-	@Autowired
-	private SchoolRightRepository right_dao;
-	
-	@Autowired
-	private SchoolRoleRightRepository role_right_dao;
-	
 	@Autowired
 	private StudentRepository student_dao;
-	
 	@Autowired
 	private ClassesRepository class_dao;
-	
 	@Autowired
 	private SchoolRepository school_dao;
-	
 	@Autowired
 	private SchoolClassRepository school_class_dao;
-	
 	@Autowired
 	private SchoolSemesterRepository school_semester_dao;
-	
 	@Autowired
 	private SchoolStudentRecordRepository school_student_record_dao;
-	
 	@Autowired
 	private TeacherRepository teacher_dao;
+	@Autowired
+	private UserSchoolsRepository user_school_dao;
 	
 	
 	@Override
@@ -94,9 +84,9 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		String md5 = DigestUtils.md5DigestAsHex(params.get("password").getBytes());
 		List<UserMapper> user = user_dao.findByloginNameAndPassword(params.get("loginName"), md5);
 		List<TeacherMapper> teacher = teacher_dao.findByPhoneAndPassword(params.get("loginName"), params.get("password"));
-		if(1 !=user.size()&&teacher==null&&user.size()==0&&teacher.size()==0)return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
+		if(user==null&&teacher==null&&user.size()!=1&&teacher.size()==0)return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
 		Integer roleId = 0;
-		if(1 ==user.size()) {
+		if(1==user.size()) {
 			roleId = user_role_dao.findByUserId(user.get(0).getId()).get(0).getRoleId();
 		}else {
 			roleId = 3;
@@ -105,13 +95,7 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		if(roleId!=2&&roleId!=3)return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
 		Map<String , String> end = new HashMap<>();
 		SchoolMapper school = null;
-		 if(roleId == 3 && 1 ==user.size()) {
-			 school=school_dao.findById(user.get(0).getSchoolId()).get();
-			 end.put("classId", user.get(0).getClassesId()+"");
-			 end.put("className", class_dao.findById(user.get(0).getClassesId()).get().getClassName());
-			 end.put("userName", user.get(0).getName());
-			 session.setAttribute("classId",user.get(0).getClassesId());
-		 }else if(roleId == 3 && 1 !=user.size()){
+		 if(roleId == 3 && (user==null||0 ==user.size())){
 			 school=school_dao.findById(teacher.get(0).getSchoolId()).get();
 			 end.put("classId", teacher.get(0).getClassId()+"");
 			 end.put("className", class_dao.findById(teacher.get(0).getClassId()).get().getClassName());
@@ -120,6 +104,7 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		 }else {
 			 school=school_dao.findById(user.get(0).getSchoolId()).get();
 			 end.put("userName", user.get(0).getName());
+			 session.setAttribute("userId",user.get(0).getId());
 		 }
 		end.put("schoolName", school.getName());
 		end.put("schoolId", school.getId()+"");
@@ -140,55 +125,59 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		return ResultVOUtil.success(end);
 	}
 	
-	/* 
-	 * 菜单list
-	 */
 	@Override
-	public ResultVO getUserRight(HttpSession session) {
-		Integer roleId = Integer.valueOf(session.getAttribute("roleId").toString());
-		// 根据角色查找相应的权限
-		List<SchoolRoleRightRelation> findByRoleId = role_right_dao.findByRoleId(roleId);
-		List<Integer> ids = new ArrayList<>();
-		for (SchoolRoleRightRelation roleRightRelation : findByRoleId) {
-			ids.add(roleRightRelation.getRightId());
-		}
-		//组装树形
-		List<SchoolRightMapper> rights = right_dao.findAllById(ids);
-		List<SchoolMenuListVo> trees = new ArrayList<SchoolMenuListVo>();
-		for (SchoolRightMapper role1 : rights) {
-			SchoolMenuListVo menu = new SchoolMenuListVo();
-			if (role1.getpId() == 0) {
-				menu.setId(role1.getId());
-				menu.setAuthName(role1.getAuthName());
-				menu.setPath(role1.getPath());
-				for (SchoolRightMapper it : rights) {
-					if (it.getpId() == role1.getId()) {
-						if (menu.getChildren() == null) {
-							menu.setChildren(new ArrayList<SchoolRightMapper>());
+	public ResultVO regionLogin(Map<String, String> params, HttpSession session) {
+		// 比如对密码进行 md5 加密
+		String md5 = DigestUtils.md5DigestAsHex(params.get("password").getBytes());
+		List<UserMapper> user = user_dao.findByloginNameAndPassword(params.get("loginName"), md5);
+		if(user==null&&user.size()!=1)return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
+		
+		Integer roleId = user_role_dao.findByUserId(user.get(0).getId()).get(0).getRoleId();
+		Integer regionId = user.get(0).getRegionId();
+		//如果不是合作商 不让进
+		if(roleId!=4)return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
+		Map<String , String> end = new HashMap<>();
+		end.put("userName", user.get(0).getName());
+		end.put("schoolName", user.get(0).getRegionName());
+		end.put("schoolId", "0");
+		
+		session.setAttribute("userId",user.get(0).getId());
+		session.setAttribute("roleId",roleId);
+		session.setAttribute("schoolId","0");
+		session.setAttribute("regionId", regionId);
+		
+		List<Integer> schoolIds = school_dao.findIdByRegionId(regionId);
+		new Thread(
+			    new Runnable(){
+					public void run(){
+						for (Integer integer : schoolIds) {
+							initialize(integer);
 						}
-						menu.setId(role1.getId());
-						menu.setAuthName(role1.getAuthName());
-						menu.getChildren().add(it);
-					}
-				}
-				trees.add(menu);
-			}
-		}
-		return ResultVOUtil.success(trees);
+			        }
+			    }
+			).start();
+		
+		return ResultVOUtil.success(end);
 	}
 
 	@Override
 	public ResultVO survey(HttpSession session) {
 		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
-		
+		List<Integer> schoolIds = new ArrayList<>();
+		if(schoolId==0) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			schoolIds=school_dao.findIdByRegionId(regionId);
+		}else {
+			schoolIds.add(schoolId);
+		}
 		Map<String , String> end = new HashMap<>();
 		DecimalFormat df=new DecimalFormat("0.00");
 		int bad= 0,nullstudent=0;
 		Double LEFT = 0d , RIGHT = 0d, AVG = 0d;
 		
 		//所有学生数量
-		int allstudent = student_dao.countBySchoolId(schoolId);
-		List<StudentMapper> students = student_dao.findBySchoolId(schoolId);
+		int allstudent = student_dao.countBySchoolIdIn(schoolIds);
+		List<StudentMapper> students = student_dao.findBySchoolIdIn(schoolIds);
 		for (StudentMapper s : students) {
 			if(s.getLastTime()==null||s.getVisionLeftStr()==null||s.getVisionRightStr()==null) {
 				nullstudent++;
@@ -223,7 +212,13 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 	@Override
 	public ResultVO badPercentage(HttpSession session) {
 		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
-		
+		List<Integer> schoolIds = new ArrayList<>();
+		if(schoolId==0) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			schoolIds=school_dao.findIdByRegionId(regionId);
+		}else {
+			schoolIds.add(schoolId);
+		}
 		DecimalFormat df=new DecimalFormat("0.00");
 		
 		List<String> end =new  ArrayList<String>();
@@ -234,7 +229,7 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		for (int i = 1; i < 7; i++) {
 			int bad= 0,nullstudent=0;
 			Double LEFT = 0d , RIGHT = 0d, AVG = 0d;
-			allclass = class_dao.findIdBySchoolIdAndGrade(schoolId,i);
+			allclass = class_dao.findIdBySchoolIdAndGrade(schoolIds,i);
 			
 			if(allclass.size()<1||allclass==null) {
 				end.add("0");
@@ -294,6 +289,14 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		
 		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
 		
+		List<Integer> schoolIds = new ArrayList<>();
+		if(schoolId==0) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			schoolIds=school_dao.findIdByRegionId(regionId);
+		}else {
+			schoolIds.add(schoolId);
+		}
+		
 		DecimalFormat df=new DecimalFormat("0.00");
 		
 		List<Integer> allclass = null;
@@ -311,7 +314,7 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 			int avgGood= 0,avgMild= 0,avgModerate= 0,avgSerious= 0,nullstudent=0;
 			Double LEFT = 0d , RIGHT = 0d , AVG = 0d;
 			
-			allclass = class_dao.findIdBySchoolIdAndGrade(schoolId,i);
+			allclass = class_dao.findIdBySchoolIdAndGrade(schoolIds,i);
 			
 			if(allclass.size()<1||allclass==null) {
 				goodList.add("0");
@@ -367,6 +370,14 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 	public ResultVO brokenLine(HttpSession session) {
 		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
 		
+		List<Integer> schoolIds = new ArrayList<>();
+		if(schoolId==0) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			schoolIds=school_dao.findIdByRegionId(regionId);
+		}else {
+			schoolIds.add(schoolId);
+		}
+		
 		DecimalFormat df=new DecimalFormat("0.00");
 		List<String> end = new ArrayList<>();
 		
@@ -376,9 +387,10 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		for (int i = 1; i < 7; i++) {
 			int bad= 0,nullstudent=0;
 			Double LEFT = 0d , RIGHT = 0d, AVG = 0d , sum = 0d;
-			allclass = class_dao.findIdBySchoolIdAndGrade(schoolId,i);
+			allclass = class_dao.findIdBySchoolIdAndGrade(schoolIds,i);
 			
 			if(allclass.size()<1||allclass==null) {
+				end.add("0");
 				continue;
 			}
 			//所有学生数量
@@ -410,6 +422,13 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 	@Override
 	public ResultVO top5(Map<String, String> params,HttpSession session) {
 		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
+		List<Integer> schoolIds = new ArrayList<>();
+		if(schoolId==0) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			schoolIds=school_dao.findIdByRegionId(regionId);
+		}else {
+			schoolIds.add(schoolId);
+		}
 		
 		String type = "";
 		if(!StringUtils.isEmpty(params.get("type")))type = params.get("type");
@@ -421,7 +440,7 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		for (int i = 1; i < 7; i++) {
 			grades.add(i);
 		}
-		List<ClassesMapper> allclass = class_dao.findBySchoolIdAndGradeIn(schoolId,grades);
+		List<ClassesMapper> allclass = class_dao.findBySchoolIdInAndGradeIn(schoolIds,grades);
 		
 		List<StudentMapper> students = null;
 		int allstudent = 0 , bad ;
@@ -432,7 +451,7 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 			allstudent=0;
 			students = student_dao.findByClassesId(po.getId());
 			Top5VO vo = new Top5VO();
-			vo.setName(po.getClassName());
+			vo.setName(po.getSchoolName()+"   :"+po.getClassName());
 			for (StudentMapper s : students) {
 				if(s.getLastTime()==null||s.getVisionLeftStr()==null||s.getVisionRightStr()==null)continue;
 				if(s.getVisionLeftStr()<=s.getVisionRightStr()) {
@@ -472,8 +491,7 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 	
 	@Override
 	public ResultVO getAllSemester(HttpSession session) {
-		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
-		return ResultVOUtil.success(school_semester_dao.findBySchool(schoolId));
+		return ResultVOUtil.success(school_semester_dao.findBySchool());
 	}
 	
 	
@@ -507,9 +525,13 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		SchoolSemesterMapper SemesterPo = school_semester_dao.findByYearAndSemesterAndSchoolId(yearStr,termInt,schoolId);
 		
 		if(SemesterPo!=null ) {
+			
+			System.out.println(new Date().getTime()+"---"+SemesterPo.getGenTime().getTime()+"---"+(new Date().getTime()-SemesterPo.getGenTime().getTime()));
 			if((new Date().getTime()-SemesterPo.getGenTime().getTime())>604800000) {
-				school_class_dao.deleteBySemesterId(SemesterPo.getId());
+				school_class_dao.deleteBySchoolIdAndSemesterId(schoolId,SemesterPo.getId());
+				school_student_record_dao.deleteBySchoolIdAndSemester(schoolId,SemesterPo.getId());
 				SemesterPo.setGenTime(new Date());
+				school_semester_dao.save(SemesterPo);
 				System.out.println("进行重置");
 			}else {
 				System.out.println("时间不够，跳出方法");
@@ -529,10 +551,12 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		List<Integer> classIds = new ArrayList<>();
 		List<ClassesMapper> classes = class_dao.findBySchoolId(schoolId);
 		for (ClassesMapper po : classes) {
+			if(po.getGrade()<1&&po.getGrade()>6)continue;
 			SchoolClassesMapper newClass = new SchoolClassesMapper();
 			newClass.setClassId(po.getId());
 			newClass.setGrade(po.getGrade());
 			newClass.setName(po.getClassName());
+			newClass.setSchoolName(po.getSchoolName());
 			newClass.setSchoolId(po.getSchoolId());
 			newClass.setSemesterId(SemesterPo.getId());
 			newClass.setClassNumber(Integer.valueOf(po.getClassName().substring(2, 3)));
@@ -600,6 +624,45 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		session.invalidate();
 		return ResultVOUtil.success();
 	}
+
+	@Override
+	public ResultVO changeSession(Map<String, String> params, HttpSession session) {
+		Map<String, String> end = new HashMap<>();
+		Integer schoolId = Integer.valueOf(params.get("schoolId"));
+		session.setAttribute("schoolId", schoolId);
+		if(schoolId==0) {
+			Integer userId = Integer.valueOf(session.getAttribute("userId").toString());
+			end.put("schoolName", user_dao.findById(userId).get().getRegionName());
+			end.put("schoolId", "0");
+		}else {
+			SchoolMapper school = school_dao.findById(schoolId).get();
+			end.put("schoolName", school.getName());
+			end.put("schoolId", school.getId()+"");
+		}
+		return ResultVOUtil.success(end);
+	}
+
+
+	@Override
+	public ResultVO getUserSchools(HttpSession session) {
+		Integer userId = Integer.valueOf(session.getAttribute("userId").toString());
+		List<SchoolMapper> end = new ArrayList<>();
+		List<UserSchoolsMapper> userSchool = user_school_dao.findByUserId(userId);
+		for (UserSchoolsMapper po : userSchool) {
+			end.add(school_dao.findById(po.getSchoolId()).get());
+		}
+		return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO getRegionSchools(HttpSession session) {
+		Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+		List<SchoolMapper> allSchools = school_dao.findByRegionIdOrderByIdDesc(regionId);
+		return ResultVOUtil.success(allSchools);
+	}
+
+
+	
 
 	
 

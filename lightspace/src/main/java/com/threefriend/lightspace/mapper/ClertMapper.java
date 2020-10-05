@@ -21,9 +21,9 @@ public class ClertMapper {
 	// 密码
 	private String password;
 	// 所属机构id
-	private Integer PartnershipId;
+	private Integer partnershipId;
 	// 所属机构
-	private String PartnershipName;
+	private String partnershipName;
 	//登录状态(0未登录 1登录)
 	private Integer state = 0;
 	//关联的小程序账号
@@ -70,16 +70,19 @@ public class ClertMapper {
 	}
 	
 	public Integer getPartnershipId() {
-		return PartnershipId;
+		return partnershipId;
 	}
 	public void setPartnershipId(Integer partnershipId) {
-		PartnershipId = partnershipId;
+		this.partnershipId = partnershipId;
 	}
 	public String getPartnershipName() {
-		return PartnershipName;
+		return partnershipName;
 	}
 	public void setPartnershipName(String partnershipName) {
-		PartnershipName = partnershipName;
+		this.partnershipName = partnershipName;
+	}
+	public void setGenTime(String genTime) {
+		this.genTime = genTime;
 	}
 	public String getGenTime() {
 		return genTime;

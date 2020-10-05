@@ -24,6 +24,8 @@ public class SchoolClassesMapper {
 	private String name;
 	// 所属学校id
 	private Integer schoolId;
+	
+	private String schoolName;
 	//年级
 	private Integer grade;
 	//班
@@ -72,6 +74,12 @@ public class SchoolClassesMapper {
 	}
 	public void setClassId(Integer classId) {
 		this.classId = classId;
+	}
+	public String getSchoolName() {
+		return schoolName;
+	}
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
 	}
 
 }

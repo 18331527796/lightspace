@@ -32,11 +32,13 @@ public class SchoolUserController {
 	public ResultVO login(@RequestParam Map<String, String> params , HttpSession session) {
 		return user_service.login(params, session);
 	}
+	
 	@ResponseBody
-	@PostMapping("/menuList")
-	public ResultVO menuList( HttpSession session) {
-		return user_service.getUserRight( session);
+	@PostMapping("/regionLogin")
+	public ResultVO regionLogin(@RequestParam Map<String, String> params , HttpSession session) {
+		return user_service.regionLogin(params, session);
 	}
+	
 	@ResponseBody
 	@PostMapping("/survey")
 	public ResultVO survey( HttpSession session) {
@@ -92,5 +94,23 @@ public class SchoolUserController {
 	@PostMapping("/loginOut")
 	public ResultVO loginOut( HttpSession session) {
 		return user_service.loginOut(session);
+	}
+	
+	@ResponseBody
+	@PostMapping("/getUserSchools")
+	public ResultVO getUserSchools( HttpSession session) {
+		return user_service.getUserSchools(session);
+	}
+	
+	@ResponseBody
+	@PostMapping("/getRegionSchools")
+	public ResultVO getRegionSchools( HttpSession session) {
+		return user_service.getRegionSchools(session);
+	}
+	
+	@ResponseBody
+	@PostMapping("/changeSession")
+	public ResultVO changeSession(@RequestParam Map<String, String> params , HttpSession session) {
+		return user_service.changeSession(params,session);
 	}
 }

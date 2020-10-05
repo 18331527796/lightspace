@@ -38,7 +38,9 @@ import com.threefriend.lightspace.repository.ScreeningWearRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.service.Impl.ReadStudentExcel;
+import com.threefriend.lightspace.util.ListUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.vo.IntegralVO;
 import com.threefriend.lightspace.vo.OneStatisticsVO;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.StudentStatisticsVO;
@@ -67,6 +69,8 @@ public class SchoolStudentServiceImpl implements SchoolStudentService{
 	private ReadStudentExcel readexcel;
 	@Autowired
 	private StudentWordRepository studentword_dao;
+	@Autowired
+	private IntegralRepository Integral_dao;
 	
 	
 
@@ -266,5 +270,48 @@ public class SchoolStudentServiceImpl implements SchoolStudentService{
 		Integer classId = Integer.valueOf(params.get("id"));
 		List<StudentMapper> allStudent = student_dao.findByClassesId(classId);
 		return ResultVOUtil.success(allStudent);
+	}
+
+
+	@Override
+	public ResultVO integralRanking(Map<String, String> params, HttpSession session) {
+		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
+		String type = "";
+		int page = 0;
+		if(!StringUtils.isEmpty(params.get("page")))page = (Integer.valueOf(params.get("page"))-1)*10;
+		if(!StringUtils.isEmpty(params.get("type"))) type = params.get("type");
+		
+		List<IntegralVO> integtalRanking = new ArrayList<>();
+		List<StudentMapper> studentIds = null;
+		Map<String, Object> end = new HashMap<>();
+		
+		end.put("size", 10);
+		end.put("number", (StringUtils.isEmpty(params.get("page")))?0:Integer.valueOf(params.get("page"))-1);
+		
+		if(schoolId == 0) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			studentIds = student_dao.findByRegionId(regionId);
+		}else {
+			if("school".equals(type)) {
+				studentIds = student_dao.findBySchoolId(schoolId);
+			}else if("class".equals(type)) {
+				Integer classId = Integer.valueOf(params.get("id"));
+				studentIds = student_dao.findByClassesId(classId);
+			}
+		}
+		for (StudentMapper po : studentIds) {
+			IntegralVO vo = new IntegralVO(po.getId(), po.getName(), po.getSchoolName(),po.getClassesName(), po.getMyIntegral()==null?0:po.getMyIntegral());
+			integtalRanking.add(vo);
+		}
+		ListUtils.sort(integtalRanking, false, "sum","studentId");
+		List<IntegralVO> subList = null;
+		if(integtalRanking.size()<=page+10) {
+			subList=integtalRanking.subList(page, integtalRanking.size());
+		}else {
+			subList=integtalRanking.subList(page, page+10);
+		}
+		end.put("totalElements", studentIds.size());
+		end.put("content", subList);
+		return ResultVOUtil.success(end);
 	}
 }

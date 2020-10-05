@@ -74,28 +74,39 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		Map<String, Object> end = new HashMap<>();
 		List<ScreeningMapper> list = null;
 		Integer page = 0;
+		int count = 0;
 		if(!StringUtils.isEmpty(params.get("page")))page = (Integer.valueOf(params.get("page"))-1)*10;
 		String type = params.get("type");
 		end.put("size", 10);
 		end.put("number", (StringUtils.isEmpty(params.get("page")))?0:Integer.valueOf(params.get("page"))-1);
-		
-		
 		if("student".equals(type)) {
 			list = screening_dao.findByNameOrderByGenTimeDesc("%"+params.get("name")+"%",schoolId,page, 10);
-			int count = screening_dao.findcountByName("%"+params.get("name")+"%",schoolId);
+			count = screening_dao.findcountByName("%"+params.get("name")+"%",schoolId);
 			end.put("totalElements", count);
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
 		}
 		if("class".equals(type)) {
 			list = screening_dao.findByClassIdOrderByGenTimeDesc(Integer.valueOf(params.get("id")),page, 10);
-			int count = screening_dao.findcountByClassId(Integer.valueOf(params.get("id")));
+			count = screening_dao.findcountByClassId(Integer.valueOf(params.get("id")));
 			end.put("totalElements", count);
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
 		}
-		list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,page, 10);
-		int count = screening_dao.findcountBySchoolId(schoolId);
+		if(schoolId == 0) {
+			List<Integer> schoolIds = new ArrayList<>();
+			if(schoolId==0) {
+				Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+				schoolIds=school_dao.findIdByRegionId(regionId);
+			}else {
+				schoolIds.add(schoolId);
+			}
+			list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
+			count = screening_dao.findcountBySchoolId(schoolIds);
+		}else {
+			list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,page, 10);
+			count = screening_dao.findcountBySchoolId(schoolId);
+		}
 		end.put("totalElements", count);
 		end.put("content", list);
 		return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
@@ -108,6 +119,7 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		Map<String, Object> end = new HashMap<>();
 		List<ScreeningWearMapper> list = null;
 		Integer page = 0;
+		int count = 0 ;
 		if(!StringUtils.isEmpty(params.get("page")))page = (Integer.valueOf(params.get("page"))-1)*10;
 		String type = params.get("type");
 		end.put("size", 10);
@@ -116,20 +128,32 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		
 		if("student".equals(type)) {
 			list = screening_wear_dao.findByNameOrderByGenTimeDesc("%"+params.get("name")+"%",schoolId,page, 10);
-			int count = screening_wear_dao.findcountByName("%"+params.get("name")+"%",schoolId);
+			count = screening_wear_dao.findcountByName("%"+params.get("name")+"%",schoolId);
 			end.put("totalElements", count);
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
 		}
 		if("class".equals(type)) {
 			list = screening_wear_dao.findByClassIdOrderByGenTimeDesc(Integer.valueOf(params.get("id")),page, 10);
-			int count = screening_wear_dao.findcountByClassId(Integer.valueOf(params.get("id")));
+			count = screening_wear_dao.findcountByClassId(Integer.valueOf(params.get("id")));
 			end.put("totalElements", count);
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
 		}
-		list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,page, 10);
-		int count = screening_wear_dao.findcountBySchoolId(schoolId);
+		if(schoolId == 0) {
+			List<Integer> schoolIds = new ArrayList<>();
+			if(schoolId==0) {
+				Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+				schoolIds=school_dao.findIdByRegionId(regionId);
+			}else {
+				schoolIds.add(schoolId);
+			}
+			list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
+			count = screening_wear_dao.findcountBySchoolId(schoolIds);
+		}else {
+			list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,page, 10);
+			count = screening_wear_dao.findcountBySchoolId(schoolId);
+		}
 		end.put("totalElements", count);
 		end.put("content", list);
 		return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
@@ -176,12 +200,19 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		List<SchoolRecordVO> gradeList = new ArrayList<SchoolRecordVO>();
 		List<Integer> gradeMyopiaList = new ArrayList<>();
 		List<String> gradeAvgList = new ArrayList<>();
+		List<Integer> schoolIds = new ArrayList<>();
+		if(schoolId==0) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			schoolIds=school_dao.findIdByRegionId(regionId);
+		}else {
+			schoolIds.add(schoolId);
+		}
 		
 		String year = params.get("year");
 		Integer semester = Integer.valueOf(params.get("semester"));
 		
-		SchoolSemesterMapper SemesterPo = school_semester_dao.findByYearAndSemesterAndSchoolId(year,semester,schoolId);
-		if(SemesterPo==null) return ResultVOUtil.success();
+		List<Integer> SemesterPos = school_semester_dao.findIdByYearAndSemesterAndSchoolIdIn(year,semester,schoolIds);
+		if(SemesterPos.size()!=schoolIds.size()) return ResultVOUtil.success();
 		
 		int gradeGood = 0 , gradeMild = 0, gradeModerate = 0 , gradeSerious = 0 , gradeAll = 0 , gradeMyopia = 0,
 			classGood = 0 , classMild = 0, classModerate = 0 , classSerious = 0 , classAll = 0 , classMyopia = 0;
@@ -194,72 +225,73 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			SchoolRecordVO grade = new SchoolRecordVO();
 			grade.setName(i+"");
 			
-			List<SchoolClassesMapper> allclass = school_class_dao.findBySemesterIdAndGradeOrderByClassNumber(SemesterPo.getId(),i);
-			//当这个年级没有班级时
-			if(allclass.size()<1||allclass==null) {
-				grade.setAll(0);
-				grade.setGood(0);
-				grade.setMild(0);
-				grade.setModerate(0);
-				grade.setMyopia(0);
-				grade.setMyopiaRate("0%");
-				grade.setSerious(0);
-				grade.setChildren(null);
-				gradeList.add(grade);
-				gradeMyopiaList.add(0);
-				gradeAvgList.add("0");
-				continue;
-			}
-			
-			for (SchoolClassesMapper classpo : allclass) {
-				SchoolRecordVO classvo = new SchoolRecordVO();
-				classvo.setName(classpo.getName());
-				
-				classGood = 0 ; classMild = 0; classModerate = 0 ; classSerious = 0 ; classAll = 0 ; classMyopia = 0;
-				students = school_student_record_dao.findByClassIdAndSemester(classpo.getClassId(),SemesterPo.getId());
-				classAll=students.size();
-				gradeAll+=classAll;
-				
-				for (SchoolStudentRecordMapper po : students) {
-					
-					if(po.getVisionLeftStr()>=po.getVisionRightStr()) {
-						AVG = po.getVisionLeftStr();
-					}else {
-						AVG = po.getVisionRightStr();
-					}
-					
-					SUM+=AVG;
-					if(AVG>=1.0) {
-						classGood++;
-						gradeGood++;
-					}else if(AVG<1.0 && AVG >= 0.8 ) {
-						classMild++;
-						gradeMild++;
-						classMyopia++;
-						gradeMyopia++;
-					}else if(AVG<0.8 && AVG >= 0.4) {
-						classModerate++;
-						gradeModerate++;
-						classMyopia++;
-						gradeMyopia++;
-					}else {
-						classSerious++;
-						gradeSerious++;
-						classMyopia++;
-						gradeMyopia++;
-					}
-					
+				List<SchoolClassesMapper> allclass = school_class_dao.findBySemesterIdInAndGradeOrderByClassNumber(SemesterPos,i);
+				//当这个年级没有班级时
+				if(allclass.size()<1||allclass==null) {
+					grade.setAll(0);
+					grade.setGood(0);
+					grade.setMild(0);
+					grade.setModerate(0);
+					grade.setMyopia(0);
+					grade.setMyopiaRate("0%");
+					grade.setSerious(0);
+					grade.setChildren(null);
+					gradeList.add(grade);
+					gradeMyopiaList.add(0);
+					gradeAvgList.add("0");
+					continue;
 				}
-				classvo.setClassId(classpo.getClassId());
-				classvo.setAll(classAll);
-				classvo.setGood(classGood);
-				classvo.setMild(classMild);
-				classvo.setModerate(classModerate);
-				classvo.setSerious(classSerious);
-				classvo.setMyopia(classMyopia);
-				classvo.setMyopiaRate(df.format(((float)classMyopia/(float)classAll)*100)+"%");
-				grade.getChildren().add(classvo);
-			}
+				
+				for (SchoolClassesMapper classpo : allclass) {
+					SchoolRecordVO classvo = new SchoolRecordVO();
+					classvo.setName(classpo.getSchoolName()+classpo.getName());
+					
+					classGood = 0 ; classMild = 0; classModerate = 0 ; classSerious = 0 ; classAll = 0 ; classMyopia = 0;
+					students = school_student_record_dao.findByClassIdAndSemesterIn(classpo.getClassId(),SemesterPos);
+					classAll=students.size();
+					gradeAll+=classAll;
+					
+					for (SchoolStudentRecordMapper po : students) {
+						
+						if(po.getVisionLeftStr()>=po.getVisionRightStr()) {
+							AVG = po.getVisionLeftStr();
+						}else {
+							AVG = po.getVisionRightStr();
+						}
+						
+						SUM+=AVG;
+						if(AVG>=1.0) {
+							classGood++;
+							gradeGood++;
+						}else if(AVG<1.0 && AVG >= 0.8 ) {
+							classMild++;
+							gradeMild++;
+							classMyopia++;
+							gradeMyopia++;
+						}else if(AVG<0.8 && AVG >= 0.4) {
+							classModerate++;
+							gradeModerate++;
+							classMyopia++;
+							gradeMyopia++;
+						}else {
+							classSerious++;
+							gradeSerious++;
+							classMyopia++;
+							gradeMyopia++;
+						}
+						
+					}
+					classvo.setClassId(classpo.getClassId());
+					classvo.setAll(classAll);
+					classvo.setGood(classGood);
+					classvo.setMild(classMild);
+					classvo.setModerate(classModerate);
+					classvo.setSerious(classSerious);
+					classvo.setMyopia(classMyopia);
+					classvo.setMyopiaRate(df.format(((float)classMyopia/(float)classAll)*100)+"%");
+					grade.getChildren().add(classvo);
+				}
+			
 			grade.setAll(gradeAll);
 			grade.setGood(gradeGood);
 			grade.setMild(gradeMild);
@@ -287,14 +319,23 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		
 		DecimalFormat df=new DecimalFormat("0.00");
 		
+		List<Integer> schoolIds = new ArrayList<>();
+		if(schoolId==0) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			schoolIds=school_dao.findIdByRegionId(regionId);
+		}else {
+			schoolIds.add(schoolId);
+		}
+		
 		String year = params.get("year");
 		Integer semester = Integer.valueOf(params.get("semester"));
 		
-		SchoolSemesterMapper SemesterPo = school_semester_dao.findByYearAndSemesterAndSchoolId(year,semester,schoolId);
-		if(SemesterPo==null) return ResultVOUtil.success();
+		List<Integer> SemesterPos = school_semester_dao.findIdByYearAndSemesterAndSchoolIdIn(year,semester,schoolIds);
+		if(SemesterPos.size()!=schoolIds.size()) return ResultVOUtil.success();
 		
 		List<Integer> allclass = null;
 		List<SchoolStudentRecordMapper> students = null;
+		int studentNumber = 0;
 		
 		
 		List<List<String>> end = new ArrayList<>();
@@ -308,45 +349,45 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			int avgGood= 0,avgMild= 0,avgModerate= 0,avgSerious= 0;
 			Double LEFT = 0d , RIGHT = 0d , AVG = 0d;
 			
-			List<SchoolClassesMapper> classlist = school_class_dao.findBySemesterIdAndGradeOrderByClassNumber(SemesterPo.getId(),i);
-			for (SchoolClassesMapper schoolClassesMapper : classlist) {
-				allclass.add(schoolClassesMapper.getClassId());
-			}
-			
-			
-			if(allclass.size()<1||allclass==null) {
-				goodList.add("0");
-				mildList.add("0");
-				moderateList.add("0");
-				seriousList.add("0");
-				continue;
-			}
-			students = school_student_record_dao.findBySemesterAndClassIdIn(SemesterPo.getId(),allclass);
-			for (SchoolStudentRecordMapper s : students) {
-				
-				LEFT = s.getVisionLeftStr();
-				RIGHT = s.getVisionRightStr();
-				if(LEFT <= RIGHT) {
-					AVG = LEFT;
-				}else {
-					AVG = RIGHT;
+				List<SchoolClassesMapper> classlist = school_class_dao.findBySemesterIdInAndGradeOrderByClassNumber(SemesterPos,i);
+				for (SchoolClassesMapper schoolClassesMapper : classlist) {
+					allclass.add(schoolClassesMapper.getClassId());
 				}
 				
-				if(AVG>=1.0) {
-					avgGood++;
-				}else if(AVG >=0.6 && AVG <1.0 ) {
-					avgMild++;
-				}else if(AVG >=0.1 && AVG <0.4){
-					avgModerate++;
-				}else {
-					avgSerious++;
+				
+				if(allclass.size()<1||allclass==null) {
+					goodList.add("0");
+					mildList.add("0");
+					moderateList.add("0");
+					seriousList.add("0");
+					continue;
 				}
-			}
-			
-			goodList.add(df.format(((float)avgGood/((float)students.size()))*100));
-			mildList.add(df.format(((float)avgMild/((float)students.size()))*100));
-			moderateList.add(df.format(((float)avgModerate/((float)students.size()))*100));
-			seriousList.add(df.format(((float)avgSerious/((float)students.size()))*100));
+				students = school_student_record_dao.findBySemesterInAndClassIdIn(SemesterPos,allclass);
+				studentNumber =students.size();
+				for (SchoolStudentRecordMapper s : students) {
+					
+					LEFT = s.getVisionLeftStr();
+					RIGHT = s.getVisionRightStr();
+					if(LEFT <= RIGHT) {
+						AVG = LEFT;
+					}else {
+						AVG = RIGHT;
+					}
+					
+					if(AVG>=1.0) {
+						avgGood++;
+					}else if(AVG >=0.6 && AVG <1.0 ) {
+						avgMild++;
+					}else if(AVG >=0.1 && AVG <0.4){
+						avgModerate++;
+					}else {
+						avgSerious++;
+					}
+				}
+			goodList.add(df.format(((float)avgGood/((float)studentNumber))*100));
+			mildList.add(df.format(((float)avgMild/((float)studentNumber))*100));
+			moderateList.add(df.format(((float)avgModerate/((float)studentNumber))*100));
+			seriousList.add(df.format(((float)avgSerious/((float)studentNumber))*100));
 		}
 		
 		end.add(goodList);
@@ -364,12 +405,20 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		
 		DecimalFormat df=new DecimalFormat("0.00");
 		
+		Integer grade = Integer.valueOf(params.get("grade"));
+		List<Integer> schoolIds = new ArrayList<>();
+		if(schoolId==0) {
+			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
+			schoolIds=school_dao.findIdByRegionId(regionId);
+		}else {
+			schoolIds.add(schoolId);
+		}
+		
 		String year = params.get("year");
 		Integer semester = Integer.valueOf(params.get("semester"));
-		Integer grade = Integer.valueOf(params.get("grade"));
 		
-		SchoolSemesterMapper SemesterPo = school_semester_dao.findByYearAndSemesterAndSchoolId(year,semester,schoolId);
-		if(SemesterPo==null) return ResultVOUtil.success();
+		List<Integer> SemesterPos = school_semester_dao.findIdByYearAndSemesterAndSchoolIdIn(year,semester,schoolIds);
+		if(SemesterPos.size()!=schoolIds.size()) return ResultVOUtil.success();
 		
 		int gradeTested=0, gradeSum=0, gradeBad=0;
 		Double AVG = 0d;
@@ -382,106 +431,105 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		ViewGradeReportVO boyVO=null; 
 		ViewGradeReportVO girlVO=null; 
 		
-		List<SchoolClassesMapper> classlist = school_class_dao.findBySemesterIdAndGradeOrderByClassNumber(SemesterPo.getId(),grade);
-		for (SchoolClassesMapper schoolClassesMapper : classlist) {
-			allclass.add(schoolClassesMapper.getClassId());
-		}
-		gradeSum = student_dao.countByClassesId(allclass);
-		
-		for (SchoolClassesMapper classId : classlist) {
-			ViewGradeReportVOmap=new HashMap<>();
-			voList = new ArrayList<>();
-			sumVO= new ViewGradeReportVO(); 
-			boyVO= new ViewGradeReportVO(); 
-			girlVO= new ViewGradeReportVO(); 
-			int sumAll=0, sumGood=0, sumMild=0, sumModerate=0, sumSerious=0,
-					
-			 	boyAll=0, boyGood=0, boyMild=0, boyModerate=0, boySerious=0,
-			
-			 	girlAll=0, girlGood=0, girlMild=0, girlModerate=0, girlSerious=0;
-			
-			List<SchoolStudentRecordMapper> allStudent = school_student_record_dao.findByClassIdAndSemester(classId.getClassId(),SemesterPo.getId());
-			gradeTested += allStudent.size();
-			
-			for (SchoolStudentRecordMapper s : allStudent) {
-				sumAll++;
-				if(s.getVisionLeftStr()>=s.getVisionRightStr()) {
-					AVG = s.getVisionLeftStr();
-				}else {
-					AVG = s.getVisionRightStr();
-				}
-				
-				if(s.getGender()==0) {
-					boyAll++;
-					if(AVG>=1.0) {
-						sumGood++;
-						boyGood++;
-					}else if(AVG<1.0 && AVG >= 0.8 ) {
-						sumMild++;
-						boyMild++;
-						gradeBad++;
-					}else if(AVG<0.8 && AVG >= 0.4) {
-						sumModerate++;
-						boyModerate++;
-						gradeBad++;
-					}else {
-						sumSerious++;
-						boySerious++;
-						gradeBad++;
-					}
-				}else {
-					girlAll++;
-					if(AVG>=1.0) {
-						sumGood++;
-						girlGood++;
-					}else if(AVG<1.0 && AVG >= 0.8 ) {
-						sumMild++;
-						girlMild++;
-						gradeBad++;
-					}else if(AVG<0.8 && AVG >= 0.4) {
-						sumModerate++;
-						girlModerate++;
-						gradeBad++;
-					}else {
-						sumSerious++;
-						girlSerious++;
-						gradeBad++;
-					}
-				}
+			List<SchoolClassesMapper> classlist = school_class_dao.findBySemesterIdInAndGradeOrderByClassNumber(SemesterPos,grade);
+			for (SchoolClassesMapper schoolClassesMapper : classlist) {
+				allclass.add(schoolClassesMapper.getClassId());
 			}
-			sumVO.setName(" 总计 ");
-			sumVO.setAll(sumAll);
-			sumVO.setGood(sumGood);
-			sumVO.setMild(sumMild);
-			sumVO.setModerate(sumModerate);
-			sumVO.setSerious(sumSerious);
-			sumVO.setPercentage(df.format(((float)(sumAll-sumGood)/(float)sumAll)*100)+"%");
+			gradeSum += student_dao.countByClassesId(allclass);
 			
-			boyVO.setName(" 男生 ");
-			boyVO.setAll(boyAll);
-			boyVO.setGood(boyGood);
-			boyVO.setMild(boyMild);
-			boyVO.setModerate(boyModerate);
-			boyVO.setSerious(boySerious);
-			boyVO.setPercentage(df.format(((float)(boyAll-boyGood)/(float)boyAll)*100)+"%");
-			
-			girlVO.setName(" 女生 ");
-			girlVO.setAll(girlAll);
-			girlVO.setGood(girlGood);
-			girlVO.setMild(girlMild);
-			girlVO.setModerate(girlModerate);
-			girlVO.setSerious(girlSerious);
-			girlVO.setPercentage(df.format(((float)(girlAll-girlGood)/(float)girlAll)*100)+"%");
-			
-			voList.add(sumVO);
-			voList.add(boyVO);
-			voList.add(girlVO);
-			
-			ViewGradeReportVOmap.put("name", classId.getClassNumber()+"班");
-			ViewGradeReportVOmap.put("viewGradeReportVO", voList);
-			ViewGradeReportVOList.add(ViewGradeReportVOmap);
-		}			
-			
+			for (SchoolClassesMapper classId : classlist) {
+				ViewGradeReportVOmap=new HashMap<>();
+				voList = new ArrayList<>();
+				sumVO= new ViewGradeReportVO(); 
+				boyVO= new ViewGradeReportVO(); 
+				girlVO= new ViewGradeReportVO(); 
+				int sumAll=0, sumGood=0, sumMild=0, sumModerate=0, sumSerious=0,
+						
+				 	boyAll=0, boyGood=0, boyMild=0, boyModerate=0, boySerious=0,
+				
+				 	girlAll=0, girlGood=0, girlMild=0, girlModerate=0, girlSerious=0;
+				
+				List<SchoolStudentRecordMapper> allStudent = school_student_record_dao.findByClassIdAndSemesterIn(classId.getClassId(),SemesterPos);
+				gradeTested += allStudent.size();
+				
+				for (SchoolStudentRecordMapper s : allStudent) {
+					sumAll++;
+					if(s.getVisionLeftStr()>=s.getVisionRightStr()) {
+						AVG = s.getVisionLeftStr();
+					}else {
+						AVG = s.getVisionRightStr();
+					}
+					
+					if(s.getGender()==0) {
+						boyAll++;
+						if(AVG>=1.0) {
+							sumGood++;
+							boyGood++;
+						}else if(AVG<1.0 && AVG >= 0.8 ) {
+							sumMild++;
+							boyMild++;
+							gradeBad++;
+						}else if(AVG<0.8 && AVG >= 0.4) {
+							sumModerate++;
+							boyModerate++;
+							gradeBad++;
+						}else {
+							sumSerious++;
+							boySerious++;
+							gradeBad++;
+						}
+					}else {
+						girlAll++;
+						if(AVG>=1.0) {
+							sumGood++;
+							girlGood++;
+						}else if(AVG<1.0 && AVG >= 0.8 ) {
+							sumMild++;
+							girlMild++;
+							gradeBad++;
+						}else if(AVG<0.8 && AVG >= 0.4) {
+							sumModerate++;
+							girlModerate++;
+							gradeBad++;
+						}else {
+							sumSerious++;
+							girlSerious++;
+							gradeBad++;
+						}
+					}
+				}
+				sumVO.setName(" 总计 ");
+				sumVO.setAll(sumAll);
+				sumVO.setGood(sumGood);
+				sumVO.setMild(sumMild);
+				sumVO.setModerate(sumModerate);
+				sumVO.setSerious(sumSerious);
+				sumVO.setPercentage(df.format(((float)(sumAll-sumGood)/(float)sumAll)*100)+"%");
+				
+				boyVO.setName(" 男生 ");
+				boyVO.setAll(boyAll);
+				boyVO.setGood(boyGood);
+				boyVO.setMild(boyMild);
+				boyVO.setModerate(boyModerate);
+				boyVO.setSerious(boySerious);
+				boyVO.setPercentage(df.format(((float)(boyAll-boyGood)/(float)boyAll)*100)+"%");
+				
+				girlVO.setName(" 女生 ");
+				girlVO.setAll(girlAll);
+				girlVO.setGood(girlGood);
+				girlVO.setMild(girlMild);
+				girlVO.setModerate(girlModerate);
+				girlVO.setSerious(girlSerious);
+				girlVO.setPercentage(df.format(((float)(girlAll-girlGood)/(float)girlAll)*100)+"%");
+				
+				voList.add(sumVO);
+				voList.add(boyVO);
+				voList.add(girlVO);
+				
+				ViewGradeReportVOmap.put("name", classId.getSchoolName()+" :"+classId.getClassNumber()+"班");
+				ViewGradeReportVOmap.put("viewGradeReportVO", voList);
+				ViewGradeReportVOList.add(ViewGradeReportVOmap);
+			}			
 		end.put("gradeTested", gradeTested);
 		end.put("gradeSum", gradeSum);
 		end.put("gradeBad", gradeBad);
@@ -492,14 +540,13 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 
 	@Override
 	public ResultVO ViewClassReport(Map<String, String> params, HttpSession session) {
+		Integer classId = Integer.valueOf(params.get("classId"));
 		
-		Integer schoolId =Integer.valueOf(session.getAttribute("schoolId").toString());
-		
+		Integer schoolId = class_dao.findById(classId).get().getSchoolId();
 		DecimalFormat df=new DecimalFormat("0.00");
 		
 		String year = params.get("year");
 		Integer semester = Integer.valueOf(params.get("semester"));
-		Integer classId = Integer.valueOf(params.get("classId"));
 		
 		SchoolSemesterMapper SemesterPo = school_semester_dao.findByYearAndSemesterAndSchoolId(year,semester,schoolId);
 		if(SemesterPo==null) return ResultVOUtil.success();
@@ -521,7 +568,7 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		SchoolClassesMapper schoolclass = school_class_dao.findBySemesterIdAndClassId(SemesterPo.getId(),classId);	
 		List<SchoolStudentRecordMapper> allStudent = school_student_record_dao.findByClassIdAndSemester(classId,SemesterPo.getId());
 		gradeTested += allStudent.size();
-		gradeSum = student_dao.countByClassesId(classId);
+		gradeSum += student_dao.countByClassesId(classId);
 		for (SchoolStudentRecordMapper s : allStudent) {
 			sumAll++;
 			if(s.getVisionLeftStr()>=s.getVisionRightStr()) {
@@ -596,7 +643,7 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		voList.add(boyVO);
 		voList.add(girlVO);
 		
-		end.put("name", schoolclass.getName());
+		end.put("name", schoolclass.getSchoolName()+" :"+schoolclass.getName());
 		end.put("gradeTested", gradeTested);
 		end.put("gradeSum", gradeSum);
 		end.put("gradeBad", gradeBad);
