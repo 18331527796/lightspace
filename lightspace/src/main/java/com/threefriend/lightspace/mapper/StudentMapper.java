@@ -54,6 +54,10 @@ public class StudentMapper {
 	private String parentPhone;
 	// 主视眼
 	private String dominantEye;
+	// 左眼屈光度
+	private String diopterLeft;
+	// 右眼屈光度
+	private String diopterRight;
 	// 性格
 	private String nature ="";
 	// 是否矫正 (0:未校正 1:未校正)
@@ -255,6 +259,18 @@ public class StudentMapper {
 	}
 	public void setDominantEye(String dominantEye) {
 		this.dominantEye = dominantEye;
+	}
+	public String getDiopterLeft() {
+		return diopterLeft;
+	}
+	public void setDiopterLeft(String diopterLeft) {
+		this.diopterLeft = diopterLeft;
+	}
+	public String getDiopterRight() {
+		return diopterRight;
+	}
+	public void setDiopterRight(String diopterRight) {
+		this.diopterRight = diopterRight;
 	}
 
 

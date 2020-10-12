@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.controller;
+package com.threefriend.priceclient.controller;
 
 import java.util.Map;
 
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.threefriend.lightspace.service.Impl.PriceServiceImpl;
 import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.priceclient.service.impl.PriceServiceImpl;
 
 @RestController
 public class PriceController {

@@ -30,6 +30,11 @@ public class SchoolRecordController {
 		return record_dao.screeningWearList(params, session);
 	}
 	
+	@PostMapping("/diopterList")
+	public ResultVO diopterList(@RequestParam Map<String, String> params , HttpSession session) {
+		return record_dao.diopterList(params, session);
+	}
+
 	@PostMapping("/screeningByStudentId")
 	public ResultVO screeningByStudentId(@RequestParam Map<String, String> params ) {
 		return record_dao.screeningByStudentId(params);
@@ -40,6 +45,11 @@ public class SchoolRecordController {
 		return record_dao.screeningWearByStudentId(params);
 	}
 	
+	@PostMapping("/diopterByStudentId")
+	public ResultVO diopterByStudentId(@RequestParam Map<String, String> params ) {
+		return record_dao.diopterByStudentId(params);
+	}
+	
 	@PostMapping("/deleteScreening")
 	public ResultVO deleteScreening(@RequestParam Map<String, String> params ) {
 		return record_dao.deleteScreening(params);
@@ -48,6 +58,11 @@ public class SchoolRecordController {
 	@PostMapping("/deleteScreeningWear")
 	public ResultVO deleteScreeningWear(@RequestParam Map<String, String> params ) {
 		return record_dao.deleteScreeningWear(params);
+	}
+	
+	@PostMapping("/deleteDiopter")
+	public ResultVO deleteDiopter(@RequestParam Map<String, String> params ) {
+		return record_dao.deleteDiopter(params);
 	}
 	
 	@PostMapping("/recordSurvey")

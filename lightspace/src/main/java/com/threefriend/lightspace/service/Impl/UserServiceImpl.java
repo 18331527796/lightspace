@@ -115,6 +115,7 @@ public class UserServiceImpl implements UserService {
 		if(!StringUtils.isEmpty(params.get("schoolId"))) {
 			SchoolMapper school = school_dao.findById(Integer.valueOf(params.get("schoolId"))).get();
 			user.setSchoolId(school.getId());
+			schoolId = school.getId();
 			regionId = school.getRegionId(); 
 		}
 		if(!StringUtils.isEmpty(params.get("classId"))) {
@@ -159,7 +160,7 @@ public class UserServiceImpl implements UserService {
 			List<UserSchoolsMapper> u_s_list = user_school_dao.findByUserId(userMapper.getId());
 			List<SchoolMapper> schoolList = new ArrayList<>();
 			for (UserSchoolsMapper userSchoolsMapper : u_s_list) {
-				if(userSchoolsMapper.getSchoolId()==0)continue;
+				if(userSchoolsMapper==null||userSchoolsMapper.getSchoolId()==0)continue;
 				schoolList.add(school_dao.findById(userSchoolsMapper.getSchoolId()).get());
 			}
 			if(schoolList.size()!=0)vo.setChildren(schoolList);

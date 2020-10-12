@@ -36,7 +36,6 @@ public class StudentController {
 	 * 学生列表
 	 * @param params
 	 * @return
-	 */
 	@PostMapping("/studentList")
 	
 	public ResultVO studentList(@RequestParam Map<String, String> params,HttpSession session) {

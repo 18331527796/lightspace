@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.service.Impl;
+package com.threefriend.priceclient.service.impl;
 
 import java.io.File;
 import java.util.List;
@@ -18,10 +18,10 @@ import com.threefriend.lightspace.mapper.SeriesProductMapper;
 import com.threefriend.lightspace.repository.LabelRepository;
 import com.threefriend.lightspace.repository.SeriesProductRepository;
 import com.threefriend.lightspace.repository.SeriesRepository;
-import com.threefriend.lightspace.service.PriceService;
 import com.threefriend.lightspace.util.ImguploadUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
+import com.threefriend.priceclient.service.PriceService;
 
 @Service
 public class PriceServiceImpl implements PriceService{

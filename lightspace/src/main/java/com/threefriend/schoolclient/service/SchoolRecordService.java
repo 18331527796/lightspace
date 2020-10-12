@@ -29,4 +29,10 @@ public interface SchoolRecordService {
 	ResultVO ViewClassReport(Map<String, String> params,HttpSession session);
 
 	ResultVO pushReport(Map<String, String> params,HttpSession session);
+	//屈光度
+	ResultVO diopterList(Map<String, String> params,HttpSession session);
+	//屈光度
+	ResultVO diopterByStudentId(Map<String, String> params);
+	//屈光度
+	ResultVO deleteDiopter(Map<String, String> params);
 }

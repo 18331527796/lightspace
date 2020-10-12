@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.service.Impl.ScreeningServiceImpl;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -64,5 +65,35 @@ public class ScreeningController {
 	@PostMapping("screeningWearByStudent")
 	public ResultVO screeningWearByStudent(@RequestParam Map<String, String> params) {
 		return screening_impl.screeningWearByStudent(params);
+	}
+	
+	@PostMapping("diopterList")
+	public ResultVO diopterList(@RequestParam Map<String, String> params) {
+		return screening_impl.diopterList(params);
+	}
+	
+	@PostMapping("diopterExcelOut")
+	public ResultVO diopterExcelOut(@RequestParam Map<String, String> params) {
+		return screening_impl.diopterExcelOut(params);
+	}
+	
+	@PostMapping("deleteDiopter")
+	public ResultVO deleteDiopter(@RequestParam Map<String, String> params) {
+		return screening_impl.deleteDiopter(params);
+	}
+	
+	@PostMapping("diopterByStudent")
+	public ResultVO diopterByStudent(@RequestParam Map<String, String> params) {
+		return screening_impl.diopterByStudent(params);
+	}
+	
+	@PostMapping("saveDiopter")
+	public ResultVO saveDiopter(@RequestParam Map<String, String> params) {
+		return screening_impl.saveDiopter(params);
+	}
+	
+	@PostMapping("readDiopterExcel")
+	public ResultVO readDiopterExcel(@RequestParam(value="file",required = false)MultipartFile file) {
+		return screening_impl.readDiopterExcel(file);
 	}
 }

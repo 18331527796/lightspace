@@ -16,6 +16,9 @@ public enum UrlEnums {
 	IMG_URL("https://www.guangliangkongjian.com/images/"),
 	//线下
 	//IMG_URL("F:\\upload\\imgs\\"),
+	//线下
+	//FILE_PATH("F:\\"),
+	//线上
 	FILE_PATH(System.getProperty("catalina.home")+"\\webapps\\file\\"),
 	;
 	

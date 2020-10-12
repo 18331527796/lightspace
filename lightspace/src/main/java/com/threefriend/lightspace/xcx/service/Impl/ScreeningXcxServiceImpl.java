@@ -28,6 +28,7 @@ import com.threefriend.lightspace.Exception.SendMessageException;
 import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.ClassesMapper;
+import com.threefriend.lightspace.mapper.DiopterMapper;
 import com.threefriend.lightspace.mapper.MsgTempMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
@@ -41,6 +42,7 @@ import com.threefriend.lightspace.mapper.xcx.ParentStudentRelation;
 import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
 import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
+import com.threefriend.lightspace.repository.DiopterRepository;
 import com.threefriend.lightspace.repository.GzhUserRepository;
 import com.threefriend.lightspace.repository.IntegralRepository;
 import com.threefriend.lightspace.repository.MsgTempRepository;
@@ -98,6 +100,8 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 	private IntegralRepository integral_dao;
 	@Resource
 	private RedisUtils redisUtil;
+	@Autowired
+	private DiopterRepository diopter_dao;
 	
 
 	/*
@@ -338,7 +342,9 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			// 找到这个孩子90天内的档案数据（戴镜）
 			List<ScreeningWearMapper> wearpicList = screening_wear_dao.findByStudentIdAndGenTimeBetweenOrderById(student.getId(),
 					beginTime, eneTime);
-
+			// 找到这个孩子所有的屈光度档案数据
+			List<DiopterMapper> diopterList = diopter_dao.findByStudentIdOrderByIdDesc(student.getId());
+			
 			map.put("id", student.getId());
 			map.put("name", student.getName());
 			map.put("gender", student.getGender());
@@ -348,6 +354,7 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			map.put("picList", picList);
 			map.put("weardataList", weardataList);
 			map.put("wearpicList", wearpicList);
+			map.put("diopterList", diopterList);
 			end.add(map);
 		}
 		return ResultVOUtil.success(end);

@@ -1,4 +1,4 @@
-package com.threefriend.lightspace.service;
+package com.threefriend.priceclient.service;
 
 import java.util.Map;
 
