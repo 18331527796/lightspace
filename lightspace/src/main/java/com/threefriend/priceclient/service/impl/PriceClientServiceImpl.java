@@ -40,6 +40,7 @@ public class PriceClientServiceImpl implements PriceClientService{
 
 	@Override
 	public ResultVO getSeriesByLabel(Map<String, String> params) {
+		//按照标签查找所属的系列 返回
 		List<SeriesMapper> end = series_dao.findByLabelId(Integer.valueOf(params.get("id")));
 		for (SeriesMapper seriesMapper : end) {
 			seriesMapper.setIntroduce(UrlEnums.IMG_URL.getUrl()+seriesMapper.getIntroduce());
@@ -49,7 +50,10 @@ public class PriceClientServiceImpl implements PriceClientService{
 
 	@Override
 	public ResultVO getProduceBySeries(Map<String, String> params) {
-		List<SeriesProductMapper> end = product_dao.findBySeriesId(Integer.valueOf(params.get("id")));
+		//查找详情图和产品价格图 整合到一起 返回
+		List<SeriesProductMapper> end = product_dao.findBySeriesIdAndType(Integer.valueOf(params.get("id")),1);
+		List<SeriesProductMapper> products = product_dao.findBySeriesIdAndType(Integer.valueOf(params.get("id")),2);
+		end.addAll(products);
 		for (SeriesProductMapper seriesProductMapper : end) {
 			seriesProductMapper.setPic(UrlEnums.IMG_URL.getUrl()+seriesProductMapper.getPic());
 		}
@@ -68,12 +72,34 @@ public class PriceClientServiceImpl implements PriceClientService{
 	@Override
 	public ResultVO changePassword(Map<String, String> params) {
 		PriceUserMapper user = price_user_dao.findAll().get(0);
+		//老的密码
 		String oldPassword = params.get("oldPassword");
+		//新修改的密码
 		String newPassword = params.get("newPassword");
+		//老密码输入错误 返回不得修改
 		if(!user.getPassword().equals(oldPassword)) return ResultVOUtil.error(ResultEnum.CREATEQRCORE_CHK.getStatus(), ResultEnum.CREATEQRCORE_CHK.getMessage());
 		user.setPassword(newPassword);
+		//修改成功保存
 		price_user_dao.save(user);
 		return ResultVOUtil.success();
 	}
+
+	@Override
+	public ResultVO contrast(Map<String, String> params) {
+		//第一张对比图
+		Integer one = Integer.valueOf(params.get("one"));
+		//第二章对比图
+		Integer two = Integer.valueOf(params.get("two"));
+		//查找这个系列的产品价格图
+		List<SeriesProductMapper> oneList = product_dao.findBySeriesIdAndType(one,2);
+		List<SeriesProductMapper> twoList = product_dao.findBySeriesIdAndType(two,2);
+		oneList.addAll(twoList);
+		for (SeriesProductMapper seriesProductMapper : oneList) {
+			seriesProductMapper.setPic(UrlEnums.IMG_URL.getUrl()+seriesProductMapper.getPic());
+		}
+		return ResultVOUtil.success(oneList);
+	}
+	
+	
 
 }

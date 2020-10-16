@@ -15,4 +15,6 @@ public interface PriceClientService {
 	ResultVO loginPrice(Map<String, String> params);
 	
 	ResultVO changePassword(Map<String, String> params);
+	
+	ResultVO contrast(Map<String, String> params);
 }

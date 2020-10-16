@@ -2,7 +2,7 @@ package com.threefriend.lightspace.vo;
 
 public class ViewGradeReportVO {
 	
-	private String name;
+    private String name;
 	
 	private Integer all;
 	

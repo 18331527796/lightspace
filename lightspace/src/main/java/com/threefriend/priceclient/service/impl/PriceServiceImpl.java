@@ -139,6 +139,7 @@ public class PriceServiceImpl implements PriceService{
 		po.setPic(uploadImg);
 		po.setSeriesId(Integer.valueOf(params.get("seriesId")));
 		po.setSeriesName(series_dao.findById(Integer.valueOf(params.get("seriesId"))).get().getName());
+		po.setType(Integer.valueOf(params.get("type")));
 		series_product_dao.save(po);
 		return ResultVOUtil.success();
 	}

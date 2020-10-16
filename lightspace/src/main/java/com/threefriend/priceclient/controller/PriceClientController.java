@@ -42,4 +42,9 @@ public class PriceClientController {
 	public ResultVO changePassword(@RequestParam Map<String , String> params) {
 		return impl.changePassword(params);
 	}
+	
+	@PostMapping("/contrast")
+	public ResultVO contrast(@RequestParam Map<String , String> params) {
+		return impl.contrast(params);
+	}
 }

@@ -14,4 +14,6 @@ import com.threefriend.lightspace.mapper.SeriesProductMapper;
 public interface SeriesProductRepository extends JpaRepository<SeriesProductMapper, Integer>{
 
 	List<SeriesProductMapper> findBySeriesId(Integer seriesId);
+	
+	List<SeriesProductMapper> findBySeriesIdAndType(Integer seriesId,Integer type);
 }
