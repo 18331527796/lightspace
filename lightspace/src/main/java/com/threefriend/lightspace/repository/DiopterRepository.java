@@ -14,6 +14,8 @@ import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 public interface DiopterRepository extends JpaRepository<DiopterMapper, Integer>{
 	
 	List<DiopterMapper> findByStudentIdOrderByIdDesc(Integer studentId);
+	
+	DiopterMapper findTopByStudentIdOrderByIdDesc(Integer studentId);
 
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM diopter_mapper where student_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<DiopterMapper> findByStudentIdOrderById(Integer studentId,int page,int size);

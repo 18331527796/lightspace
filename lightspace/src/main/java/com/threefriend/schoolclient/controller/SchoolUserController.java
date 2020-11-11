@@ -41,8 +41,8 @@ public class SchoolUserController {
 	
 	@ResponseBody
 	@PostMapping("/survey")
-	public ResultVO survey( HttpSession session) {
-		return user_service.survey( session);
+	public ResultVO survey(@RequestParam Map<String, String> params , HttpSession session) {
+		return user_service.survey( params ,session);
 	}
 	@ResponseBody
 	@PostMapping("/badPercentage")
@@ -80,14 +80,14 @@ public class SchoolUserController {
 	
 	@ResponseBody
 	@PostMapping("/undetectedList")
-	public ResultVO undetectedList( HttpSession session) {
-		return user_service.undetectedList(session);
+	public ResultVO undetectedList(@RequestParam Map<String, String> params , HttpSession session) {
+		return user_service.undetectedList(params ,session);
 	}
 	
 	@ResponseBody
 	@PostMapping("/badList")
-	public ResultVO badList( HttpSession session) {
-		return user_service.badList(session);
+	public ResultVO badList(@RequestParam Map<String, String> params ,  HttpSession session) {
+		return user_service.badList(params ,session);
 	}
 	
 	@ResponseBody

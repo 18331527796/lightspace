@@ -7,5 +7,7 @@ import com.threefriend.lightspace.vo.ResultVO;
 public interface RegionService {
 	
 	ResultVO findRegion(Map<String, String> params);
+	
+	ResultVO findSchoolByRegion(Map<String, String> params);
 
 }

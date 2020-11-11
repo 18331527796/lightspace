@@ -17,9 +17,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.common.collect.Lists;
 import com.threefriend.lightspace.mapper.SortMapper;
+import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.xcx.FabulousRecordMapper;
 import com.threefriend.lightspace.repository.FabulousRcordRepository;
 import com.threefriend.lightspace.repository.SortRepository;
+import com.threefriend.lightspace.repository.StudentRepository;
 
 
 
@@ -29,9 +31,24 @@ import com.threefriend.lightspace.repository.SortRepository;
 public class test {
 	@Autowired
 	private SortRepository sort_dao;
+	@Autowired
+	private StudentRepository student_dao;
 	@Test
 	public void test(){
-		//计算当前的学年学期
+		
+		System.out.println(0%6);
+		System.out.println(1%6);
+		System.out.println(2%6);
+		System.out.println(3%6);
+		System.out.println(4%6);
+		System.out.println(5%6);
+		System.out.println(6%6);
+		System.out.println(7%6);
+		System.out.println(8%6);
+		System.out.println(9%6);
+		System.out.println(10%6);
+		System.out.println(11%6);
+		/*//计算当前的学年学期
         Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH )+1;
@@ -47,7 +64,7 @@ public class test {
 		}else {
 			term = "2学期";
 		}
-		System.out.println("现在是：" + year + " - " + (year + 1) +  "学年，" + term + "。");
+		System.out.println("现在是：" + year + " - " + (year + 1) +  "学年，" + term + "。");*/
 		
 	}
 	

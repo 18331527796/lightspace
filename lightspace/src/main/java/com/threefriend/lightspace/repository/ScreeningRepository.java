@@ -40,27 +40,42 @@ public interface ScreeningRepository extends JpaRepository<ScreeningMapper, Inte
 	int findcountByStudentId(Integer studentId);
 	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where student_name like ?1 and school_id = ?2",nativeQuery = true)
 	int findcountByName(String name , Integer schoolId);
+	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where student_name like ?1 and school_id = ?2 and gen_time BETWEEN ?3 and ?4",nativeQuery = true)
+	int findcountByName(String name , Integer schoolId,Date beginTime,Date endTime);
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where student_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningMapper> findByStudentIdOrderByGenTimeDesc(Integer studentId,int page,int size);
 	
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where student_name like ?1 and school_id = ?2 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?3,?4",nativeQuery = true)
 	List<ScreeningMapper> findByNameOrderByGenTimeDesc(String name,Integer schoolId,int page,int size);
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where student_name like ?1 and school_id = ?2 and gen_time BETWEEN ?3 and ?4 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?5,?6",nativeQuery = true)
+	List<ScreeningMapper> findByNameOrderByGenTimeDesc(String name,Integer schoolId,Date beginTime,Date endTime , int page,int size);
+	
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where student_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningMapper> findExcel(Integer studentId);
 	
 	
 	
 	
+	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where school_id = ?1 and gen_time BETWEEN ?2 and ?3",nativeQuery = true)
+	int findcountBySchoolId(Integer SchoolId,Date beginTime,Date endTime);
 	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where school_id = ?1",nativeQuery = true)
 	int findcountBySchoolId(Integer SchoolId);
 	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where school_id in ?1",nativeQuery = true)
 	int findcountBySchoolId(List<Integer> schoolId);
+	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where school_id in ?1 and gen_time BETWEEN ?2 and ?3",nativeQuery = true)
+	int findcountBySchoolId(List<Integer> schoolId,Date beginTime,Date endTime);
 	
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId,int page,int size);
 	
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id = ?1 and gen_time BETWEEN ?2 and ?3 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?4,?5",nativeQuery = true)
+	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId,Date beginTime,Date endTime,int page,int size);
+	
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id in ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(List<Integer> schoolId,int page,int size);
+	
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id in ?1 and gen_time BETWEEN ?2 and ?3 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?4,?5",nativeQuery = true)
+	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(List<Integer> schoolId,Date beginTime,Date endTime,int page,int size);
 	
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where school_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningMapper> findBySchoolIdOrderByGenTimeDesc(Integer schoolId);
@@ -70,8 +85,12 @@ public interface ScreeningRepository extends JpaRepository<ScreeningMapper, Inte
 	
 	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where class_id = ?1",nativeQuery = true)
 	int findcountByClassId(Integer SchoolId);
+	@Query(value="SELECT count(DISTINCT student_id) from screening_mapper where class_id = ?1 and gen_time BETWEEN ?2 and ?3",nativeQuery = true)
+	int findcountByClassId(Integer SchoolId,Date beginTime,Date endTime);
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where class_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?2,?3",nativeQuery = true)
 	List<ScreeningMapper> findByClassIdOrderByGenTimeDesc(Integer classId,int page,int size);
+	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where class_id = ?1 and gen_time BETWEEN ?2 and ?3 ORDER BY id DESC ) A GROUP BY student_id order by id desc limit ?4,?5",nativeQuery = true)
+	List<ScreeningMapper> findByClassIdOrderByGenTimeDesc(Integer classId,Date beginTime,Date endTime ,int page,int size);
 	@Query(value="SELECT * FROM ( SELECT DISTINCT * FROM screening_mapper where class_id = ?1 ORDER BY id DESC ) A GROUP BY student_id order by id desc",nativeQuery = true)
 	List<ScreeningMapper> findByClassIdOrderByGenTimeDesc(Integer classId);
  	

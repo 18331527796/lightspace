@@ -36,4 +36,12 @@ public interface ScreeningXcxService {
 	ResultVO getCoin(Integer parentId , Integer studentId )throws ParseException;
 	//删除档案
 	ResultVO deleteScreening(Map<String, String> params);
+	//屈光度展示
+	ResultVO diopterList(Map<String, String> params);
+	//按照屈光度的id找详细信息
+	ResultVO diopterById(Map<String, String> params);
+	//查找这个学生的最新一次筛查记录展示
+	ResultVO screeningTopByStudent(Map<String, String> params);
+	
+	
 }

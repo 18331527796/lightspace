@@ -1,7 +1,10 @@
 package com.threefriend.schoolclient.service.impl;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +43,11 @@ import com.threefriend.lightspace.repository.schoolclient.SchoolClassRepository;
 import com.threefriend.lightspace.repository.schoolclient.SchoolSemesterRepository;
 import com.threefriend.lightspace.repository.schoolclient.SchoolStudentRecordRepository;
 import com.threefriend.lightspace.repository.schoolclient.UserSchoolsRepository;
+import com.threefriend.lightspace.service.Impl.ReadDiopterExcel;
 import com.threefriend.lightspace.service.Impl.ReportServiceImpl;
+import com.threefriend.lightspace.util.ExcelUtil;
 import com.threefriend.lightspace.util.JfreeUtil;
+import com.threefriend.lightspace.util.ListUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.util.WordUtil;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -53,6 +59,9 @@ import cn.afterturn.easypoi.entity.ImageEntity;
 
 @Service
 public class SchoolRecordServiceImpl implements SchoolRecordService{
+	
+	private final String[] diopterArray = { "学校名称", "班级名称", "学生姓名", "右眼球镜", "左眼球镜", "右眼柱镜", "左眼柱镜", 
+											"右眼轴位", "左眼轴位", "右眼水平眼位", "左眼水平眼位", "右眼垂直眼位", "左眼垂直眼位"};
 	
 	@Autowired
 	private StudentRepository student_dao;
@@ -74,11 +83,23 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 	private DiopterRepository diopter_dao;
 	@Autowired
 	private UserSchoolsRepository u_s_dao;
+	@Autowired
+	private ReadDiopterExcel readexcel;
 
 	@Override
-	public ResultVO screeningList(Map<String, String> params, HttpSession session) {
+	public ResultVO screeningList(Map<String, String> params, HttpSession session){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
-		
+		Date begintime = null,endtime = null;
+		if(!StringUtils.isEmpty(params.get("begin"))) {
+			System.out.println(params.get("begin")+"---"+params.get("end"));
+			try {
+				begintime = sdf.parse(params.get("begin"));
+				endtime = sdf.parse(params.get("end"));
+			} catch (ParseException e) {
+				System.out.println("时间解析出错");
+			}
+		}
 		Map<String, Object> end = new HashMap<>();
 		List<ScreeningMapper> list = null;
 		Integer page = 0;
@@ -88,15 +109,25 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		end.put("size", 10);
 		end.put("number", (StringUtils.isEmpty(params.get("page")))?0:Integer.valueOf(params.get("page"))-1);
 		if("student".equals(type)) {
-			list = screening_dao.findByNameOrderByGenTimeDesc("%"+params.get("name")+"%",schoolId,page, 10);
-			count = screening_dao.findcountByName("%"+params.get("name")+"%",schoolId);
+			if(begintime!=null) {
+				list = screening_dao.findByNameOrderByGenTimeDesc("%"+params.get("name")+"%",schoolId,begintime,endtime,page, 10);
+				count = screening_dao.findcountByName("%"+params.get("name")+"%",schoolId,begintime,endtime);
+			}else {
+				list = screening_dao.findByNameOrderByGenTimeDesc("%"+params.get("name")+"%",schoolId,page, 10);
+				count = screening_dao.findcountByName("%"+params.get("name")+"%",schoolId);
+			}
 			end.put("totalElements", count);
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
 		}
 		if("class".equals(type)) {
-			list = screening_dao.findByClassIdOrderByGenTimeDesc(Integer.valueOf(params.get("id")),page, 10);
-			count = screening_dao.findcountByClassId(Integer.valueOf(params.get("id")));
+			if(begintime!=null) {
+				list = screening_dao.findByClassIdOrderByGenTimeDesc(Integer.valueOf(params.get("id")),begintime,endtime,page, 10);
+				count = screening_dao.findcountByClassId(Integer.valueOf(params.get("id")),begintime,endtime);
+			}else {
+				list = screening_dao.findByClassIdOrderByGenTimeDesc(Integer.valueOf(params.get("id")),page, 10);
+				count = screening_dao.findcountByClassId(Integer.valueOf(params.get("id")));
+			}
 			end.put("totalElements", count);
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
@@ -105,8 +136,13 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			List<Integer> schoolIds = new ArrayList<>();
 			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
 			schoolIds=school_dao.findIdByRegionId(regionId);
-			list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
-			count = screening_dao.findcountBySchoolId(schoolIds);
+			if(begintime!=null) {
+				list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,begintime,endtime,page, 10);
+				count = screening_dao.findcountBySchoolId(schoolIds,begintime,endtime);
+			}else {
+				list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
+				count = screening_dao.findcountBySchoolId(schoolIds);
+			}
 		}else if(schoolId == -1){
 			List<Integer> schoolIds = new ArrayList<>();
 			Integer userId = Integer.valueOf(session.getAttribute("userId").toString());
@@ -114,11 +150,21 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			for (UserSchoolsMapper userSchoolsMapper : u_s_list) {
 				schoolIds.add(userSchoolsMapper.getSchoolId());
 			}
-			list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
-			count = screening_dao.findcountBySchoolId(schoolIds);
+			if(begintime!=null) {
+				list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,begintime,endtime,page, 10);
+				count = screening_dao.findcountBySchoolId(schoolIds,begintime,endtime);
+			}else {
+				list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
+				count = screening_dao.findcountBySchoolId(schoolIds);
+			}
 		}else {
-			list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,page, 10);
-			count = screening_dao.findcountBySchoolId(schoolId);
+			if(begintime!=null) {
+				list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,begintime,endtime,page, 10);
+				count = screening_dao.findcountBySchoolId(schoolId,begintime,endtime);
+			}else {
+				list = screening_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,page, 10);
+				count = screening_dao.findcountBySchoolId(schoolId);
+			}
 		}
 		end.put("totalElements", count);
 		end.put("content", list);
@@ -127,8 +173,18 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 
 	@Override
 	public ResultVO screeningWearList(Map<String, String> params, HttpSession session) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
-		
+		Date begintime = null,endtime = null;
+		if(!StringUtils.isEmpty(params.get("begin"))) {
+			System.out.println(params.get("begin")+"---"+params.get("end"));
+			try {
+				begintime = sdf.parse(params.get("begin"));
+				endtime = sdf.parse(params.get("end"));
+			} catch (ParseException e) {
+				System.out.println("时间解析出错");
+			}
+		}
 		Map<String, Object> end = new HashMap<>();
 		List<ScreeningWearMapper> list = null;
 		Integer page = 0;
@@ -140,15 +196,25 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		
 		
 		if("student".equals(type)) {
-			list = screening_wear_dao.findByNameOrderByGenTimeDesc("%"+params.get("name")+"%",schoolId,page, 10);
-			count = screening_wear_dao.findcountByName("%"+params.get("name")+"%",schoolId);
+			if(begintime!=null) {
+				list = screening_wear_dao.findByNameOrderByGenTimeDesc("%"+params.get("name")+"%",schoolId,begintime,endtime,page, 10);
+				count = screening_wear_dao.findcountByName("%"+params.get("name")+"%",schoolId,begintime,endtime);
+			}else {
+				list = screening_wear_dao.findByNameOrderByGenTimeDesc("%"+params.get("name")+"%",schoolId,page, 10);
+				count = screening_wear_dao.findcountByName("%"+params.get("name")+"%",schoolId);
+			}
 			end.put("totalElements", count);
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
 		}
 		if("class".equals(type)) {
-			list = screening_wear_dao.findByClassIdOrderByGenTimeDesc(Integer.valueOf(params.get("id")),page, 10);
-			count = screening_wear_dao.findcountByClassId(Integer.valueOf(params.get("id")));
+			if(begintime!=null) {
+				list = screening_wear_dao.findByClassIdOrderByGenTimeDesc(Integer.valueOf(params.get("id")),begintime,endtime,page, 10);
+				count = screening_wear_dao.findcountByClassId(Integer.valueOf(params.get("id")),begintime,endtime);
+			}else {
+				list = screening_wear_dao.findByClassIdOrderByGenTimeDesc(Integer.valueOf(params.get("id")),page, 10);
+				count = screening_wear_dao.findcountByClassId(Integer.valueOf(params.get("id")));
+			}
 			end.put("totalElements", count);
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
@@ -157,8 +223,13 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			List<Integer> schoolIds = new ArrayList<>();
 			Integer regionId = Integer.valueOf(session.getAttribute("regionId").toString());
 			schoolIds=school_dao.findIdByRegionId(regionId);
-			list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
-			count = screening_wear_dao.findcountBySchoolId(schoolIds);
+			if(begintime!=null) {
+				list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,begintime,endtime,page, 10);
+				count = screening_wear_dao.findcountBySchoolId(schoolIds,begintime,endtime);
+			}else {
+				list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
+				count = screening_wear_dao.findcountBySchoolId(schoolIds);
+			}
 		}else if(schoolId == -1){
 			List<Integer> schoolIds = new ArrayList<>();
 			Integer userId = Integer.valueOf(session.getAttribute("userId").toString());
@@ -166,11 +237,21 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			for (UserSchoolsMapper userSchoolsMapper : u_s_list) {
 				schoolIds.add(userSchoolsMapper.getSchoolId());
 			}
-			list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
-			count = screening_wear_dao.findcountBySchoolId(schoolIds);
+			if(begintime!=null) {
+				list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,begintime,endtime,page, 10);
+				count = screening_wear_dao.findcountBySchoolId(schoolIds,begintime,endtime);
+			}else {
+				list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolIds,page, 10);
+				count = screening_wear_dao.findcountBySchoolId(schoolIds);
+			}
 		}else {
-			list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,page, 10);
-			count = screening_wear_dao.findcountBySchoolId(schoolId);
+			if(begintime!=null) {
+				list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,begintime,endtime,page, 10);
+				count = screening_wear_dao.findcountBySchoolId(schoolId,begintime,endtime);
+			}else {
+				list = screening_wear_dao.findBySchoolIdOrderByGenTimeDesc(schoolId,page, 10);
+				count = screening_wear_dao.findcountBySchoolId(schoolId);
+			}
 		}
 		end.put("totalElements", count);
 		end.put("content", list);
@@ -963,5 +1044,64 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 	public ResultVO deleteDiopter(Map<String, String> params) {
 		diopter_dao.deleteById(Integer.valueOf(params.get("id")));
 		return ResultVOUtil.success();
+	}
+	
+	@Override
+	public ResultVO diopterExcelOut(Map<String, String> params,HttpSession session) {
+		Integer classId = 0;
+		if(!StringUtils.isEmpty(params.get("classId"))) {
+			classId = Integer.valueOf(params.get("classId")); 
+		}else {
+			classId = Integer.valueOf(session.getAttribute("schoolId").toString());
+		}
+		List<StudentMapper> list = null;
+		if(classId == 0 ) {
+			list = student_dao.findBySchoolIdOrderByDiopterLeftDesc(classId);
+		}else {
+			list = student_dao.findByClassesIdOrderByDiopterLeftDesc(classId);
+		}
+		ExcelUtil.createExcel(diopterExcel(list), diopterArray);
+		return ResultVOUtil.success();
+	}
+
+	@Override
+	public Map<String, List<String>> diopterExcel(List<StudentMapper> student) {
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		for (StudentMapper s_po : student) {
+			DiopterMapper diopter = diopter_dao.findTopByStudentIdOrderByIdDesc(s_po.getId());
+			ArrayList<String> members = new ArrayList<String>();
+			if(diopter==null) {
+				members.add(s_po.getSchoolName());
+				members.add(s_po.getClassesName());
+				members.add(s_po.getName());
+				members.add("暂无数据");
+				members.add("暂无数据");
+				members.add("暂无数据");
+				members.add("暂无数据");
+				members.add("暂无数据");
+				members.add("暂无数据");
+				members.add("暂无数据");
+				members.add("暂无数据");
+				members.add("暂无数据");
+				members.add("暂无数据");
+				map.put(s_po.getId() + "", members);
+			}else {
+				members.add(s_po.getSchoolName());
+				members.add(s_po.getClassesName());
+				members.add(s_po.getName());
+				members.add(diopter.getDs1R());
+				members.add(diopter.getDs1L());
+				members.add(diopter.getDc1R());
+				members.add(diopter.getDc1L());
+				members.add(diopter.getAxis1R());
+				members.add(diopter.getAxis1L());
+				members.add(diopter.getGhR());
+				members.add(diopter.getGhL());
+				members.add(diopter.getGvR());
+				members.add(diopter.getGvL());
+				map.put(s_po.getId() + "", members);
+			}
+		}
+		return map;
 	}
 }

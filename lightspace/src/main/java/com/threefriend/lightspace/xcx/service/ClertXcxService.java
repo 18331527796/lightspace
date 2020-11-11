@@ -25,6 +25,8 @@ public interface ClertXcxService {
 	ResultVO childrenScreening(Map<String, String> params);
 	//扫码查看待体验订单
 	ResultVO orderShow(Map<String, String> params);
+	//扫码查看眼轴长度列表
+	ResultVO axisLengthShow(Map<String, String> params);
 	//录入眼健康的档案
 	ResultVO insertStudentWord(StudentWordMapper word);
 }

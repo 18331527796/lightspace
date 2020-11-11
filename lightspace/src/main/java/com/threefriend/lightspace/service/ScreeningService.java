@@ -49,6 +49,6 @@ public interface ScreeningService {
 	
 	ResultVO deleteDiopter(Map<String, String> params);
 
-	ResultVO readDiopterExcel(MultipartFile file);
+	ResultVO readDiopterExcel(Integer classId,MultipartFile export,MultipartFile nameList);
 	
 }

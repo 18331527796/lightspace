@@ -89,4 +89,9 @@ public class SchoolRecordController {
 	public ResultVO pushReport(@RequestParam Map<String, String> params ,HttpSession session) {
 		return record_dao.pushReport(params,session);
 	}
+	
+	@PostMapping("/diopterExcelOut")
+	public ResultVO diopterExcelOut(@RequestParam Map<String, String> params,HttpSession session) {
+		return record_dao.diopterExcelOut(params,session);
+	}
 }

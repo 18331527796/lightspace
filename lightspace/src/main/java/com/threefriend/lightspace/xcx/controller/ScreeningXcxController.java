@@ -106,4 +106,20 @@ public class ScreeningXcxController {
 	public ResultVO deleteScreening(@RequestParam Map<String, String> params) {
 		return screening_impl.deleteScreening(params);
 	}
+	
+	@PostMapping("/diopterList")
+	public ResultVO diopterList(@RequestParam Map<String, String> params) {
+		return screening_impl.diopterList(params);
+	}
+	
+	@PostMapping("/diopterById")
+	public ResultVO diopterById(@RequestParam Map<String, String> params) {
+		return screening_impl.diopterById(params);
+	}
+	
+	@PostMapping("/screeningTopByStudent")
+	public ResultVO screeningTopByStudent(@RequestParam Map<String, String> params) {
+		return screening_impl.screeningTopByStudent(params);
+	}
+	
 }

@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.mapper.ClassesMapper;
+import com.threefriend.lightspace.mapper.DiopterMapper;
 import com.threefriend.lightspace.mapper.RegionMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
@@ -35,10 +36,6 @@ import com.threefriend.lightspace.util.MyBeanUtils;
  */
 @Service
 public class ReadDiopterExcel {
-	@Autowired
-	private SchoolRepository school_dao;
-	@Autowired
-	private ClassesRepository class_dao;
 	@Autowired
 	private StudentRepository student_dao;
 
@@ -74,9 +71,9 @@ public class ReadDiopterExcel {
 	 * @param fielName
 	 * @return
 	 */
-	public List<StudentMapper> getStudentInfo(MultipartFile mFile) {
+	public List<DiopterMapper> getDiopterInfo(MultipartFile mFile) {
 		String fileName = mFile.getOriginalFilename();// 获取文件名
-		List<StudentMapper> studentList = null;
+		List<DiopterMapper> DiopterList = null;
 		try {
 			if (!validateExcel(fileName)) {// 验证文件名是否合格
 				return null;
@@ -85,11 +82,11 @@ public class ReadDiopterExcel {
 			if (isExcel2007(fileName)) {
 				isExcel2003 = false;
 			}
-			studentList = createExcel(mFile.getInputStream(), isExcel2003);
+			DiopterList = createExcel(mFile.getInputStream(), isExcel2003);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return studentList;
+		return DiopterList;
 	}
 
 	/**
@@ -101,8 +98,8 @@ public class ReadDiopterExcel {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<StudentMapper> createExcel(InputStream is, boolean isExcel2003) {
-		List<StudentMapper> studentList = null;
+	public List<DiopterMapper> createExcel(InputStream is, boolean isExcel2003) {
+		List<DiopterMapper> DiopterList = null;
 		try {
 			Workbook wb = null;
 			if (isExcel2003) {// 当excel是2003时,创建excel2003
@@ -110,11 +107,11 @@ public class ReadDiopterExcel {
 			} else {// 当excel是2007时,创建excel2007
 				wb = new XSSFWorkbook(is);
 			}
-			studentList = readStudentValue(wb);// 读取Excel里面客户的信息
+			DiopterList = readDiopterValue(wb);// 读取Excel里面客户的信息
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return studentList;
+		return DiopterList;
 	}
 
 	/**
@@ -123,91 +120,160 @@ public class ReadDiopterExcel {
 	 * @param wb
 	 * @return
 	 */
-	private List<StudentMapper> readStudentValue(Workbook wb) {
+	private List<DiopterMapper> readDiopterValue(Workbook wb) {
 		// 得到第一个shell
 		Sheet sheet = wb.getSheetAt(0);
 		// 得到Excel的行数
 		this.totalRows = sheet.getPhysicalNumberOfRows();
 		// 得到Excel的列数(前提是有行数)
-		if (totalRows > 1 && sheet.getRow(0) != null) {
-			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
-		}
-		List<StudentMapper> studentList = new ArrayList<StudentMapper>();
-		// 用来优化查询数据库操作
-		Integer classId = 0,schoolId = 0;
-		String schoolName = "",className = "",name = "";
+		//if (totalRows > 1 && sheet.getRow(0) != null) {
+		//	this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		//}
+		List<DiopterMapper> DiopterList = new ArrayList<DiopterMapper>();
+		DiopterMapper Diopter = null;
+		int diopterRows = 0;
 		// 循环Excel行数
-		for (int r = 1; r < totalRows; r++) {
+		for (int r = 0; r < totalRows; r++) {
 			Row row = sheet.getRow(r);
 			if (row == null) {
 				continue;
 			}
-			StudentMapper student = new StudentMapper();
-			// 循环Excel的列
-			for (int c = 0; c < this.totalCells; c++) {
-				Cell cell = row.getCell(c);
+			//每6行是一个对象实例
+			if(r%6==0) {
+				System.out.println("创建实例");
+				Diopter= new DiopterMapper();
+				diopterRows = 1;
+			}
+			if(diopterRows==2) {
+				//这里找瞳距
+				Cell cell = row.getCell(0);
 				if (null != cell) {
-					if(c!=4) {
-						cell.setCellType(Cell.CELL_TYPE_STRING);
-					}
-					switch (c) {
-					case 0:// 学校名称
-						if (cell.getStringCellValue().equals(schoolName)) {
-							student.setSchoolId(schoolId);
-							student.setSchoolName(schoolName);
-						} else {
-							System.out.println(cell.getStringCellValue());
-							SchoolMapper school = school_dao.findByName(cell.getStringCellValue()).get(0);
-							if (school != null) {
-								schoolId = school.getId();
-								schoolName = school.getName();
-								student.setSchoolId(schoolId);
-								student.setSchoolName(schoolName);
-							}
-						}
-						break;
-					case 1:// 班級名称
-						if (cell.getStringCellValue().equals(className)) {
-							student.setClassesId(classId);
-							student.setClassesName(className);
-						} else {
-							ClassesMapper classes = class_dao
-									.findBySchoolIdAndClassName(schoolId, cell.getStringCellValue()).get(0);
-							if (classes != null) {
-								classId = classes.getId();
-								className = classes.getClassName();
-								student.setClassesId(classId);
-								student.setClassesName(className);
-							}
-						}
-						break;
-					case 2:// 姓名
-						name = cell.getStringCellValue();
-						student.setName(cell.getStringCellValue());
-						break;
-					case 3:// 屈光度右
-						student.setDiopterRight(cell.getStringCellValue());
-						break;
-					case 4:// 屈光度左
-						student.setDiopterLeft(cell.getStringCellValue());
-						break;
-					default:
-						break;
-					}
+					cell.setCellType(Cell.CELL_TYPE_STRING);
+					Diopter.setPd(cell.getStringCellValue());
 				} else {
-					System.out.println("这个列是空的 读取不到");
+					System.out.println("瞳距是空的 读取不到");
 				}
 			}
-			StudentMapper po = student_dao.findBySchoolNameAndClassesNameAndName(schoolName, className, name);
-			if (po != null) {
-				MyBeanUtils.copyProperties(student, po);
-				studentList.add(po);
-			}else {
-				System.out.println("没有这个学生:  "+name);
-				continue;
+			if(diopterRows==4) {
+				//这里找左眼的数据
+				// 循环Excel的列
+				for (int c = 0; c < 11; c++) {
+					Cell cell = row.getCell(c);
+					if (null != cell) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						switch (c) {
+						case 2:
+							System.out.println(cell.getStringCellValue());
+							String[] ds1 = cell.getStringCellValue().split(":");
+							if(ds1.length<2) {
+								System.out.println("左眼的球，找不到");
+								Diopter.setDs1L("");
+							}else {
+								Diopter.setDs1L(ds1[1]);
+							}
+							
+							break;
+						case 3:// 班級名称
+							System.out.println(cell.getStringCellValue());
+							String[] dc1 = cell.getStringCellValue().split(":");
+							if(dc1.length<2) {
+								System.out.println("左眼的柱，找不到");
+								Diopter.setDc1L("");
+							}else {
+								Diopter.setDc1L(dc1[1]);
+							}
+							break;
+						case 4:// 姓名
+							System.out.println(cell.getStringCellValue());
+							String[] axis = cell.getStringCellValue().split(":");
+							if(axis.length<2) {
+								System.out.println("左眼的度，找不到");
+								Diopter.setAxis1L("");
+							}else {
+								Diopter.setAxis1L(axis[1]);
+							}
+							break;
+						case 9:
+							System.out.println(cell.getStringCellValue());
+							String[] gh = cell.getStringCellValue().split(":");
+							Diopter.setGhL(gh[1]);
+							break;
+						case 10:// 姓名
+							System.out.println(cell.getStringCellValue());
+							String[] gv = cell.getStringCellValue().split(":");
+							Diopter.setGvL(gv[1]);
+							break;
+						default:
+							break;
+						}
+					} else {
+						System.out.println("这个列是空的 读取不到");
+					}
+				}
 			}
+			if(diopterRows==6) {
+				//这里找右眼的数据
+				// 循环Excel的列
+				for (int c = 0; c < 11; c++) {
+					Cell cell = row.getCell(c);
+					if (null != cell) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						switch (c) {
+						case 2:
+							System.out.println(cell.getStringCellValue());
+							String[] ds1 = cell.getStringCellValue().split(":");
+							if(ds1.length<2) {
+								System.out.println("右眼的球，找不到");
+								Diopter.setDs1R("");
+							}else {
+								Diopter.setDs1R(ds1[1]);
+							}
+							
+							break;
+						case 3:// 班級名称
+							System.out.println(cell.getStringCellValue());
+							String[] dc1 = cell.getStringCellValue().split(":");
+							if(dc1.length<2) {
+								System.out.println("右眼的柱，找不到");
+								Diopter.setDc1R("");
+							}else {
+								Diopter.setDc1R(dc1[1]);
+							}
+							break;
+						case 4:// 姓名
+							System.out.println(cell.getStringCellValue());
+							String[] axis = cell.getStringCellValue().split(":");
+							if(axis.length<2) {
+								System.out.println("右眼的度，找不到");
+								Diopter.setAxis1R("");
+							}else {
+								Diopter.setAxis1R(axis[1]);
+							}
+							break;
+						case 9:
+							System.out.println(cell.getStringCellValue());
+							String[] gh = cell.getStringCellValue().split(":");
+							Diopter.setGhR(gh[1]);
+							break;
+						case 10:// 姓名
+							System.out.println(cell.getStringCellValue());
+							String[] gv = cell.getStringCellValue().split(":");
+							Diopter.setGvR(gv[1]);
+							break;
+						default:
+							break;
+						}
+					} else {
+						System.out.println("这个列是空的 读取不到");
+					}
+				}
+				Diopter.setDiopterLeft(Diopter.getDs1L()+Diopter.getDc1L()+(Diopter.getAxis1L()==null?"":"/"+Diopter.getAxis1L()));
+				Diopter.setDiopterRight(Diopter.getDs1R()+Diopter.getDc1R()+(Diopter.getAxis1R()==null?"":"/"+Diopter.getAxis1R()));
+				DiopterList.add(Diopter);
+			}
+			diopterRows++;
 		}
-		return studentList;
+		return DiopterList;
 	}
 
 	/**
@@ -232,5 +298,84 @@ public class ReadDiopterExcel {
 	// @描述：是否是2007的excel，返回true是2007
 	public static boolean isExcel2007(String filePath) {
 		return filePath.matches("^.+\\.(?i)(xlsx)$");
+	}
+	
+	/**
+	 * 读EXCEL文件，获取信息集合
+	 * 
+	 * @param fielName
+	 * @return
+	 */
+	public List<StudentMapper> getStudentInfo(Integer classId,MultipartFile mFile) {
+		String fileName = mFile.getOriginalFilename();// 获取文件名
+		List<StudentMapper> StudentList = null;
+		try {
+			if (!validateExcel(fileName)) {// 验证文件名是否合格
+				return null;
+			}
+			boolean isExcel2003 = true;// 根据文件名判断文件是2003版本还是2007版本
+			if (isExcel2007(fileName)) {
+				isExcel2003 = false;
+			}
+			StudentList = createStudentExcel(classId,mFile.getInputStream(), isExcel2003);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return StudentList;
+	}
+
+	/**
+	 * 根据excel里面的内容读取客户信息
+	 * 
+	 * @param is输入流
+	 * @param isExcel2003
+	 *            excel是2003还是2007版本
+	 * @return
+	 * @throws IOException
+	 */
+	public List<StudentMapper> createStudentExcel(Integer id,InputStream is, boolean isExcel2003) {
+		List<StudentMapper> StudentList = null;
+		try {
+			Workbook wb = null;
+			if (isExcel2003) {// 当excel是2003时,创建excel2003
+				wb = new HSSFWorkbook(is);
+			} else {// 当excel是2007时,创建excel2007
+				wb = new XSSFWorkbook(is);
+			}
+			StudentList = readStudentValue(id,wb);// 读取Excel里面客户的信息
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return StudentList;
+	}
+
+	/**
+	 * 读取Excel里面客户的信息
+	 * 
+	 * @param wb
+	 * @return
+	 */
+	private List<StudentMapper> readStudentValue(Integer id,Workbook wb) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+		// 得到Excel的行数
+		this.totalRows = sheet.getPhysicalNumberOfRows();
+		List<StudentMapper> StudentList = new ArrayList<StudentMapper>();
+		// 循环Excel行数
+		for (int r = 0; r < totalRows; r++) {
+			Row row = sheet.getRow(r);
+			if (row == null) {
+				continue;
+			}
+			Cell cell = row.getCell(0);
+			if (null != cell) {
+				cell.setCellType(Cell.CELL_TYPE_STRING);
+				StudentMapper po = student_dao.findByClassesIdAndName(id,cell.getStringCellValue().trim());
+				StudentList.add(po);
+			} else {
+				System.out.println("瞳距是空的 读取不到");
+			}
+		}
+		return StudentList;
 	}
 }

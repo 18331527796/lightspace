@@ -20,4 +20,9 @@ public class RegionController {
 	public ResultVO findRegion(@RequestParam Map<String, String> params) {
 		return region_impl.findRegion(params);
 	}
+
+	@PostMapping("/findSchoolByRegion")
+	public ResultVO findSchoolByRegion(@RequestParam Map<String, String> params) {
+		return region_impl.findSchoolByRegion(params);
+	}
 }

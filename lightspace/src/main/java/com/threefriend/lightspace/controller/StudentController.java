@@ -36,8 +36,8 @@ public class StudentController {
 	 * 学生列表
 	 * @param params
 	 * @return
+	 */
 	@PostMapping("/studentList")
-	
 	public ResultVO studentList(@RequestParam Map<String, String> params,HttpSession session) {
 		return student_Impl.studentList(params,session);
 	}
@@ -48,7 +48,6 @@ public class StudentController {
 	 * @return
 	 */
 	@PostMapping("/addStudent")
-	
 	public ResultVO insertStudent(@RequestParam Map<String, String> params) {
 		return student_Impl.addStudent(params);
 	}
@@ -59,7 +58,6 @@ public class StudentController {
 	 * @return
 	 */
 	@PostMapping("/editStudent")
-	
 	public ResultVO editStudent(@RequestParam Map<String, String> params) {
 		return student_Impl.findById(Integer.valueOf(params.get("id")));
 	}
@@ -70,7 +68,6 @@ public class StudentController {
 	 * @return
 	 */
 	@PostMapping("/saveStudent")
-	
 	public ResultVO saveStudent(@RequestParam Map<String, String> params) {
 		return student_Impl.saveStudent(params);
 	}
@@ -81,7 +78,6 @@ public class StudentController {
 	 * @return
 	 */
 	@PostMapping("/deleteStudent")
-	
 	public ResultVO deleteStudent(@RequestParam Map<String, String> params) {
 		return student_Impl.deleteStudent(Integer.valueOf(params.get("id")),params.get("token"));
 	}
@@ -92,7 +88,6 @@ public class StudentController {
 	 * @return
 	 */
 	@PostMapping("/queryStudentBySidCid")
-	
 	public ResultVO queryStudentsBySidCid(@RequestParam Map<String, String> params) {
 		return student_Impl.queryBySidCid( Integer.valueOf(params.get("classId")));
 	}
@@ -103,7 +98,6 @@ public class StudentController {
 	 * @return
 	 */
 	@PostMapping("/queryStudent")
-	
 	public ResultVO queryStudents(@RequestParam Map<String, String> params) {
 		return student_Impl.findByNameLike(params.get("name"));
 	}
@@ -114,7 +108,6 @@ public class StudentController {
 	 * @return
 	 */
 	@PostMapping("/searchStudents")
-	
 	public ResultVO searchStudents(@RequestParam Map<String, String> params) {
 		return student_Impl.findBySchoolIdAndClassesIdAndNameLike(Integer.valueOf(params.get("schoolId")), Integer.valueOf(params.get("classId")), params.get("name"));
 	}

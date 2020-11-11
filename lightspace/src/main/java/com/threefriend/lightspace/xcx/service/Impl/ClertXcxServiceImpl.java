@@ -38,6 +38,7 @@ import com.threefriend.lightspace.repository.SortRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.StudentWordRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
+import com.threefriend.lightspace.vo.AxisLengthShowVO;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.xcx.service.ClertXcxService;
 
@@ -211,6 +212,23 @@ public class ClertXcxServiceImpl implements ClertXcxService {
 		po.setClassName(student.getClassesName());
 		student_word_dao.save(po);
 		return ResultVOUtil.success(po.getId());
+	}
+
+	@Override
+	public ResultVO axisLengthShow(Map<String, String> params) {
+		System.out.println("in"+params.get("studentId"));
+		List<StudentWordMapper> list = student_word_dao.findByStudentIdOrderByGenTimeDesc(Integer.valueOf(params.get("studentId")));
+		List<AxisLengthShowVO> end = new ArrayList<>();
+		for (StudentWordMapper po : list) {
+			/*if(StringUtils.isEmpty(po.getLevelRight())||StringUtils.isEmpty(po.getLevelLeft())||
+			   StringUtils.isEmpty(po.getVerticalRight())||StringUtils.isEmpty(po.getVerticalLeft())||
+			   StringUtils.isEmpty(po.getAxialLengthRight())||StringUtils.isEmpty(po.getAxialLengthLeft())
+			   )continue;*/
+			
+			AxisLengthShowVO vo = new AxisLengthShowVO(po);
+			end.add(vo);
+		}
+		return ResultVOUtil.success(end);
 	}
 	
 

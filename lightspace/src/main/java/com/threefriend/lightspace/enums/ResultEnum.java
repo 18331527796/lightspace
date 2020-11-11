@@ -91,6 +91,8 @@ public enum ResultEnum {
     SORT_ERROR(10238,"没有进行过排座"),
     
     SORT_TYPE_ERROR(10239,"座位列数与之前不符，请打乱重新排列"),
+    
+    TEACHER_CLASS_ERROR(10240,"账号关联班级已毕业，请申请更换关联班级"),
     ;
 
     private Integer status;

@@ -4,90 +4,57 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.priceclient.service.impl.PriceServiceImpl;
 
 @RestController
+@RequestMapping("/priceclient")
 public class PriceController {
 
 	@Autowired
 	private PriceServiceImpl impl;
 	
-	@PostMapping("/seriesList")
-	public ResultVO seriesList(@RequestParam Map<String, String> params) {
-		return impl.seriesList(params);
+	@PostMapping("/getAllLabel")
+	public ResultVO getAllLabel() {
+		return impl.getAllLabel();
 	}
 	
-	@PostMapping("/addSeries")
-	public ResultVO addSeries(@RequestParam Map<String, String> params,
-							  @RequestParam(value="file",required=false) MultipartFile file) {
-		return impl.addSeries(params, file);
+	@PostMapping("/getSeriesByLabel")
+	public ResultVO getSeriesByLabel(@RequestParam Map<String , String> params) {
+		return impl.getSeriesByLabel(params);
 	}
 	
-	@PostMapping("/editSeries")
-	public ResultVO editSeries(@RequestParam Map<String, String> params) {
-		return impl.editSeries(params);
+	@PostMapping("/getProduceBySeries")
+	public ResultVO getProduceBySeries(@RequestParam Map<String , String> params) {
+		return impl.getProduceBySeries(params);
 	}
 	
-	@PostMapping("/saveSeries")
-	public ResultVO saveSeries(@RequestParam Map<String, String> params,
-			  				  @RequestParam(value="file",required=false) MultipartFile file) {
-		return impl.saveSeries(params,file);
+	@PostMapping("/loginPrice")
+	public ResultVO loginPrice(@RequestParam Map<String , String> params) {
+		return impl.loginPrice(params);
 	}
 	
-	@PostMapping("/deleteSeries")
-	public ResultVO deleteSeries(@RequestParam Map<String, String> params) {
-		return impl.deleteSeries(params);
+	@PostMapping("/changePassword")
+	public ResultVO changePassword(@RequestParam Map<String , String> params) {
+		return impl.changePassword(params);
 	}
 	
-	@PostMapping("/labelList")
-	public ResultVO labelList(@RequestParam Map<String, String> params) {
-		return impl.labelList(params);
+	@PostMapping("/contrast")
+	public ResultVO contrast(@RequestParam Map<String , String> params) {
+		return impl.contrast(params);
 	}
 	
-	@PostMapping("/addLabel")
-	public ResultVO addLabel(@RequestParam Map<String, String> params) {
-		return impl.addLabel(params);
+	@PostMapping("/findGlassesBySeries")
+	public ResultVO findGlassesBySeries(@RequestParam Map<String , String> params) {
+		return impl.findGlassesBySeries(params);
 	}
 	
-	@PostMapping("/editLabel")
-	public ResultVO editLabel(@RequestParam Map<String, String> params) {
-		return impl.editLabel(params);
+	@PostMapping("/contrastGlasses")
+	public ResultVO contrastGlasses(@RequestParam Map<String , String> params) {
+		return impl.contrastGlasses(params);
 	}
-	
-	@PostMapping("/saveLabel")
-	public ResultVO saveLabel(@RequestParam Map<String, String> params) {
-		return impl.saveLabel(params);
-	}
-	
-	@PostMapping("/deleteLabel")
-	public ResultVO deleteLabel(@RequestParam Map<String, String> params) {
-		return impl.deleteLabel(params);
-	}
-	
-	@PostMapping("/seriesProductList")
-	public ResultVO seriesProductList(@RequestParam Map<String, String> params) {
-		return impl.seriesProductList(params);
-	}
-	
-	@PostMapping("/addSeriesProduct")
-	public ResultVO addSeriesProduct(@RequestParam Map<String, String> params,
-			  				  @RequestParam(value="file",required=false) MultipartFile file) {
-		return impl.addSeriesProduct(params,file);
-	}
-	
-	@PostMapping("/deleteSeriesProduct")
-	public ResultVO deleteSeriesProduct(@RequestParam Map<String, String> params) {
-		return impl.deleteSeriesProduct(params);
-	}
-	
-	@PostMapping("/findSeriesBylabel")
-	public ResultVO findSeriesBylabel(@RequestParam Map<String, String> params) {
-		return impl.findSeriesBylabel(params);
-	}
-	
 }

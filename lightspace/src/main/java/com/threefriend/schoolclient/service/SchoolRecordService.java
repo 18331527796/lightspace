@@ -1,9 +1,11 @@
 package com.threefriend.schoolclient.service;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.vo.ResultVO;
 
 public interface SchoolRecordService {
@@ -35,4 +37,8 @@ public interface SchoolRecordService {
 	ResultVO diopterByStudentId(Map<String, String> params);
 	//屈光度
 	ResultVO deleteDiopter(Map<String, String> params);
+
+	ResultVO diopterExcelOut(Map<String, String> params,HttpSession session);
+
+	Map<String, List<String>> diopterExcel(List<StudentMapper> student);
 }

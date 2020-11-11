@@ -26,6 +26,7 @@ import com.threefriend.lightspace.mapper.ClassesMapper;
 import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.StudentWordMapper;
+import com.threefriend.lightspace.mapper.xcx.IntegralMapper;
 import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
 import com.threefriend.lightspace.mapper.xcx.ScreeningWearMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
@@ -140,12 +141,23 @@ public class SchoolStudentServiceImpl implements SchoolStudentService{
 	@Override
 	public ResultVO deleteStudent(Map<String, String> params) {
 		Integer id = Integer.valueOf(params.get("id"));
-		screening_dao.deleteAll(screening_dao.findByStudentIdOrderByGenTimeDesc(id));
-		screening_wear_dao.deleteAll(screening_wear_dao.findByStudentIdOrderByGenTimeDesc(id));
-		integral_dao.deleteAll(integral_dao.findByStudentIdOrderByGenTimeDesc(id));
-		parent_student_dao.deleteAll(parent_student_dao.findByStudentId(id));
-		record_dao.deleteByStudentId(id);
-		student_dao.deleteById(id);
+		StudentMapper studentMapper = student_dao.findById(id).get();
+		studentMapper.setClassesId(202);
+		studentMapper.setClassesName("社会");
+		studentMapper.setSchoolId(64);
+		studentMapper.setSchoolName("社会");
+		
+		List<ScreeningMapper> screening = screening_dao.findByStudentIdOrderByGenTimeDesc(id);
+		for (ScreeningMapper po : screening) {
+			po.setClassId(202);po.setClassName("社会");po.setSchoolId(64);po.setSchoolName("社会");
+		}
+		List<ScreeningWearMapper> wear = screening_wear_dao.findByStudentIdOrderByGenTimeDesc(id);
+		for (ScreeningWearMapper po : wear) {
+			po.setClassId(202);po.setClassName("社会");po.setSchoolId(64);po.setSchoolName("社会");
+		}
+		screening_dao.saveAll(screening);
+		screening_wear_dao.saveAll(wear);
+		student_dao.save(studentMapper);
 		return ResultVOUtil.success();
 	}
 	

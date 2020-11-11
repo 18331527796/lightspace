@@ -93,7 +93,10 @@ public class ScreeningController {
 	}
 	
 	@PostMapping("readDiopterExcel")
-	public ResultVO readDiopterExcel(@RequestParam(value="file",required = false)MultipartFile file) {
-		return screening_impl.readDiopterExcel(file);
+	public ResultVO readDiopterExcel(@RequestParam(value="exportList",required = false)MultipartFile export,
+									 @RequestParam(value="nameList",required = false)MultipartFile nameList,
+									 @RequestParam(value="classId") Integer classId
+									) {
+		return screening_impl.readDiopterExcel(classId,export,nameList);
 	}
 }

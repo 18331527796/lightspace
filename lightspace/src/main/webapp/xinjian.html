@@ -25,13 +25,12 @@
 				display: block;
 			}
 			.titleBox> img {
-				width: 200px !important;
-				height: auto;
+				height: 14vh;
+				width: auto !important;
 			}
 			.box {
 				width: 100%;
-				height: 40px;
-				line-height: 40px;
+				height: 6vh;
 				border: 1px solid lightgray;
 				border-radius: 8px;
 				padding-left: 8px;
@@ -53,7 +52,7 @@
 				box-sizing: border-box;
 			}
 			.btnWrap {
-				margin: 30px auto;
+				margin: 10px auto;
 				clear: both;
 			}
 			.btn {
@@ -154,7 +153,7 @@
 		<!-- 引入样式 -->
 		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
 		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-		<!-- <script type="text/javascript" src="../lightspace/select/select.js"></script> -->
+	<!-- 	<script type="text/javascript" src="../lightspace/select/select.js"></script> -->
 	</head>
 	<body>
 		<div class="mask">
@@ -167,6 +166,21 @@
 				<div class="titleBox">
 					<img src="https://www.guangliangkongjian.com/images/login.png" style="width: 100%"/>
 				</div>
+			</div>
+			<div class="input-group">
+				<select id="province" class="box">
+					<option>省选择</option>
+				</select>
+			</div>
+			<div class="input-group">
+				<select id="city" class="box">
+					<option>市选择</option>
+				</select>
+			</div>
+			<div class="input-group">
+				<select id="region" class="box">
+					<option>区选择</option>
+				</select>
 			</div>
 			<div class="input-group">
 				<select id="school" class="box">
@@ -229,9 +243,62 @@
 		</div>
 
 	<script type="text/javascript">
-		let schoolId, grade,classId,studentId, year, month,day, birthday;
+		let provinceId, cityId, regionId, schoolId, grade,classId,studentId, year, month,day, birthday;
 		let that = this;
-		$('#school').change((() => {
+		$('#province').change(() => {
+			provinceId = $('#province option:selected').val();
+			if(cityId !== undefined) {
+				$('#city option').attr('selected', '');
+			}	
+				$('#city > option').remove();
+				$('#region > option').remove();
+				$('#school > option').remove();
+				$('#classList > option').remove();
+				$('#classList > option').remove();
+				$('#studentList > option').remove();
+				$('#grade option:first').prop("selected", 'selected');
+				$('#city').append("<option>" + '市选择' + "</option>")
+				$('#region').append("<option>" + '区选择' + "</option>")
+				$('#school').append("<option>" + '学校选择' + "</option>")
+				$('#classList').append("<option>" + '班级选择' + "</option>")
+				$('#studentList').append("<option>" + '学生选择' + "</option>")
+			 this.getCityList(provinceId)
+		});
+		$('#city').change(() => {
+			let cityId = $('#city option:selected').val();
+				if(regionId !==undefined) {
+					$('#region option').attr('selected', '');
+				}
+				$('#region > option').remove();
+				$('#school > option').remove();
+				$('#classList > option').remove();
+				$('#classList > option').remove();
+				$('#studentList > option').remove();
+				$('#grade option:first').prop("selected", 'selected');
+				// $('#city').append("<option>" + '市选择' + "</option>")
+				$('#region').append("<option>" + '区选择' + "</option>")
+				$('#school').append("<option>" + '学校选择' + "</option>")
+				$('#classList').append("<option>" + '班级选择' + "</option>")
+				$('#studentList').append("<option>" + '学生选择' + "</option>")
+			this.getRegionList(cityId);
+		})
+		$('#region').change(() => {
+			regionId = $('#region option:selected').val();
+			if(schoolId !==undefined) {
+					$('#school option').attr('selected', '');
+			}
+				$('#school > option').remove();
+				$('#classList > option').remove();
+				$('#classList > option').remove();
+				$('#studentList > option').remove();
+				$('#grade option:first').prop("selected", 'selected');
+				// $('#region').append("<option>" + '区选择' + "</option>")
+				$('#school').append("<option>" + '学校选择' + "</option>")
+				$('#classList').append("<option>" + '班级选择' + "</option>")
+				$('#studentList').append("<option>" + '学生选择' + "</option>")
+			this.getschoolList(regionId);
+		})
+		$('#school').change(() => {
 			schoolId = $('#school option:selected').val();
 			if(grade !== undefined) {
 				$('#grade option').attr('selected', '');
@@ -241,14 +308,15 @@
 				$('#classList').append("<option>" + '班级选择' + "</option>")
 				$('#studentList').append("<option>" + '学生选择' + "</option>")
 			}
-		}));
-		$('#grade').change((() => {
+		});
+		$('#grade').change(() => {
 			if(schoolId == undefined) {
 				alert('请先选择学校')
 				return 
 			}
 			if(grade !== undefined) {
 				$('#classList option').remove();
+				$('#classList').append("<option selected= 'selected'>" + '班级选择' + "</option>")
 			}
 			// 如果班级不为空，先清空
 			if(classId !== undefined) {
@@ -256,25 +324,27 @@
 				$('#studentList > option').remove();
 				$('#classList').append("<option selected= 'selected'>" + '班级选择' + "</option>")
 				$('#studentList').append("<option selected= 'selected'>" + '学生选择' + "</option>")
-			}
+			} 
+			// $('#classList').append("<option selected= 'selected'>" + '班级选择' + "</option>")
 			grade = $('#grade option:selected').val();
 			this.getClassList(schoolId, grade);
-		}));
-		$('#classList').change((() => {
+		});
+		$('#classList').change(() => {
 			if(classId !== undefined) {
 				$('#studentList > option').remove();
+				$('#studentList').append("<option selected='selected'>" + '学生选择' + "</option>")
 			}
 			if(studentId !== undefined) {
 				$('#studentList > option').remove();
 				$('#studentList').append("<option selected='selected'>" + '学生选择' + "</option>")
 			}
 			 classId = $('#classList option:selected').val();
-			this.getStudentList(classId)
-		}));
-		$('#studentList').change((() => {
+			 this.getStudentList(classId)
+		});
+		$('#studentList').change(() => {
 			 studentId = $('#studentList option:selected').val();
-		}));
-		$('.btn').click((() => {
+		});	
+		$('.btn').click(() => {
 			if(studentId == undefined) {
 				alert('请先选择学生');
 				return;
@@ -285,30 +355,10 @@
 			// }
 			$('.mask').css('display', 'block');
 			that.downLoad()
-			// $.ajax({
-			// 	type: 'post',
-			// 	data: {
-			// 		id: studentId
-			// 	},
-			//     url : "https://www.guangliangkongjian.com/lightspace/xcx/chkStudent",
-			//     success : function(res) {
-			// 		if(res.status == 200) {
-			// 			$('.mask').css('display', 'none');
-			// 			that.downLoad()
-			// 		}else {
-			// 			$('.confirmWrap').css('display', 'block');
-			// 			$('.mask').css('display', 'none');
-			// 		}
-					
-			//     },
-			// 	fail: function(err) {
-					
-			// 	}
-			// });
-		}))
+		})
 		$('.resetBtn').click(() => {
 			$('.confirmWrap').css('display', 'none');
-		})
+		});
 		function downLoad() {
 			$.ajax({
 				type: 'post',
@@ -322,10 +372,71 @@
 					document.body.appendChild(downloadElement);
 					downloadElement.click();
 				},
-				fail: function(err) {
+				fail: function(err) {	
+				}	
+			})
+		};
+		function getCityList(provinceId) {
+			$.ajax({
+				type: 'post',
+			    url : "https://www.guangliangkongjian.com/lightspace/findRegion",
+				data: {
+					type: 2,
+					pId: provinceId
+				},
+			    success : function(res) {
+					//console.log(res)
+					var city = res.data;
+					for(var key in city) {
+						$('#city').append("<option value='" + city[key].id + "'>" + city[key].name + "</option>")
+					}
 					
-			}	
-		})
+			    },
+				fail: function(err) {
+					console.log(err, )
+				} 
+			});
+		}
+		function getRegionList(cityId) {
+			$.ajax({
+				type: 'post',
+			    url : "https://www.guangliangkongjian.com/lightspace/findRegion",
+				data: {
+					type: 2,
+					pId: cityId
+				},
+			    success : function(res) {
+					//console.log(res)
+					var region = res.data;
+					for(var key in region) {
+						$('#region').append("<option value='" + region[key].id + "'>" + region[key].name + "</option>")
+					}
+					
+			    },
+				fail: function(err) {
+					console.log(err, )
+				} 
+			})
+		};
+		function getschoolList(regionId) {
+			$.ajax({
+				type: 'post',
+			    url : "https://www.guangliangkongjian.com/lightspace/findSchoolByRegion",
+				data: {
+					regionId: regionId
+				},
+			    success : function(res) {
+					//console.log(res)
+					var school = res.data;
+					for(var key in school) {
+						$('#school').append("<option value='" + school[key].id + "'>" + school[key].name + "</option>")
+					}
+					
+			    },
+				fail: function(err) {
+					console.log(err)
+				} 
+			})
 		};
 		function getClassList(schoolId, grade) {
 			$.ajax({
@@ -362,7 +473,6 @@
 			    url : "https://www.guangliangkongjian.com/lightspace/xcx/allStudent",
 			    success : function(res) {
 					var studentList = res.data;
-					
 					if(studentList.length) {
 						for(var key in studentList) {
 							$('#studentList').append("<option value='" + studentList[key].id + "'>" + studentList[key].name + "</option>")
@@ -375,32 +485,22 @@
 				
 			});
 		};
-		 $(document).ready(function() {
+		$(document).ready(function() {
 		        $.ajax({
 		        	type: 'post',
-		            url : "https://www.guangliangkongjian.com/lightspace/xcx/allSchool",
+		            url : "https://www.guangliangkongjian.com/lightspace/findRegion",
+					data: {
+						type: 1
+					},
 		            success : function(res) {
-						// console.log(res)
-						var school = res.data;
-						for(var key in school) {
-							$('#school').append("<option value='" + school[key].id + "'>" + school[key].name + "</option>")
+						//console.log(res)
+						var province = res.data;
+						for(var key in province) {
+							$('#province').append("<option value='" + province[key].id + "'>" + province[key].name + "</option>")
 						}
-						
 		            }
-					
 		        });
 		    });  
-		
-		$(function(){
-			$("#date").selectDate()
-			$("#days").focusout(function(){
-				 year = $("#year option:selected").html().match(/\d+/g)
-				 month = $("#month option:selected").html().match(/\d+/g)
-				 day = $("#days option:selected").html().match(/\d+/g)
-				 birthday = year + '/' + month + '/' + day;
-				
-			})
-		})
 	</script>
 	</body>
 </html>

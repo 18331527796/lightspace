@@ -1,6 +1,7 @@
 package com.threefriend.lightspace.service.Impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,6 @@ import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.service.ScreeningService;
 import com.threefriend.lightspace.util.ExcelUtil;
 import com.threefriend.lightspace.util.ResultVOUtil;
-import com.threefriend.lightspace.vo.DiopterVO;
 import com.threefriend.lightspace.vo.ResultVO;
 
 @Service
@@ -298,25 +298,28 @@ public class ScreeningServiceImpl implements ScreeningService{
 		Integer page = 0,count=0;
 		if(!StringUtils.isEmpty(params.get("page")))page = (Integer.valueOf(params.get("page"))-1)*10;
 		String type = params.get("type");
-		List<DiopterVO> list = new ArrayList<>();
+		List<DiopterMapper> list = new ArrayList<>();
 		Map<String, Object> end = new HashMap<>();
 		end.put("size", 10);
 		end.put("number", (StringUtils.isEmpty(params.get("page")))?0:Integer.valueOf(params.get("page"))-1);
 		if("student".equals(type)) {
 			StudentMapper student = student_dao.findById(Integer.valueOf(params.get("id"))).get();
-			DiopterVO vo = new DiopterVO(student);
-			list.add(vo);
+			DiopterMapper po = diopter_dao.findTopByStudentIdOrderByIdDesc(student.getId());
+			if(po==null)po = new DiopterMapper(student);
+			list.add(po);
 			count = 1;
 			end.put("totalElements", count);
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
 		}
 		if("class".equals(type)) {
+			List<Integer> ids = new ArrayList<>();
 			if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page"))-1;
 			Page<StudentMapper> findByClassesId = student_dao.findByClassesId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10));
 			for (StudentMapper student : findByClassesId.getContent()) {
-				DiopterVO vo = new DiopterVO(student);
-				list.add(vo);
+				DiopterMapper po = diopter_dao.findTopByStudentIdOrderByIdDesc(student.getId());
+				if(po==null)po = new DiopterMapper(student);
+				list.add(po);
 			}
 			count = student_dao.countByClassesId(Integer.valueOf(params.get("id")));
 			end.put("totalElements", count);
@@ -327,19 +330,16 @@ public class ScreeningServiceImpl implements ScreeningService{
 			if(!StringUtils.isEmpty(params.get("page")))page = Integer.valueOf(params.get("page"))-1;
 			Page<StudentMapper> findBySchoolId = student_dao.findBySchoolId(Integer.valueOf(params.get("id")),PageRequest.of(page, 10));
 			for (StudentMapper student : findBySchoolId.getContent()) {
-				DiopterVO vo = new DiopterVO(student);
-				list.add(vo);
+				DiopterMapper po = diopter_dao.findTopByStudentIdOrderByIdDesc(student.getId());
+				if(po==null)po = new DiopterMapper(student);
+				list.add(po);
 			}
 			count = student_dao.countBySchoolId(Integer.valueOf(params.get("id")));
 			end.put("totalElements", findBySchoolId.getTotalElements());
 			end.put("content", list);
 			return (list.size()!=0)?ResultVOUtil.success(end):ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
 		}
-		List<DiopterMapper> findAllByOrderById = diopter_dao.findAllByOrderById(page,10);
-		for (DiopterMapper diopterMapper : findAllByOrderById) {
-			DiopterVO vo = new DiopterVO(diopterMapper);
-			list.add(vo);
-		}
+		list = diopter_dao.findAllByOrderById(page,10);
 		count = diopter_dao.findcount();
 		end.put("totalElements", count);
 		end.put("content", list);
@@ -367,7 +367,9 @@ public class ScreeningServiceImpl implements ScreeningService{
 			list = student_dao.findBySchoolId(Integer.valueOf(params.get("id")));
 		}
 		if(list.size()<1)return ResultVOUtil.error(ResultEnum.STUDENTSIZE_NULL.getStatus(), ResultEnum.STUDENTSIZE_NULL.getMessage());
-		
+		for (StudentMapper studentMapper : list) {
+			System.out.println(studentMapper.getName());
+		}
 		ExcelUtil.createExcel(diopterExcel(list), diopterArray);
 		
 		return ResultVOUtil.success();
@@ -402,57 +404,61 @@ public class ScreeningServiceImpl implements ScreeningService{
 	 */
 	@Override
 	@Transactional
-	public ResultVO readDiopterExcel(MultipartFile file) {
-		List<StudentMapper> studentInfo = readexcel.getStudentInfo(file);
-		if(studentInfo==null) {
-			System.out.println("读取excel数据返回值是空的");
-			return ResultVOUtil.error(ResultEnum.READEXCEL_ERROR.getStatus(), ResultEnum.READEXCEL_ERROR.READEXCEL_ERROR.getMessage());
+	public ResultVO readDiopterExcel(Integer classId,MultipartFile export,MultipartFile nameList) {
+		System.out.println("批量操作开始");
+		List<DiopterMapper> diopterInfo = readexcel.getDiopterInfo(export);
+		List<StudentMapper> studentInfo = readexcel.getStudentInfo(classId, nameList);
+		Collections.reverse(studentInfo);
+		System.out.println(diopterInfo.size()+"----"+studentInfo.size());
+		if(diopterInfo.size()!=studentInfo.size())return ResultVOUtil.error(ResultEnum.READEXCEL_ERROR.getStatus(), ResultEnum.READEXCEL_ERROR.getMessage());
+		for (int i = 0; i < diopterInfo.size(); i++) {
+			diopterInfo.get(i).setStudentMapper(studentInfo.get(i));
+			studentInfo.get(i).setDiopterLeft(diopterInfo.get(i).getDiopterLeft());
+			studentInfo.get(i).setDiopterRight(diopterInfo.get(i).getDiopterRight());
 		}
-        for (StudentMapper studentMapper : studentInfo) {
-        	student_dao.save(studentMapper);
-        	DiopterMapper po = new DiopterMapper(studentMapper);
-        	diopter_dao.save(po);
-        }
+		diopter_dao.saveAll(diopterInfo);
+		student_dao.saveAll(studentInfo);
 		return ResultVOUtil.success();
 	}
 
 
 	@Override
 	public ResultVO saveDiopter(Map<String, String> params) {
-		Integer type = Integer.valueOf(params.get("type"));
-		Integer id = Integer.valueOf(params.get("id"));
-		if(type==1) {
-			List<DiopterMapper> polist = diopter_dao.findByStudentIdOrderByIdDesc(id);
-			if(polist.size()==0||polist==null) {
-				StudentMapper student = student_dao.findById(id).get();
-				if(!StringUtils.isEmpty(params.get("diopterLeft"))) student.setDiopterLeft(params.get("diopterLeft"));
-				if(!StringUtils.isEmpty(params.get("diopterRight")))student.setDiopterRight(params.get("diopterRight"));
-				DiopterMapper po = new DiopterMapper(student);
-				diopter_dao.save(po);
-				student_dao.save(student);
-				return ResultVOUtil.success();
-			}else{
-				StudentMapper student = student_dao.findById(id).get();
-				DiopterMapper po = polist.get(0);
-				if(!StringUtils.isEmpty(params.get("diopterLeft"))) {
-					student.setDiopterLeft(params.get("diopterLeft"));
-					po.setDiopterLeft(params.get("diopterLeft"));
-				}
-				if(!StringUtils.isEmpty(params.get("diopterRight"))) {
-					student.setDiopterRight(params.get("diopterRight"));
-					po.setDiopterRight(params.get("diopterRight"));
-				}
-				diopter_dao.save(po);
-				student_dao.save(student);
-				return ResultVOUtil.success();
-			}
-		}else {
-			DiopterMapper po = diopter_dao.findById(id).get();
-			if(!StringUtils.isEmpty(params.get("diopterLeft"))) po.setDiopterLeft(params.get("diopterLeft"));
-			if(!StringUtils.isEmpty(params.get("diopterRight")))po.setDiopterRight(params.get("diopterRight"));
-			diopter_dao.save(po);
-			return ResultVOUtil.success();
-		}
+		return null;
+//		Integer type = Integer.valueOf(params.get("type"));
+//		Integer id = Integer.valueOf(params.get("id"));
+//		if(type==1) {
+//			List<DiopterMapper> polist = diopter_dao.findByStudentIdOrderByIdDesc(id);
+//			if(polist.size()==0||polist==null) {
+//				StudentMapper student = student_dao.findById(id).get();
+//				if(!StringUtils.isEmpty(params.get("diopterLeft"))) student.setDiopterLeft(params.get("diopterLeft"));
+//				if(!StringUtils.isEmpty(params.get("diopterRight")))student.setDiopterRight(params.get("diopterRight"));
+//				DiopterMapper po = new DiopterMapper(student);
+//				diopter_dao.save(po);
+//				student_dao.save(student);
+//				return ResultVOUtil.success();
+//			}else{
+//				StudentMapper student = student_dao.findById(id).get();
+//				DiopterMapper po = polist.get(0);
+//				if(!StringUtils.isEmpty(params.get("diopterLeft"))) {
+//					student.setDiopterLeft(params.get("diopterLeft"));
+//					po.setDiopterLeft(params.get("diopterLeft"));
+//				}
+//				if(!StringUtils.isEmpty(params.get("diopterRight"))) {
+//					student.setDiopterRight(params.get("diopterRight"));
+//					po.setDiopterRight(params.get("diopterRight"));
+//				}
+//				diopter_dao.save(po);
+//				student_dao.save(student);
+//				return ResultVOUtil.success();
+//			}
+//		}else {
+//			DiopterMapper po = diopter_dao.findById(id).get();
+//			if(!StringUtils.isEmpty(params.get("diopterLeft"))) po.setDiopterLeft(params.get("diopterLeft"));
+//			if(!StringUtils.isEmpty(params.get("diopterRight")))po.setDiopterRight(params.get("diopterRight"));
+//			diopter_dao.save(po);
+//			return ResultVOUtil.success();
+//		}
 	}
 
 	

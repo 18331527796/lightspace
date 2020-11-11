@@ -22,6 +22,8 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	
 	List<StudentMapper> findByNameLike(String name);
 	
+	List<StudentMapper> findByNameAndBirthday(String name,String birthday);
+	
 	List<StudentMapper> findBySchoolId(Integer id);
 	
 	List<StudentMapper> findBySchoolIdIn(List<Integer> ids);
@@ -41,6 +43,12 @@ public interface StudentRepository extends JpaRepository<StudentMapper, Integer>
 	Page<StudentMapper> findById(Integer id ,Pageable Pageable);
 	
 	List<StudentMapper> findByClassesId(Integer id);
+	
+	List<StudentMapper> findByClassesIdOrderByDiopterLeftDesc(Integer id);
+	
+	List<StudentMapper> findBySchoolIdOrderByDiopterLeftDesc(Integer id);
+	
+	StudentMapper findByClassesIdAndName(Integer id,String name);
 	
 	Page<StudentMapper> findByClassesId(Integer id ,Pageable Pageable);
 	

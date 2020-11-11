@@ -133,21 +133,22 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	@Override
 	public synchronized ResultVO  insertStudent(Map<String, String> params) {
 		Integer studentId=Integer.valueOf(params.get("studentId"));
-		//查找家长学生表中的信息 看看这个孩子有没有被绑定
-		List<ParentStudentRelation> findByStudentId = p_s_dao.findByStudentId(studentId);
 		//家长
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		Integer parentId = parent.getId();
-		for (ParentStudentRelation parentStudentRelation : findByStudentId) {
-			//这个孩子绑定过了 而且是这个家长 就直接返回成功
-			if(parentStudentRelation!=null&&parentId==parentStudentRelation.getParentId()) return childrenList(params);
+		//查找家长学生表中的信息 看看这个孩子有没有被绑定
+		ParentStudentRelation p_s = p_s_dao.findByStudentIdAndParentId(studentId,parentId);
+		//这个孩子绑定过了 而且是这个家长 就直接返回成功
+		if(p_s!=null) {
+			return childrenList(params);
+		}else {
+			//保存信息到中间表中
+			ParentStudentRelation po =new ParentStudentRelation();
+			po.setParentId(parentId);
+			po.setStudentId(studentId);
+			p_s_dao.save(po);
+			return childrenIntegral(params);
 		}
-		//保存信息到中间表中
-		ParentStudentRelation po =new ParentStudentRelation();
-		po.setParentId(parentId);
-		po.setStudentId(studentId);
-		p_s_dao.save(po);
-		return childrenIntegral(params);
 	}
 
 	/* 
@@ -158,12 +159,12 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		Integer parentId = parent_dao.findByOpenId(params.get("openId")).getId();
 		Integer studentId=Integer.valueOf(params.get("studentId"));
 		String classesName = student_dao.findById(studentId).get().getClassesName();
-		if("社会".equals(classesName)) {
+		/*if("社会".equals(classesName)) {
 			screening_dao.deleteAll(screening_dao.findByStudentIdOrderByGenTimeDesc(studentId));
 			screening_wear_Dao.deleteAll(screening_wear_Dao.findByStudentIdOrderByGenTimeDesc(studentId));
 			integral_dao.deleteAll(integral_dao.findByStudentIdOrderByGenTimeDesc(studentId));
 			student_dao.deleteById(studentId);
-		}
+		}*/
 		p_s_dao.deleteByStudentIdAndParentId(studentId,parentId);
 		List<ParentStudentRelation> findByParentId = p_s_dao.findByParentIdOrderByIdDesc(parentId);
 		List<StudentMapper> end = new ArrayList<>();
@@ -297,6 +298,12 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 		Integer oldId = Integer.valueOf(params.get("oldId"));
 		Integer newId = Integer.valueOf(params.get("newId"));
 		StudentMapper newStudent = student_dao.findById(newId).get();
+		StudentMapper oldIdStudent = student_dao.findById(oldId).get();
+		newStudent.setLastTime(oldIdStudent.getSendTime());
+		newStudent.setSendTime(oldIdStudent.getSendTime());
+		newStudent.setRemindDecline(oldIdStudent.getRemindDecline());
+		newStudent.setRemindUndetected(oldIdStudent.getRemindUndetected());
+		newStudent.setRemindUntask(oldIdStudent.getRemindUntask());
 		
 		List<IntegralMapper> integral = integral_dao.findByStudentIdOrderByGenTimeDesc(oldId);
 		List<ScreeningMapper> screening = screening_dao.findByStudentIdOrderByGenTimeDesc(oldId);
@@ -330,15 +337,12 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 			}
 			integral_dao.saveAll(integral);
 		}
-		ParentStudentRelation findByStudentIdAndParentId = p_s_dao.findByStudentIdAndParentId(newId,parent.getId());
-		if(findByStudentIdAndParentId==null) {
-			ParentStudentRelation po = new ParentStudentRelation();
-			po.setParentId(parent.getId());
-			po.setStudentId(newId);
-			p_s_dao.save(po);
-		}else {
-			p_s_dao.deleteByStudentIdAndParentId(oldId, parent.getId());
+		List<ParentStudentRelation> findByStudentId = p_s_dao.findByStudentId(oldId);
+		for (ParentStudentRelation old : findByStudentId) {
+			old.setStudentId(newId);
 		}
+		student_dao.save(newStudent);
+		p_s_dao.saveAll(findByStudentId);
 		student_dao.deleteById(oldId);
 		return ResultVOUtil.success();
 	}
@@ -419,7 +423,7 @@ public class ParentXcxServiceImpl implements ParentXcxService{
 	public ResultVO chkCalibration(Map<String, String> params) {
 		CalibrationMapper findByOpenId = calibration_dao.findByOpenId(params.get("openId"));
 		if(findByOpenId==null) {
-			return ResultVOUtil.success();
+			return ResultVOUtil.success("1");
 		}else {
 			return ResultVOUtil.success(findByOpenId.getLv());
 		}

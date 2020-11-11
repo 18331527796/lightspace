@@ -12,7 +12,7 @@ public interface SchoolUserService {
 	
 	ResultVO regionLogin(Map<String, String> params,HttpSession session);
 	
-	ResultVO survey(HttpSession session);
+	ResultVO survey(Map<String, String> params ,HttpSession session);
 	
 	ResultVO badPercentage(HttpSession session);
 	
@@ -28,9 +28,9 @@ public interface SchoolUserService {
 	
 	void initialize(Integer schoolId);
 	
-	ResultVO undetectedList(HttpSession session);
+	ResultVO undetectedList(Map<String, String> params,HttpSession session);
 	
-	ResultVO badList(HttpSession session);
+	ResultVO badList(Map<String, String> params ,HttpSession session);
 	
 	ResultVO loginOut(HttpSession session);
 	

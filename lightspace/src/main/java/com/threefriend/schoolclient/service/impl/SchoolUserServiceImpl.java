@@ -2,6 +2,8 @@ package com.threefriend.schoolclient.service.impl;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -49,6 +51,7 @@ import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.lightspace.vo.SchoolMenuListVo;
 import com.threefriend.lightspace.vo.Top5VO;
+import com.threefriend.lightspace.vo.UndetectedVO;
 import com.threefriend.lightspace.xcx.util.SendMessageUtils;
 import com.threefriend.schoolclient.service.SchoolUserService;
 
@@ -90,6 +93,8 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 			roleId = user_role_dao.findByUserId(user.get(0).getId()).get(0).getRoleId();
 		}else {
 			roleId = 3;
+			Integer finish = class_dao.findById(teacher.get(0).getClassId()).get().getFinish();
+			if(finish!=null&&finish==1)return ResultVOUtil.error(ResultEnum.TEACHER_CLASS_ERROR.getStatus(), ResultEnum.TEACHER_CLASS_ERROR.getMessage());
 		}
 		//如果不是校园管理 班级管理 不让进
 		if(roleId!=2&&roleId!=3)return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
@@ -174,7 +179,18 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 	}
 
 	@Override
-	public ResultVO survey(HttpSession session) {
+	public ResultVO survey(Map<String, String> params ,HttpSession session) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date begintime = null,endtime = null;
+		System.out.println(params.get("begin")+"+++++"+params.get("end"));
+		if(!StringUtils.isEmpty(params.get("begin"))) {
+			try {
+				begintime = sdf.parse(params.get("begin"));
+				endtime = sdf.parse(params.get("end"));
+			} catch (ParseException e) {
+				System.out.println("时间解析出错");
+			}
+		}
 		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
 		List<Integer> schoolIds = new ArrayList<>();
 		if(schoolId==0) {
@@ -198,9 +214,25 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		int allstudent = student_dao.countBySchoolIdIn(schoolIds);
 		List<StudentMapper> students = student_dao.findBySchoolIdIn(schoolIds);
 		for (StudentMapper s : students) {
-			if(s.getLastTime()==null||s.getVisionLeftStr()==null||s.getVisionRightStr()==null) {
+			if(s.getLastTime()==null||s.getSendTime()==null||s.getVisionLeftStr()==null||s.getVisionRightStr()==null) {
 				nullstudent++;
 				continue;
+			}
+			
+			if(begintime!=null) {
+				Calendar date = Calendar.getInstance();
+				date.setTime(s.getSendTime());
+		 
+				Calendar beginTime = Calendar.getInstance();
+				beginTime.setTime(begintime);
+		 
+				Calendar endTime = Calendar.getInstance();
+				endTime.setTime(endtime);
+		 
+				if (!(date.after(beginTime) && date.before(endTime))) {
+					nullstudent++;
+					continue;
+				}
 			}
 			
 			LEFT = s.getVisionLeftStr();
@@ -626,38 +658,162 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 	}
 
 	@Override
-	public ResultVO undetectedList(HttpSession session) {
-		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
-		List<StudentMapper> student = student_dao.findBySchoolId(schoolId);
-		List<StudentMapper> end = new ArrayList<>();
-		for (StudentMapper s : student) {
-			if(s.getLastTime()==null||s.getVisionLeftStr()==null||s.getVisionRightStr()==null) {
-				end.add(s);
+	public ResultVO undetectedList(Map<String, String> params ,HttpSession session) {
+		List<UndetectedVO> end = new ArrayList<>();
+		List<UndetectedVO> classList = null;
+		List<StudentMapper> studentList = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date begintime = null,endtime = null;
+		Calendar date = Calendar.getInstance();
+		Calendar beginTime = Calendar.getInstance();
+		Calendar endTime = Calendar.getInstance();
+		System.out.println(params.get("begin")+"+++++"+params.get("end"));
+		if(!StringUtils.isEmpty(params.get("begin"))) {
+			try {
+				begintime = sdf.parse(params.get("begin"));
+				endtime = sdf.parse(params.get("end"));
+			} catch (ParseException e) {
+				System.out.println("时间解析出错");
 			}
+		}
+		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
+		int gredeNum = 0,classNum = 0;
+		for (int i = 1; i < 7; i++) {
+			UndetectedVO gredevo = new UndetectedVO();
+			classList = new ArrayList<>();
+			gredeNum = 0;
+			gredevo.setName(i+"年级");
+			List<ClassesMapper> classIds = class_dao.findBySchoolIdAndGradeOrderByClassNumber(schoolId, i);
+			for (ClassesMapper classPo : classIds) {
+				UndetectedVO classvo = new UndetectedVO();
+				studentList = new ArrayList<>();
+				classNum = 0;
+				List<StudentMapper> students = student_dao.findByClassesId(classPo.getId());
+				for (StudentMapper s : students) {
+					if(begintime==null) {
+						if(s.getLastTime()==null) {
+							studentList.add(s);
+							classNum++;
+							gredeNum++;
+						}
+					}else {
+						if(s.getLastTime()==null) {
+							studentList.add(s);
+							classNum++;
+							gredeNum++;
+						}else {
+							date.setTime(s.getSendTime());
+							beginTime.setTime(begintime);
+							endTime.setTime(endtime);
+							if(!(date.after(beginTime) && date.before(endTime))) {
+								studentList.add(s);
+								classNum++;
+								gredeNum++;
+							}
+						}
+					}
+				}
+				classvo.setName(classPo.getClassName());
+				classvo.setUndetectedNumber(classNum);
+				classvo.setStudentData(studentList);
+				classList.add(classvo);
+			}
+			gredevo.setClassData(classList);
+			gredevo.setUndetectedNumber(gredeNum);
+			end.add(gredevo);
 		}
 		return ResultVOUtil.success(end);
 	}
 
 	@Override
-	public ResultVO badList(HttpSession session) {
-		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
-		List<StudentMapper> student = student_dao.findBySchoolId(schoolId);
-		List<StudentMapper> end = new ArrayList<>();
+	public ResultVO badList(Map<String, String> params ,HttpSession session) {
+		List<UndetectedVO> end = new ArrayList<>();
+		List<UndetectedVO> classList = null;
+		List<StudentMapper> studentList = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date begintime = null,endtime = null;
 		Double LEFT,RIGHT,AVG;
-		for (StudentMapper s : student) {
-			if(s.getLastTime()==null||s.getVisionLeftStr()==null||s.getVisionRightStr()==null) {
-				continue;
+		Calendar date = Calendar.getInstance();
+		Calendar beginTime = Calendar.getInstance();
+		Calendar endTime = Calendar.getInstance();
+		System.out.println(params.get("begin")+"+++++"+params.get("end"));
+		if(!StringUtils.isEmpty(params.get("begin"))) {
+			try {
+				begintime = sdf.parse(params.get("begin"));
+				endtime = sdf.parse(params.get("end"));
+			} catch (ParseException e) {
+				System.out.println("时间解析出错");
 			}
-			
-			LEFT = s.getVisionLeftStr();
-			RIGHT = s.getVisionRightStr();
-			
-			if(LEFT>=RIGHT) {
-				AVG = RIGHT;
-			}else {
-				AVG = LEFT;
+		}
+		Integer schoolId = Integer.valueOf(session.getAttribute("schoolId").toString());
+		int gredeNum = 0,classNum = 0;
+		for (int i = 1; i < 7; i++) {
+			UndetectedVO gredevo = new UndetectedVO();
+			classList = new ArrayList<>();
+			gredeNum = 0;
+			gredevo.setName(i+"年级");
+			List<ClassesMapper> classIds = class_dao.findBySchoolIdAndGradeOrderByClassNumber(schoolId, i);
+			for (ClassesMapper classPo : classIds) {
+				UndetectedVO classvo = new UndetectedVO();
+				studentList = new ArrayList<>();
+				classNum = 0;
+				List<StudentMapper> students = student_dao.findByClassesId(classPo.getId());
+				for (StudentMapper s : students) {
+					if(s.getLastTime()==null) continue;
+					if(begintime==null) {
+						LEFT = s.getVisionLeftStr();
+						RIGHT = s.getVisionRightStr();
+						if(LEFT>=RIGHT) {
+							AVG = RIGHT;
+						}else {
+							AVG = LEFT;
+						}
+						if(s.getScreeningType()==1) {
+							if(AVG<1.0) {
+								studentList.add(s);
+								classNum++;
+								gredeNum++;
+							}
+						}else {
+							studentList.add(s);
+							classNum++;
+							gredeNum++;
+						}
+						
+					}else {
+						date.setTime(s.getSendTime());
+						beginTime.setTime(begintime);
+						endTime.setTime(endtime);
+						if(!(date.after(beginTime) && date.before(endTime))) {
+							LEFT = s.getVisionLeftStr();
+							RIGHT = s.getVisionRightStr();
+							if(LEFT>=RIGHT) {
+								AVG = RIGHT;
+							}else {
+								AVG = LEFT;
+							}
+							if(s.getScreeningType()==1) {
+								if(AVG<1.0) {
+									studentList.add(s);
+									classNum++;
+									gredeNum++;
+								}
+							}else {
+								studentList.add(s);
+								classNum++;
+								gredeNum++;
+							}
+						}
+					}
+				}
+				classvo.setName(classPo.getClassName());
+				classvo.setUndetectedNumber(classNum);
+				classvo.setStudentData(studentList);
+				classList.add(classvo);
 			}
-			if(AVG<1.0)end.add(s);
+			gredevo.setClassData(classList);
+			gredevo.setUndetectedNumber(gredeNum);
+			end.add(gredevo);
 		}
 		return ResultVOUtil.success(end);
 	}

@@ -97,4 +97,14 @@ public class ClertXcxController {
 		return impl.insertStudentWord(word);
 	}
 	
+	/**
+	 * 扫码查看眼轴长度列表
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("/axisLengthShow")
+	public ResultVO axisLengthShow(@RequestParam Map<String, String> params) {
+		return impl.axisLengthShow(params);
+	}
+	
 }

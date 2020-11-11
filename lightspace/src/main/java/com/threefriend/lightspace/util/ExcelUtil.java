@@ -11,7 +11,11 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 
 import com.threefriend.lightspace.enums.UrlEnums;
 
@@ -19,7 +23,7 @@ public class ExcelUtil {
     /**
      * @功能：手工构建一个简单格式的Excel
      */
-    public static void createExcel(Map<String, List<String>> map, String[] strArray) {
+    public synchronized static void createExcel(Map<String, List<String>> map, String[] strArray) {
     	
         // 第一步，创建一个webbook，对应一个Excel文件
         HSSFWorkbook wb = new HSSFWorkbook();
@@ -40,16 +44,23 @@ public class ExcelUtil {
             cell.setCellValue(strArray[i]);
             cell.setCellStyle(style);
         }
+        //添加颜色
+        CellStyle color = wb.createCellStyle();
+    	//关键点 IndexedColors.AQUA.getIndex() 对应颜色
+        color.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        color.setFillForegroundColor(IndexedColors.RED.index);
 
         // 第五步，写入实体数据 实际应用中这些数据从数据库得到,list中字符串的顺序必须和数组strArray中的顺序一致
         int i = 0;
         for (String str : map.keySet()) {
             row = sheet.createRow((int) i + 1);
             List<String> list = map.get(str);
-
             // 第四步，创建单元格，并设置值
             for (int j = 0; j < strArray.length; j++) {
-                row.createCell((short) j).setCellValue(list.get(j));
+        		row.createCell((short) j).setCellValue(list.get(j));
+        		if(list.get(3).indexOf("-")!=-1||list.get(4).indexOf("-")!=-1) {
+        			row.getCell(j).setCellStyle(color);
+        		}
             }
 
             // 第六步，将文件存到指定位置

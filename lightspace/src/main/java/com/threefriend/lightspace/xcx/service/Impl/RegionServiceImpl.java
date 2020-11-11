@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.mapper.RegionMapper;
+import com.threefriend.lightspace.mapper.SchoolMapper;
 import com.threefriend.lightspace.repository.RegionRepository;
+import com.threefriend.lightspace.repository.SchoolRepository;
 import com.threefriend.lightspace.service.RegionService;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -18,6 +20,8 @@ public class RegionServiceImpl implements RegionService{
 
 	@Autowired
 	private RegionRepository region_dao;
+	@Autowired
+	private SchoolRepository school_dao;
 	
 	@Override
 	public ResultVO findRegion(Map<String, String> params) {
@@ -32,6 +36,13 @@ public class RegionServiceImpl implements RegionService{
 			end = region_dao.findByParentidOrderByVieworder(Integer.valueOf(params.get("pId")));
 		}
 		return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO findSchoolByRegion(Map<String, String> params) {
+		Integer regionId = Integer.valueOf(params.get("regionId"));
+		List<SchoolMapper> schools = school_dao.findByRegionId(regionId);
+		return ResultVOUtil.success(schools);
 	}
 
 }

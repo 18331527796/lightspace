@@ -494,4 +494,60 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 		return ResultVOUtil.success();
 	}
 
+	@Override
+	public ResultVO diopterList(Map<String, String> params) {
+		Integer studentId = Integer.valueOf(params.get("studentId"));
+		// 找到这个孩子所有的屈光度档案数据
+		List<DiopterMapper> diopterList = diopter_dao.findByStudentIdOrderByIdDesc(studentId);
+		return ResultVOUtil.success(diopterList);
+	}
+
+	@Override
+	public ResultVO diopterById(Map<String, String> params) {
+		Integer id = Integer.valueOf(params.get("id"));
+		DiopterMapper diopterMapper = diopter_dao.findById(id).get();
+		return ResultVOUtil.success(diopterMapper);
+	}
+
+	@Override
+	public ResultVO screeningTopByStudent(Map<String, String> params) {
+		Double shibiao  = 0.6d;
+		Integer levelId = 11;
+		Integer studentId = 0 ;
+		if(!StringUtils.isEmpty(params.get("studentId"))) {
+			studentId = Integer.valueOf(params.get("studentId"));
+			//区分戴镜还是裸视 0:screening 1:wear
+			Integer detectType	= Integer.valueOf(params.get("detectType"));
+			//左右眼 type 1:R 2:L
+			Integer type 	= Integer.valueOf(params.get("type"));
+			if(detectType==0) {
+				ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(studentId);
+				if(screening!=null) {
+					if(type==1) {
+						shibiao = screening.getVisionRightStr();
+					}else {
+						shibiao = screening.getVisionLeftStr();
+					}
+				}
+			}else {
+				ScreeningWearMapper wear = screening_wear_dao.findTopByStudentIdOrderByGenTime(studentId);
+				if(wear!=null) {
+					if(type==1) {
+						shibiao = wear.getVisionRightStr();
+					}else {
+						shibiao = wear.getVisionLeftStr();
+					}
+				}
+			}
+		}
+		List<OptotypeMapper> findAll = optotype_dao.findAll();
+		for (OptotypeMapper optotypeMapper : findAll) {
+			if(optotypeMapper.getLevelName().equals(shibiao.toString())) {
+				levelId = optotypeMapper.getLevelId();
+				break;
+			}
+		}
+		return ResultVOUtil.success(levelId);
+	}
+
 }
