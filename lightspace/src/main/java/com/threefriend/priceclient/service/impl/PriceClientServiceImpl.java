@@ -82,6 +82,7 @@ public class PriceClientServiceImpl implements PriceClientService{
 			String detailsstr = ImguploadUtils.uploadImg(details, "price");
 			end.setIntroduce(detailsstr);
 		}
+		series_dao.save(end);
 		return ResultVOUtil.success();
 	}
 

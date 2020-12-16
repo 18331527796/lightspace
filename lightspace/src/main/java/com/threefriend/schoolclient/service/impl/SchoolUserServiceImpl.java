@@ -34,8 +34,10 @@ import com.threefriend.lightspace.mapper.schoolclient.SchoolRoleRightRelation;
 import com.threefriend.lightspace.mapper.schoolclient.SchoolSemesterMapper;
 import com.threefriend.lightspace.mapper.schoolclient.SchoolStudentRecordMapper;
 import com.threefriend.lightspace.mapper.schoolclient.UserSchoolsMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
 import com.threefriend.lightspace.repository.ClassesRepository;
 import com.threefriend.lightspace.repository.SchoolRepository;
+import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 import com.threefriend.lightspace.repository.TeacherRepository;
 import com.threefriend.lightspace.repository.UserRepository;
@@ -78,6 +80,8 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 	private TeacherRepository teacher_dao;
 	@Autowired
 	private UserSchoolsRepository u_s_dao;
+	@Autowired
+	private ScreeningRepository screening_dao;
 	
 	
 	@Override
@@ -601,17 +605,17 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		
 		if(SemesterPo!=null ) {
 			
-			System.out.println(new Date().getTime()+"---"+SemesterPo.getGenTime().getTime()+"---"+(new Date().getTime()-SemesterPo.getGenTime().getTime()));
-			if((new Date().getTime()-SemesterPo.getGenTime().getTime())>604800000) {
+			//System.out.println(new Date().getTime()+"---"+SemesterPo.getGenTime().getTime()+"---"+(new Date().getTime()-SemesterPo.getGenTime().getTime()));
+			//if((new Date().getTime()-SemesterPo.getGenTime().getTime())>604800000) {
 				school_class_dao.deleteBySchoolIdAndSemesterId(schoolId,SemesterPo.getId());
 				school_student_record_dao.deleteBySchoolIdAndSemester(schoolId,SemesterPo.getId());
 				SemesterPo.setGenTime(new Date());
 				school_semester_dao.save(SemesterPo);
 				System.out.println("进行重置");
-			}else {
-				System.out.println("时间不够，跳出方法");
-				return ; 
-			}
+			//}else {
+			//	System.out.println("时间不够，跳出方法");
+			//	return ; 
+			//}
 		}else {
 			System.out.println("新学期创建");
 			SemesterPo = new SchoolSemesterMapper();
@@ -642,14 +646,15 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		List<StudentMapper> allStudent = student_dao.findByClassesId(classIds);
 		List<SchoolStudentRecordMapper> saveRecord = new ArrayList<>();
 		for (StudentMapper po : allStudent) {
-			if(po.getLastTime()==null||po.getVisionLeftStr()==null||po.getVisionRightStr()==null)continue;
+			ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(po.getId());
+			if(screening==null)continue;
 			SchoolStudentRecordMapper record = new SchoolStudentRecordMapper();
 			record.setName(po.getName());
 			record.setClassId(po.getClassesId());
 			record.setGender(po.getGender());
 			record.setSchoolId(schoolId);
-			record.setVisionLeftStr(po.getVisionLeftStr());
-			record.setVisionRightStr(po.getVisionLeftStr());
+			record.setVisionLeftStr(screening.getVisionLeftStr());
+			record.setVisionRightStr(screening.getVisionLeftStr());
 			record.setSemester(SemesterPo.getId());
 			saveRecord.add(record);
 		}

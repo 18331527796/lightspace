@@ -48,6 +48,7 @@ import com.threefriend.lightspace.service.Impl.ReportServiceImpl;
 import com.threefriend.lightspace.util.ExcelUtil;
 import com.threefriend.lightspace.util.JfreeUtil;
 import com.threefriend.lightspace.util.ListUtils;
+import com.threefriend.lightspace.util.OptotypeUtils;
 import com.threefriend.lightspace.util.ResultVOUtil;
 import com.threefriend.lightspace.util.WordUtil;
 import com.threefriend.lightspace.vo.ResultVO;
@@ -61,7 +62,7 @@ import cn.afterturn.easypoi.entity.ImageEntity;
 public class SchoolRecordServiceImpl implements SchoolRecordService{
 	
 	private final String[] diopterArray = { "学校名称", "班级名称", "学生姓名", "右眼球镜", "左眼球镜", "右眼柱镜", "左眼柱镜", 
-											"右眼轴位", "左眼轴位", "右眼水平眼位", "左眼水平眼位", "右眼垂直眼位", "左眼垂直眼位"};
+											"右眼轴位", "左眼轴位", "右眼水平眼位", "左眼水平眼位", "右眼垂直眼位", "左眼垂直眼位","左眼视力","右眼视力","左眼屈光不正","右眼屈光不正","左眼串镜","右眼串镜"};
 	
 	@Autowired
 	private StudentRepository student_dao;
@@ -577,6 +578,7 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 						AVG = s.getVisionRightStr();
 					}
 					
+					
 					if(s.getGender()==0) {
 						boyAll++;
 						if(AVG>=1.0) {
@@ -693,6 +695,7 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			}else {
 				AVG = s.getVisionRightStr();
 			}
+			
 			
 			if(s.getGender()==0) {
 				boyAll++;
@@ -837,9 +840,9 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			RIGHT = s.getVisionRightStr();
 			
 				//双眼大于1.0 并且没有戴镜记录 就是良好
-				if(LEFT>=1.0d&&RIGHT>=1.0d&&screeningwear==null) {
-						good++;
-				}else { //这里条件是 视力有不到1.0的眼 或者 有戴镜记录
+				if(LEFT>=1.0d&&RIGHT>=1.0d) {
+					good++;
+				}else { //这里条件是 视力有不到1.0的眼 
 					bad++; //不良
 					
 					if(LEFT<1.0d&&RIGHT>=1.0d) {
@@ -863,7 +866,7 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 							avgSerious++;
 						}
 					}else {
-						if(RIGHT<1.0d&&RIGHT>=0.6d) {
+						 if(RIGHT<1.0d&&RIGHT>=0.6d) {
 							avgMild++;
 						}else if(RIGHT<0.6d&&RIGHT>=0.4d) {
 							avgModerate++;
@@ -1084,6 +1087,15 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 				members.add("暂无数据");
 				members.add("暂无数据");
 				members.add("暂无数据");
+				//新加的临时用
+				members.add(s_po.getVisionLeftStr()==null?"":OptotypeUtils.vision2onlyvision5(s_po.getVisionLeftStr()));
+				members.add(s_po.getVisionRightStr()==null?"":OptotypeUtils.vision2onlyvision5(s_po.getVisionRightStr()));
+				
+				members.add("9");
+				members.add("9");
+				members.add("9");
+				members.add("9");
+				
 				map.put(s_po.getId() + "", members);
 			}else {
 				members.add(s_po.getSchoolName());
@@ -1099,6 +1111,54 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 				members.add(diopter.getGhL());
 				members.add(diopter.getGvR());
 				members.add(diopter.getGvL());
+				//这下面都是加来临时用的
+				members.add(s_po.getVisionLeftStr()==null?"":OptotypeUtils.vision2onlyvision5(s_po.getVisionLeftStr()));
+				members.add(s_po.getVisionRightStr()==null?"":OptotypeUtils.vision2onlyvision5(s_po.getVisionRightStr()));
+				//等效球镜
+				Double sphericalEquivalent = 0d;
+				if(diopter.getDc1L().indexOf("<")==-1) {
+					sphericalEquivalent=(Double.valueOf(diopter.getDc1L())/2)+Double.valueOf(diopter.getDs1L());
+				}else {
+					sphericalEquivalent=(-3.00d/2)+Double.valueOf(diopter.getDs1L());
+				}
+				if(sphericalEquivalent<-0.50) {
+					members.add("1");
+				}else if(sphericalEquivalent>=-0.50&&sphericalEquivalent<1.00){
+					members.add("0");
+				}else {
+					members.add("2");
+				}
+				
+				
+				if(diopter.getDc1R().indexOf("<")==-1) {
+					sphericalEquivalent=(Double.valueOf(diopter.getDc1R())/2)+Double.valueOf(diopter.getDs1R());
+				}else {
+					sphericalEquivalent=(-3.00d/2)+Double.valueOf(diopter.getDs1R());
+				}
+				if(sphericalEquivalent<-0.50) {
+					members.add("1");
+				}else if(sphericalEquivalent>=-0.50&&sphericalEquivalent<1.00){
+					members.add("0");
+				}else {
+					members.add("2");
+				}
+				
+				if(members.get(15).equals("0")) {
+					members.add("0");
+				}else if(members.get(15).equals("1")){
+					members.add("-1");
+				}else {
+					members.add("1");
+				}
+				
+				if(members.get(16).equals("0")) {
+					members.add("0");
+				}else if(members.get(15).equals("1")){
+					members.add("-1");
+				}else {
+					members.add("1");
+				}
+				
 				map.put(s_po.getId() + "", members);
 			}
 		}

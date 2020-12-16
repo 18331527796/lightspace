@@ -68,4 +68,9 @@ public class TeacherXcxController {
 		return teacher_impl.studentByType(params);
 	}
 	
+	@PostMapping("/loginOut")
+	public ResultVO loginOut(@RequestParam Map<String, String> params){
+		return teacher_impl.loginOut(params);
+	}
+	
 }

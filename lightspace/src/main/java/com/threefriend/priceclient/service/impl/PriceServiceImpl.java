@@ -70,6 +70,7 @@ public class PriceServiceImpl implements PriceService{
 	public ResultVO loginPrice(Map<String, String> params) {
 		String loginname = params.get("loginName");
 		String password = params.get("password");
+		System.out.println(loginname+"-----"+password);
 		PriceUserMapper user = price_user_dao.findByLoginNameAndPassword(loginname,password);
 		if(user==null) return ResultVOUtil.error(ResultEnum.LOGIN_FAIL.getStatus(), ResultEnum.LOGIN_FAIL.getMessage());
 		return ResultVOUtil.success();
@@ -93,7 +94,6 @@ public class PriceServiceImpl implements PriceService{
 	@Override
 	public ResultVO contrast(Map<String, String> params) {
 		List<SeriesProductMapper> end = new ArrayList<>();
-		System.out.println(params.get("one"));
 		//第一张对比图
 		String[] split = params.get("one").split(",");
 		for (String string : split) {
@@ -111,7 +111,7 @@ public class PriceServiceImpl implements PriceService{
 	public ResultVO findGlassesBySeries(Map<String, String> params) {
 		Integer seriesId = Integer.valueOf(params.get("seriesId"));
 		List<GlassesVO> end = new ArrayList<>();
-		List<GlassesMapper> poList = glasses_dao.findBySeriesId(seriesId);
+		List<GlassesMapper> poList = glasses_dao.findBySeriesIdOrderById(seriesId);
 		for (GlassesMapper po : poList) {
 			end.add(new GlassesVO(po));
 		}

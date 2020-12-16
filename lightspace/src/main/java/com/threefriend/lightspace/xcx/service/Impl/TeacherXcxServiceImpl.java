@@ -79,7 +79,7 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 	 */
 	@Override
 	public ResultVO teacherLogin(Map<String, String> params) {
-		System.err.println(params.get("phone") + params.get("password"));
+		System.err.println("教师登录账号："+params.get("phone") +"    密码："+ params.get("password"));
 		String phone = params.get("phone");
 		String password = params.get("password");
 		List<TeacherMapper> teacher = teacher_dao.findByPhoneAndPassword(phone, password);
@@ -87,6 +87,14 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 			return ResultVOUtil.error(ResultEnum.TEACHER_LOGIN_ERROR.getStatus(),
 					ResultEnum.TEACHER_LOGIN_ERROR.getMessage());
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		
+		TeacherMapper po = teacher_dao.findByParentId(parent.getId());
+		if (null != po ) {
+			po.setParentId(null);
+			po.setState(0);
+			teacher_dao.save(po);
+		}
+		
 		teacher.get(0).setState(1); // 改变登录状态
 		teacher.get(0).setParentId(parent.getId());// 关联小程序账号
 		teacher_dao.save(teacher.get(0));
@@ -100,7 +108,7 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 	public ResultVO chkState(Map<String, String> params) {
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		TeacherMapper po = teacher_dao.findByParentId(parent.getId());
-		if (po != null && po.getState() == 1)
+		if (null != po && null != po.getState() && po.getState()== 1)
 			return ResultVOUtil.success();
 		return ResultVOUtil.error(ResultEnum.CHKSTATE_ERROR.getStatus(), ResultEnum.CHKSTATE_ERROR.getMessage());
 	}
@@ -128,7 +136,8 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 			RIGHT = one.getVisionRightStr();
 			tasknumber = taskrecord_dao.countByStudentIdAndGenTimeBetween(one.getId(), map.get("begin"),
 					map.get("end"));
-			if (!now.equals(Format.format(one.getRemindDecline()).substring(0, 10))) {
+			//if (!now.equals(Format.format(one.getRemindDecline()).substring(0, 10))) {
+			  if ((today - one.getRemindDecline().getTime())/1000 >= 5184000) {	
 				if (one.getScreeningType() == 1) {
 					List<ScreeningMapper> screening = screening_dao
 							.findByStudentIdOrderByGenTimeDesc(one.getId(), PageRequest.of(0, 2)).getContent();
@@ -151,12 +160,12 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 				if (tasknumber != tasksize)
 					untask++;
 			}
-			if (!now.equals(Format.format(one.getRemindUndetected()).substring(0, 10))) {
+			//if (!now.equals(Format.format(one.getRemindUndetected()).substring(0, 10))) {
 				if (LEFT == null || RIGHT == null || one.getSendTime() == null
-						|| today - one.getSendTime().getTime() >= 604800000) {
+						|| (today - one.getSendTime().getTime())/1000 >= 5184000) {
 					undetected++;
 				}
-			}
+			//}
 			if (LEFT != null && RIGHT != null) {
 				if (LEFT >= RIGHT) {
 					if (RIGHT >= 1.0d) {
@@ -205,17 +214,18 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 	@Override
 	public ResultVO undetected(Map<String, String> params) {
 		SimpleDateFormat Format = new SimpleDateFormat("yyyy-MM-dd"); // 定义想要的格式
-		String now = Format.format(new Date()).substring(0, 10);
+		//String now = Format.format(new Date()).substring(0, 10);
 		long today = new Date().getTime();
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		TeacherMapper po = teacher_dao.findByParentId(parent.getId());
 		List<StudentMapper> student = student_dao.findByClassesId(po.getClassId());
 		List<StudentMapper> end = new ArrayList<>();
 		for (StudentMapper s : student) {
-			if (now.equals(Format.format(s.getRemindUndetected()).substring(0, 10)))
-				continue;
+			//这个是用来跳过今天提醒过了的
+//			if (now.equals(Format.format(s.getRemindUndetected()).substring(0, 10)))
+//				continue;
 			if (s.getVisionLeftStr() == null || s.getVisionRightStr() == null|| s.getSendTime() == null
-					|| today - s.getSendTime().getTime() >= 604800000) {
+					|| (today - s.getSendTime().getTime())/1000 >= 5184000) {
 				end.add(s);
 			}
 		}
@@ -268,13 +278,14 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 	public ResultVO decline(Map<String, String> params) {
 		SimpleDateFormat Format = new SimpleDateFormat("yyyy-MM-dd"); // 定义想要的格式
 		String now = Format.format(new Date()).substring(0, 10);
+		long today = new Date().getTime();
 		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
 		TeacherMapper po = teacher_dao.findByParentId(parent.getId());
 		List<StudentMapper> student = student_dao.findByClassesId(po.getClassId());
 		List<Map<String, Object>> end = new ArrayList<>();
 		Map<String, Object> endmap = null;
 		for (StudentMapper one : student) {
-			if (now.equals(Format.format(one.getRemindDecline()).substring(0, 10)))
+			if (now.equals(Format.format(one.getRemindDecline()).substring(0, 10))||(today - one.getRemindDecline().getTime())/1000 < 5184000)
 				continue;
 			if (one.getScreeningType() == 1) {
 				List<ScreeningMapper> screening = screening_dao
@@ -311,7 +322,6 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 
 	@Override
 	public ResultVO remindUndetected(Integer[] params) throws IOException {
-		System.out.println(params.length);
 		List<Integer> ids = new ArrayList<>();
 		for (Integer integer : params) {
 			ids.add(integer);
@@ -324,7 +334,7 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 				now = (now - student.getSendTime().getTime()) / 1000 / 86400;
 				time = now + "";
 			} else {
-				time = "超过7";
+				time = "超过60";
 			}
 			sendmsg(student, time, "undetected", null);
 			student.setRemindUndetected(new Date());
@@ -451,6 +461,18 @@ public class TeacherXcxServiceImpl implements TeacherXcxService {
 				}
 			}
 			return ResultVOUtil.success(end);
+	}
+
+	@Override
+	public ResultVO loginOut(Map<String, String> params) {
+		ParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		List<TeacherMapper> teachers = teacher_dao.findAllByParentId(parent.getId());
+		for (TeacherMapper po : teachers) {
+			po.setState(0);
+			po.setParentId(null);
+		}
+		teacher_dao.saveAll(teachers);
+		return ResultVOUtil.success();
 	}
 	
 

@@ -1,14 +1,37 @@
 package com.threefriend.lightspace;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.collections4.map.HashedMap;
+import org.apache.poi.POIXMLDocument;
+import org.apache.poi.POIXMLTextExtractor;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +39,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.common.collect.Lists;
+import com.threefriend.lightspace.enums.UrlEnums;
 import com.threefriend.lightspace.mapper.SortMapper;
 import com.threefriend.lightspace.mapper.StudentMapper;
 import com.threefriend.lightspace.mapper.xcx.FabulousRecordMapper;
+import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
 import com.threefriend.lightspace.repository.FabulousRcordRepository;
+import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.SortRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
 
@@ -33,42 +59,117 @@ public class test {
 	private SortRepository sort_dao;
 	@Autowired
 	private StudentRepository student_dao;
+	@Autowired
+	private ScreeningRepository screening_dao;
+	
+	
+	
+	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void test(){
-		
-		System.out.println(0%6);
-		System.out.println(1%6);
-		System.out.println(2%6);
-		System.out.println(3%6);
-		System.out.println(4%6);
-		System.out.println(5%6);
-		System.out.println(6%6);
-		System.out.println(7%6);
-		System.out.println(8%6);
-		System.out.println(9%6);
-		System.out.println(10%6);
-		System.out.println(11%6);
-		/*//计算当前的学年学期
-        Calendar cal = Calendar.getInstance();
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH )+1;
-		String term = "1学期";
-		if(month < 9)
-			year = year - 1;
-		if (month>=7 && month<9) {
-			term = "暑假";
-		}else if(month>=9 && month<1){
-			term = "1学期";
-		}else if(month>=1 && month<3) {
-			term = "寒假";
-		}else {
-			term = "2学期";
+		/*int count = 0 ;
+		List<StudentMapper> findBySchoolId = student_dao.findBySchoolId(50);
+		for (StudentMapper studentMapper : findBySchoolId) {
+			ScreeningMapper po = screening_dao.findTopByStudentIdOrderByGenTimeDesc(studentMapper.getId());
+			if(po!=null)count++;
 		}
-		System.out.println("现在是：" + year + " - " + (year + 1) +  "学年，" + term + "。");*/
+		System.out.println(count);*/
+        
+		String filePath = "C:/Users/Administrator/Desktop/主播礼物表/用来统计主播工资的word.docx";
+        String content = readWord(filePath);
+        String[] split = content.split("\n");
+        
+        String []player =new String[] {"团团","晚安","兰兰","冉冉","香菜","阿柚","雪儿","大三","萌幼","芯儿","盲盒"};
+        
+        Map<String, List<String>> map = new LinkedHashMap<>();
+        for (String string : player) {
+        	map.put(string, new ArrayList<>());
+		}
+        
+        for (String string : split) {
+        	string=string.replaceAll(" ", "").replaceAll("。", "").replaceAll("，", "");
+        	System.out.println("----");
+        	System.out.println(string);
+        	if(string.indexOf("盲盒")!=-1) {
+        		string=string.replaceAll("盲盒", "");
+        		map.get("盲盒").add(string.replaceAll("[\\u4e00-\\u9fa5]", ""));
+        	}
+        	String a = string.replaceAll("[\\u4e00-\\u9fa5]", ""); 
+            String b = string.replaceAll("[0-9]", "");
+            System.out.println("输出数字："+a);
+            System.out.println("输出文字："+b);
+            map.get(b).add(a);
+        }
+        
+        createExcel(map);
+
+	}
+	public static String readWord(String path) {
+		String buffer = "";
+		try {
+			if (path.endsWith(".doc")) {
+				InputStream is = new FileInputStream(new File(path));
+				WordExtractor ex = new WordExtractor(is);
+				buffer = ex.getText();
+				ex.close();
+			} else if (path.endsWith("docx")) {
+				OPCPackage opcPackage = POIXMLDocument.openPackage(path);
+				POIXMLTextExtractor extractor = new XWPFWordExtractor(opcPackage);
+				buffer = extractor.getText();
+				extractor.close();
+			} else {
+				System.out.println("此文件不是word文件！");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		return buffer;
 	}
 	
-		
+	
+public synchronized static void createExcel(Map<String, List<String>> map) {
+    	
+        // 第一步，创建一个webbook，对应一个Excel文件
+        HSSFWorkbook wb = new HSSFWorkbook();
+        // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+        HSSFSheet sheet = wb.createSheet("sheet1");
+        sheet.setDefaultColumnWidth(8);// 默认列宽
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+        HSSFRow row = sheet.createRow((int) 0);
+
+        // 第五步，写入实体数据 实际应用中这些数据从数据库得到,list中字符串的顺序必须和数组strArray中的顺序一致
+        int i = 0, sumrow = 0;
+        for (String str : map.keySet()) {
+        	if(map.get(str).size()>sumrow) sumrow=map.get(str).size()+2;
+        }
+        
+        
+        for (String str : map.keySet()) {
+        	System.out.println("--------"+str);
+        	Integer sum = 0;
+            row = sheet.createRow(i);
+            List<String> list = map.get(str);
+            row.createCell(0).setCellValue(str);
+            // 第四步，创建单元格，并设置值
+            for (int j = 1; j < map.get(str).size()+1; j++) {
+            	row.createCell((short) j).setCellValue(list.get(j-1));
+            	sum+=Integer.valueOf(list.get(j-1));
+    		}
+            row.createCell(sumrow).setCellValue(sum);
+            row.createCell(sumrow+1).setCellValue(Double.valueOf(sum*0.05));
+	        // 第六步，将文件存到指定位置
+	        try (FileOutputStream fout = new FileOutputStream("C:/Users/Administrator/Desktop/ceshi.xls")){
+	            wb.write(fout);
+	            wb.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        i++;
+        }
+    }
 
 	public void initTimer() {
 		Timer t = new Timer();// 创建Timer对象

@@ -48,7 +48,7 @@ public class ExcelUtil {
         CellStyle color = wb.createCellStyle();
     	//关键点 IndexedColors.AQUA.getIndex() 对应颜色
         color.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        color.setFillForegroundColor(IndexedColors.RED.index);
+        color.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.index);
 
         // 第五步，写入实体数据 实际应用中这些数据从数据库得到,list中字符串的顺序必须和数组strArray中的顺序一致
         int i = 0;
@@ -58,7 +58,18 @@ public class ExcelUtil {
             // 第四步，创建单元格，并设置值
             for (int j = 0; j < strArray.length; j++) {
         		row.createCell((short) j).setCellValue(list.get(j));
-        		if(list.get(3).indexOf("-")!=-1||list.get(4).indexOf("-")!=-1) {
+        		if(list.get(5).equals("暂无数据"))continue;
+        		//散光低于100度 进入判断否则标红
+        		if(list.get(5).indexOf("<")==-1&&list.get(6).indexOf("<")==-1&&Double.valueOf(list.get(5))>=-1.5d&&Double.valueOf(list.get(6))>=-1.5d) {
+        			//判断是不是近视
+        			if(list.get(3).indexOf("-")!=-1||list.get(4).indexOf("-")!=-1) {
+        				//是近视 大于50度标红
+        				if(Double.valueOf(list.get(3))<-0.5d||Double.valueOf(list.get(4))<-0.5d) row.getCell(j).setCellStyle(color);
+        			}else {
+        				//是远视大于150度标红
+        				if(Double.valueOf(list.get(3))>1.5d||Double.valueOf(list.get(4))>1.5d) row.getCell(j).setCellStyle(color);
+        			}
+        		}else {
         			row.getCell(j).setCellStyle(color);
         		}
             }

@@ -25,11 +25,25 @@ public class GlassesMapper {
 	//隐形标记
 	private String covert;
 	//光度范围1
-	private String photometric1;
+	private String photometric1 = "";
 	//光度范围2
-	private String photometric2;
+	private String photometric2 = "";
 	//光度范围3
-	private String photometric3;
+	private String photometric3 = "";
+	//光度范围4
+	private String photometric4 = "";
+	//光度范围5
+	private String photometric5 = "";
+	//形状1(矩形：1  三角形：2  上梯形：3)
+	private Integer shape1;
+	//形状2
+	private Integer shape2;
+	//形状3
+	private Integer shape3;
+	//形状4
+	private Integer shape4;
+	//形状5
+	private Integer shape5;
 	//下加光
 	private String addLightBelow;
 	//现片价
@@ -52,9 +66,41 @@ public class GlassesMapper {
 	private String colonoscope;
 	//现片
 	private String onTheSpot;
+	//偏光价
+	private String polarizing = "";
+	//通道
+	private String passageway = "";
+	//偏光定制价
+	private String pricepol = "";
+	//蓝光片价
+	private String bluray = "";
 	
 	private boolean checked = false;
-	
+	 
+	public String getPolarizing() {
+		return polarizing;
+	}
+	public void setPolarizing(String polarizing) {
+		this.polarizing = polarizing;
+	}
+	public String getPassageway() {
+		return passageway;
+	}
+	public void setPassageway(String passageway) {
+		this.passageway = passageway;
+	}
+	public String getPricepol() {
+		return pricepol;
+	}
+	public void setPricepol(String pricepol) {
+		this.pricepol = pricepol;
+	}
+	public String getBluray() {
+		return bluray;
+	}
+	public void setBluray(String bluray) {
+		this.bluray = bluray;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -182,6 +228,48 @@ public class GlassesMapper {
 	}
 	public void setOnTheSpot(String onTheSpot) {
 		this.onTheSpot = onTheSpot;
+	}
+	public String getPhotometric4() {
+		return photometric4;
+	}
+	public void setPhotometric4(String photometric4) {
+		this.photometric4 = photometric4;
+	}
+	public String getPhotometric5() {
+		return photometric5;
+	}
+	public void setPhotometric5(String photometric5) {
+		this.photometric5 = photometric5;
+	}
+	public Integer getShape1() {
+		return shape1;
+	}
+	public void setShape1(Integer shape1) {
+		this.shape1 = shape1;
+	}
+	public Integer getShape2() {
+		return shape2;
+	}
+	public void setShape2(Integer shape2) {
+		this.shape2 = shape2;
+	}
+	public Integer getShape3() {
+		return shape3;
+	}
+	public void setShape3(Integer shape3) {
+		this.shape3 = shape3;
+	}
+	public Integer getShape4() {
+		return shape4;
+	}
+	public void setShape4(Integer shape4) {
+		this.shape4 = shape4;
+	}
+	public Integer getShape5() {
+		return shape5;
+	}
+	public void setShape5(Integer shape5) {
+		this.shape5 = shape5;
 	}
 	
 	

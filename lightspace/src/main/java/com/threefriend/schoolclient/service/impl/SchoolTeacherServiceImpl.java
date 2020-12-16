@@ -283,7 +283,6 @@ public class SchoolTeacherServiceImpl implements SchoolTeacherService{
 
 	@Override
 	public ResultVO remindUndetected(Integer[] params) throws IOException {
-		System.out.println(params.length);
 		List<Integer> ids = new ArrayList<>();
 		for (Integer integer : params) {
 			ids.add(integer);

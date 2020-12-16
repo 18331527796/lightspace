@@ -38,4 +38,6 @@ public interface TeacherXcxService {
 	String getAccessToken();
 	//不同程度视力的孩子列表
 	ResultVO studentByType(Map<String, String> params);
+	//登出接口
+	ResultVO loginOut(Map<String, String> params);
 }

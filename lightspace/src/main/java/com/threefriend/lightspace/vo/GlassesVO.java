@@ -26,6 +26,15 @@ public class GlassesVO {
 		sphericalMirror = po.getSphericalMirror();
 		colonoscope = po.getColonoscope();
 		onTheSpot = po.getOnTheSpot();
+		shape1 = po.getShape1();
+		shape2 = po.getShape2();
+		shape3 = po.getShape3();
+		shape4 = po.getShape4();
+		shape5 = po.getShape5();
+		polarizing = po.getPolarizing();
+		passageway = po.getPassageway();
+		pricepol = po.getPricepol();
+		bluray = po.getBluray();
 
 		if (!po.getPhotometric1().isEmpty()) {
 			if (po.getPhotometric1().indexOf("/") == -1) {
@@ -57,6 +66,26 @@ public class GlassesVO {
 				}
 			}
 		}
+		if (!po.getPhotometric4().isEmpty()) {
+			if (po.getPhotometric4().indexOf("/") == -1) {
+				photometric4.add(po.getPhotometric4());
+			} else {
+				String[] split = po.getPhotometric4().split("/");
+				for (String string : split) {
+					photometric4.add(string);
+				}
+			}
+		}
+		if (!po.getPhotometric5().isEmpty()) {
+			if (po.getPhotometric5().indexOf("/") == -1) {
+				photometric5.add(po.getPhotometric5());
+			} else {
+				String[] split = po.getPhotometric5().split("/");
+				for (String string : split) {
+					photometric5.add(string);
+				}
+			}
+		}
 
 	}
 
@@ -78,6 +107,20 @@ public class GlassesVO {
 	private List<String> photometric2 = new ArrayList<>();
 	// 光度范围3
 	private List<String> photometric3 = new ArrayList<>();
+	// 光度范围4
+	private List<String> photometric4 = new ArrayList<>();
+	// 光度范围5
+	private List<String> photometric5 = new ArrayList<>();
+	//形状1(矩形：1  三角形：2  上梯形：3)
+	private Integer shape1;
+	//形状2
+	private Integer shape2;
+	//形状3
+	private Integer shape3;
+	//形状4
+	private Integer shape4;
+	//形状5
+	private Integer shape5;
 	// 下加光
 	private String addLightBelow;
 	// 现片价
@@ -103,6 +146,47 @@ public class GlassesVO {
 	private String onTheSpot;
 
 	private boolean checked;
+	//偏光价
+	private String polarizing;
+	//通道
+	private String passageway;
+	//偏光定制价
+	private String pricepol;
+	//蓝光片价
+	private String bluray;
+
+
+	public String getPolarizing() {
+		return polarizing;
+	}
+
+	public void setPolarizing(String polarizing) {
+		this.polarizing = polarizing;
+	}
+
+	public String getPassageway() {
+		return passageway;
+	}
+
+	public void setPassageway(String passageway) {
+		this.passageway = passageway;
+	}
+
+	public String getPricepol() {
+		return pricepol;
+	}
+
+	public void setPricepol(String pricepol) {
+		this.pricepol = pricepol;
+	}
+
+	public String getBluray() {
+		return bluray;
+	}
+
+	public void setBluray(String bluray) {
+		this.bluray = bluray;
+	}
 
 	public Integer getId() {
 		return id;
@@ -270,6 +354,62 @@ public class GlassesVO {
 
 	public void setOnTheSpot(String onTheSpot) {
 		this.onTheSpot = onTheSpot;
+	}
+
+	public List<String> getPhotometric4() {
+		return photometric4;
+	}
+
+	public void setPhotometric4(List<String> photometric4) {
+		this.photometric4 = photometric4;
+	}
+
+	public List<String> getPhotometric5() {
+		return photometric5;
+	}
+
+	public void setPhotometric5(List<String> photometric5) {
+		this.photometric5 = photometric5;
+	}
+
+	public Integer getShape1() {
+		return shape1;
+	}
+
+	public void setShape1(Integer shape1) {
+		this.shape1 = shape1;
+	}
+
+	public Integer getShape2() {
+		return shape2;
+	}
+
+	public void setShape2(Integer shape2) {
+		this.shape2 = shape2;
+	}
+
+	public Integer getShape3() {
+		return shape3;
+	}
+
+	public void setShape3(Integer shape3) {
+		this.shape3 = shape3;
+	}
+
+	public Integer getShape4() {
+		return shape4;
+	}
+
+	public void setShape4(Integer shape4) {
+		this.shape4 = shape4;
+	}
+
+	public Integer getShape5() {
+		return shape5;
+	}
+
+	public void setShape5(Integer shape5) {
+		this.shape5 = shape5;
 	}
 
 }

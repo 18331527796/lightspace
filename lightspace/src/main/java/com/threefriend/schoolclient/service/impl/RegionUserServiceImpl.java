@@ -125,7 +125,7 @@ public class RegionUserServiceImpl implements UserService{
 
 	@Override
 	public ResultVO deleteUserSchool(Map<String, String> params) {
-		System.out.println(params.get("userId")+"--"+params.get("schoolId"));
+		System.out.println("删除用户和学校的关联，用户id:"+params.get("userId")+"--学校id:"+params.get("schoolId"));
 		Integer userId = Integer.valueOf(params.get("userId"));
 		Integer schoolId = Integer.valueOf(params.get("schoolId"));
 		user_school_dao.deleteBySchoolIdAndUserId(schoolId,userId);

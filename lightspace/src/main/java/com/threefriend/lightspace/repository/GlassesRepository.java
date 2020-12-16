@@ -16,7 +16,7 @@ import com.threefriend.lightspace.mapper.GlassesMapper;
  */
 public interface GlassesRepository extends JpaRepository<GlassesMapper, Integer>{
 
-	List<GlassesMapper> findBySeriesId(Integer seriesId);
+	List<GlassesMapper> findBySeriesIdOrderById(Integer seriesId);
 	
 	Page<GlassesMapper> findBySeriesId(Integer seriesId,Pageable page);
 

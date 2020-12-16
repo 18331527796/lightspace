@@ -25,6 +25,8 @@ public interface TeacherRepository extends JpaRepository<TeacherMapper, Integer>
 	
 	TeacherMapper findByParentId(Integer parentId);
 	
+	List<TeacherMapper> findAllByParentId(Integer parentId);
+	
 	List<TeacherMapper> findByNameLike(String name);
 	
 	List<TeacherMapper> findBySchoolIdAndNameLike(Integer schoolId ,String name);
