@@ -26,6 +26,9 @@ public class SeriesMapper {
 	private String name;
 	// 介绍
 	private String introduce;
+	// 详情图片
+	private String picture;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -55,6 +58,12 @@ public class SeriesMapper {
 	}
 	public void setLabelName(String labelName) {
 		this.labelName = labelName;
+	}
+	public String getPicture() {
+		return picture;
+	}
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 	
 	

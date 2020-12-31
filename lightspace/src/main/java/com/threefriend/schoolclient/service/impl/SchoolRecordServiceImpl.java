@@ -834,7 +834,7 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 		nullstudent=allstudent-students.size();
 		
 		for (SchoolStudentRecordMapper s : students) {
-			ScreeningWearMapper screeningwear = screening_wear_dao.findTopByStudentIdOrderByGenTimeDesc(Integer.valueOf(s.getId().toString()));
+			ScreeningWearMapper screeningwear = screening_wear_dao.findTopByStudentIdOrderByGenTimeDesc(s.getStudentId());
 			
 			LEFT = s.getVisionLeftStr();
 			RIGHT = s.getVisionRightStr();

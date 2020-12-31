@@ -14,14 +14,18 @@ import com.threefriend.lightspace.enums.AccountEnums;
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.train.TrainChildrenWordMapper;
 import com.threefriend.lightspace.mapper.train.TrainClertMapper;
+import com.threefriend.lightspace.mapper.train.TrainCombinationMapper;
 import com.threefriend.lightspace.mapper.train.TrainChildrenCombinationMapper;
 import com.threefriend.lightspace.mapper.train.TrainChildrenMapper;
+import com.threefriend.lightspace.mapper.train.TrainChildrenRowMapper;
 import com.threefriend.lightspace.mapper.train.TrainParentChildrenMapper;
 import com.threefriend.lightspace.mapper.train.TrainParentMapper;
 import com.threefriend.lightspace.mapper.xcx.ParentMapper;
 import com.threefriend.lightspace.repository.train.TrainChildrenWordRepository;
+import com.threefriend.lightspace.repository.train.TrainCombinationRepository;
 import com.threefriend.lightspace.repository.train.TrainChildrenCombinationRepository;
 import com.threefriend.lightspace.repository.train.TrainChildrenRepository;
+import com.threefriend.lightspace.repository.train.TrainChildrenRowRepository;
 import com.threefriend.lightspace.repository.train.TrainParentRepository;
 import com.threefriend.lightspace.repository.train.TrainPenterChildrenRepositroy;
 import com.threefriend.lightspace.util.MyBeanUtils;
@@ -44,7 +48,11 @@ public class TrainPartenrServiceImpl implements TrainParentService{
 	private TrainPenterChildrenRepositroy p_c_dao;
 	@Autowired
 	private TrainChildrenCombinationRepository c_c_dao;
-
+	@Autowired
+    private TrainChildrenRowRepository row_dao;
+	@Autowired
+	private TrainCombinationRepository combination_dao;;
+	
 	@Override
 	public ResultVO loginXcx(Map<String, String> params) throws Exception {
 		//从微信的接口获取sessionkey openId
@@ -64,6 +72,15 @@ public class TrainPartenrServiceImpl implements TrainParentService{
 			return ResultVOUtil.success(parent);
 		}
 		return ResultVOUtil.success(findByOpenId);
+	}
+	
+
+	@Override
+	public ResultVO manualBindingPhone(Map<String, String> params) {
+		TrainParentMapper parent = parent_dao.findByOpenId(params.get("openId"));
+		parent.setPhone(params.get("phone").trim());
+		parent_dao.save(parent);
+		return ResultVOUtil.success(parent);
 	}
 	
 	
@@ -168,17 +185,26 @@ public class TrainPartenrServiceImpl implements TrainParentService{
 	@Override
 	public ResultVO bindingChildren(TrainParentChildrenMapper vo) {
 		List<TrainParentChildrenMapper> po = p_c_dao.findByOpenIdAndChildrenId(vo.getOpenId(),vo.getChildrenId());
-		if(po!=null) return ResultVOUtil.success();
+		if(po.size()>0) return ResultVOUtil.success();
 		TrainParentChildrenMapper p_c = new TrainParentChildrenMapper(vo.getChildrenId(), vo.getOpenId());
 		p_c_dao.save(p_c);
 		return ResultVOUtil.success();
 	}
 
 	@Override
-	public ResultVO combinationSuccess(TrainChildrenCombinationMapper vo) {
-		TrainChildrenCombinationMapper po = c_c_dao.findById(vo.getId()).get();
-		po.setIsSuccess(1);
-		c_c_dao.save(po);
+	public ResultVO combinationSuccess(Map<String, String> params) {
+		TrainChildrenCombinationMapper po = c_c_dao.findById(Integer.valueOf(params.get("id"))).get();
+		TrainChildrenRowMapper row = row_dao.findByChildrenCombinationIdAndRow(po.getId(),Integer.valueOf(params.get("row")));
+		row.setIsSuccess(1);
+		row_dao.save(row);
+		int rowNumber = row_dao.countByChildrenCombinationIdAndIsSuccess(po.getId(),1);
+		Integer row2 = combination_dao.findById(po.getCombinationId()).get().getRow();
+		System.out.println(rowNumber+"++"+row2);
+		if(rowNumber>=row2) {
+			po.setIsSuccess(1);
+			po.setSuccessTime(new Date());
+			c_c_dao.save(po);
+		}
 		return ResultVOUtil.success();
 	}
 	
@@ -196,6 +222,38 @@ public class TrainPartenrServiceImpl implements TrainParentService{
 		}
 		return ResultVOUtil.success(all);
 	}
+
+	@Override
+	public ResultVO getCombinationHistory(TrainChildrenCombinationMapper vo) {
+		List<TrainChildrenCombinationMapper> allList = c_c_dao.findByChildrenIdAndIsSuccessOrderByIdDesc(vo.getChildrenId(),1);
+		return ResultVOUtil.success(allList);
+	}
+
+	@Override
+	public ResultVO getCombinationParent(TrainChildrenCombinationMapper vo) {
+		List<Map<String , Object>> end = new ArrayList<>();
+		List<String> combination = new ArrayList<>();
+		List<Integer> row = new ArrayList<>();
+		TrainCombinationMapper po = combination_dao.findById(vo.getCombinationId()).get();
+		List<TrainChildrenRowMapper> rowPo = row_dao.findByChildrenCombinationIdOrderByRow(vo.getId());
+		String[] split = po.getCombination().split("/");
+		int p = 0 ; 
+		for (int i = 0; i < split.length; i++) {
+			if(StringUtils.isEmpty(split[i]))continue;
+			Map<String , Object> map = new HashMap<>();
+			map.put("row", p+1);
+			map.put("name", split[p]);
+			map.put("isSuccess", rowPo.get(p).getIsSuccess());
+			end.add(map);
+			p++;
+		}
+		return ResultVOUtil.success(end);
+	}
+
+
+
+
+	
 	
 	
 }

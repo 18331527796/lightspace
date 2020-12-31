@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * 方案组合 应16种（视觉训练 8 套   弱视训练 8 套）
+ * 方案组合
  * @author Administrator
  *
  */
@@ -30,7 +30,11 @@ public class TrainCombinationMapper {
 	
 	private Integer isShow = 1;
 	
-	private String genTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());;
+	private String clert;
+	
+	private Integer row;
+	
+	private String genTime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());;
 
 	public Integer getId() {
 		return id;
@@ -82,6 +86,22 @@ public class TrainCombinationMapper {
 
 	public void setIsShow(Integer isShow) {
 		this.isShow = isShow;
+	}
+
+	public String getClert() {
+		return clert;
+	}
+
+	public void setClert(String clert) {
+		this.clert = clert;
+	}
+
+	public Integer getRow() {
+		return row;
+	}
+
+	public void setRow(Integer row) {
+		this.row = row;
 	}
 
 

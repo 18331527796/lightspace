@@ -21,11 +21,11 @@ public interface PriceClientService {
 
 	ResultVO seriesList(Map<String, String> params);
 	
-	ResultVO addSeries(Map<String, String> params,MultipartFile details);
+	ResultVO addSeries(Map<String, String> params,MultipartFile details,MultipartFile picture);
 	
 	ResultVO editSeries(Map<String, String> params);
 	
-	ResultVO saveSeries(Map<String, String> params,MultipartFile details);
+	ResultVO saveSeries(Map<String, String> params,MultipartFile details,MultipartFile picture);
 	
 	ResultVO findSeriesBylabel(Map<String, String> params);
 	
@@ -37,13 +37,13 @@ public interface PriceClientService {
 	
 	ResultVO deleteSeriesProduct(Map<String, String> params);
 	
-	ResultVO addGlasses(GlassesMapper vo);
+	ResultVO addGlasses(GlassesMapper vo,MultipartFile picture,MultipartFile customFile);
 	
 	ResultVO findGlassesBySeries(Map<String, String> params);
 	
 	ResultVO editGlasses(Map<String, String> params);
 	
-	ResultVO saveGlasses(GlassesMapper vo);
+	ResultVO saveGlasses(GlassesMapper vo,MultipartFile picture,MultipartFile customFile);
 	
 	ResultVO deleteGlasses(Map<String, String> params);
 	

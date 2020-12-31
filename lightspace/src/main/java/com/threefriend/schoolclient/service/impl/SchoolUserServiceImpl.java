@@ -606,16 +606,16 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		if(SemesterPo!=null ) {
 			
 			//System.out.println(new Date().getTime()+"---"+SemesterPo.getGenTime().getTime()+"---"+(new Date().getTime()-SemesterPo.getGenTime().getTime()));
-			//if((new Date().getTime()-SemesterPo.getGenTime().getTime())>604800000) {
+			if((new Date().getTime()-SemesterPo.getGenTime().getTime())>86400000) {
 				school_class_dao.deleteBySchoolIdAndSemesterId(schoolId,SemesterPo.getId());
 				school_student_record_dao.deleteBySchoolIdAndSemester(schoolId,SemesterPo.getId());
 				SemesterPo.setGenTime(new Date());
 				school_semester_dao.save(SemesterPo);
 				System.out.println("进行重置");
-			//}else {
-			//	System.out.println("时间不够，跳出方法");
-			//	return ; 
-			//}
+			}else {
+				System.out.println("时间不够，跳出方法");
+				return ; 
+			}
 		}else {
 			System.out.println("新学期创建");
 			SemesterPo = new SchoolSemesterMapper();
@@ -649,6 +649,7 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 			ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(po.getId());
 			if(screening==null)continue;
 			SchoolStudentRecordMapper record = new SchoolStudentRecordMapper();
+			record.setStudentId(po.getId());
 			record.setName(po.getName());
 			record.setClassId(po.getClassesId());
 			record.setGender(po.getGender());

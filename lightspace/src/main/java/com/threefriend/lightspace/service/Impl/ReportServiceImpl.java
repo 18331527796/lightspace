@@ -310,11 +310,11 @@ public class ReportServiceImpl implements ReportService{
         map.put("picture3", imageEntity3);
         
         //模拟饼状图数据
-        HashMap<String, Integer> datas4 = new HashMap<>();
-        datas4.put("已矫正",correct);
-        datas4.put("未校正",bad-correct);
-        ImageEntity imageEntity4 = JfreeUtil.pieChart("视力矫正情况",datas4, 500, 200);
-        map.put("picture4", imageEntity4);
+        //HashMap<String, Integer> datas4 = new HashMap<>();
+        //datas4.put("已矫正",correct);
+        //datas4.put("未校正",bad-correct);
+        //ImageEntity imageEntity4 = JfreeUtil.pieChart("视力矫正情况",datas4, 500, 200);
+        //map.put("picture4", imageEntity4);
         
         //模拟饼状图数据
         HashMap<String, Integer> datas5 = new HashMap<>();
@@ -343,8 +343,8 @@ public class ReportServiceImpl implements ReportService{
         
         map.put("remark3", "实际应检人数为:"+allstudent+"人   实检人数:"
         		+(allstudent-nullstudent)+ "人;\r\n"
-        		+ "其中视力矫正人数为:"+correct+"人,占"+df.format(((float)correct/((float)bad))*100)+"%;\r\n"
-        		+ "    视力未校正人数为:"+(bad-correct)+"人,占"+df.format(((float)((bad-correct))/bad)*100)+"%;\r\n"
+        		//+ "其中视力矫正人数为:"+correct+"人,占"+df.format(((float)correct/((float)bad))*100)+"%;\r\n"
+        		//+ "    视力未校正人数为:"+(bad-correct)+"人,占"+df.format(((float)((bad-correct))/bad)*100)+"%;\r\n"
         		+ "视力矫正中:\r\n"
         		+ "    适配人数为:"+(correct-screeningbad)+"人,占"+df.format((float)(correct-screeningbad)/((float)correct)*100)+"%;\r\n"
         		+ "    不适配人数为:"+screeningbad+"人,占"+df.format((float)screeningbad/((float)correct)*100)+"%;");

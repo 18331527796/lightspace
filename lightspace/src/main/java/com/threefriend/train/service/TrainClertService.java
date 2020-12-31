@@ -37,7 +37,7 @@ public interface TrainClertService {
 	//查看孩子的训练计划
 	ResultVO clertChildrenCombinationList(Map<String, String> params);
 	//删除孩子的训练计划
-	ResultVO deleteChildrenCombination(TrainChildrenCombinationMapper vo);
+	ResultVO deleteChildrenCombination(Map<String, String> params);
 	//保存训练计划顺序
 	ResultVO saveSort(Map<String, String> params);
 	

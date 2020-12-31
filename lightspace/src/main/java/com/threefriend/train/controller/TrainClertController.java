@@ -86,8 +86,8 @@ public class TrainClertController {
 	}
 	
 	@PostMapping("/deleteChildrenCombination")
-	public ResultVO deleteChildrenCombination(@Valid TrainChildrenCombinationMapper vo ){
-		return clert_impl.deleteChildrenCombination(vo);
+	public ResultVO deleteChildrenCombination(@RequestParam Map<String, String> params){
+		return clert_impl.deleteChildrenCombination(params);
 	}
 	
 	@PostMapping("/saveSort")

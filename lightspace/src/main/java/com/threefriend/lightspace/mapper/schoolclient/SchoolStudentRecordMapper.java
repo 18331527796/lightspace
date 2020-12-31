@@ -13,6 +13,8 @@ public class SchoolStudentRecordMapper {
 	
 	private String name;
 	
+	private Integer studentId;
+	
 	private Integer schoolId;
 	
 	private Integer classId;
@@ -88,6 +90,14 @@ public class SchoolStudentRecordMapper {
 
 	public void setSemester(Integer semester) {
 		this.semester = semester;
+	}
+
+	public Integer getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
 	}
 
 	

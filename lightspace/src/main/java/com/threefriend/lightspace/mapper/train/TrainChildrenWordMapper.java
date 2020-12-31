@@ -1,5 +1,6 @@
 package com.threefriend.lightspace.mapper.train;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -110,8 +111,14 @@ public class TrainChildrenWordMapper {
 	private String weight;
 	//处理建议
 	private String suggest;
+	//上传人
+	private String clert;
+	//openId
+	private String openId;
 	//创建时间
 	private Date genTime = new Date();
+	//显示时间
+	private String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 	public Integer getId() {
 		return id;
 	}
@@ -393,6 +400,24 @@ public class TrainChildrenWordMapper {
 	}
 	public void setGenTime(Date genTime) {
 		this.genTime = genTime;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	public String getClert() {
+		return clert;
+	}
+	public void setClert(String clert) {
+		this.clert = clert;
+	}
+	public String getOpenId() {
+		return openId;
+	}
+	public void setOpenId(String openId) {
+		this.openId = openId;
 	}
 	
 	

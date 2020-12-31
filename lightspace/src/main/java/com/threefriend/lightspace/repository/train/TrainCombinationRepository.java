@@ -8,5 +8,5 @@ import com.threefriend.lightspace.mapper.train.TrainCombinationMapper;
 
 public interface TrainCombinationRepository extends JpaRepository<TrainCombinationMapper, Integer>{
 
-	List<TrainCombinationMapper> findByOpenIdAndPNameAndIsShowOrderByIdDesc(String openId,String pName,Integer isShow);
+	List<TrainCombinationMapper> findByPNameAndIsShowOrderByIdDesc(String pName,Integer isShow);
 }

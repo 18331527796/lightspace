@@ -24,7 +24,11 @@ public class GlassesMapper {
 	private String film;
 	//隐形标记
 	private String covert;
-	//光度范围1
+	//图片
+	private String picture;
+	//图片
+	private String customFile;
+	/*//光度范围1
 	private String photometric1 = "";
 	//光度范围2
 	private String photometric2 = "";
@@ -43,7 +47,7 @@ public class GlassesMapper {
 	//形状4
 	private Integer shape4;
 	//形状5
-	private Integer shape5;
+	private Integer shape5;*/
 	//下加光
 	private String addLightBelow;
 	//现片价
@@ -137,24 +141,6 @@ public class GlassesMapper {
 	public void setCovert(String covert) {
 		this.covert = covert;
 	}
-	public String getPhotometric1() {
-		return photometric1;
-	}
-	public void setPhotometric1(String photometric1) {
-		this.photometric1 = photometric1;
-	}
-	public String getPhotometric2() {
-		return photometric2;
-	}
-	public void setPhotometric2(String photometric2) {
-		this.photometric2 = photometric2;
-	}
-	public String getPhotometric3() {
-		return photometric3;
-	}
-	public void setPhotometric3(String photometric3) {
-		this.photometric3 = photometric3;
-	}
 	public String getAddLightBelow() {
 		return addLightBelow;
 	}
@@ -229,47 +215,17 @@ public class GlassesMapper {
 	public void setOnTheSpot(String onTheSpot) {
 		this.onTheSpot = onTheSpot;
 	}
-	public String getPhotometric4() {
-		return photometric4;
+	public String getPicture() {
+		return picture;
 	}
-	public void setPhotometric4(String photometric4) {
-		this.photometric4 = photometric4;
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
-	public String getPhotometric5() {
-		return photometric5;
+	public String getCustomFile() {
+		return customFile;
 	}
-	public void setPhotometric5(String photometric5) {
-		this.photometric5 = photometric5;
-	}
-	public Integer getShape1() {
-		return shape1;
-	}
-	public void setShape1(Integer shape1) {
-		this.shape1 = shape1;
-	}
-	public Integer getShape2() {
-		return shape2;
-	}
-	public void setShape2(Integer shape2) {
-		this.shape2 = shape2;
-	}
-	public Integer getShape3() {
-		return shape3;
-	}
-	public void setShape3(Integer shape3) {
-		this.shape3 = shape3;
-	}
-	public Integer getShape4() {
-		return shape4;
-	}
-	public void setShape4(Integer shape4) {
-		this.shape4 = shape4;
-	}
-	public Integer getShape5() {
-		return shape5;
-	}
-	public void setShape5(Integer shape5) {
-		this.shape5 = shape5;
+	public void setCustomFile(String customFile) {
+		this.customFile = customFile;
 	}
 	
 	

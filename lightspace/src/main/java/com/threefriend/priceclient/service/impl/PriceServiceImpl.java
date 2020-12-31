@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.enums.UrlEnums;
@@ -20,7 +21,6 @@ import com.threefriend.lightspace.repository.PriceUserRepository;
 import com.threefriend.lightspace.repository.SeriesProductRepository;
 import com.threefriend.lightspace.repository.SeriesRepository;
 import com.threefriend.lightspace.util.ResultVOUtil;
-import com.threefriend.lightspace.vo.GlassesVO;
 import com.threefriend.lightspace.vo.ResultVO;
 import com.threefriend.priceclient.service.PriceService;
 
@@ -50,6 +50,7 @@ public class PriceServiceImpl implements PriceService{
 		List<SeriesMapper> end = series_dao.findByLabelId(Integer.valueOf(params.get("id")));
 		for (SeriesMapper seriesMapper : end) {
 			seriesMapper.setIntroduce(UrlEnums.IMG_URL.getUrl()+seriesMapper.getIntroduce());
+			seriesMapper.setPicture(UrlEnums.IMG_URL.getUrl()+seriesMapper.getPicture());
 		}
 		return ResultVOUtil.success(end);
 	}
@@ -110,21 +111,25 @@ public class PriceServiceImpl implements PriceService{
 	@Override
 	public ResultVO findGlassesBySeries(Map<String, String> params) {
 		Integer seriesId = Integer.valueOf(params.get("seriesId"));
-		List<GlassesVO> end = new ArrayList<>();
 		List<GlassesMapper> poList = glasses_dao.findBySeriesIdOrderById(seriesId);
 		for (GlassesMapper po : poList) {
-			end.add(new GlassesVO(po));
+			po.setPicture(UrlEnums.IMG_URL.getUrl()+po.getPicture());
+			if(!StringUtils.isEmpty(po.getCustomFile()))
+			po.setCustomFile(UrlEnums.IMG_URL.getUrl()+po.getCustomFile());
 		}
-		return ResultVOUtil.success(end);
+		return ResultVOUtil.success(poList);
 	}
 
 	@Override
 	public ResultVO contrastGlasses(Map<String, String> params) {
-		List<GlassesVO> end = new ArrayList<>();
+		List<GlassesMapper> end = new ArrayList<>();
 		String[] split = params.get("glasses").split(",");
 		for (String string : split) {
 			GlassesMapper po = glasses_dao.findById(Integer.valueOf(string)).get();
-			end.add(new GlassesVO(po));
+			po.setPicture(UrlEnums.IMG_URL.getUrl()+po.getPicture());
+			if(!StringUtils.isEmpty(po.getCustomFile()))
+			po.setCustomFile(UrlEnums.IMG_URL.getUrl()+po.getCustomFile());
+			end.add(po);
 		}
 		return ResultVOUtil.success(end);
 	}

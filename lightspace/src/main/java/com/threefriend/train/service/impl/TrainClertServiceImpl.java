@@ -17,6 +17,7 @@ import com.threefriend.lightspace.enums.ResultEnum;
 import com.threefriend.lightspace.mapper.train.TrainChildrenWordMapper;
 import com.threefriend.lightspace.mapper.train.TrainChildrenCombinationMapper;
 import com.threefriend.lightspace.mapper.train.TrainChildrenMapper;
+import com.threefriend.lightspace.mapper.train.TrainChildrenRowMapper;
 import com.threefriend.lightspace.mapper.train.TrainClertMapper;
 import com.threefriend.lightspace.mapper.train.TrainCombinationMapper;
 import com.threefriend.lightspace.mapper.train.TrainParentMapper;
@@ -24,6 +25,7 @@ import com.threefriend.lightspace.mapper.train.TrainProgramMapper;
 import com.threefriend.lightspace.repository.train.TrainChildrenWordRepository;
 import com.threefriend.lightspace.repository.train.TrainChildrenCombinationRepository;
 import com.threefriend.lightspace.repository.train.TrainChildrenRepository;
+import com.threefriend.lightspace.repository.train.TrainChildrenRowRepository;
 import com.threefriend.lightspace.repository.train.TrainClertRepository;
 import com.threefriend.lightspace.repository.train.TrainCombinationRepository;
 import com.threefriend.lightspace.repository.train.TrainParentRepository;
@@ -52,6 +54,8 @@ public class TrainClertServiceImpl implements TrainClertService {
 	private TrainParentRepository parent_dao;
 	@Autowired
 	private TrainChildrenCombinationRepository c_c_dao;
+    @Autowired
+    private TrainChildrenRowRepository row_dao;
 	
 	@Override
 	public ResultVO clertLogin(TrainClertMapper vo) {
@@ -79,6 +83,8 @@ public class TrainClertServiceImpl implements TrainClertService {
 	public ResultVO insertChildrenWord(TrainChildrenWordMapper word) {
 		TrainChildrenWordMapper po = new TrainChildrenWordMapper();
 		BeanUtils.copyProperties(word, po);
+		String name = clert_dao.findByOpenId(word.getOpenId()).getName();
+		po.setClert(name);
 		word_dao.save(po);
 		return ResultVOUtil.success(po.getId());
 	}
@@ -108,10 +114,18 @@ public class TrainClertServiceImpl implements TrainClertService {
 	 */
 	@Override
 	public ResultVO pushTrainCombination(TrainCombinationMapper vo) {
-		System.out.println(vo.getCombination());
 		if(StringUtils.isEmpty(vo.getCombination()))return ResultVOUtil.error(ResultEnum.PARAM_ERROR.getStatus(), ResultEnum.PARAM_ERROR.getMessage());
 		TrainCombinationMapper po = new TrainCombinationMapper();
 		MyBeanUtils.copyProperties(vo, po);
+		String name = clert_dao.findByOpenId(vo.getOpenId()).getName();
+		int row = 0; 
+		String[] split = vo.getCombination().split("/");
+		for (String string : split) {
+			if(StringUtils.isEmpty(string))continue;
+			row++;
+		}
+		po.setClert(name);
+		po.setRow(row);
 		combination_dao.save(po);
 		return ResultVOUtil.success();
 	}
@@ -121,11 +135,12 @@ public class TrainClertServiceImpl implements TrainClertService {
 	@Override
 	public ResultVO combinationList(Map<String, String> params) {
 		List<Map<String , String>> end = new ArrayList<>();
-		List<TrainCombinationMapper> combinations = combination_dao.findByOpenIdAndPNameAndIsShowOrderByIdDesc(params.get("openId"),params.get("pName"),1);
+		List<TrainCombinationMapper> combinations = combination_dao.findByPNameAndIsShowOrderByIdDesc(params.get("pName"),1);
 		for (TrainCombinationMapper po : combinations) {
 			Map<String , String > map = new HashMap<String , String >();
 			map.put("id", po.getId()+"");
 			map.put("name", po.getName());
+			map.put("clert", po.getClert());
 			map.put("time", po.getGenTime());
 			end.add(map);
 		}
@@ -136,13 +151,16 @@ public class TrainClertServiceImpl implements TrainClertService {
 	 */
 	@Override
 	public ResultVO getCombination(TrainCombinationMapper vo) {
-		List<String> end = new ArrayList<>();
+		List<Map<String, String>> end = new ArrayList<>();
 		TrainCombinationMapper combination = combination_dao.findById(vo.getId()).get();
 		String[] split = combination.getCombination().split("/");
 		for (String string : split) {
-			end.add(string);
+			if(StringUtils.isEmpty(string))continue;
+			Map<String, String> map = new HashMap<>();
+			map.put("name", string);
+			end.add(map);
 		}
-		Collections.reverse(end);
+		//Collections.reverse(end);
 		return ResultVOUtil.success(end);
 	}
 	/* 
@@ -154,11 +172,12 @@ public class TrainClertServiceImpl implements TrainClertService {
 		Combination.setIsShow(2);
 		combination_dao.save(Combination);
 		List<Map<String , String>> end = new ArrayList<>();
-		List<TrainCombinationMapper> combinations = combination_dao.findByOpenIdAndPNameAndIsShowOrderByIdDesc(vo.getOpenId(),vo.getpName(),1);
+		List<TrainCombinationMapper> combinations = combination_dao.findByPNameAndIsShowOrderByIdDesc(vo.getpName(),1);
 		for (TrainCombinationMapper po : combinations) {
 			Map<String , String > map = new HashMap<String , String >();
 			map.put("id", po.getId()+"");
 			map.put("name", po.getName());
+			map.put("clert", po.getClert());
 			map.put("time", po.getGenTime());
 			end.add(map);
 		}
@@ -192,10 +211,21 @@ public class TrainClertServiceImpl implements TrainClertService {
 	public ResultVO combinationToChildren(TrainChildrenCombinationMapper vo) {
 		TrainChildrenCombinationMapper po = new TrainChildrenCombinationMapper();
 		MyBeanUtils.copyProperties(vo, po);
-		po.setCombinationName(combination_dao.findById(vo.getCombinationId()).get().getName());
+		TrainCombinationMapper trainCombinationMapper = combination_dao.findById(vo.getCombinationId()).get();
+		po.setCombinationName(trainCombinationMapper.getName());
 		int sort = c_c_dao.countByChildrenId(vo.getChildrenId());
 		po.setSort(sort);
 		c_c_dao.save(po);
+		String[] split = trainCombinationMapper.getCombination().split("/");
+		int rowNumber = 1;
+		for (String string : split) {
+			if(StringUtils.isEmpty(string))continue;
+			TrainChildrenRowMapper row = new TrainChildrenRowMapper();
+			row.setChildrenCombinationId(po.getId());
+			row.setRow(rowNumber);
+			row_dao.save(row);
+			rowNumber++;
+		}
 		return ResultVOUtil.success();
 	}
 
@@ -207,8 +237,11 @@ public class TrainClertServiceImpl implements TrainClertService {
 	}
 
 	@Override
-	public ResultVO deleteChildrenCombination(TrainChildrenCombinationMapper vo) {
-		c_c_dao.deleteById(vo.getId());
+	public ResultVO deleteChildrenCombination(Map<String, String> params) {
+		if(StringUtils.isEmpty(params.get("id")))return ResultVOUtil.success("请选择删除哪组方案！");
+		Integer id = Integer.valueOf(params.get("id"));
+		c_c_dao.deleteById(id);
+		row_dao.deleteByChildrenCombinationId(id);
 		return ResultVOUtil.success();
 	}
 

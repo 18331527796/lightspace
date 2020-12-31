@@ -59,6 +59,11 @@ public class TrainParentController {
 		return partenr_impl.getWord(vo);
 	}
 	
+	@PostMapping("/manualBindingPhone")
+	public ResultVO manualBindingPhone(@RequestParam Map<String, String> params){
+		return partenr_impl.manualBindingPhone(params);
+	}
+	
 	@PostMapping("/bindingPhone")
 	public ResultVO bindingPhone(@RequestParam Map<String, String> params) throws Exception{
 		return partenr_impl.bindingPhone(params);
@@ -70,12 +75,22 @@ public class TrainParentController {
 	}
 	
 	@PostMapping("/combinationSuccess")
-	public ResultVO combinationSuccess(@Valid TrainChildrenCombinationMapper vo) throws Exception{
-		return partenr_impl.combinationSuccess(vo);
+	public ResultVO combinationSuccess(@RequestParam Map<String, String> params) throws Exception{
+		return partenr_impl.combinationSuccess(params);
 	}
 	
 	@PostMapping("/childrenCombinationList")
 	public ResultVO childrenCombinationList(@RequestParam Map<String, String> params){
 		return partenr_impl.childrenCombinationList(params);
+	}
+	
+	@PostMapping("/getCombinationHistory")
+	public ResultVO getCombinationHistory(@Valid TrainChildrenCombinationMapper vo){
+		return partenr_impl.getCombinationHistory(vo);
+	}
+	
+	@PostMapping("/getCombinationParent")
+	public ResultVO getCombinationParent(@Valid TrainChildrenCombinationMapper vo){
+		return partenr_impl.getCombinationParent(vo);
 	}
 }

@@ -7,30 +7,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.collections4.map.HashedMap;
 import org.apache.poi.POIXMLDocument;
 import org.apache.poi.POIXMLTextExtractor;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,13 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.google.common.collect.Lists;
-import com.threefriend.lightspace.enums.UrlEnums;
-import com.threefriend.lightspace.mapper.SortMapper;
-import com.threefriend.lightspace.mapper.StudentMapper;
-import com.threefriend.lightspace.mapper.xcx.FabulousRecordMapper;
-import com.threefriend.lightspace.mapper.xcx.ScreeningMapper;
-import com.threefriend.lightspace.repository.FabulousRcordRepository;
 import com.threefriend.lightspace.repository.ScreeningRepository;
 import com.threefriend.lightspace.repository.SortRepository;
 import com.threefriend.lightspace.repository.StudentRepository;
@@ -68,19 +50,14 @@ public class test {
 	@SuppressWarnings("deprecation")
 	@Test
 	public void test(){
-		/*int count = 0 ;
-		List<StudentMapper> findBySchoolId = student_dao.findBySchoolId(50);
-		for (StudentMapper studentMapper : findBySchoolId) {
-			ScreeningMapper po = screening_dao.findTopByStudentIdOrderByGenTimeDesc(studentMapper.getId());
-			if(po!=null)count++;
-		}
-		System.out.println(count);*/
+		
         
 		String filePath = "C:/Users/Administrator/Desktop/主播礼物表/用来统计主播工资的word.docx";
         String content = readWord(filePath);
         String[] split = content.split("\n");
         
-        String []player =new String[] {"团团","晚安","兰兰","冉冉","香菜","阿柚","雪儿","大三","萌幼","芯儿","盲盒"};
+        String []player =new String[] {"团团","晚安","兰兰","冉冉","香菜","阿柚","雪儿","大三","萌幼","芯儿","水蜜桃","妮妮","共枕",
+        		"伊人","萌崽","小鹿","盲盒"};
         
         Map<String, List<String>> map = new LinkedHashMap<>();
         for (String string : player) {
@@ -161,7 +138,7 @@ public synchronized static void createExcel(Map<String, List<String>> map) {
             row.createCell(sumrow).setCellValue(sum);
             row.createCell(sumrow+1).setCellValue(Double.valueOf(sum*0.05));
 	        // 第六步，将文件存到指定位置
-	        try (FileOutputStream fout = new FileOutputStream("C:/Users/Administrator/Desktop/ceshi.xls")){
+	        try (FileOutputStream fout = new FileOutputStream("C:/Users/Administrator/Desktop/30号.xls")){
 	            wb.write(fout);
 	            wb.close();
 	        } catch (Exception e) {

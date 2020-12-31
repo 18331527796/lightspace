@@ -27,6 +27,8 @@ public class TrainChildrenCombinationMapper {
 	private Integer sort;
 	
 	private String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+	
+	private String successTime;
 
 	public Integer getId() {
 		return id;
@@ -86,6 +88,14 @@ public class TrainChildrenCombinationMapper {
 
 	public void setCombinationName(String combinationName) {
 		this.combinationName = combinationName;
+	}
+
+	public String getSuccessTime() {
+		return successTime;
+	}
+
+	public void setSuccessTime(Date successTime) {
+		this.successTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(successTime);
 	}
 	
 	

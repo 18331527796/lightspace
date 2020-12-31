@@ -27,8 +27,9 @@ public class PriceClientController {
 	
 	@PostMapping("/addSeries")
 	public ResultVO addSeries(@RequestParam Map<String, String> params,
-							  @RequestParam(value="file",required=false) MultipartFile file) {
-		return impl.addSeries(params, file);
+							  @RequestParam(value="file",required=false) MultipartFile file,
+							  @RequestParam(value="file1",required=false) MultipartFile file1) {
+		return impl.addSeries(params, file ,file1);
 	}
 	
 	@PostMapping("/editSeries")
@@ -38,8 +39,9 @@ public class PriceClientController {
 	
 	@PostMapping("/saveSeries")
 	public ResultVO saveSeries(@RequestParam Map<String, String> params,
-			  				  @RequestParam(value="file",required=false) MultipartFile file) {
-		return impl.saveSeries(params,file);
+			  				  @RequestParam(value="file",required=false) MultipartFile file,
+							  @RequestParam(value="file1",required=false) MultipartFile file1) {
+		return impl.saveSeries(params,file,file1);
 	}
 	
 	@PostMapping("/deleteSeries")
@@ -94,8 +96,10 @@ public class PriceClientController {
 	}
 	
 	@PostMapping("/addGlasses")
-	public ResultVO addGlasses(@Valid GlassesMapper vo) {
-		return impl.addGlasses(vo);
+	public ResultVO addGlasses(@Valid GlassesMapper vo,
+							   @RequestParam(value="file",required=false) MultipartFile picture,
+							   @RequestParam(value="file1",required=false)MultipartFile customFile) {
+		return impl.addGlasses(vo,picture,customFile);
 	}
 	
 	@PostMapping("/findGlassesBySeries")
@@ -109,8 +113,10 @@ public class PriceClientController {
 	}
 	
 	@PostMapping("/saveGlasses")
-	public ResultVO saveGlasses(@Valid GlassesMapper vo) {
-		return impl.saveGlasses(vo);
+	public ResultVO saveGlasses(@Valid GlassesMapper vo,
+							    @RequestParam(value="file",required=false) MultipartFile picture,
+								@RequestParam(value="file1",required=false)MultipartFile customFile) {
+		return impl.saveGlasses(vo,picture,customFile);
 	}
 	
 	@PostMapping("/deleteGlasses")
