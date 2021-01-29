@@ -16,8 +16,8 @@ public class TestAspect implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o)
 			throws Exception {
 		httpServletResponse.setHeader("Access-Control-Allow-Origin","*");
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM"); // 定义想要的格式
-		String timeString = simpleDateFormat.format(new Date()).substring(0, 7); // 双重保险，最好能获得系统时间，以免第三方网站异常时程序无法运行
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM"); // 定义想要的格式
+//		String timeString = simpleDateFormat.format(new Date()).substring(0, 7); // 双重保险，最好能获得系统时间，以免第三方网站异常时程序无法运行
 //		if (!timeString.equals("2020-04")) { // 我把时间设定成为2012年12月有效
 //			return false;
 //		}

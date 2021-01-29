@@ -5,10 +5,14 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.threefriend.dingding.dto.TaskDTO;
+import com.threefriend.dingding.dto.TaskRecordDTO;
 import com.threefriend.dingding.mapper.TaskMapper;
 import com.threefriend.dingding.service.impl.TaskServiceImpl;
+import com.threefriend.dingding.util.ResultVOUtil;
 import com.threefriend.dingding.vo.ResultVO;
 
 @RestController
@@ -39,8 +43,18 @@ public class TaskController {
 	}
 	
 	@PostMapping("/taskList")
-	public ResultVO taskList(@Valid TaskMapper vo) {
+	public ResultVO taskList(@Valid TaskDTO vo,@RequestParam(value="userId") String userId) throws Exception {
+		return impl.taskList(vo,userId);
+	}
+	
+	@PostMapping("/superviseTaskList")
+	public ResultVO taskList(@Valid TaskDTO vo){
 		return impl.taskList(vo);
+	}
+	
+	@PostMapping("/clockIn")
+	public ResultVO clockIn(@Valid TaskRecordDTO dto) {
+		return ResultVOUtil.success(impl.clockIn(dto));
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.threefriend.dingding.service;
 
+import com.threefriend.dingding.dto.TaskDTO;
+import com.threefriend.dingding.dto.TaskRecordDTO;
 import com.threefriend.dingding.mapper.TaskMapper;
 import com.threefriend.dingding.vo.ResultVO;
 
@@ -13,6 +15,10 @@ public interface TaskService {
 	
 	ResultVO saveTask(TaskMapper vo);
 	
-	ResultVO taskList(TaskMapper vo);
+	ResultVO taskList(TaskDTO vo);
+	
+	ResultVO taskList(TaskDTO vo,String userId)throws Exception ;
+
+	ResultVO clockIn(TaskRecordDTO dto);
 	
 }

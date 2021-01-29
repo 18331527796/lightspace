@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,14 +38,6 @@ import com.threefriend.lightspace.repository.StudentRepository;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class test {
-	@Autowired
-	private SortRepository sort_dao;
-	@Autowired
-	private StudentRepository student_dao;
-	@Autowired
-	private ScreeningRepository screening_dao;
-	
-	
 	
 	
 	@SuppressWarnings("deprecation")
@@ -57,7 +50,8 @@ public class test {
         String[] split = content.split("\n");
         
         String []player =new String[] {"团团","晚安","兰兰","冉冉","香菜","阿柚","雪儿","大三","萌幼","芯儿","水蜜桃","妮妮","共枕",
-        		"伊人","萌崽","小鹿","盲盒"};
+        		"伊人","萌崽","小鹿","媛媛","米米","苏苏","御可","美之心","曦曦","爽爽","卿","米朵儿","婉妍","熙迟","久奈","林夕","啵啵",
+        		"闲闲","盲盒"};
         
         Map<String, List<String>> map = new LinkedHashMap<>();
         for (String string : player) {
@@ -123,6 +117,8 @@ public synchronized static void createExcel(Map<String, List<String>> map) {
         	if(map.get(str).size()>sumrow) sumrow=map.get(str).size()+2;
         }
         
+        Calendar ca =Calendar.getInstance();
+        int k = ca.get(Calendar.DATE)-1;
         
         for (String str : map.keySet()) {
         	System.out.println("--------"+str);
@@ -138,7 +134,7 @@ public synchronized static void createExcel(Map<String, List<String>> map) {
             row.createCell(sumrow).setCellValue(sum);
             row.createCell(sumrow+1).setCellValue(Double.valueOf(sum*0.05));
 	        // 第六步，将文件存到指定位置
-	        try (FileOutputStream fout = new FileOutputStream("C:/Users/Administrator/Desktop/30号.xls")){
+	        try (FileOutputStream fout = new FileOutputStream("C:/Users/Administrator/Desktop/"+k+"号.xls")){
 	            wb.write(fout);
 	            wb.close();
 	        } catch (Exception e) {

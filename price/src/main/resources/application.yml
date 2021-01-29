@@ -1,0 +1,35 @@
+#server:    
+#  servlet:
+#    context-path: /price
+
+
+spring:
+#  jmx:
+#    enabled: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url:  jdbc:mysql://127.0.0.1:3306/price?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+#    password: root  # 这是本地的密码
+#    password: lightspace # 这是阿里服务器的密码
+    password: sanyou123 # 这是三友服务器的密码
+    
+  main:
+    allow-bean-definition-overriding: true
+  
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: false
+    show-sql: false  
+  
+#  servlet:
+#    multipart:
+#      enabled: true
+#      max-file-size: 50MB
+#      max-request-size: 50MB
+        
+    
+    
+

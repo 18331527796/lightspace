@@ -1,27 +1,18 @@
-server:    
-  servlet:
-    context-path: /dingding
+#server:    
+#  servlet:
+#    context-path: /dingding
 
 
 spring:
+  jmx:
+    enabled: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url:  jdbc:mysql://localhost:3306/dingding?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
     username: root
-    password: root
-#    password: lightspace
+#    password: root
+    password: lightspace
     
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    database: 0
-    timeout: 5000
-    jedis:
-      pool:
-        max-active: 50
-        max-wait: -1
-        max-idle: 30
-        min-idle: 2
   main:
     allow-bean-definition-overriding: true
   
