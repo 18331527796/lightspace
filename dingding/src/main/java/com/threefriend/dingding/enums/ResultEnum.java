@@ -15,7 +15,8 @@ public enum ResultEnum {
     MARK_ERROR(10200, "所有任务未完成~"),
 
     PARAM_ERROR(10201, "参数不正确"),
-
+    
+    ATTENDANCE(10202, "当天未打卡"),
     
     ;
 

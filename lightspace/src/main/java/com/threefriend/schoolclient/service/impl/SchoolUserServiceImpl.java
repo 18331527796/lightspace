@@ -646,16 +646,16 @@ public class SchoolUserServiceImpl implements SchoolUserService{
 		List<StudentMapper> allStudent = student_dao.findByClassesId(classIds);
 		List<SchoolStudentRecordMapper> saveRecord = new ArrayList<>();
 		for (StudentMapper po : allStudent) {
-			ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(po.getId());
-			if(screening==null)continue;
+			//ScreeningMapper screening = screening_dao.findTopByStudentIdOrderByGenTimeDesc(po.getId());
+			//if(screening==null)continue;
 			SchoolStudentRecordMapper record = new SchoolStudentRecordMapper();
 			record.setStudentId(po.getId());
 			record.setName(po.getName());
 			record.setClassId(po.getClassesId());
 			record.setGender(po.getGender());
 			record.setSchoolId(schoolId);
-			record.setVisionLeftStr(screening.getVisionLeftStr());
-			record.setVisionRightStr(screening.getVisionLeftStr());
+			record.setVisionLeftStr(po.getVisionLeftStr());
+			record.setVisionRightStr(po.getVisionRightStr());
 			record.setSemester(SemesterPo.getId());
 			saveRecord.add(record);
 		}

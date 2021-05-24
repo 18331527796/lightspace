@@ -1,16 +1,22 @@
 package com.threefriend.dingding.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.threefriend.constants.DingDingAccessToken;
 import com.threefriend.constants.DingDingConstants;
 import com.threefriend.dingding.mapper.UserTaskRecordMapper;
 
 public class DingDingUtils {
+	
+	
 
 	public static String getToken() {
 		String url = "https://oapi.dingtalk.com/gettoken?appkey="+DingDingConstants.AppKey+"&appsecret="+DingDingConstants.AppSecret;
@@ -62,19 +68,23 @@ public class DingDingUtils {
 	}
 	
 	public static String isLeader(String token,String user_id,String dept_id) {
+		String isLeader = "false";
 		Map<String , String> param = new HashMap<String, String>();
 		String url = "https://oapi.dingtalk.com/topapi/v2/user/get?access_token="+token;
 		param.put("userid", user_id);
 		JSONObject httpPost = HttpUtils.httpPost(url, JSONObject.toJSONString(param));
-		if(!httpPost.get("errcode").toString().equals("0")) return "false";
+		if(!httpPost.get("errcode").toString().equals("0")) return isLeader;
 		JSONObject result = httpPost.getJSONObject("result");
 		JSONArray leader_in_dept = result.getJSONArray("leader_in_dept");
-		String isLeader = "";
-		for (int i = 0; i < leader_in_dept.size(); i++) {
-			JSONObject user = (JSONObject) leader_in_dept.get(i);
-			if(user.get("dept_id").toString().equals(dept_id)) {
-				isLeader =user.get("leader").toString();
+		try {
+			for (int i = 0; i < leader_in_dept.size(); i++) {
+				JSONObject user = (JSONObject) leader_in_dept.get(i);
+				if(user.get("dept_id").toString().equals(dept_id)) {
+					isLeader =user.get("leader").toString();
+				}
 			}
+		} catch (Exception e) {
+			return isLeader;
 		}
 		return isLeader;
 	}
@@ -94,6 +104,29 @@ public class DingDingUtils {
 			}
 		}
 		return isLeader;
+	}
+	
+	public static boolean attendance(String userId, Date begin , Date end) {
+		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String token = DingDingAccessToken.getToken();
+		List<String> userIds = Arrays.asList(userId);
+		Map<String , Object> param = new HashMap<String, Object>();
+		boolean timeResult = false;
+		String beginStr = f.format(begin);
+		String endStr = f.format(end);
+		String url = "https://oapi.dingtalk.com/attendance/listRecord?access_token="+token;
+		param.put("userIds", userIds);
+		param.put("checkDateFrom", beginStr);
+		param.put("checkDateTo", endStr);
+		JSONObject httpPost = HttpUtils.httpPost(url, JSONObject.toJSONString(param));
+		JSONArray recordresult = httpPost.getJSONArray("recordresult");
+		for (int i = 0; i < recordresult.size(); i++) {
+			JSONObject record = (JSONObject) recordresult.get(i);
+			if(record.get("checkType").toString().equals("OnDuty")||!record.get("timeResult").toString().equals("NotSigned")) {
+				timeResult = true;
+			}
+		}
+		return timeResult;
 	}
 
 }

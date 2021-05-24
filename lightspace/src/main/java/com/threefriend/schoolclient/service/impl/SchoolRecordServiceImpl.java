@@ -801,7 +801,6 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			schoolName = school_dao.findById(schoolId).get().getName();
 			range = "全校";
 			//所有学生数量
-			allstudent = student_dao.countBySchoolId(schoolId);
 			students= school_student_record_dao.findBySchoolIdAndSemester(schoolId,SemesterPo.getId());
 			
 		}else if("grade".equals(type)) {
@@ -811,7 +810,6 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			
 			if(allclass.size()==0)return ResultVOUtil.error(ResultEnum.REPORT_ERROR.getStatus(), ResultEnum.REPORT_ERROR.getMessage());
 			//所有学生数量
-			allstudent = student_dao.countByClassesId(allclass);
 			students = school_student_record_dao.findBySemesterAndClassIdIn(SemesterPo.getId(),allclass);
 			
 		}else if("class".equals(type)) {
@@ -826,14 +824,19 @@ public class SchoolRecordServiceImpl implements SchoolRecordService{
 			schoolName = classesMapper.getSchoolName()+classesMapper.getClassName();
 			range = classesMapper.getClassName();
 			//所有学生数量
-			allstudent = student_dao.countByClassesId(classId);
 			students = school_student_record_dao.findByClassIdAndSemester(classId,SemesterPo.getId());
 			
 		}
 		
-		nullstudent=allstudent-students.size();
+		allstudent = students.size();
+		
+		for (SchoolStudentRecordMapper po : students) {
+			if(po.getVisionLeftStr()==null||po.getVisionRightStr()==null)nullstudent++;
+		}
 		
 		for (SchoolStudentRecordMapper s : students) {
+			if(s.getVisionLeftStr()==null||s.getVisionRightStr()==null)continue;
+			
 			ScreeningWearMapper screeningwear = screening_wear_dao.findTopByStudentIdOrderByGenTimeDesc(s.getStudentId());
 			
 			LEFT = s.getVisionLeftStr();

@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import com.threefriend.constants.DingDingAccessToken;
 import com.threefriend.dingding.dto.TaskDTO;
 import com.threefriend.dingding.dto.TaskRecordDTO;
+import com.threefriend.dingding.mapper.RemarksMapper;
 import com.threefriend.dingding.mapper.TaskMapper;
 import com.threefriend.dingding.mapper.TaskRecordMapper;
+import com.threefriend.dingding.repository.RemarksRepository;
 import com.threefriend.dingding.repository.TaskRecordRepository;
 import com.threefriend.dingding.repository.TaskRepository;
 import com.threefriend.dingding.service.TaskService;
@@ -32,6 +34,8 @@ public class TaskServiceImpl implements TaskService{
 	private TaskRepository task_dao;
 	@Autowired
 	private TaskRecordRepository record_dao;
+	@Autowired
+	private RemarksRepository remark_dao;
 
 	
 	public Map<String, Date> beginAndEnd() throws Exception {
@@ -76,17 +80,13 @@ public class TaskServiceImpl implements TaskService{
 	
 	@Override
 	public ResultVO taskList(TaskDTO vo){
-		List<TaskMapper> allList = null;
-		if(vo.getLevel()==100) {
-			allList = task_dao.findByIsShowOrderById(1);
-		}else{
-			allList = task_dao.findByIsShowAndLevelOrderById(1,2);
-		}
+		List<TaskMapper> allList = task_dao.findByIsShowAndLevelOrderById(1,Integer.valueOf(vo.getLevel()));
 		return ResultVOUtil.success(allList);
 	}
 
 	@Override
 	public ResultVO taskList(TaskDTO vo,String userId) throws Exception {
+		Map<String, Object> endMap = new HashMap<>();
 		List<TaskMapper> allList = null;
 		List<TaskDTO> endList = new ArrayList<>(); 
 		Integer isSuccess = 2;
@@ -112,7 +112,14 @@ public class TaskServiceImpl implements TaskService{
 			dto.setIsSuccess(isSuccess);
 			endList.add(dto);
 		}
-		return ResultVOUtil.success(endList);
+		RemarksMapper remark = remark_dao.findByUserIdAndTimeBetween(userId, beginAndEnd.get("begin"),beginAndEnd.get("end"));
+		endMap.put("taskList", endList);
+		if(remark==null) {
+			endMap.put("remark", null);
+		}else {
+			endMap.put("remark", remark);
+		}
+		return ResultVOUtil.success(endMap);
 	}
 	
 	@Override

@@ -178,12 +178,14 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			student.setVisionLeftStr(Double.valueOf(params.get("visionLeft")));
 			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 			student.setScreeningType(1);
-			MsgTempMapper msgtemp = msg_temp_dao.findByTypeAndSelected("screening",1);
-			screeningMessage(msgtemp,student.getId(),1,student.getName());
 			student.setSendTime(new Date());
-			
 			student.setMyIntegral(integral_dao.findIntegtalByState(1, studentId));
 			student_dao.save(student);
+			
+			MsgTempMapper msgtemp = msg_temp_dao.findByTypeAndSelected("screening",1);
+			screeningMessage(msgtemp,student.getId(),1,student.getName());
+		}else {
+			return null;
 		}
 			return getCoin(parent.getId(),studentId);
 	}
@@ -219,14 +221,15 @@ public class ScreeningXcxServiceImpl implements ScreeningXcxService {
 			student.setVisionRightStr(Double.valueOf(params.get("visionRight")));
 			student.setScreeningType(2);
 			student.setCorrect(1);
+			student.setSendTime(new Date());
+			student.setMyIntegral(integral_dao.findIntegtalByState(1, studentId));
+			student_dao.save(student);
 			
 			MsgTempMapper msgtemp = msg_temp_dao.findByTypeAndSelected("screening",1);
 			screeningMessage(msgtemp,student.getId(),2,student.getName());
-			student.setSendTime(new Date());
-			student.setMyIntegral(integral_dao.findIntegtalByState(1, studentId));
 			
-			student_dao.save(student);
-			
+		}else {
+			return null;
 		}
 			return getCoin(parent.getId(),studentId);
 	}

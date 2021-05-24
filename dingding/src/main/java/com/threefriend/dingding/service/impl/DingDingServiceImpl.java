@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -20,9 +21,11 @@ import com.threefriend.dingding.dto.DeptDTO;
 import com.threefriend.dingding.dto.UserDTO;
 import com.threefriend.dingding.dto.UserTaskRecordDTO;
 import com.threefriend.dingding.enums.ResultEnum;
+import com.threefriend.dingding.mapper.RemarksMapper;
 import com.threefriend.dingding.mapper.TaskMapper;
 import com.threefriend.dingding.mapper.TaskRecordMapper;
 import com.threefriend.dingding.mapper.UserTaskRecordMapper;
+import com.threefriend.dingding.repository.RemarksRepository;
 import com.threefriend.dingding.repository.TaskRecordRepository;
 import com.threefriend.dingding.repository.TaskRepository;
 import com.threefriend.dingding.repository.UserTaskRecordrepository;
@@ -40,6 +43,8 @@ public class DingDingServiceImpl implements DingDingService{
 	private TaskRecordRepository record_dao;
 	@Autowired
 	private TaskRepository task_dao;
+	@Autowired
+	private RemarksRepository remark_dao;
 
 	@Override
 	public ResultVO login(String code) {
@@ -89,6 +94,7 @@ public class DingDingServiceImpl implements DingDingService{
 
 	@Override
 	public ResultVO getUserRecord(Map<String, String> param) {
+		Map<String, Object> endMap = new HashMap<>();
 		List<UserTaskRecordDTO> endList = new ArrayList<>();
 		Calendar calendar = Calendar.getInstance();
 		try {
@@ -106,6 +112,7 @@ public class DingDingServiceImpl implements DingDingService{
         calendar.set(Calendar.MINUTE, 30);
         Date end = calendar.getTime();
         
+        if(!DingDingUtils.attendance(param.get("userId"), begin, end))return ResultVOUtil.error(ResultEnum.ATTENDANCE.getStatus(), ResultEnum.ATTENDANCE.getMessage());
 		List<TaskRecordMapper> record = record_dao.findByUserIdAndTimeBetween(param.get("userId"),begin,end);
 		if(record.size()<1)return ResultVOUtil.error(ResultEnum.MARK_ERROR.getStatus(), ResultEnum.MARK_ERROR.getMessage());
 		//Map<Integer, String> chakTask = new HashMap<>();
@@ -128,11 +135,35 @@ public class DingDingServiceImpl implements DingDingService{
 		for (TaskRecordMapper po : record) {
 			UserTaskRecordDTO dto = new UserTaskRecordDTO();
 			dto.setContent(task_dao.findById(po.getTaskId()).get().getContent());
-			dto.setIsSuccess("完成");
+			dto.setIsSuccess("已完成");
 			endList.add(dto);
 		}
-		return ResultVOUtil.success(endList);
+		RemarksMapper remark = remark_dao.findByUserIdAndTimeBetween(param.get("userId"),begin,end);
+		endMap.put("taskList", endList);
+		if(remark==null) {
+			endMap.put("remark", null);
+		}else {
+			endMap.put("remark", remark);
+		}
+		return ResultVOUtil.success(endMap);
 	}
+
+	@Override
+	public ResultVO pushRemark(Map<String, String> param) {
+		RemarksMapper remark = null;
+		if(StringUtils.isEmpty(param.get("id"))) {
+			remark = new RemarksMapper();
+			remark.setContent(param.get("content"));
+			remark.setUserId(param.get("userId"));
+		}else {
+			remark = remark_dao.findById(Integer.valueOf(param.get("id"))).get();
+			remark.setContent(param.get("content"));
+			
+		}
+		remark_dao.save(remark);
+		return ResultVOUtil.success();
+	}
+
 
 	
 

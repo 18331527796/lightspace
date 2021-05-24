@@ -1,5 +1,6 @@
 package com.threefriend.dingding.aspect;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,7 +41,8 @@ public class ScheduledTasks {
 
     //表达式  执行此任务
     @Scheduled(cron="0 0 23 1/1 * ? ")
-    public void firstScheduledTasks(){
+    //@Scheduled(cron="3 3 10 1/1 * ? ")
+    public void firstScheduledTasks() throws ParseException{
         System.out.println("定时任务执行，现在时间是 : "+format.format(new Date())+"进行统计操作");
         //获取今天的 0点 23点
         Calendar calendar = Calendar.getInstance();

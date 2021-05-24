@@ -55,6 +55,10 @@ public class DingDingController {
 		return dingding.getUserRecord(param);
 	}
 	
+	@PostMapping("/pushRemark")
+	public ResultVO pushRemark(@RequestParam Map<String, String> param) {
+		return dingding.pushRemark(param);
+	}
 	
 	  
 }
